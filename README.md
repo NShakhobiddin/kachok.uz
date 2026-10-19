@@ -9,6 +9,7 @@ Telefonda ishlaydigan veb-ilova (PWA): sizga moslangan mashq dasturi, har bir ma
 | **Dastur tuzish** | Maqsad (massa, ozish, shakl, kuch, sog'liq), tajriba, haftasiga 2–6 kun, mashg'ulot vaqti (30–90 daq), zaldagi jihozlar va jarohatlarga qarab haftalik reja tuzadi. Har mushak haftasiga 2 marta, 10–20 set oralig'ida avtomatik muvozanatlanadi. |
 | **Jihozga moslash** | 24 turdagi jihozdan belgilaysiz (yoki "To'liq zal / Oddiy zal / Uy / O'z vaznim") — faqat bor jihozdagi mashqlar tanlanadi. |
 | **63 ta mashq, ~40 animatsiya** | Anatomik sportchi figurasi: mushaklar tana shakliga yopishgan, tolalari ko'rinadi va qisqarganda qalinlashadi (bitseps tirsak bukilganda, boldir tovon ko'tarilganda). Kuch fazasi tez, nazorat fazasi bir tekis — haqiqiy tempoda; nafas olish ham ko'rinadi. Har mashqda tempo chizig'i (soniyalari bilan), shtanga yo'li, sekinlashtirish. Asosiy mushak — qizil, yordamchi — sariq. |
+| **Mushaklar 3D** | Anatomik 3D model (Z-Anatomy / BodyParts3D, 37 ta mushak guruhi, skelet va paylar): aylantirish, yaqinlashtirish, mushakka bosilsa nomi va foizi. Har mashqda har mushak qancha ishlashi — sirt EMG tadqiqotlaridan **% MVIC** (63 mashq, ~410 qiymat, 100+ manba), rol (asosiy / yordamchi / barqarorlashtiruvchi) va harakat bo'ylab o'zgarishi; model takror fazasiga qarab "yonadi" (ko'tarishda kuchli, tushirishda sustroq). To'g'ridan-to'g'ri o'lchanmagan qiymatlar ≈ bilan belgilangan. |
 | **Xatolardan ogohlantirish** | Har bir mashqda keng tarqalgan xatolar: noto'g'ri va to'g'ri bajarilish yonma-yon animatsiyada, nega xavfli va qanday tuzatish. Jarohatingizga zid mashqlar belgilanadi va dasturga kiritilmaydi. |
 | **Tibbiy foyda** | Har bir mashq tanaga qayerda foyda berishi (suyak, yurak, qand, bel, kayfiyat...) tana siluetida animatsiyada ko'rsatiladi — manbasi bilan. |
 | **4 ta dastur uslubi** | Gipertrofiya (Renaissance Periodization: har hafta zaxira takror 3 → 0, mushak fikriga qarab set qo'shiladi, MEV/MAV/MRV chegaralari), kuch bloki (asosiy shtanga mashqlari 75 → 80 → 85 → 88% 1RM, keyin yengillashtirish), chiziqli progressiya 3×5 (boshlovchi: har mashg'ulot +2.5/+5 kg, ikki marta yetmasa −10%) va powerbuilding (og'ir + hajm kunlari). Avtomatik tanlanadi yoki "Dastur" sahifasida almashtiriladi. |
@@ -110,3 +111,7 @@ server/
 ---
 
 Tavsiyalar ma'lumot uchun, tibbiy maslahat o'rnini bosmaydi.
+
+## Litsenziyalar
+
+Ilova kodi — ushbu repozitoriy egasiga tegishli. 3D anatomik model (`public/models/muscles.glb`) — Z-Anatomy asosidagi moslashtirilgan versiya, **CC BY-SA 4.0** (BodyParts3D, © DBCLS); tafsilotlar [`public/models/LICENSE.md`](public/models/LICENSE.md). EMG tadqiqot jadvallari: [`docs/emg/`](docs/emg/).

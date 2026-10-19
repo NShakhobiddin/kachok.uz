@@ -1,0 +1,2167 @@
+{
+  "meta": {
+    "compiled": "2026-10-19",
+    "verification": "This environment's network policy blocked direct page fetches (PubMed, PMC, DOI resolver, journal sites). Every source was identified and checked through web-search index results: title, authors, year and, where shown, abstract or review-table numbers. The URL given is the one those results returned; the page itself was not opened. DOIs are filled only where a search result showed them; others are left blank rather than guessed. Abbreviated author lists ('et al.') mark co-authors that were not confirmed. The search budget ran out before full coverage.",
+    "estimateFlag": "estimate=false means the mvic number appears in a retrieved study or review result for that exercise and muscle. estimate=true covers anything interpolated, scaled, derived (for example from a hamstring:quadriceps ratio) or judged. For direct values, the range is the spread between studies or an approximate band; for estimates, the range is judgement anchored to the cited sources.",
+    "normalisationCaveat": "%MVIC is not directly comparable across labs or muscles: MVIC test positions differ, dynamic heavy lifts can exceed 100%, and step-up and some glute values are probably inflated by the MVIC position. Use the values as relative intensity indicators.",
+    "ranking": "Each exercise's 'ranking' array lists muscle keys sorted by the mvic values in this file."
+  },
+  "exercises": {
+    "back-squat": {
+      "basis": "direct",
+      "load": "10RM (Contreras 2015, trained women); pooled loads across 10 studies for GM (Neto 2020)",
+      "metric": "mean",
+      "muscles": {
+        "vastusLateralis": {
+          "mvic": 110,
+          "range": [
+            60,
+            130
+          ],
+          "src": [
+            "contreras2015"
+          ],
+          "estimate": false
+        },
+        "vastusMedialis": {
+          "mvic": 105,
+          "range": [
+            60,
+            130
+          ],
+          "src": [
+            "contreras2015",
+            "schwanbeck2009"
+          ],
+          "estimate": true
+        },
+        "gluteMax": {
+          "mvic": 53.1,
+          "range": [
+            26.6,
+            59.8
+          ],
+          "src": [
+            "neto2020",
+            "contreras2015"
+          ],
+          "estimate": false
+        },
+        "rectusFemoris": {
+          "mvic": 45,
+          "range": [
+            25,
+            60
+          ],
+          "src": [
+            "escamilla1998",
+            "coratella2021"
+          ],
+          "estimate": true
+        },
+        "erectors": {
+          "mvic": 45,
+          "range": [
+            30,
+            70
+          ],
+          "src": [
+            "nuzzo2008"
+          ],
+          "estimate": true
+        },
+        "adductors": {
+          "mvic": 40,
+          "range": [
+            20,
+            60
+          ],
+          "src": [
+            "coratella2021"
+          ],
+          "estimate": true
+        },
+        "gastrocnemius": {
+          "mvic": 20,
+          "range": [
+            10,
+            35
+          ],
+          "src": [
+            "schwanbeck2009",
+            "escamilla2001"
+          ],
+          "estimate": true
+        },
+        "medialHamstrings": {
+          "mvic": 18,
+          "range": [
+            10,
+            30
+          ],
+          "src": [
+            "escamilla1998"
+          ],
+          "estimate": true
+        },
+        "bicepsFemoris": {
+          "mvic": 14.9,
+          "range": [
+            10,
+            30
+          ],
+          "src": [
+            "contreras2015",
+            "escamilla1998"
+          ],
+          "estimate": false
+        }
+      },
+      "ranking": [
+        "vastusLateralis",
+        "vastusMedialis",
+        "gluteMax",
+        "rectusFemoris",
+        "erectors",
+        "adductors",
+        "gastrocnemius",
+        "medialHamstrings",
+        "bicepsFemoris"
+      ],
+      "rom": "Quadriceps and glute max are working hardest out of the bottom (deep knee/hip flexion, the sticking region early in the ascent) and taper toward lockout. At a matched 10RM, parallel, full and front squats gave no significant GM/BF/VL EMG differences (Contreras 2016). Clark 2012 concluded stance width and hip rotation have little effect on activation, while Coratella 2021 found wider stances raised VL and adductor longus activity.",
+      "notes": "VL above 100% MVIC (Contreras 2015 mean 110%, peak 244%) reflects dynamic heavy lifting relative to isometric normalisation. GM uses the Neto 2020 pooled back-squat mean of 53.1 +/- 25.1% (study range 13-92.7%). Subgroup means were 59.8% for parallel and 26.6% for full squats. Contreras 2015 upper-GM mean at 10RM was 29.4%. Hamstrings are low (BF 14.9%), consistent with Escamilla 1998 and 2001, where the squat still exceeded the leg press for hamstring and quadriceps activity. Abdominals are omitted: Nuzzo 2008 found rectus abdominis and external oblique activity in heavy squats/deadlifts no higher than in stability-ball exercises."
+    },
+    "front-squat": {
+      "basis": "direct",
+      "load": "10RM (Contreras 2016, trained women); GM pooled from 2 studies (Neto 2020)",
+      "metric": "mean",
+      "muscles": {
+        "vastusLateralis": {
+          "mvic": 105,
+          "range": [
+            60,
+            130
+          ],
+          "src": [
+            "contreras2016sq",
+            "contreras2015"
+          ],
+          "estimate": true
+        },
+        "vastusMedialis": {
+          "mvic": 105,
+          "range": [
+            60,
+            130
+          ],
+          "src": [
+            "contreras2016sq"
+          ],
+          "estimate": true
+        },
+        "rectusFemoris": {
+          "mvic": 50,
+          "range": [
+            25,
+            65
+          ],
+          "src": [
+            "coratella2021"
+          ],
+          "estimate": true
+        },
+        "erectors": {
+          "mvic": 45,
+          "range": [
+            30,
+            70
+          ],
+          "src": [
+            "coratella2021"
+          ],
+          "estimate": true
+        },
+        "gluteMax": {
+          "mvic": 40.5,
+          "range": [
+            37.2,
+            43.9
+          ],
+          "src": [
+            "neto2020",
+            "contreras2016sq"
+          ],
+          "estimate": false
+        },
+        "adductors": {
+          "mvic": 35,
+          "range": [
+            20,
+            55
+          ],
+          "src": [
+            "coratella2021"
+          ],
+          "estimate": true
+        },
+        "bicepsFemoris": {
+          "mvic": 15,
+          "range": [
+            10,
+            30
+          ],
+          "src": [
+            "contreras2016sq"
+          ],
+          "estimate": true
+        },
+        "medialHamstrings": {
+          "mvic": 15,
+          "range": [
+            10,
+            30
+          ],
+          "src": [
+            "contreras2016sq"
+          ],
+          "estimate": true
+        }
+      },
+      "ranking": [
+        "vastusLateralis",
+        "vastusMedialis",
+        "rectusFemoris",
+        "erectors",
+        "gluteMax",
+        "adductors",
+        "bicepsFemoris",
+        "medialHamstrings"
+      ],
+      "rom": "Same pattern as the back squat: quadriceps and GM peak out of the hole and decline toward lockout. The upright torso shifts relative emphasis toward the knee extensors.",
+      "notes": "Contreras 2016 found no significant EMG differences between front, full and parallel squats at each lift's 10RM, even though front-squat loads were lighter. Coratella 2021 (competitive bodybuilders) found greater rectus femoris activity in the front squat than in the full back squat during the ascent. It also reported greater gluteal and lower-back activation with the front bar position, so erectors are not reduced here. GM is the Neto 2020 pooled front-squat mean, 40.54 +/- 4.73%. Other values are estimates scaled from the back-squat profile."
+    },
+    "goblet-squat": {
+      "basis": "similar:front-squat",
+      "load": "typical dumbbell/kettlebell goblet load (estimated as markedly lighter for the legs than a 10RM front squat because the arms limit the load)",
+      "metric": "mean",
+      "muscles": {
+        "vastusLateralis": {
+          "mvic": 75,
+          "range": [
+            40,
+            100
+          ],
+          "src": [
+            "contreras2016sq"
+          ],
+          "estimate": true
+        },
+        "vastusMedialis": {
+          "mvic": 75,
+          "range": [
+            40,
+            100
+          ],
+          "src": [
+            "contreras2016sq"
+          ],
+          "estimate": true
+        },
+        "rectusFemoris": {
+          "mvic": 35,
+          "range": [
+            20,
+            50
+          ],
+          "src": [
+            "coratella2021"
+          ],
+          "estimate": true
+        },
+        "gluteMax": {
+          "mvic": 30,
+          "range": [
+            15,
+            45
+          ],
+          "src": [
+            "neto2020"
+          ],
+          "estimate": true
+        },
+        "erectors": {
+          "mvic": 30,
+          "range": [
+            15,
+            45
+          ],
+          "src": [
+            "coratella2021"
+          ],
+          "estimate": true
+        },
+        "adductors": {
+          "mvic": 30,
+          "range": [
+            15,
+            45
+          ],
+          "src": [
+            "coratella2021"
+          ],
+          "estimate": true
+        },
+        "deltAnt": {
+          "mvic": 15,
+          "range": [
+            10,
+            30
+          ],
+          "src": [],
+          "estimate": true
+        },
+        "biceps": {
+          "mvic": 15,
+          "range": [
+            10,
+            30
+          ],
+          "src": [],
+          "estimate": true
+        }
+      },
+      "ranking": [
+        "vastusLateralis",
+        "vastusMedialis",
+        "rectusFemoris",
+        "gluteMax",
+        "erectors",
+        "adductors",
+        "deltAnt",
+        "biceps"
+      ],
+      "rom": "Expected to match the front squat: quadriceps and GM highest out of the bottom.",
+      "notes": "No goblet-squat sEMG study was found. Leg and trunk values are the front-squat profile scaled down for the lighter typical load. Justification: it is an anterior-loaded, upright-torso squat. The deltAnt and biceps entries reflect the isometric bell hold and are not supported by any data."
+    },
+    "smith-squat": {
+      "basis": "similar:back-squat (scaled with Schwanbeck 2009 free-weight vs Smith differences)",
+      "load": "8RM (Schwanbeck 2009, n=6)",
+      "metric": "mean",
+      "muscles": {
+        "vastusLateralis": {
+          "mvic": 105,
+          "range": [
+            60,
+            130
+          ],
+          "src": [
+            "schwanbeck2009",
+            "contreras2015"
+          ],
+          "estimate": true
+        },
+        "vastusMedialis": {
+          "mvic": 70,
+          "range": [
+            45,
+            100
+          ],
+          "src": [
+            "schwanbeck2009"
+          ],
+          "estimate": true
+        },
+        "gluteMax": {
+          "mvic": 50,
+          "range": [
+            25,
+            60
+          ],
+          "src": [
+            "neto2020"
+          ],
+          "estimate": true
+        },
+        "rectusFemoris": {
+          "mvic": 40,
+          "range": [
+            20,
+            55
+          ],
+          "src": [
+            "escamilla1998"
+          ],
+          "estimate": true
+        },
+        "erectors": {
+          "mvic": 40,
+          "range": [
+            25,
+            60
+          ],
+          "src": [
+            "schwanbeck2009"
+          ],
+          "estimate": true
+        },
+        "adductors": {
+          "mvic": 35,
+          "range": [
+            15,
+            55
+          ],
+          "src": [],
+          "estimate": true
+        },
+        "gastrocnemius": {
+          "mvic": 15,
+          "range": [
+            8,
+            25
+          ],
+          "src": [
+            "schwanbeck2009"
+          ],
+          "estimate": true
+        },
+        "bicepsFemoris": {
+          "mvic": 12,
+          "range": [
+            8,
+            25
+          ],
+          "src": [
+            "schwanbeck2009"
+          ],
+          "estimate": true
+        }
+      },
+      "ranking": [
+        "vastusLateralis",
+        "vastusMedialis",
+        "gluteMax",
+        "rectusFemoris",
+        "erectors",
+        "adductors",
+        "gastrocnemius",
+        "bicepsFemoris"
+      ],
+      "rom": "Expected to match the back squat. Foot placement in front of the bar shifts emphasis between quadriceps and hip extensors, but no EMG data on this were retrieved.",
+      "notes": "Schwanbeck 2009 (n=6, 8RM) is the only direct comparison found. Free-weight squat EMG was higher than the Smith machine by 34% (gastrocnemius), 26% (biceps femoris) and 49% (vastus medialis), and 43% higher averaged over all muscles. Other muscles showed no significant differences. Values here are the back-squat profile divided by those ratios, so all are estimates. GM was not measured."
+    },
+    "leg-press": {
+      "basis": "direct",
+      "load": "12RM (Wilk 1996; Escamilla 1998)",
+      "metric": "mean",
+      "muscles": {
+        "vastusLateralis": {
+          "mvic": 48,
+          "range": [
+            39,
+            52
+          ],
+          "src": [
+            "wilk1996"
+          ],
+          "estimate": true
+        },
+        "vastusMedialis": {
+          "mvic": 48,
+          "range": [
+            39,
+            52
+          ],
+          "src": [
+            "wilk1996"
+          ],
+          "estimate": true
+        },
+        "rectusFemoris": {
+          "mvic": 39,
+          "range": [
+            30,
+            52
+          ],
+          "src": [
+            "wilk1996",
+            "escamilla1998"
+          ],
+          "estimate": true
+        },
+        "gluteMax": {
+          "mvic": 30,
+          "range": [
+            15,
+            45
+          ],
+          "src": [
+            "dasilva2008"
+          ],
+          "estimate": true
+        },
+        "adductors": {
+          "mvic": 25,
+          "range": [
+            10,
+            40
+          ],
+          "src": [],
+          "estimate": true
+        },
+        "gastrocnemius": {
+          "mvic": 15,
+          "range": [
+            8,
+            25
+          ],
+          "src": [
+            "wilk1996"
+          ],
+          "estimate": true
+        },
+        "bicepsFemoris": {
+          "mvic": 12,
+          "range": [
+            8,
+            20
+          ],
+          "src": [
+            "wilk1996"
+          ],
+          "estimate": false
+        },
+        "medialHamstrings": {
+          "mvic": 12,
+          "range": [
+            8,
+            20
+          ],
+          "src": [
+            "wilk1996"
+          ],
+          "estimate": false
+        }
+      },
+      "ranking": [
+        "vastusLateralis",
+        "vastusMedialis",
+        "rectusFemoris",
+        "gluteMax",
+        "adductors",
+        "gastrocnemius",
+        "bicepsFemoris",
+        "medialHamstrings"
+      ],
+      "rom": "In closed-chain knee exercises quadriceps activity is highest near the deepest knee flexion (start of the press) and falls toward extension (Escamilla 1998 compared closed- and open-chain patterns across knee angles). A high or wide foot placement shifts work toward GM and hamstrings, and a low placement toward RF and VL (Da Silva 2008; Escamilla 2001).",
+      "notes": "Wilk 1996 abstract: during the leg press, quadriceps EMG was about 39-52% MVIC and hamstrings were minimal (12% MVIC). The paper does not split that range by individual vastus or RF in the abstract, so the per-head values are estimates. RF is placed at the low end because closed-chain exercises favoured the vasti over RF (Escamilla 1998). Escamilla 2001: the squat produced more quadriceps and hamstring activity than either leg-press setup."
+    },
+    "hack-squat": {
+      "basis": "direct",
+      "load": "70% and 90% 1RM (University of Tehran study, 10 male powerlifters)",
+      "metric": "mean",
+      "muscles": {
+        "vastusLateralis": {
+          "mvic": 100,
+          "range": [
+            50,
+            130
+          ],
+          "src": [
+            "ut2012hack",
+            "contreras2015"
+          ],
+          "estimate": true
+        },
+        "vastusMedialis": {
+          "mvic": 100,
+          "range": [
+            50,
+            130
+          ],
+          "src": [
+            "ut2012hack"
+          ],
+          "estimate": true
+        },
+        "gluteMax": {
+          "mvic": 40,
+          "range": [
+            20,
+            55
+          ],
+          "src": [],
+          "estimate": true
+        },
+        "rectusFemoris": {
+          "mvic": 40,
+          "range": [
+            25,
+            55
+          ],
+          "src": [],
+          "estimate": true
+        },
+        "adductors": {
+          "mvic": 30,
+          "range": [
+            15,
+            45
+          ],
+          "src": [],
+          "estimate": true
+        },
+        "gastrocnemius": {
+          "mvic": 15,
+          "range": [
+            8,
+            25
+          ],
+          "src": [],
+          "estimate": true
+        },
+        "bicepsFemoris": {
+          "mvic": 12,
+          "range": [
+            8,
+            20
+          ],
+          "src": [],
+          "estimate": true
+        },
+        "medialHamstrings": {
+          "mvic": 12,
+          "range": [
+            8,
+            20
+          ],
+          "src": [],
+          "estimate": true
+        }
+      },
+      "ranking": [
+        "vastusLateralis",
+        "vastusMedialis",
+        "gluteMax",
+        "rectusFemoris",
+        "adductors",
+        "gastrocnemius",
+        "bicepsFemoris",
+        "medialHamstrings"
+      ],
+      "rom": "Expected to follow the closed-chain pattern: quadriceps are highest at deep knee flexion.",
+      "notes": "Only qualitative direct data were found: VM and VL activity was higher in the hack squat and back squat than in the leg press at 70% and 90% 1RM. The source's authors could not be retrieved. Numbers are interpolated between back squat and leg press. Erectors are omitted because the back is supported, though no hack-squat erector data were retrieved."
+    },
+    "bw-squat": {
+      "basis": "similar:back-squat (scaled down to bodyweight)",
+      "load": "bodyweight",
+      "metric": "mean",
+      "muscles": {
+        "vastusLateralis": {
+          "mvic": 40,
+          "range": [
+            25,
+            60
+          ],
+          "src": [
+            "contreras2015"
+          ],
+          "estimate": true
+        },
+        "vastusMedialis": {
+          "mvic": 40,
+          "range": [
+            25,
+            60
+          ],
+          "src": [],
+          "estimate": true
+        },
+        "rectusFemoris": {
+          "mvic": 20,
+          "range": [
+            10,
+            30
+          ],
+          "src": [],
+          "estimate": true
+        },
+        "gluteMax": {
+          "mvic": 15,
+          "range": [
+            8,
+            25
+          ],
+          "src": [
+            "neto2020"
+          ],
+          "estimate": true
+        },
+        "erectors": {
+          "mvic": 15,
+          "range": [
+            8,
+            25
+          ],
+          "src": [],
+          "estimate": true
+        },
+        "adductors": {
+          "mvic": 15,
+          "range": [
+            8,
+            25
+          ],
+          "src": [],
+          "estimate": true
+        },
+        "tibialisAnterior": {
+          "mvic": 15,
+          "range": [
+            8,
+            30
+          ],
+          "src": [],
+          "estimate": true
+        },
+        "gastrocnemius": {
+          "mvic": 10,
+          "range": [
+            5,
+            20
+          ],
+          "src": [],
+          "estimate": true
+        }
+      },
+      "ranking": [
+        "vastusLateralis",
+        "vastusMedialis",
+        "rectusFemoris",
+        "gluteMax",
+        "erectors",
+        "adductors",
+        "tibialisAnterior",
+        "gastrocnemius"
+      ],
+      "rom": "Quadriceps are highest around the bottom and early ascent. Tibialis anterior helps control the descent and balance.",
+      "notes": "Direct unloaded-squat sEMG studies exist (Isear 1997; Slater & Hart 2017), but their %MVIC values could not be retrieved. Values are scaled-down estimates of the loaded squat profile."
+    },
+    "deadlift": {
+      "basis": "direct",
+      "load": "12RM (Escamilla 2002); 1RM (Andersen 2018); pooled loads for GM (Neto 2020)",
+      "metric": "mean",
+      "muscles": {
+        "erectors": {
+          "mvic": 65,
+          "range": [
+            45,
+            100
+          ],
+          "src": [
+            "martinfuentes2020",
+            "andersen2018",
+            "nuzzo2008"
+          ],
+          "estimate": true
+        },
+        "gluteMax": {
+          "mvic": 64.5,
+          "range": [
+            35,
+            94
+          ],
+          "src": [
+            "neto2020"
+          ],
+          "estimate": false
+        },
+        "forearmFlexors": {
+          "mvic": 60,
+          "range": [
+            40,
+            90
+          ],
+          "src": [],
+          "estimate": true
+        },
+        "medialHamstrings": {
+          "mvic": 50,
+          "range": [
+            30,
+            70
+          ],
+          "src": [
+            "martinfuentes2020"
+          ],
+          "estimate": true
+        },
+        "bicepsFemoris": {
+          "mvic": 45,
+          "range": [
+            30,
+            60
+          ],
+          "src": [
+            "andersen2018",
+            "contreras2015"
+          ],
+          "estimate": true
+        },
+        "vastusLateralis": {
+          "mvic": 40,
+          "range": [
+            35,
+            60
+          ],
+          "src": [
+            "escamilla2002",
+            "martinfuentes2020"
+          ],
+          "estimate": false
+        },
+        "vastusMedialis": {
+          "mvic": 36,
+          "range": [
+            30,
+            55
+          ],
+          "src": [
+            "escamilla2002"
+          ],
+          "estimate": false
+        },
+        "trapUpper": {
+          "mvic": 35,
+          "range": [
+            20,
+            60
+          ],
+          "src": [],
+          "estimate": true
+        },
+        "gastrocnemius": {
+          "mvic": 26,
+          "range": [
+            19,
+            35
+          ],
+          "src": [
+            "escamilla2002"
+          ],
+          "estimate": false
+        }
+      },
+      "ranking": [
+        "erectors",
+        "gluteMax",
+        "forearmFlexors",
+        "medialHamstrings",
+        "bicepsFemoris",
+        "vastusLateralis",
+        "vastusMedialis",
+        "trapUpper",
+        "gastrocnemius"
+      ],
+      "rom": "Knee extensors contribute most off the floor. Hip extensors (GM, hamstrings) and erectors dominate from knee height to lockout. The barbell deadlift's biceps femoris advantage over the hip thrust was largest in the lower portion of the lift (+48%; Andersen 2018).",
+      "notes": "The Escamilla 2002 conventional-style values (12RM, collegiate football players) were obtained through a secondary summary of the paper: VL 40, VM 36, tibialis anterior 13, medial gastrocnemius 26 %MVIC. The abstract confirms the direction (sumo > conventional for VL/VM/TA; conventional > sumo for medial gastrocnemius). GM is the Neto 2020 traditional-deadlift mean, 64.5 +/- 41.7% (deadlift-family range 35-94%). Martín-Fuentes 2020 review: erector spinae and quadriceps generally exceed GM and BF in deadlifts, and semitendinosus exceeds BF. The low Escamilla VL figure versus the Neto GM figure reflects different labs and normalisations. Andersen 2018 (1RM): barbell deadlift BF was 20% above the hip thrust and 28% above the hex bar; erector spinae did not differ among the three lifts. Grip and trapezius values have no retrieved data."
+    },
+    "rdl": {
+      "basis": "direct",
+      "load": "mixed: 70% of RDL 1RM (Lee 2018), 6RM (Andersen 2021), 80% 1RM (Coratella 2022), 1RM (Delgado 2019); load in Zebis 2013 not retrieved",
+      "metric": "mean",
+      "muscles": {
+        "medialHamstrings": {
+          "mvic": 94,
+          "range": [
+            73,
+            115
+          ],
+          "src": [
+            "zebis2013",
+            "martinfuentes2020"
+          ],
+          "estimate": true
+        },
+        "bicepsFemoris": {
+          "mvic": 75,
+          "range": [
+            55,
+            95
+          ],
+          "src": [
+            "zebis2013"
+          ],
+          "estimate": true
+        },
+        "erectors": {
+          "mvic": 55,
+          "range": [
+            40,
+            80
+          ],
+          "src": [
+            "martinfuentes2020",
+            "andersen2021"
+          ],
+          "estimate": true
+        },
+        "gluteMax": {
+          "mvic": 50,
+          "range": [
+            35,
+            80
+          ],
+          "src": [
+            "lee2018",
+            "delgado2019",
+            "andersen2021",
+            "coratella2022"
+          ],
+          "estimate": true
+        },
+        "forearmFlexors": {
+          "mvic": 45,
+          "range": [
+            30,
+            70
+          ],
+          "src": [],
+          "estimate": true
+        },
+        "adductors": {
+          "mvic": 30,
+          "range": [
+            15,
+            45
+          ],
+          "src": [],
+          "estimate": true
+        },
+        "trapUpper": {
+          "mvic": 25,
+          "range": [
+            15,
+            40
+          ],
+          "src": [],
+          "estimate": true
+        },
+        "vastusLateralis": {
+          "mvic": 15,
+          "range": [
+            8,
+            25
+          ],
+          "src": [
+            "delgado2019"
+          ],
+          "estimate": true
+        }
+      },
+      "ranking": [
+        "medialHamstrings",
+        "bicepsFemoris",
+        "erectors",
+        "gluteMax",
+        "forearmFlexors",
+        "adductors",
+        "trapUpper",
+        "vastusLateralis"
+      ],
+      "rom": "Hip-extension demand (hamstrings, GM) is greatest near the bottom, where the torso is most horizontal and the hamstrings are lengthened, and it decreases toward lockout. This is a biomechanical inference; no retrieved source quantified it.",
+      "notes": "Zebis 2013 (elite female athletes): the kettlebell swing and RDL both biased semitendinosus over biceps femoris by 17-22%, at 73-115% MVC. The ST value is that range's midpoint, and BF is about 20% lower. Martín-Fuentes 2020: in the RDL, erector spinae activation is lower than BF and ST. Lee 2018: the conventional deadlift exceeded the RDL for RF and GM. Delgado 2019 (1RM): GM did not differ significantly between hip thrust and RDL, and squat VL far exceeded RDL VL. Coratella 2022 (80% 1RM): during the ascent the RDL produced more ST but less GM than the stiff-leg deadlift."
+    },
+    "db-rdl": {
+      "basis": "similar:rdl",
+      "load": "typical dumbbell load (usually lighter than a barbell RDL)",
+      "metric": "mean",
+      "muscles": {
+        "medialHamstrings": {
+          "mvic": 80,
+          "range": [
+            55,
+            105
+          ],
+          "src": [
+            "zebis2013"
+          ],
+          "estimate": true
+        },
+        "bicepsFemoris": {
+          "mvic": 65,
+          "range": [
+            45,
+            85
+          ],
+          "src": [
+            "zebis2013"
+          ],
+          "estimate": true
+        },
+        "forearmFlexors": {
+          "mvic": 50,
+          "range": [
+            30,
+            75
+          ],
+          "src": [],
+          "estimate": true
+        },
+        "erectors": {
+          "mvic": 45,
+          "range": [
+            30,
+            70
+          ],
+          "src": [
+            "martinfuentes2020"
+          ],
+          "estimate": true
+        },
+        "gluteMax": {
+          "mvic": 45,
+          "range": [
+            30,
+            70
+          ],
+          "src": [
+            "lee2018",
+            "delgado2019"
+          ],
+          "estimate": true
+        },
+        "adductors": {
+          "mvic": 25,
+          "range": [
+            10,
+            40
+          ],
+          "src": [],
+          "estimate": true
+        },
+        "trapUpper": {
+          "mvic": 20,
+          "range": [
+            10,
+            35
+          ],
+          "src": [],
+          "estimate": true
+        }
+      },
+      "ranking": [
+        "medialHamstrings",
+        "bicepsFemoris",
+        "forearmFlexors",
+        "erectors",
+        "gluteMax",
+        "adductors",
+        "trapUpper"
+      ],
+      "rom": "Same as the barbell RDL: greatest hip-extensor demand in the bottom, hamstring-lengthened position.",
+      "notes": "No dumbbell-RDL sEMG study was found. It is the same hip-hinge pattern with a usually lighter load held at the sides, so values are about 85% of the barbell RDL estimates. Grip demand is relatively higher."
+    },
+    "kb-swing": {
+      "basis": "direct",
+      "load": "16-kg kettlebell (McGill 2012); kettlebell masses in Van Gelder 2015 and Zebis 2013 not retrieved",
+      "metric": "peak",
+      "muscles": {
+        "medialHamstrings": {
+          "mvic": 94,
+          "range": [
+            73,
+            115
+          ],
+          "src": [
+            "zebis2013"
+          ],
+          "estimate": true
+        },
+        "bicepsFemoris": {
+          "mvic": 79,
+          "range": [
+            62,
+            95
+          ],
+          "src": [
+            "vangelder2015",
+            "zebis2013"
+          ],
+          "estimate": false
+        },
+        "gluteMax": {
+          "mvic": 75,
+          "range": [
+            75,
+            80
+          ],
+          "src": [
+            "vangelder2015",
+            "mcgill2012"
+          ],
+          "estimate": false
+        },
+        "gluteMed": {
+          "mvic": 55.5,
+          "range": [
+            30,
+            80
+          ],
+          "src": [
+            "vangelder2015"
+          ],
+          "estimate": false
+        },
+        "erectors": {
+          "mvic": 50,
+          "range": [
+            40,
+            60
+          ],
+          "src": [
+            "mcgill2012"
+          ],
+          "estimate": false
+        },
+        "forearmFlexors": {
+          "mvic": 40,
+          "range": [
+            25,
+            60
+          ],
+          "src": [],
+          "estimate": true
+        },
+        "vastusLateralis": {
+          "mvic": 30,
+          "range": [
+            15,
+            45
+          ],
+          "src": [],
+          "estimate": true
+        },
+        "deltAnt": {
+          "mvic": 25,
+          "range": [
+            10,
+            40
+          ],
+          "src": [],
+          "estimate": true
+        }
+      },
+      "ranking": [
+        "medialHamstrings",
+        "bicepsFemoris",
+        "gluteMax",
+        "gluteMed",
+        "erectors",
+        "forearmFlexors",
+        "vastusLateralis",
+        "deltAnt"
+      ],
+      "rom": "Activity comes in rapid activation-relaxation cycles. Hip extensors fire hard from the bottom of the backswing through hip lockout, then relax during the float and backswing (McGill 2012). Biceps femoris is the first muscle to activate (Van Gelder 2015).",
+      "notes": "Van Gelder 2015 reports peak %MVIC pooled across two- and single-handed swings, with very large SDs: GM 75.0 +/- 55.4, BF 79.0 +/- 53.3, GMed 55.5 +/- 26.3. McGill 2012 (7 men, 16-kg bell) reports about 80% MVC for the gluteals and about 50% MVC for the lumbar extensors. Zebis 2013 found semitendinosus 17-22% above BF (73-115% MVC range). Grip, quadriceps and anterior-deltoid entries have no retrieved data."
+    },
+    "back-extension": {
+      "basis": "direct",
+      "load": "6RM (Andersen 2021, 15 resistance-trained women)",
+      "metric": "mean",
+      "muscles": {
+        "bicepsFemoris": {
+          "mvic": 90,
+          "range": [
+            60,
+            130
+          ],
+          "src": [
+            "andersen2021"
+          ],
+          "estimate": true
+        },
+        "medialHamstrings": {
+          "mvic": 85,
+          "range": [
+            55,
+            120
+          ],
+          "src": [
+            "andersen2021"
+          ],
+          "estimate": true
+        },
+        "erectors": {
+          "mvic": 55,
+          "range": [
+            40,
+            80
+          ],
+          "src": [
+            "andersen2021"
+          ],
+          "estimate": true
+        },
+        "gluteMax": {
+          "mvic": 50,
+          "range": [
+            30,
+            75
+          ],
+          "src": [
+            "andersen2021"
+          ],
+          "estimate": true
+        },
+        "adductors": {
+          "mvic": 25,
+          "range": [
+            10,
+            40
+          ],
+          "src": [],
+          "estimate": true
+        }
+      },
+      "ranking": [
+        "bicepsFemoris",
+        "medialHamstrings",
+        "erectors",
+        "gluteMax",
+        "adductors"
+      ],
+      "rom": "On a 45-degree bench the external hip/spine extension moment peaks mid-range, as the torso passes horizontal, and is smallest at the bottom. Rounding the spine versus hinging at the hip shifts work between erectors and hip extensors. This is a biomechanical inference, not measured in the retrieved sources.",
+      "notes": "Andersen 2021: biceps femoris activation in the 45-degree Roman chair extension was 71-174% higher than in the RDL and seated machine back extension. GM was similar to the RDL, both 94-140% above the machine, and erector spinae did not differ among the three. Absolute %MVIC values were not retrieved, so the numbers are estimates anchored to the RDL profile."
+    },
+    "split-squat": {
+      "basis": "direct",
+      "load": "6-8RM barbell, set to failure (Mausehund 2018); GM from Neto 2020",
+      "metric": "peak",
+      "muscles": {
+        "vastusLateralis": {
+          "mvic": 90,
+          "range": [
+            70,
+            110
+          ],
+          "src": [
+            "mausehund2018"
+          ],
+          "estimate": true
+        },
+        "vastusMedialis": {
+          "mvic": 85,
+          "range": [
+            65,
+            110
+          ],
+          "src": [
+            "mausehund2018"
+          ],
+          "estimate": true
+        },
+        "gluteMax": {
+          "mvic": 70,
+          "range": [
+            55,
+            85
+          ],
+          "src": [
+            "neto2020",
+            "mausehund2018",
+            "williams2021"
+          ],
+          "estimate": false
+        },
+        "bicepsFemoris": {
+          "mvic": 62.3,
+          "range": [
+            50,
+            75
+          ],
+          "src": [
+            "mausehund2018"
+          ],
+          "estimate": false
+        },
+        "medialHamstrings": {
+          "mvic": 50,
+          "range": [
+            35,
+            65
+          ],
+          "src": [],
+          "estimate": true
+        },
+        "gluteMed": {
+          "mvic": 46.2,
+          "range": [
+            35,
+            60
+          ],
+          "src": [
+            "mausehund2018"
+          ],
+          "estimate": false
+        },
+        "rectusFemoris": {
+          "mvic": 40,
+          "range": [
+            25,
+            55
+          ],
+          "src": [],
+          "estimate": true
+        },
+        "adductors": {
+          "mvic": 40,
+          "range": [
+            20,
+            55
+          ],
+          "src": [],
+          "estimate": true
+        },
+        "forearmFlexors": {
+          "mvic": 30,
+          "range": [
+            15,
+            45
+          ],
+          "src": [],
+          "estimate": true
+        }
+      },
+      "ranking": [
+        "vastusLateralis",
+        "vastusMedialis",
+        "gluteMax",
+        "bicepsFemoris",
+        "medialHamstrings",
+        "gluteMed",
+        "rectusFemoris",
+        "adductors",
+        "forearmFlexors"
+      ],
+      "rom": "Front-leg quadriceps and GM are highest at the bottom (deepest hip/knee flexion) and fall toward the top. Hamstring:quadriceps co-activation rose over the set to failure (Mausehund 2018).",
+      "notes": "Mausehund 2018 used a barbell and peak %MVIC: BF 62.3%, GMed 46.2%, H:Q ratio 0.69. The VL value is derived as BF / (H:Q ratio), which is why it is marked as an estimate. GM and VL did not differ between split squat, rear-foot-elevated split squat and single-leg squat. GM uses Neto 2020's split-squat entry, 70 +/- 15%; whether that is mean or peak, and which study it comes from, was not confirmed. Williams 2021 (3RM): hip-thrust peak GM exceeded the split squat by 6-58 %MVIC (95% CI of the difference). The forearm entry for the dumbbell hold has no data."
+    },
+    "bulgarian": {
+      "basis": "direct",
+      "load": "6-8RM barbell, set to failure (Mausehund 2018)",
+      "metric": "peak",
+      "muscles": {
+        "vastusLateralis": {
+          "mvic": 92,
+          "range": [
+            70,
+            110
+          ],
+          "src": [
+            "mausehund2018"
+          ],
+          "estimate": true
+        },
+        "vastusMedialis": {
+          "mvic": 88,
+          "range": [
+            65,
+            110
+          ],
+          "src": [
+            "mausehund2018"
+          ],
+          "estimate": true
+        },
+        "bicepsFemoris": {
+          "mvic": 76.1,
+          "range": [
+            60,
+            90
+          ],
+          "src": [
+            "mausehund2018"
+          ],
+          "estimate": false
+        },
+        "gluteMax": {
+          "mvic": 70,
+          "range": [
+            55,
+            85
+          ],
+          "src": [
+            "mausehund2018",
+            "neto2020"
+          ],
+          "estimate": true
+        },
+        "medialHamstrings": {
+          "mvic": 60,
+          "range": [
+            40,
+            75
+          ],
+          "src": [],
+          "estimate": true
+        },
+        "gluteMed": {
+          "mvic": 54.9,
+          "range": [
+            40,
+            70
+          ],
+          "src": [
+            "mausehund2018"
+          ],
+          "estimate": false
+        },
+        "adductors": {
+          "mvic": 40,
+          "range": [
+            20,
+            55
+          ],
+          "src": [],
+          "estimate": true
+        },
+        "rectusFemoris": {
+          "mvic": 35,
+          "range": [
+            20,
+            50
+          ],
+          "src": [],
+          "estimate": true
+        },
+        "forearmFlexors": {
+          "mvic": 30,
+          "range": [
+            15,
+            45
+          ],
+          "src": [],
+          "estimate": true
+        }
+      },
+      "ranking": [
+        "vastusLateralis",
+        "vastusMedialis",
+        "bicepsFemoris",
+        "gluteMax",
+        "medialHamstrings",
+        "gluteMed",
+        "adductors",
+        "rectusFemoris",
+        "forearmFlexors"
+      ],
+      "rom": "Same as the split squat: front-leg quadriceps and GM peak at the bottom. The rear-foot-elevated split squat had the highest hamstring:quadriceps ratio of the three unilateral lifts (0.83 vs 0.69 split squat and 0.63 single-leg squat; Mausehund 2018).",
+      "notes": "Mausehund 2018: BF 76.1% (significantly above the split squat's 62.3%), GMed 54.9% (peak %MVIC). VL is derived from BF / H:Q ratio, so it is an estimate. GM did not differ significantly from the split squat, so the split-squat GM value is reused as an estimate."
+    },
+    "step-up": {
+      "basis": "direct",
+      "load": "6RM, 45.7-cm box (Simenz 2012, 15 trained women)",
+      "metric": "mean",
+      "muscles": {
+        "gluteMax": {
+          "mvic": 120,
+          "range": [
+            74,
+            169
+          ],
+          "src": [
+            "neto2020",
+            "simenz2012"
+          ],
+          "estimate": true
+        },
+        "vastusLateralis": {
+          "mvic": 90,
+          "range": [
+            60,
+            120
+          ],
+          "src": [
+            "simenz2012"
+          ],
+          "estimate": true
+        },
+        "vastusMedialis": {
+          "mvic": 90,
+          "range": [
+            60,
+            120
+          ],
+          "src": [
+            "simenz2012"
+          ],
+          "estimate": true
+        },
+        "gluteMed": {
+          "mvic": 50,
+          "range": [
+            30,
+            70
+          ],
+          "src": [
+            "simenz2012"
+          ],
+          "estimate": true
+        },
+        "rectusFemoris": {
+          "mvic": 40,
+          "range": [
+            25,
+            60
+          ],
+          "src": [
+            "simenz2012"
+          ],
+          "estimate": true
+        },
+        "bicepsFemoris": {
+          "mvic": 35,
+          "range": [
+            20,
+            50
+          ],
+          "src": [
+            "simenz2012"
+          ],
+          "estimate": true
+        },
+        "medialHamstrings": {
+          "mvic": 35,
+          "range": [
+            20,
+            50
+          ],
+          "src": [
+            "simenz2012"
+          ],
+          "estimate": true
+        },
+        "gastrocnemius": {
+          "mvic": 25,
+          "range": [
+            10,
+            40
+          ],
+          "src": [],
+          "estimate": true
+        }
+      },
+      "ranking": [
+        "gluteMax",
+        "vastusLateralis",
+        "vastusMedialis",
+        "gluteMed",
+        "rectusFemoris",
+        "bicepsFemoris",
+        "medialHamstrings",
+        "gastrocnemius"
+      ],
+      "rom": "Lead-leg activity is greatest at the start of the ascent (deepest knee/hip flexion on the box) and declines toward full extension. This is an inference; Simenz 2012 phase data were not retrieved.",
+      "notes": "Neto 2020 lists the step-up GM at 169.2 +/- 101.5 %MVIC from a single study of 15 subjects, which matches Simenz 2012, and ranks step-ups highest for GM. The GM MVIC position used by that group has been argued to give low reference values, which inflates %MVIC. A review cited in Van Gelder 2015 reports about 74% for the forward step-up. The 120 is a tempered estimate between the two. Simenz 2012 measured BF, GM, GMed, RF, ST, VL and VM, but per-exercise values were not retrieved."
+    },
+    "bw-split-squat": {
+      "basis": "similar:split-squat (bodyweight)",
+      "load": "bodyweight",
+      "metric": "mean",
+      "muscles": {
+        "vastusLateralis": {
+          "mvic": 50,
+          "range": [
+            30,
+            70
+          ],
+          "src": [
+            "mausehund2018",
+            "muyor2020"
+          ],
+          "estimate": true
+        },
+        "vastusMedialis": {
+          "mvic": 50,
+          "range": [
+            30,
+            70
+          ],
+          "src": [
+            "muyor2020"
+          ],
+          "estimate": true
+        },
+        "gluteMed": {
+          "mvic": 30,
+          "range": [
+            15,
+            45
+          ],
+          "src": [
+            "muyor2020"
+          ],
+          "estimate": true
+        },
+        "gluteMax": {
+          "mvic": 28,
+          "range": [
+            15,
+            45
+          ],
+          "src": [
+            "muyor2020",
+            "neto2020"
+          ],
+          "estimate": true
+        },
+        "rectusFemoris": {
+          "mvic": 25,
+          "range": [
+            10,
+            40
+          ],
+          "src": [],
+          "estimate": true
+        },
+        "bicepsFemoris": {
+          "mvic": 20,
+          "range": [
+            10,
+            35
+          ],
+          "src": [
+            "mausehund2018"
+          ],
+          "estimate": true
+        },
+        "adductors": {
+          "mvic": 20,
+          "range": [
+            10,
+            35
+          ],
+          "src": [],
+          "estimate": true
+        },
+        "medialHamstrings": {
+          "mvic": 15,
+          "range": [
+            8,
+            30
+          ],
+          "src": [],
+          "estimate": true
+        }
+      },
+      "ranking": [
+        "vastusLateralis",
+        "vastusMedialis",
+        "gluteMed",
+        "gluteMax",
+        "rectusFemoris",
+        "bicepsFemoris",
+        "adductors",
+        "medialHamstrings"
+      ],
+      "rom": "Quadriceps and GM are highest at the bottom. Muyor 2020 found concentric-phase EMG significantly higher than eccentric in every muscle for the forward lunge.",
+      "notes": "No bodyweight split-squat %MVIC values were retrieved. The muscle ranking follows Muyor 2020 (forward lunge, 5 reps at 60% of 5RM): VL and VM highest, then GMed and GM. Magnitudes are the loaded split-squat profile scaled down."
+    },
+    "leg-extension": {
+      "basis": "direct",
+      "load": "12RM (Escamilla 1998; Wilk 1996)",
+      "metric": "mean",
+      "muscles": {
+        "vastusLateralis": {
+          "mvic": 70,
+          "range": [
+            50,
+            90
+          ],
+          "src": [
+            "escamilla1998"
+          ],
+          "estimate": true
+        },
+        "vastusMedialis": {
+          "mvic": 70,
+          "range": [
+            50,
+            90
+          ],
+          "src": [
+            "escamilla1998"
+          ],
+          "estimate": true
+        },
+        "rectusFemoris": {
+          "mvic": 65,
+          "range": [
+            45,
+            90
+          ],
+          "src": [
+            "escamilla1998"
+          ],
+          "estimate": true
+        }
+      },
+      "ranking": [
+        "vastusLateralis",
+        "vastusMedialis",
+        "rectusFemoris"
+      ],
+      "rom": "In open-chain knee extension the external knee moment, and with it quadriceps demand, rises toward full extension, the opposite of closed-chain squats and presses. This is a biomechanical inference; Escamilla 1998 compared closed- and open-chain patterns across knee angles, but the values were not retrieved.",
+      "notes": "Escamilla 1998: open-chain knee extension produced more rectus femoris activity, while closed-chain exercises produced more vasti activity. Wilk 1996: greater hamstring-quadriceps co-contraction in the squat than in the leg press or knee extension, so hamstrings are omitted here. Absolute %MVIC values were not retrieved, so all numbers are estimates."
+    },
+    "leg-curl": {
+      "basis": "similar:leg curl (variant not specified in Hegyi 2019)",
+      "load": "not retrieved",
+      "metric": "mean",
+      "muscles": {
+        "medialHamstrings": {
+          "mvic": 80,
+          "range": [
+            69,
+            85
+          ],
+          "src": [
+            "hegyi2019",
+            "schoenfeld2015"
+          ],
+          "estimate": true
+        },
+        "bicepsFemoris": {
+          "mvic": 75,
+          "range": [
+            69,
+            85
+          ],
+          "src": [
+            "hegyi2019"
+          ],
+          "estimate": true
+        },
+        "gastrocnemius": {
+          "mvic": 30,
+          "range": [
+            15,
+            50
+          ],
+          "src": [],
+          "estimate": true
+        }
+      },
+      "ranking": [
+        "medialHamstrings",
+        "bicepsFemoris",
+        "gastrocnemius"
+      ],
+      "rom": "Leg curls bias distal hamstring regions compared with hip-hinge exercises. In Schoenfeld 2015, the lying leg curl produced greater lower-hamstring activity than the stiff-legged deadlift, with upper-hamstring activity similar. Hegyi 2019 found lower distal than mid/proximal semitendinosus activity in the leg curl.",
+      "notes": "Hegyi 2019: straight-knee bridge, upright hip extension and leg curls showed the highest hamstring activity, 69-85% MVIC concentric and 40-54% MVIC eccentric. Whether that leg curl was seated or lying was not confirmed. Ebben 2009 included the seated leg curl in a 6-exercise hamstring comparison, but its values were not retrieved. The seated position (hip flexed) is expected to keep the hamstrings lengthened, but there is no direct seated %MVIC data here. The gastrocnemius entry has no data."
+    },
+    "hip-thrust": {
+      "basis": "direct",
+      "load": "10RM (Contreras 2015/2016); 1RM (Andersen 2018; Delgado 2019); 3RM (Williams 2021)",
+      "metric": "mean",
+      "muscles": {
+        "gluteMax": {
+          "mvic": 82.4,
+          "range": [
+            69.5,
+            105
+          ],
+          "src": [
+            "neto2020",
+            "contreras2015",
+            "contreras2016ht",
+            "williams2021"
+          ],
+          "estimate": false
+        },
+        "vastusLateralis": {
+          "mvic": 75,
+          "range": [
+            50,
+            99.5
+          ],
+          "src": [
+            "contreras2015",
+            "delgado2019"
+          ],
+          "estimate": true
+        },
+        "vastusMedialis": {
+          "mvic": 70,
+          "range": [
+            45,
+            95
+          ],
+          "src": [],
+          "estimate": true
+        },
+        "erectors": {
+          "mvic": 55,
+          "range": [
+            35,
+            75
+          ],
+          "src": [
+            "andersen2018"
+          ],
+          "estimate": true
+        },
+        "bicepsFemoris": {
+          "mvic": 40.8,
+          "range": [
+            30,
+            55
+          ],
+          "src": [
+            "contreras2015",
+            "andersen2018"
+          ],
+          "estimate": false
+        },
+        "medialHamstrings": {
+          "mvic": 35,
+          "range": [
+            20,
+            50
+          ],
+          "src": [],
+          "estimate": true
+        },
+        "adductors": {
+          "mvic": 35,
+          "range": [
+            15,
+            50
+          ],
+          "src": [],
+          "estimate": true
+        },
+        "gluteMed": {
+          "mvic": 30,
+          "range": [
+            15,
+            45
+          ],
+          "src": [],
+          "estimate": true
+        }
+      },
+      "ranking": [
+        "gluteMax",
+        "vastusLateralis",
+        "vastusMedialis",
+        "erectors",
+        "bicepsFemoris",
+        "medialHamstrings",
+        "adductors",
+        "gluteMed"
+      ],
+      "rom": "GM activity peaks near full hip extension (lockout). The hip thrust beat the hex-bar deadlift for GM by 26% in the upper part of the movement versus 16% over the whole movement, while the barbell deadlift produced more BF in the lower portion (Andersen 2018).",
+      "notes": "GM uses Neto 2020's traditional barbell hip thrust mean, 82.37 +/- 18.65%. The all-variation pooled mean was 75.4%, range 49.2-105. Contreras 2015 (10RM) means were upper GM 69.5% and lower GM 86.8% (versus back-squat upper GM 29.4%), BF 40.8% (squat 14.9%) and VL 99.5% (squat 110%, not significantly different). Delgado 2019 (1RM), however, found squat VL much higher than hip-thrust VL, so the VL entry is a lowered representative estimate. Andersen 2018: erector spinae did not differ between hip thrust, barbell deadlift and hex-bar deadlift. Williams 2021 (3RM): peak GM exceeded the back squat by 4-56 %MVIC (95% CI)."
+    },
+    "glute-bridge": {
+      "basis": "similar:hip-thrust (floor bridge: shorter range of motion, usually lighter load)",
+      "load": "barbell or bodyweight floor bridge (no loaded-bridge %MVIC data retrieved)",
+      "metric": "mean",
+      "muscles": {
+        "gluteMax": {
+          "mvic": 60,
+          "range": [
+            25,
+            82
+          ],
+          "src": [
+            "contreras2016ht",
+            "contreras2015"
+          ],
+          "estimate": true
+        },
+        "vastusLateralis": {
+          "mvic": 35,
+          "range": [
+            15,
+            60
+          ],
+          "src": [],
+          "estimate": true
+        },
+        "erectors": {
+          "mvic": 35,
+          "range": [
+            20,
+            50
+          ],
+          "src": [],
+          "estimate": true
+        },
+        "bicepsFemoris": {
+          "mvic": 30,
+          "range": [
+            15,
+            45
+          ],
+          "src": [
+            "contreras2015"
+          ],
+          "estimate": true
+        },
+        "medialHamstrings": {
+          "mvic": 25,
+          "range": [
+            10,
+            40
+          ],
+          "src": [],
+          "estimate": true
+        },
+        "gluteMed": {
+          "mvic": 25,
+          "range": [
+            10,
+            40
+          ],
+          "src": [],
+          "estimate": true
+        },
+        "adductors": {
+          "mvic": 25,
+          "range": [
+            10,
+            40
+          ],
+          "src": [],
+          "estimate": true
+        }
+      },
+      "ranking": [
+        "gluteMax",
+        "vastusLateralis",
+        "erectors",
+        "bicepsFemoris",
+        "medialHamstrings",
+        "gluteMed",
+        "adductors"
+      ],
+      "rom": "As in the hip thrust, GM is highest near full hip extension. The floor bridge works almost entirely in that top range.",
+      "notes": "No loaded floor-bridge EMG values were retrieved. Ekstrom 2007 studied a bodyweight bridge, but its values were not retrieved. In Contreras 2016 (10RM), mean upper GM was 70% for the barbell hip thrust, 57% for the American version and 49% for the band version, and lower GM was 87% for barbell, 90% for American and 79% for band. Those figures come from the author's site. Bodyweight bridges are expected to sit well below these values."
+    },
+    "calf-raise": {
+      "basis": "similar:heel raise (Hébert-Losier 2012 bodyweight data, scaled to a loaded standing calf raise)",
+      "load": "estimated 10RM standing calf raise; source data are bodyweight unilateral heel raises (Hébert-Losier 2012) and 130-135% body-mass free-weight heel raises (Riemann 2011, values not retrieved)",
+      "metric": "mean",
+      "muscles": {
+        "gastrocnemius": {
+          "mvic": 60,
+          "range": [
+            23,
+            90
+          ],
+          "src": [
+            "heberlosier2012",
+            "riemann2011"
+          ],
+          "estimate": true
+        },
+        "soleus": {
+          "mvic": 55,
+          "range": [
+            23,
+            85
+          ],
+          "src": [
+            "heberlosier2012"
+          ],
+          "estimate": true
+        }
+      },
+      "ranking": [
+        "gastrocnemius",
+        "soleus"
+      ],
+      "rom": "With the knee straight the gastrocnemius contributes relatively more. At 45 vs 0 degrees knee flexion, soleus rose by 4 and the gastrocnemii fell by 5 %MVIC (Hébert-Losier 2012). Toes-out increases medial-gastrocnemius and toes-in lateral-gastrocnemius activation (Riemann 2011).",
+      "notes": "Bodyweight unilateral heel raises averaged 23% MVIC across the triceps surae at 0 degrees knee flexion (21% at 45 degrees; Hébert-Losier 2012), which sets the lower bound. Loaded values are estimates."
+    }
+  },
+  "sources": {
+    "contreras2015": {
+      "cite": "Contreras B, Vigotsky AD, Schoenfeld BJ, Beardsley C, Cronin J. A Comparison of Gluteus Maximus, Biceps Femoris, and Vastus Lateralis Electromyographic Activity in the Back Squat and Barbell Hip Thrust Exercises. J Appl Biomech 31(6):452-458, 2015.",
+      "doi": "",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/26214739/"
+    },
+    "contreras2016sq": {
+      "cite": "Contreras B, Vigotsky AD, Schoenfeld BJ, Beardsley C, Cronin J. A Comparison of Gluteus Maximus, Biceps Femoris, and Vastus Lateralis Electromyography Amplitude in the Parallel, Full, and Front Squat Variations in Resistance-Trained Females. J Appl Biomech 32(1):16-22, 2016.",
+      "doi": "10.1123/jab.2015-0113",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/26252837"
+    },
+    "contreras2016ht": {
+      "cite": "Contreras B, Vigotsky AD, Schoenfeld BJ, Beardsley C, Cronin J. A Comparison of Gluteus Maximus, Biceps Femoris, and Vastus Lateralis Electromyography Amplitude for the Barbell, Band, and American Hip Thrust Variations. J Appl Biomech 32(3):254-260, 2016.",
+      "doi": "",
+      "url": "https://bretcontreras.com/wp-content/uploads/A-Comparison-of-Gluteus-Maximus-Biceps-Femoris-and-Vastus-Lateralis-Electromyography-Amplitude-for-the-Barbell-Band-and-American-Hip-Thrust-Variations-copy.pdf"
+    },
+    "neto2020": {
+      "cite": "Krause Neto W, Soares EG, Vieira TL, et al. Gluteus Maximus Activation during Common Strength and Hypertrophy Exercises: A Systematic Review. J Sports Sci Med 19(1):195-203, 2020.",
+      "doi": "",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/32132843/"
+    },
+    "mausehund2018": {
+      "cite": "Mausehund L, Skard AE, Krosshaug T. Muscle Activation in Unilateral Barbell Exercises: Implications for Strength Training and Rehabilitation. J Strength Cond Res, 2018 (published online).",
+      "doi": "10.1519/JSC.0000000000002617",
+      "url": "https://oda.oslomet.no/oda-xmlui/handle/10642/7206"
+    },
+    "vangelder2015": {
+      "cite": "Van Gelder LH, et al. EMG analysis and sagittal plane kinematics of the two-handed and single-handed kettlebell swing: a descriptive study. Int J Sports Phys Ther, 2015.",
+      "doi": "",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4637916/"
+    },
+    "mcgill2012": {
+      "cite": "McGill SM, Marshall LW. Kettlebell swing, snatch, and bottoms-up carry: back and hip muscle loads, motion, and training implications. J Strength Cond Res 26(1):16-27, 2012.",
+      "doi": "",
+      "url": "https://www.backfitpro.com/medical-scientific-articles/2012/[63]McGill,S.(2012)Kettlebell-swing-snatch-and-bottoms-up-carry[J.Strength-Condit.Res.].pdf"
+    },
+    "zebis2013": {
+      "cite": "Zebis MK, et al. Kettlebell swing targets semitendinosus and supine leg curl targets biceps femoris: an EMG study with rehabilitation implications. Br J Sports Med 47(18):1192, 2013.",
+      "doi": "",
+      "url": "https://bjsm.bmj.com/content/47/18/1192"
+    },
+    "wilk1996": {
+      "cite": "Wilk KE, Escamilla RF, Fleisig GS, Barrentine SW, Andrews JR, Boyd ML. A comparison of tibiofemoral joint forces and electromyographic activity during open and closed kinetic chain exercises. Am J Sports Med 24:518-527, 1996.",
+      "doi": "10.1177/036354659602400418",
+      "url": "https://orthobullets.com/evidence/8827313"
+    },
+    "escamilla1998": {
+      "cite": "Escamilla RF, Fleisig GS, Zheng N, Barrentine SW, Wilk KE, Andrews JR. Biomechanics of the knee during closed kinetic chain and open kinetic chain exercises. Med Sci Sports Exerc 30(4):556-569, 1998.",
+      "doi": "10.1097/00005768-199804000-00014",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/9565938/"
+    },
+    "escamilla2001": {
+      "cite": "Escamilla RF, Fleisig GS, et al. Effects of technique variations on knee biomechanics during the squat and leg press. Med Sci Sports Exerc, 2001.",
+      "doi": "",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/11528346/"
+    },
+    "escamilla2002": {
+      "cite": "Escamilla RF, Francisco AC, Kayes AV, Speer KP, Moorman CT. An electromyographic analysis of sumo and conventional style deadlifts. Med Sci Sports Exerc 34(4):682-688, 2002.",
+      "doi": "10.1097/00005768-200204000-00019",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/11932579/"
+    },
+    "martinfuentes2020": {
+      "cite": "Martín-Fuentes I, Oliva-Lozano JM, Muyor JM. Electromyographic activity in deadlift exercise and its variants. A systematic review. PLoS One 15(2):e0229507, 2020.",
+      "doi": "10.1371/journal.pone.0229507",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/32107499/"
+    },
+    "andersen2018": {
+      "cite": "Andersen V, et al. Electromyographic Comparison of Barbell Deadlift, Hex Bar Deadlift, and Hip Thrust Exercises: A Cross-Over Study. J Strength Cond Res 32(3):587-593, 2018.",
+      "doi": "10.1519/JSC.0000000000001826",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/28151780/"
+    },
+    "andersen2021": {
+      "cite": "Andersen V, Pedersen H, Fimland MS, Shaw MP, et al. Comparison of Muscle Activity in Three Single-Joint, Hip Extension Exercises in Resistance-Trained Women. J Sports Sci Med 20:181-187, 2021.",
+      "doi": "",
+      "url": "https://www.jssm.org/jssm-20-181.xml%3EFulltext"
+    },
+    "lee2018": {
+      "cite": "Lee S, Schultz J, Timgren J, Staelgraeve K, Miller M, Liu Y. An electromyographic and kinetic comparison of conventional and Romanian deadlifts. J Exerc Sci Fit 16(3):87-93, 2018.",
+      "doi": "10.1016/j.jesf.2018.08.001",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/30662500/"
+    },
+    "delgado2019": {
+      "cite": "Delgado J, et al. Comparison between back squat, Romanian deadlift, and barbell hip thrust for leg and hip muscle activities during hip extension. J Strength Cond Res 33(10):2595-2601, 2019.",
+      "doi": "",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/31356511/"
+    },
+    "schwanbeck2009": {
+      "cite": "Schwanbeck S, Chilibeck PD, Binsted G. A comparison of free weight squat to Smith machine squat using electromyography. J Strength Cond Res, 2009.",
+      "doi": "",
+      "url": "https://www.bisp-surf.de/Record/PU201102001039"
+    },
+    "williams2021": {
+      "cite": "Williams MJ, et al. Activation of the Gluteus Maximus During Performance of the Back Squat, Split Squat, and Barbell Hip Thrust and the Relationship With Maximal Sprinting. J Strength Cond Res 35(1):16-24, 2021.",
+      "doi": "10.1519/JSC.0000000000002651",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/33332802/"
+    },
+    "simenz2012": {
+      "cite": "Simenz CJ, et al. Electromyographical analysis of lower extremity muscle activation during variations of the loaded step-up exercise. J Strength Cond Res 26(12):3398-3405, 2012.",
+      "doi": "",
+      "url": "https://epublications.marquette.edu/exsci_fac/52"
+    },
+    "heberlosier2012": {
+      "cite": "Hébert-Losier K, et al. Influence of knee flexion angle and age on triceps surae muscle activity during heel raises. J Strength Cond Res 26(11), 2012.",
+      "doi": "",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/22190157/"
+    },
+    "riemann2011": {
+      "cite": "Riemann BL, Limbaugh GK, Eitner JD, LeFavi RG. Medial and lateral gastrocnemius activation differences during heel-raise exercise with three different foot positions. J Strength Cond Res 25(3):634-639, 2011.",
+      "doi": "10.1519/JSC.0b013e3181cc22b8",
+      "url": "https://scholars.georgiasouthern.edu/en/publications/medial-and-lateral-gastrocnemius-activation-differences-during-he/"
+    },
+    "hegyi2019": {
+      "cite": "Hegyi A, Csala D, Péter A, Finni T, Cronin NJ. High-density electromyography activity in various hamstring exercises. Scand J Med Sci Sports 29:34-43, 2019.",
+      "doi": "",
+      "url": "https://jyx.jyu.fi/handle/123456789/60600"
+    },
+    "ebben2009": {
+      "cite": "Ebben WP. Hamstring activation during lower body resistance training exercises. Int J Sports Physiol Perform 4(1):84-96, 2009.",
+      "doi": "10.1123/ijspp.4.1.84",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/19417230/"
+    },
+    "schoenfeld2015": {
+      "cite": "Schoenfeld BJ, et al. Regional differences in muscle activation during hamstrings exercise. J Strength Cond Res 29(1):159-164, 2015.",
+      "doi": "",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/24978835/"
+    },
+    "muyor2020": {
+      "cite": "Muyor JM, et al. Electromyographic activity in the gluteus medius, gluteus maximus, biceps femoris, vastus lateralis, vastus medialis and rectus femoris during the Monopodal Squat, Forward Lunge and Lateral Step-Up exercises. PLoS One 15:e0230841, 2020.",
+      "doi": "10.1371/journal.pone.0230841",
+      "url": "https://journals.plos.org/plosone/article?id=10.1371%2Fjournal.pone.0230841"
+    },
+    "coratella2021": {
+      "cite": "Coratella G, Tornatore G, et al. The Activation of Gluteal, Thigh, and Lower Back Muscles in Different Squat Variations Performed by Competitive Bodybuilders: Implications for Resistance Training. Int J Environ Res Public Health 18(2):772, 2021.",
+      "doi": "10.3390/ijerph18020772",
+      "url": "https://doi.org/10.3390/ijerph18020772"
+    },
+    "coratella2022": {
+      "cite": "Coratella G, et al. An Electromyographic Analysis of Romanian, Step-Romanian, and Stiff-Leg Deadlift: Implication for Resistance Training. Int J Environ Res Public Health 19(3):1903, 2022.",
+      "doi": "10.3390/ijerph19031903",
+      "url": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8835508/"
+    },
+    "clark2012": {
+      "cite": "Clark DR, Lambert MI, Hunter AM. Muscle activation in the loaded free barbell squat: a brief review. J Strength Cond Res 26(4):1169-1178, 2012.",
+      "doi": "10.1519/JSC.0b013e31822d533d",
+      "url": "https://www.stir.ac.uk/research/hub/publication/781901"
+    },
+    "isear1997": {
+      "cite": "Isear JA, Erickson JC, Worrell TW. EMG analysis of lower extremity muscle recruitment patterns during an unloaded squat. Med Sci Sports Exerc 29(4):532-539, 1997.",
+      "doi": "10.1097/00005768-199704000-00016",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC1320404"
+    },
+    "ut2012hack": {
+      "cite": "[Authors not retrieved]. The Comparison of Myoelectric Activity of Selected Lower Limb Muscles during Three Common Quadriceps Strength Exercises Performed with Different Loads. Sport Sciences and Health Research (University of Tehran), c. 2011-2012.",
+      "doi": "",
+      "url": "https://journals.ut.ac.ir/article_24964.html"
+    },
+    "dasilva2008": {
+      "cite": "Da Silva EM, Brentano MA, Cadore EL, De Almeida AP, Kruel LF. Analysis of muscle activation during different leg press exercises at submaximum effort levels. J Strength Cond Res 22:1059-1065, 2008.",
+      "doi": "",
+      "url": "https://lume.ufrgs.br/bitstream/10183/37700/1/000499136.pdf"
+    },
+    "nuzzo2008": {
+      "cite": "Nuzzo JL, McCaulley GO, Cormie P, Cavill MJ, McBride JM. Trunk muscle activity during stability ball and free weight exercises. J Strength Cond Res 22(1):95-102, 2008.",
+      "doi": "",
+      "url": "https://www.bisp-surf.de/Record/PU200911005984"
+    },
+    "slater2017": {
+      "cite": "Slater LV, Hart JM. Muscle activation patterns during different squat techniques. J Strength Cond Res 31:667-676, 2017.",
+      "doi": "10.1519/JSC.0000000000001323",
+      "url": "https://www.bisp-surf.de/Record/PU201703001798/RIS"
+    },
+    "ekstrom2007": {
+      "cite": "Ekstrom RA, Donatelli RA, Carp KC. Electromyographic analysis of core trunk, hip, and thigh muscles during 9 rehabilitation exercises. J Orthop Sports Phys Ther 37(12):754-762, 2007.",
+      "doi": "10.2519/jospt.2007.2471",
+      "url": "https://www.jospt.org/doi/pdf/10.2519/jospt.2007.2471"
+    }
+  }
+}

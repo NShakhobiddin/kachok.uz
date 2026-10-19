@@ -1,0 +1,331 @@
+{
+  "bench-press": {
+    "load": "60–85% 1RM",
+    "rom": "Ko‘krak va old delta eng ko‘p ko‘tarishning boshi-o‘rtasida (eng og‘ir nuqta) ishlaydi; charchagan sari ularning faolligi yanada oshadi.",
+    "notes": "Laboratoriyalar orasida mutlaq qiymat 3 baravargacha farq qiladi (60% 1RM da ~25%, 65% 1RM da ~100% MVIC) — raqamlar og‘ir set uchun o‘rtacha baho."
+  },
+  "db-bench": {
+    "load": "6RM – 1RM",
+    "rom": "Ko‘krak va old delta shtangadagi kabi ishlaydi; gantelda triseps biroz kamroq, bitseps (barqarorlashtirish uchun) ko‘proq.",
+    "notes": "Gantel uchun %MVIC o‘lchanmagan — shtanga natijalaridan nisbiy farqlar bo‘yicha hisoblangan."
+  },
+  "machine-chest-press": {
+    "load": "60–80% 1RM",
+    "rom": "Trenajyor harakat yo‘lini o‘zi ushlaydi — barqarorlashtiruvchi mushaklar kamroq qatnashadi.",
+    "notes": "Ko‘krakning yuqori qismi bo‘yicha tadqiqotlar bir-biriga zid (biri yuqoriroq, boshqasi pastroq topgan)."
+  },
+  "push-up": {
+    "load": "o‘z vazni",
+    "rom": "Qo‘llar torroq qo‘yilsa triseps (va ko‘krak) faolligi oshadi.",
+    "notes": "Cho‘qqi qiymatlar — boshqa mashqlardagi o‘rtacha qiymatlardan balandroq chiqadi. Old tishsimon mushak kuchli ishlaydi — kurakni ko‘krak qafasiga bosib turadi."
+  },
+  "dips": {
+    "load": "o‘z vazni",
+    "rom": "Pastki nuqtada (yelka orqaga cho‘zilganda) ko‘krak faolligi yuqori va charchaganda keskin oshadi.",
+    "notes": "%MVIC tadqiqoti topilmadi (faqat mV) — baho. Barlarda brusdagi ko‘tarilish skameykadagidan barcha mushaklarda kuchliroq."
+  },
+  "incline-db-press": {
+    "load": "o‘rtacha vazn",
+    "rom": "Ko‘krakning yuqori qismi qiya skameykada tekisdagidan asosan tushirish fazasida ko‘proq ishlaydi.",
+    "notes": "Qiya shtanga natijalaridan gantel farqlari bo‘yicha hisoblangan."
+  },
+  "incline-bench": {
+    "load": "65–80% 1RM, 30–45°",
+    "rom": "30–45° qiyalikda yuqori ko‘krak ustunligi ko‘tarishning 26–50% qismida ko‘rinadi; qiyalik oshgan sari to‘sh qismi kamayadi, old delta ko‘payadi.",
+    "notes": "Yuqori ko‘krak uchun eng yaxshi burchak ~30°; 45° dan tik qilinsa ish yelkaga o‘tadi."
+  },
+  "cable-fly": {
+    "load": "80% 1RM",
+    "rom": "Kabel qo‘llar yaqinlashganda ham yuklamani ushlab turadi (gantelda tepada yuklama yo‘qoladi).",
+    "notes": "Ilmiy jurnalda chop etilgan EMG tadqiqot topilmadi — pec-deck va yotib jim natijalari asosida baho. Yuqori yoki pastki ko‘krak ulushi kabel yo‘nalishiga bog‘liq."
+  },
+  "pec-deck": {
+    "load": "10RM",
+    "rom": "Ko‘krak va old delta faolligi yotib jimdagidan farq qilmagan; triseps deyarli ishlamaydi.",
+    "notes": "Ko‘krak qismlari bo‘yicha qiymatlar baho."
+  },
+  "db-fly": {
+    "load": "6RM",
+    "rom": "Gantelli ochishda ko‘krak pastki (cho‘zilgan) holatda yaxshi ishlaydi, qo‘llar tepada tik bo‘lganda faollik keskin tushadi.",
+    "notes": "Umuman olganda ko‘krak faolligi shtanga bilan yotib jimdan ~16% past."
+  },
+  "ohp": {
+    "load": "60–80% 1RM",
+    "rom": "To‘liq amplitudada delta va trapetsiya eng ko‘p ishlaydi; qisqa amplituda ikkalasini kamaytiradi.",
+    "notes": "Tik turib bajarilganda delta (ayniqsa orqa qismi) o‘tirib bajarilgandan faolroq."
+  },
+  "db-shoulder-press": {
+    "load": "60–80% 1RM",
+    "rom": "To‘liq amplituda — eng yuqori faollik.",
+    "notes": "O‘tirib bajarilganda orqa delta tik turishdagidan ~24% kam ishlaydi."
+  },
+  "machine-shoulder-press": {
+    "load": "10RM",
+    "rom": "Trenajyor yo‘lni ushlaydi — orqa delta erkin shtangadagidan kamroq qatnashadi.",
+    "notes": "Old delta qiymati Smit-trenajyordagi jimdan olingan."
+  },
+  "pike-push-up": {
+    "similar": "push-up va tik turib jim",
+    "load": "o‘z vazni",
+    "rom": "Tana qanchalik tik bo‘lsa, ish ko‘krakdan deltaga shuncha ko‘p o‘tadi.",
+    "notes": "EMG tadqiqot topilmadi — push-up va tik turib jim oralig‘ida baho."
+  },
+  "lateral-raise": {
+    "load": "60% 1RM – 10RM",
+    "rom": "O‘rta delta yelka 90° ga yaqinlashganda eng ko‘p ishlaydi (mexanik yuklama tepada eng katta).",
+    "notes": "To‘rt yelka mashqi ichida o‘rta va orqa delta eng ko‘p shu mashqda ishlagan. Qo‘l neytral holatda bo‘lsa o‘rta delta eng faol."
+  },
+  "cable-lateral-raise": {
+    "similar": "lateral-raise",
+    "load": "10RM",
+    "rom": "Kabel pastki holatda ham yuklama beradi, gantelda esa yuklama tepada eng katta.",
+    "notes": "Kabel va gantel varianti EMG bo‘yicha farq qilmagan."
+  },
+  "pushdown": {
+    "load": "30–70% 1RM",
+    "rom": "Qo‘l tanaga yopishgan holatda tirsakni yozish uchala boshni ham ishlatadi.",
+    "notes": "Ilmiy jurnaldagi %MVIC qiymatlari topilmadi — baho. Bir tadqiqotda uzun bosh yon tomondagi boshdan faolroq chiqqan."
+  },
+  "overhead-extension": {
+    "load": "40% maks. – 70% 1RM",
+    "rom": "Faollik tirsak bukilgan (uzun bosh cho‘zilgan) boshlang‘ich va o‘rta qismida eng yuqori.",
+    "notes": "Qo‘l bosh ustida bo‘lganda uzun bosh cho‘ziladi — uning o‘sishi uchun foydali holat."
+  },
+  "skull-crusher": {
+    "load": "40% maks. – 70% 1RM",
+    "rom": "Tashqi bosh boshlang‘ich va o‘rta amplitudada eng faol.",
+    "notes": "%MVIC qiymatlari baho."
+  },
+  "close-grip-bench": {
+    "load": "60–80% 1RM",
+    "rom": "Ushlash torayganda triseps va ko‘krakning yuqori qismi ko‘proq, to‘sh qismi kamroq ishlaydi.",
+    "notes": "Juda tor ushlash (yelka kengligidan tor) bilakka ortiqcha yuklama beradi."
+  },
+  "bench-dip": {
+    "load": "o‘z vazni",
+    "rom": "Pastki nuqtada yelka barlardagidan ham ko‘proq orqaga cho‘ziladi.",
+    "notes": "Triseps cho‘qqisi barlardagi ko‘tarilishning ~80% i — qiymatlar baho."
+  },
+  "face-pull": {
+    "similar": "reverse-fly",
+    "load": "yengil–o‘rtacha",
+    "rom": "Qo‘llar yuqoriga-orqaga tortilib, yelka tashqariga burilganda orqa delta, qirra osti mushagi va pastki trapetsiya ko‘proq ishlaydi.",
+    "notes": "Face pull bo‘yicha EMG tadqiqot topilmadi — orqa ochish va rezinani cho‘zish mashqlari asosida baho."
+  },
+  "reverse-fly": {
+    "load": "rezina, o‘rtacha kuch",
+    "rom": "Kaft yuqoriga qaraganda qirra osti va pastki trapetsiya, pastga qaraganda yuqori trapetsiya va orqa delta ko‘proq ishlaydi; diagonal yuqoriga tortish eng samarali.",
+    "notes": "Orqa delta qiymatlari baho."
+  },
+  "barbell-row": {
+    "load": "o‘rtacha–og‘ir",
+    "rom": "Bel va dumba butun harakat davomida statik ushlab turadi — bel yuklamasi eng katta eshkak eshish turi.",
+    "notes": "Lat qiymati (53%) tadqiqot qisqacha bayonidan olingan; trapetsiya va romb qiymatlari baho."
+  },
+  "db-row": {
+    "load": "o‘rtacha–og‘ir",
+    "rom": "Bir qo‘lda tortishda o‘rta va pastki trapetsiya yuqori trapetsiyadan ancha faol.",
+    "notes": "Qiymatlar baho; nisbiy farqlar tadqiqotdan."
+  },
+  "cable-row": {
+    "load": "o‘rtacha",
+    "rom": "Tirsaklar yon tomonga ochilsa trapetsiya va orqa delta, tanaga yopishtirilsa lat ko‘proq ishlaydi.",
+    "notes": "Kurakni ataylab qisish lat faolligini oshirmagan."
+  },
+  "chest-supported-row": {
+    "similar": "barbell-row",
+    "load": "o‘rtacha–og‘ir",
+    "rom": "Ko‘krak tayanchda — bel va dumba deyarli ishlamaydi, butun ish yelka kamari va orqaga tushadi.",
+    "notes": "Egilib eshkak eshish natijalaridan bel va dumbasiz baho."
+  },
+  "inverted-row": {
+    "load": "o‘z vazni",
+    "rom": "Ko‘tarish fazasida lat ~65% MVIC; uch xil eshkak eshish ichida lat va orqa eng faol, bel yuklamasi esa eng kam.",
+    "notes": "Ko‘pchilik qiymatlar tadqiqotdagi oraliqlar ichida baho."
+  },
+  "pull-up": {
+    "load": "o‘z vazni",
+    "rom": "Tortishni pastki trapetsiya va ko‘krak boshlaydi, tepada bitseps va lat yakunlaydi.",
+    "notes": "Lat 100% dan oshadi — eng kuchli orqa mashqlaridan. Laboratoriyalar orasida farq katta (boshqa tadqiqotda ~55%)."
+  },
+  "chin-up": {
+    "load": "o‘z vazni",
+    "rom": "Supinatsiya (kaft o‘ziga) ushlashda bitseps va ko‘krak turnikdagidan ko‘proq, pastki trapetsiya kamroq ishlaydi.",
+    "notes": "Lat 117 ± 46% MVIC."
+  },
+  "lat-pulldown": {
+    "load": "70% 1RM",
+    "rom": "Old tomonga (ko‘krakka) tortish latni eng barqaror faollashtiradi; ushlash kengligi deyarli farq qilmaydi.",
+    "notes": "Keng va tor ushlash lat, trapetsiya va bitseps bo‘yicha farq bermagan."
+  },
+  "db-shrug": {
+    "load": "20–30 kg",
+    "rom": "Qo‘llar biroz yon tomonga (30°) ochilgan holda yelka qisish yuqori va pastki trapetsiyani ko‘proq ishlatadi.",
+    "notes": "Yuqori trapetsiya ~102% MVIC (tadqiqot bo‘yin og‘rig‘i bor ayollarda o‘tkazilgan)."
+  },
+  "barbell-curl": {
+    "load": "65% 1RM",
+    "rom": "Tik turib bukishda bitseps butun amplituda davomida yuqori ishlaydi; to‘g‘ri grifda yelka-bilak mushagi gantelga nisbatan faolroq.",
+    "notes": "To‘g‘ri va EZ-grif deyarli farq qilmaydi, ikkalasi ham gantel bilan bukishdan yuqori."
+  },
+  "db-curl": {
+    "load": "80% 1RM",
+    "rom": "Tik turib gantel bilan bukishda bitseps butun amplituda davomida kuchli ishlaydi.",
+    "notes": "Bitseps 111 ± 27% MVIC."
+  },
+  "hammer-curl": {
+    "load": "8RM",
+    "rom": "Neytral ushlashda bitseps ~12% kam ishlaydi; yelka-bilak mushagi esa (keng tarqalgan fikrdan farqli) ko‘paymagan.",
+    "notes": "Mutlaq qiymatlar gantel bilan bukishdan nisbiy farq bo‘yicha baho."
+  },
+  "incline-curl": {
+    "load": "o‘rtacha",
+    "rom": "Qiya skameykada yelka orqada — bitseps uzun boshi cho‘ziladi va butun amplituda davomida ishlaydi (Skott skameykasida faqat qisqa oraliqda).",
+    "notes": "Qiymatlar baho."
+  },
+  "cable-curl": {
+    "similar": "Bayes usulidagi (orqadan) kabel bilan bukish",
+    "load": "80% 1RM",
+    "rom": "Kabel butun amplituda bo‘ylab yuklamani tekisroq beradi.",
+    "notes": "Kabel bilan bukishda bitseps 93% — gantel bilan bukishdagidan (111%) kam."
+  },
+  "plank": {
+    "load": "o‘z vazni, ~30 s",
+    "rom": "Izometrik. Tos orqaga qiyshaytirilib, tirsaklar uzoqroq qo‘yilsa qorin mushaklari sezilarli ko‘proq ishlaydi.",
+    "notes": "Oddiy plankada qorin faolligi o‘rtacha — kuchliroq yuklama uchun uzun-richagli variantni bajaring."
+  },
+  "hanging-leg-raise": {
+    "load": "o‘z vazni",
+    "rom": "Boshida asosan son bukuvchilar ishlaydi; tepada tos o‘zingizga burilganda qorin mushaklari eng ko‘p ishlaydi.",
+    "notes": "Qorin mashqlari ichida eng kuchlilaridan biri; qiymatlar baho."
+  },
+  "cable-crunch": {
+    "similar": "trenajyorda qorin bukish",
+    "load": "10RM",
+    "rom": "Yuklama butun harakat davomida qorin to‘g‘ri mushagida.",
+    "notes": "Trenajyorda qorin bukish bo‘yicha: to‘g‘ri mushak 84% MVIC."
+  },
+  "crunch": {
+    "load": "o‘z vazni",
+    "rom": "Faqat yelka kuraklari poldan ko‘tariladi — son bukuvchilar deyarli ishlamaydi.",
+    "notes": "Qiymatlar baho."
+  },
+  "dead-bug": {
+    "load": "o‘z vazni",
+    "rom": "Tezroq bajarilganda va qo‘l-oyoq birga harakatlantirilganda qorin mushaklari faolligi oshadi.",
+    "notes": "Qiymatlar baho."
+  },
+  "back-squat": {
+    "load": "10RM / 70–85% 1RM",
+    "rom": "Son oldi va katta dumba eng ko‘p pastdan ko‘tarilishning boshida (eng og‘ir nuqta) ishlaydi va tik turishga qarab kamayadi.",
+    "notes": "Sonning tashqi keng mushagi 100% MVIC dan oshadi — og‘ir dinamik harakat izometrik testdan kuchliroq. Parallel chuqurlikda dumba faolligi to‘liq cho‘kishdagidan yuqoriroq o‘lchangan."
+  },
+  "front-squat": {
+    "load": "10RM",
+    "rom": "Tana tikroq — yuklama son oldiga ko‘proq o‘tadi; sonning to‘g‘ri mushagi orqa cho‘kishdagidan faolroq.",
+    "notes": "Har biri o‘z 10RM ida orqa va old cho‘kish deyarli bir xil faollik bergan (old cho‘kishda vazn yengilroq bo‘lsa ham)."
+  },
+  "goblet-squat": {
+    "similar": "front-squat",
+    "load": "gantel / girya",
+    "rom": "Old cho‘kish kabi: son oldi va dumba pastki nuqtadan chiqishda eng faol.",
+    "notes": "Goblet cho‘kish bo‘yicha EMG tadqiqot topilmadi — old cho‘kish natijalari yengilroq vazn uchun kamaytirilgan."
+  },
+  "smith-squat": {
+    "similar": "back-squat",
+    "load": "8RM",
+    "rom": "Oyoqlarni grifdan oldinroq qo‘yish yuklamani dumba va son orqasiga suradi.",
+    "notes": "Erkin shtangada cho‘kish Smitdagidan o‘rtacha 43% ko‘proq faollik bergan (ichki keng mushak +49%, boldir +34%)."
+  },
+  "leg-press": {
+    "load": "12RM",
+    "rom": "Son oldi tizza eng bukilgan (pastki) holatda eng faol; oyoqlar platformada baland va keng qo‘yilsa dumba va son orqasi ko‘proq ishlaydi.",
+    "notes": "Son oldi 39–52% MVIC, son orqasi ~12%. Cho‘kishdan farqli — orqa va bel deyarli yuklanmaydi."
+  },
+  "hack-squat": {
+    "load": "70–90% 1RM",
+    "rom": "Son oldi tizza chuqur bukilganda eng faol.",
+    "notes": "Ichki va tashqi keng mushaklar hack-squat va orqa cho‘kishda oyoq pressidan yuqori bo‘lgan; qiymatlar baho."
+  },
+  "bw-squat": {
+    "similar": "back-squat",
+    "load": "o‘z vazni",
+    "rom": "Son oldi pastki nuqtada eng faol; boldirning old mushagi muvozanatni ushlab turadi.",
+    "notes": "Vaznsiz cho‘kishda faollik og‘ir cho‘kishdan ancha past — o‘rganish va qizdirish uchun yaxshi."
+  },
+  "deadlift": {
+    "load": "12RM – 1RM",
+    "rom": "Poldan ko‘tarishda son oldi ko‘proq qatnashadi; tizzadan yuqorida dumba, son orqasi va bel ustunlik qiladi.",
+    "notes": "Klassik o‘lik tortishda son oldi sumo uslubidan kam, boldir esa ko‘proq ishlaydi. Bilak va yuqori trapetsiya — grifni ushlab turish uchun."
+  },
+  "rdl": {
+    "load": "70% 1RM – 6RM",
+    "rom": "Son orqasi va dumba eng pastda (tana gorizontalga yaqin, son orqasi cho‘zilgan) eng ko‘p ishlaydi.",
+    "notes": "Ichki son orqasi (yarim payli) ikki boshli mushakdan ~20% faolroq. Bel mushaklari son orqasidan kamroq ishlaydi."
+  },
+  "db-rdl": {
+    "similar": "rdl",
+    "load": "gantel",
+    "rom": "Shtangali rumin o‘lik tortishi kabi: eng pastki cho‘zilgan holatda eng og‘ir.",
+    "notes": "Gantel uchun EMG tadqiqot topilmadi — shtangali variantning ~85% i sifatida baho."
+  },
+  "kb-swing": {
+    "load": "16 kg girya",
+    "rom": "Mushaklar \"yonib-o‘chib\" ishlaydi: pastdan tos to‘liq yozilguncha dumba va son orqasi kuchli qisqaradi, girya uchganda bo‘shashadi.",
+    "notes": "Cho‘qqi qiymatlar, tafovut juda katta. Harakatni son orqasi birinchi bo‘lib boshlaydi."
+  },
+  "back-extension": {
+    "load": "6RM, 45°",
+    "rom": "Tana gorizontaldan o‘tayotganda yuklama eng katta; umurtqani bukish o‘rniga tosdan bukilsangiz ish son orqasi va dumbaga o‘tadi.",
+    "notes": "Son orqasi rumin o‘lik tortishiga nisbatan 71–174% ko‘proq ishlagan; bel mushaklari uchala mashqda bir xil."
+  },
+  "split-squat": {
+    "load": "6–8RM",
+    "rom": "Oldingi oyoqda son oldi va dumba pastki nuqtada eng faol; set oxiriga qarab son orqasi ham ko‘proq qatnashadi.",
+    "notes": "Cho‘qqi qiymatlar. Dumba faolligi bolgar cho‘kishi va bir oyoqda cho‘kish bilan bir xil."
+  },
+  "bulgarian": {
+    "load": "6–8RM",
+    "rom": "Orqa oyoq ko‘tarilgan — oldingi oyoqda son orqasi oddiy hamladan ko‘proq ishlaydi.",
+    "notes": "Cho‘qqi qiymatlar. Ikki boshli son mushagi 76% (oddiy hamlada 62%)."
+  },
+  "step-up": {
+    "load": "6RM, 46 sm quti",
+    "rom": "Ko‘tarilishning boshida (tizza va tos eng bukilgan) eng og‘ir.",
+    "notes": "Katta dumba uchun eng kuchli mashqlardan biri (bir tadqiqotda 169% MVIC — referens testi tufayli oshirilgan, bu yerda 120% olingan)."
+  },
+  "bw-split-squat": {
+    "similar": "split-squat",
+    "load": "o‘z vazni",
+    "rom": "Ko‘tarilish fazasida barcha mushaklar tushishdagidan sezilarli faolroq.",
+    "notes": "Vaznsiz variant — qiymatlar og‘ir hamladan kamaytirilgan."
+  },
+  "leg-extension": {
+    "load": "12RM",
+    "rom": "Ochiq zanjirda son oldi oyoq to‘liq yozilishiga yaqinlashganda eng ko‘p ishlaydi (cho‘kishning aksi).",
+    "notes": "Sonning to‘g‘ri mushagi bu mashqda cho‘kishdagidan faolroq; son orqasi deyarli ishlamaydi."
+  },
+  "leg-curl": {
+    "similar": "son orqasini bukish (yotib yoki o‘tirib)",
+    "load": "o‘rtacha–og‘ir",
+    "rom": "Oyoq bukish son orqasining pastki qismini o‘lik tortishdan ko‘proq ishlatadi.",
+    "notes": "Son orqasi ko‘tarishda 69–85%, tushirishda 40–54% MVIC."
+  },
+  "hip-thrust": {
+    "load": "10RM – 1RM",
+    "rom": "Katta dumba tos to‘liq yozilgan (tepadagi) holatda eng faol — yuqori qismda trap-grif o‘lik tortishidan 26% ko‘proq.",
+    "notes": "Katta dumba 82% (cho‘kishda ~30–53%). Son orqasi cho‘kishdagidan ~3 baravar ko‘proq ishlaydi."
+  },
+  "glute-bridge": {
+    "similar": "hip-thrust",
+    "load": "o‘z vazni yoki shtanga",
+    "rom": "Ko‘prik deyarli faqat yuqori amplitudada ishlaydi — dumba tepada eng faol.",
+    "notes": "Hip thrust natijalaridan kamaytirilgan baho."
+  },
+  "calf-raise": {
+    "similar": "bir oyoqda tovonni ko‘tarish",
+    "load": "~10RM",
+    "rom": "Tizza to‘g‘ri bo‘lsa boldirning ikki boshli mushagi, bukilgan bo‘lsa kambalasimon mushak ko‘proq ishlaydi.",
+    "notes": "O‘z vazni bilan ~23% MVIC; og‘ir yuklama uchun qiymatlar baho."
+  }
+}

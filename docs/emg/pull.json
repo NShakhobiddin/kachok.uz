@@ -1,0 +1,495 @@
+{
+  "_meta": {
+    "compiled": "2026-10-19",
+    "method": "Values were taken only from web-search result text (abstracts, indexed full-text snippets, and secondary summaries) for the sources listed. Direct page fetching (WebFetch/curl to PubMed, PMC, doi.org, journal sites) was blocked by the session's network policy, so no source page was opened in full. Each 'url' is the page the search engine returned for that source; numbers were not checked against the original tables. The session's web-search quota also ran out before every exercise could be researched in depth.",
+    "estimateFlag": "estimate:false = the mvic number itself is reported by a cited study (directly or as quoted in an indexed summary of it). estimate:true = anything else: values placed inside a range that a study reports across several variants, numbers derived from another exercise, or expert estimates anchored to the cited qualitative findings. If only one study value exists, 'range' is an estimated uncertainty band or that study's ±1 SD (noted where used).",
+    "normalization": "%MVIC and %MVC (maximal voluntary isometric/static contraction) are treated as equivalent. Normalization methods differ between labs: for the same exercise, Youdas 2010 reports latissimus at 117-130 %MVIC, while Dickie 2017 (secondary summary) reports about 52-58 %. Use the numbers as relative guides, not absolute truths.",
+    "notMeasurable": "Surface EMG cannot reliably isolate brachialis, rhomboids, teres major or iliopsoas. Every value for these is an estimate."
+  },
+  "exercises": {
+    "face-pull": {
+      "basis": "similar:reverse-fly (prone horizontal abduction with full external rotation, Reinold 2004; horizontal band pull-apart, Fukunaga 2022)",
+      "load": "No direct study. The analog studies used light prone loads (Reinold 2004) or an elastic band at moderate effort, Borg CR10 about 5 (Fukunaga 2022).",
+      "metric": "mean",
+      "muscles": {
+        "deltPost": { "mvic": 70, "range": [45, 88], "src": ["reinold2004", "fukunaga2022"], "estimate": true },
+        "infraspinatus": { "mvic": 50, "range": [23, 62], "src": ["reinold2004", "fukunaga2022"], "estimate": true },
+        "trapMid": { "mvic": 55, "range": [35, 75], "src": ["fukunaga2022"], "estimate": true },
+        "rhomboids": { "mvic": 45, "range": [25, 65], "src": [], "estimate": true },
+        "trapLower": { "mvic": 40, "range": [20, 60], "src": ["fukunaga2022"], "estimate": true },
+        "deltLat": { "mvic": 40, "range": [25, 87], "src": ["reinold2004"], "estimate": true },
+        "trapUpper": { "mvic": 30, "range": [15, 50], "src": ["fukunaga2022"], "estimate": true },
+        "biceps": { "mvic": 20, "range": [10, 35], "src": [], "estimate": true }
+      },
+      "rom": "No face-pull data. In the band pull-apart analog, a diagonal-up path gave higher infraspinatus, upper and lower trapezius, and posterior deltoid activity than a horizontal path (Fukunaga 2022), so a high face pull with external rotation probably behaves similarly.",
+      "notes": "No EMG study of the cable face pull was found. The face pull combines horizontal abduction with external rotation. Reinold 2004 found posterior deltoid 88, middle deltoid 87 and supraspinatus 82 %MVIC during prone horizontal abduction at 100° with full external rotation, which serves as an upper bound. Reinold's best infraspinatus exercise was side-lying external rotation (62 %MVIC)."
+    },
+    "reverse-fly": {
+      "basis": "direct",
+      "load": "Elastic band at moderate effort, Borg CR10 about 5 (Fukunaga 2022, band pull-apart). Reverse-fly machine to failure (Schoenfeld 2013). Light prone horizontal abduction (Reinold 2004).",
+      "metric": "peak",
+      "muscles": {
+        "deltPost": { "mvic": 70, "range": [45, 88], "src": ["fukunaga2022", "reinold2004", "schoenfeld2013"], "estimate": true },
+        "trapMid": { "mvic": 50, "range": [30, 72.6], "src": ["fukunaga2022"], "estimate": true },
+        "rhomboids": { "mvic": 45, "range": [25, 65], "src": [], "estimate": true },
+        "deltLat": { "mvic": 40, "range": [20, 87], "src": ["reinold2004", "schoenfeld2013"], "estimate": true },
+        "infraspinatus": { "mvic": 35, "range": [23, 49.5], "src": ["fukunaga2022", "schoenfeld2013"], "estimate": true },
+        "trapLower": { "mvic": 35, "range": [15.3, 60], "src": ["fukunaga2022"], "estimate": true },
+        "trapUpper": { "mvic": 35, "range": [15.3, 60], "src": ["fukunaga2022"], "estimate": true }
+      },
+      "rom": "Fukunaga 2022: a palm-up grip maximised infraspinatus and lower trapezius, a palm-down grip maximised upper trapezius and posterior deltoid, and a diagonal-up direction gave the highest activity in most muscles. Schoenfeld 2013: on the reverse-fly machine, a neutral grip gave higher mean posterior deltoid and infraspinatus activity than a pronated grip.",
+      "notes": "Fukunaga 2022 (10 men) reported mean peak activity of 15.3-72.6 %MVC across 5 muscles and 9 conditions. Only the infraspinatus row was retrieved: 23.0 (diagonal-down, palm-down) to 49.5 (diagonal-up, palm-up). Reinold's 88 %MVIC posterior deltoid value (prone horizontal abduction at 100° with external rotation) is used as the upper bound."
+    },
+    "barbell-row": {
+      "basis": "direct",
+      "load": "Barbell standing bent-over row (Fenwick 2009). The exact load was not retrieved.",
+      "metric": "peak",
+      "muscles": {
+        "trapMid": { "mvic": 60, "range": [40, 80], "src": [], "estimate": true },
+        "deltPost": { "mvic": 60, "range": [40, 85], "src": [], "estimate": true },
+        "erectors": { "mvic": 55, "range": [35, 75], "src": ["fenwick2009"], "estimate": true },
+        "rhomboids": { "mvic": 55, "range": [35, 75], "src": [], "estimate": true },
+        "lats": { "mvic": 53.4, "range": [45, 70], "src": ["fenwick2009"], "estimate": false },
+        "biceps": { "mvic": 40, "range": [25, 60], "src": [], "estimate": true },
+        "trapLower": { "mvic": 40, "range": [25, 60], "src": [], "estimate": true },
+        "gluteMax": { "mvic": 19, "range": [15, 25], "src": ["fenwick2009"], "estimate": false }
+      },
+      "rom": "No ROM curve was retrieved. Fenwick 2009: the bent-over row had the highest lumbar compression of the rows tested (3576 N vs 2339 N for the inverted row) and the highest spine stiffness. Erector and hip-extensor work is isometric throughout.",
+      "notes": "The latissimus value (left side, 53.4 %MVC) comes from a search-engine summary of Fenwick 2009, and a secondary site gives about 53 %. Gluteus maximus was 19.0 %MVC (bent-over row) vs 19.2 (inverted row). Fenwick 2009 reported that the bent-over row activated the back symmetrically but gave less latissimus, upper-back and hip-extensor activity than the inverted row. No numbers were retrieved for the trapezius, rhomboids or deltoid."
+    },
+    "db-row": {
+      "basis": "direct",
+      "load": "Dumbbell one-arm row. Andersen 2008: women with trapezius myalgia. Andersen 2012: 17 women at Borg 3 and Borg 8 effort. Absolute loads were not retrieved.",
+      "metric": "peak",
+      "muscles": {
+        "lats": { "mvic": 60, "range": [40, 80], "src": [], "estimate": true },
+        "trapMid": { "mvic": 60, "range": [45, 80], "src": ["andersen2012"], "estimate": true },
+        "deltPost": { "mvic": 55, "range": [35, 75], "src": [], "estimate": true },
+        "trapLower": { "mvic": 55, "range": [35, 75], "src": ["andersen2012"], "estimate": true },
+        "rhomboids": { "mvic": 50, "range": [30, 70], "src": [], "estimate": true },
+        "teresMajor": { "mvic": 45, "range": [30, 65], "src": [], "estimate": true },
+        "biceps": { "mvic": 40, "range": [25, 55], "src": [], "estimate": true },
+        "trapUpper": { "mvic": 35, "range": [20, 60], "src": ["andersen2012", "andersen2008"], "estimate": true }
+      },
+      "rom": "Not documented in the sources retrieved.",
+      "notes": "Andersen 2012: the one-arm row favoured lower over upper trapezius by 13-30 percentage points and middle over upper trapezius by 21-30 points, at both Borg 3 and Borg 8. The trapezius values here are set to match those differences. Andersen 2008 reported trapezius activation above 60 %MVC for most of its 5 exercises, but the one-arm-row values were not retrieved."
+    },
+    "cable-row": {
+      "basis": "direct",
+      "load": "Seated cable row, isometric and dynamic efforts, recreationally trained adults (Vasconcelos 2023). Absolute loads were not retrieved.",
+      "metric": "mean",
+      "muscles": {
+        "lats": { "mvic": 55, "range": [35, 75], "src": ["vasconcelos2023", "difonza2026"], "estimate": true },
+        "trapMid": { "mvic": 45, "range": [30.5, 51.6], "src": ["vasconcelos2023"], "estimate": true },
+        "deltPost": { "mvic": 45, "range": [30, 65], "src": ["vasconcelos2023"], "estimate": true },
+        "rhomboids": { "mvic": 45, "range": [30, 60], "src": ["lehman2004"], "estimate": true },
+        "trapLower": { "mvic": 35, "range": [20, 50], "src": [], "estimate": true },
+        "biceps": { "mvic": 30, "range": [20, 45], "src": [], "estimate": true },
+        "trapUpper": { "mvic": 25, "range": [15.8, 54.7], "src": ["vasconcelos2023"], "estimate": true },
+        "erectors": { "mvic": 20, "range": [10, 35], "src": [], "estimate": true }
+      },
+      "rom": "Vasconcelos 2023: upper and middle trapezius and posterior deltoid rose as shoulder abduction increased to 60-90° (elbows flared). Latissimus was higher near 0° abduction (elbows tucked) with any grip. Lehman 2004 (as summarised by Di Fonza 2026): active scapular retraction did not raise latissimus or middle trapezius/rhomboid amplitude.",
+      "notes": "The trapezius ranges (upper 15.8-54.7, middle 30.5-51.6 %MVIC across grip and abduction conditions) were attributed to Vasconcelos 2023 by a search summary of its ResearchGate page. Di Fonza 2026: a narrower grip and a lower abduction angle each gave higher latissimus amplitude in separate studies."
+    },
+    "chest-supported-row": {
+      "basis": "similar:barbell-row (bent-over row with the trunk supported; no direct EMG study of the chest-supported row was found)",
+      "load": "No direct study.",
+      "metric": "mean",
+      "muscles": {
+        "trapMid": { "mvic": 60, "range": [40, 80], "src": [], "estimate": true },
+        "deltPost": { "mvic": 60, "range": [40, 85], "src": [], "estimate": true },
+        "rhomboids": { "mvic": 55, "range": [35, 75], "src": [], "estimate": true },
+        "lats": { "mvic": 50, "range": [35, 70], "src": ["fenwick2009"], "estimate": true },
+        "biceps": { "mvic": 40, "range": [25, 55], "src": [], "estimate": true },
+        "trapLower": { "mvic": 40, "range": [25, 60], "src": [], "estimate": true },
+        "trapUpper": { "mvic": 25, "range": [10, 45], "src": [], "estimate": true }
+      },
+      "rom": "Not documented.",
+      "notes": "Same pulling pattern as the bent-over row, but chest support removes the isometric lumbar-erector and hip-extensor demand (Fenwick 2009 found the bent-over row had the largest lumbar load). Erectors and glutes are therefore omitted, as they are expected to be below 10 %MVIC. Upper-back values are assumed similar to the bent-over row."
+    },
+    "inverted-row": {
+      "basis": "direct",
+      "load": "Bodyweight: bar or portable pull-up device with feet on the floor (Fenwick 2009, Youdas 2016, Snarr & Esco 2013).",
+      "metric": "peak",
+      "muscles": {
+        "deltPost": { "mvic": 70, "range": [61, 90], "src": ["youdas2016", "snarr2013"], "estimate": true },
+        "lats": { "mvic": 64.8, "range": [61, 101.6], "src": ["fenwick2009", "youdas2016", "snarr2013"], "estimate": false },
+        "trapLower": { "mvic": 65, "range": [61, 80], "src": ["youdas2016"], "estimate": true },
+        "biceps": { "mvic": 65, "range": [61, 85], "src": ["youdas2016", "snarr2013"], "estimate": true },
+        "trapMid": { "mvic": 60, "range": [41, 76.7], "src": ["youdas2016", "snarr2013"], "estimate": true },
+        "trapUpper": { "mvic": 50, "range": [41, 60], "src": ["youdas2016"], "estimate": true },
+        "erectors": { "mvic": 35, "range": [21, 60], "src": ["youdas2016"], "estimate": true },
+        "rectusAbdominis": { "mvic": 30, "range": [21, 40], "src": ["youdas2016"], "estimate": true },
+        "gluteMax": { "mvic": 19.2, "range": [15, 25], "src": ["fenwick2009"], "estimate": false }
+      },
+      "rom": "Fenwick 2009 reported the 64.8 %MVC left-latissimus value for the up (concentric) phase. Of the three rows it tested, the inverted row gave the highest latissimus, upper-back and hip-extensor activation and the lowest lumbar load.",
+      "notes": "The Youdas 2016 abstract (26 adults, 4 grip/leg conditions) gives only bands: biceps, latissimus, lower trapezius and posterior deltoid were very high (>61 %MVIC); upper and middle trapezius and lumbar multifidus were high (41-60); longissimus thoracis and rectus abdominis were moderate (21-40). Values inside those bands are estimates. A search summary of the Snarr & Esco 2013 table gives latissimus about 99.3 ± 53.3 and middle trapezius 76.7 ± 19.1 %MVC for the standard inverted row, and its abstract reports higher biceps for the standard row than the suspension version. Grip and single- vs double-leg support made little difference (Youdas 2016)."
+    },
+    "pull-up": {
+      "basis": "direct",
+      "load": "Bodyweight (Youdas 2010; Dickie 2017).",
+      "metric": "mean",
+      "muscles": {
+        "lats": { "mvic": 120, "range": [52, 130], "src": ["youdas2010", "dickie2017"], "estimate": true },
+        "biceps": { "mvic": 80, "range": [78, 96], "src": ["youdas2010", "dickie2017"], "estimate": true },
+        "infraspinatus": { "mvic": 75, "range": [71, 79], "src": ["youdas2010"], "estimate": true },
+        "teresMajor": { "mvic": 70, "range": [50, 100], "src": [], "estimate": true },
+        "trapLower": { "mvic": 56, "range": [45, 56], "src": ["youdas2010"], "estimate": true },
+        "forearmFlexors": { "mvic": 50, "range": [35, 70], "src": [], "estimate": true },
+        "pecLower": { "mvic": 44, "range": [44, 57], "src": ["youdas2010"], "estimate": true },
+        "erectors": { "mvic": 40, "range": [39, 41], "src": ["youdas2010"], "estimate": true },
+        "externalOblique": { "mvic": 33, "range": [31, 35], "src": ["youdas2010"], "estimate": true }
+      },
+      "rom": "A thesis summarising Youdas 2010 reports that lower trapezius and pectoralis major lead the start of the pull, and biceps and latissimus dominate its completion.",
+      "notes": "The Youdas 2010 abstract reports ranges across pull-up, chin-up and Perfect-Pullup: latissimus 117-130, biceps 78-96, infraspinatus 71-79, lower trapezius 45-56, pectoralis major 44-57, erector spinae 39-41, external oblique 31-35 %MVIC. Chin-up exceeded pull-up for pectoralis major and biceps; pull-up exceeded chin-up for lower trapezius. The pull-up's own values were not retrieved, so they are placed inside those ranges following the significant differences. SDs were large (latissimus about ±46-53). Dickie 2017 found biceps higher than latissimus (secondary summary: latissimus about 52-58 %, biceps about 81-93 %), hence the wide latissimus range. The pectoralis electrode was mapped to pecLower (sternocostal fibres), which is an assumption."
+    },
+    "chin-up": {
+      "basis": "direct",
+      "load": "Bodyweight (Youdas 2010; Dickie 2017; Doma 2013).",
+      "metric": "mean",
+      "muscles": {
+        "lats": { "mvic": 117, "range": [52, 130], "src": ["youdas2010", "dickie2017"], "estimate": false },
+        "biceps": { "mvic": 96, "range": [78, 96], "src": ["youdas2010", "dickie2017", "doma2013"], "estimate": true },
+        "infraspinatus": { "mvic": 75, "range": [71, 79], "src": ["youdas2010"], "estimate": true },
+        "teresMajor": { "mvic": 65, "range": [45, 95], "src": [], "estimate": true },
+        "pecLower": { "mvic": 57, "range": [44, 57], "src": ["youdas2010"], "estimate": true },
+        "trapLower": { "mvic": 45, "range": [45, 56], "src": ["youdas2010"], "estimate": true },
+        "forearmFlexors": { "mvic": 45, "range": [30, 65], "src": [], "estimate": true },
+        "erectors": { "mvic": 40, "range": [39, 41], "src": ["youdas2010", "doma2013"], "estimate": true },
+        "externalOblique": { "mvic": 33, "range": [31, 35], "src": ["youdas2010"], "estimate": true }
+      },
+      "rom": "Doma 2013: in the concentric phase, biceps and erector spinae activity were higher for the chin-up than the lat pulldown, and latissimus exceeded pectoralis major. A thesis summarising Youdas 2010 reports that lower trapezius and pectoralis major lead the start of the pull, and biceps and latissimus finish it.",
+      "notes": "Latissimus 117 ± 46 %MVIC for the supinated chin-up (Youdas 2010, as quoted in secondary summaries; the Perfect-Pullup was 130 ± 53). The other muscles are placed inside the Youdas cross-variant ranges according to the significant chin-up vs pull-up differences: chin-up higher for biceps and pectoralis major, lower for lower trapezius."
+    },
+    "lat-pulldown": {
+      "basis": "direct",
+      "load": "70% 1RM (Lusk 2010); 6RM (Andersen 2014).",
+      "metric": "mean",
+      "muscles": {
+        "lats": { "mvic": 67, "range": [55, 80], "src": ["lusk2010", "andersen2014", "difonza2026"], "estimate": false },
+        "teresMajor": { "mvic": 50, "range": [30, 70], "src": [], "estimate": true },
+        "biceps": { "mvic": 35, "range": [20, 55], "src": ["lusk2010"], "estimate": true },
+        "trapMid": { "mvic": 35, "range": [20, 55], "src": ["lusk2010"], "estimate": true },
+        "trapLower": { "mvic": 35, "range": [20, 50], "src": [], "estimate": true },
+        "deltPost": { "mvic": 35, "range": [20, 55], "src": [], "estimate": true },
+        "infraspinatus": { "mvic": 35, "range": [20, 50], "src": ["andersen2014"], "estimate": true },
+        "pecLower": { "mvic": 20, "range": [10, 35], "src": ["doma2013"], "estimate": true }
+      },
+      "rom": "Andersen 2014: whole-movement latissimus, trapezius and infraspinatus activity was similar across grips of 1-2 × biacromial width, with some phase-specific differences. Doma 2013: latissimus exceeded the other muscles in the eccentric phase of the pulldown. Di Fonza 2026 review: pulling to the front (anterior bar path) most consistently gave higher latissimus amplitude, while grip-width effects were inconsistent.",
+      "notes": "Lusk 2010 (12 men, 70% 1RM): latissimus normalised amplitude was 0.67 (pronated) vs 0.63 (supinated) of MVIC, as quoted in a search summary. Grip width had no effect on latissimus, middle trapezius or biceps, and grip orientation had no effect on middle trapezius or biceps. The range is an estimated band around that value."
+    },
+    "db-shrug": {
+      "basis": "direct",
+      "load": "20-30 kg dumbbells (Andersen 2008; 12 women with trapezius myalgia).",
+      "metric": "peak",
+      "muscles": {
+        "trapUpper": { "mvic": 102, "range": [91, 113], "src": ["andersen2008", "ekstrom2003"], "estimate": false },
+        "trapMid": { "mvic": 40, "range": [20, 60], "src": ["pizzari2014"], "estimate": true },
+        "forearmFlexors": { "mvic": 40, "range": [25, 60], "src": [], "estimate": true },
+        "rhomboids": { "mvic": 25, "range": [10, 40], "src": [], "estimate": true },
+        "serratus": { "mvic": 20, "range": [10, 35], "src": ["pizzari2014"], "estimate": true },
+        "trapLower": { "mvic": 15, "range": [5, 30], "src": ["pizzari2014"], "estimate": true }
+      },
+      "rom": "Pizzari 2014: an upward-rotation shrug (arms at 30° abduction) produced higher upper and lower trapezius activity, and higher activity in all four muscles measured, than a standard shrug at 0°.",
+      "notes": "Upper trapezius was 102 ± 11 %MVC (range shown is ±1 SD). Lateral raise was 97 % and upright row 85 % in the same study. Ekstrom 2003 also found that the unilateral shrug produced the highest upper trapezius activity of 10 exercises. The sample was women with neck pain, and whether the metric was peak or mean was not confirmed."
+    },
+    "barbell-curl": {
+      "basis": "direct",
+      "load": "65% 1RM, 10 reps (Marcolin 2018, straight bar).",
+      "metric": "mean",
+      "muscles": {
+        "biceps": { "mvic": 95, "range": [70, 120], "src": ["marcolin2018", "parpa2025"], "estimate": true },
+        "brachialis": { "mvic": 75, "range": [50, 95], "src": [], "estimate": true },
+        "brachioradialis": { "mvic": 60, "range": [40, 80], "src": ["marcolin2018"], "estimate": true },
+        "forearmFlexors": { "mvic": 35, "range": [20, 50], "src": [], "estimate": true },
+        "deltAnt": { "mvic": 20, "range": [10, 35], "src": ["coratella2023"], "estimate": true }
+      },
+      "rom": "Marcolin 2018: in the concentric phase, brachioradialis was higher for the straight bar than the dumbbell. Oliveira 2009: free-weight standing curls keep substantial biceps effort across the whole elbow ROM.",
+      "notes": "Marcolin 2018 found little difference between straight and EZ bars, and both were above the dumbbell curl (the EZ bar significantly for biceps and brachioradialis). Absolute %MVIC values were not retrieved, so the biceps value is anchored to the dumbbell curl in Parpa 2025 (111 %MVC at 80% 1RM) and to the lighter load used here."
+    },
+    "db-curl": {
+      "basis": "direct",
+      "load": "80% 1RM (Parpa 2025); 65% 1RM (Marcolin 2018).",
+      "metric": "mean",
+      "muscles": {
+        "biceps": { "mvic": 111.5, "range": [84.7, 138.3], "src": ["parpa2025", "marcolin2018"], "estimate": false },
+        "brachialis": { "mvic": 75, "range": [50, 95], "src": [], "estimate": true },
+        "brachioradialis": { "mvic": 50, "range": [35, 75], "src": ["marcolin2018"], "estimate": true },
+        "forearmFlexors": { "mvic": 30, "range": [15, 45], "src": [], "estimate": true },
+        "deltAnt": { "mvic": 15, "range": [5, 30], "src": ["coratella2023"], "estimate": true }
+      },
+      "rom": "Oliveira 2009: the standing dumbbell curl produced considerable biceps effort across the whole elbow ROM.",
+      "notes": "Parpa 2025 (11 participants): biceps 111.46 ± 26.80 %MVC (range shown is ±1 SD). Whether this was a mean or a peak amplitude was not confirmed. In Marcolin 2018 the dumbbell curl gave lower biceps and brachioradialis activity than the EZ bar."
+    },
+    "hammer-curl": {
+      "basis": "direct",
+      "load": "8RM load, non-exhaustive 6-rep sets, competitive bodybuilders (Coratella 2023, neutral-grip curl).",
+      "metric": "mean",
+      "muscles": {
+        "biceps": { "mvic": 80, "range": [60, 100], "src": ["coratella2023"], "estimate": true },
+        "brachialis": { "mvic": 75, "range": [55, 95], "src": [], "estimate": true },
+        "brachioradialis": { "mvic": 60, "range": [40, 80], "src": ["coratella2023"], "estimate": true },
+        "forearmExtensors": { "mvic": 30, "range": [15, 45], "src": [], "estimate": true },
+        "deltAnt": { "mvic": 25, "range": [10, 40], "src": ["coratella2023"], "estimate": true },
+        "forearmFlexors": { "mvic": 25, "range": [10, 40], "src": [], "estimate": true }
+      },
+      "rom": "Coratella 2023: grip differences appeared in the ascending (concentric) phase. In the descending phase only anterior deltoid differed.",
+      "notes": "Coratella 2023, ascending phase, neutral vs supinated grip: about 12% lower biceps, about 6% lower brachioradialis and about 9% higher anterior deltoid (normalised RMS). Against common belief, brachioradialis was not higher with the neutral grip in this study. Absolute values were not retrieved, so they are scaled from the dumbbell-curl estimate."
+    },
+    "incline-curl": {
+      "basis": "direct",
+      "load": "Load not retrieved (Oliveira 2009).",
+      "metric": "mean",
+      "muscles": {
+        "biceps": { "mvic": 90, "range": [65, 115], "src": ["oliveira2009", "parpa2025"], "estimate": true },
+        "brachialis": { "mvic": 70, "range": [50, 90], "src": [], "estimate": true },
+        "brachioradialis": { "mvic": 50, "range": [30, 70], "src": [], "estimate": true },
+        "forearmFlexors": { "mvic": 30, "range": [15, 45], "src": [], "estimate": true }
+      },
+      "rom": "Oliveira 2009: the incline dumbbell curl (shoulder extended) and the standing curl kept considerable biceps effort across the whole elbow ROM, whereas the preacher curl was high only over a short range of elbow angles.",
+      "notes": "Oliveira 2009 measured the biceps long head. No absolute %MVIC values were retrieved, so all numbers are estimates anchored to the dumbbell curl."
+    },
+    "cable-curl": {
+      "basis": "similar:Bayesian (behind-the-body) cable curl, Parpa 2025; the standard standing cable curl has no direct study found",
+      "load": "80% 1RM (Parpa 2025).",
+      "metric": "mean",
+      "muscles": {
+        "biceps": { "mvic": 93.4, "range": [77.7, 109], "src": ["parpa2025"], "estimate": true },
+        "brachialis": { "mvic": 70, "range": [50, 90], "src": [], "estimate": true },
+        "brachioradialis": { "mvic": 50, "range": [30, 70], "src": [], "estimate": true },
+        "forearmFlexors": { "mvic": 30, "range": [15, 45], "src": [], "estimate": true },
+        "deltAnt": { "mvic": 15, "range": [5, 30], "src": [], "estimate": true }
+      },
+      "rom": "Not documented by EMG. The cable keeps tension more even across the ROM than free weights, which is a mechanical argument only.",
+      "notes": "Parpa 2025: the Bayesian cable curl gave 93.39 ± 15.65 %MVC vs 111.46 ± 26.80 for the dumbbell curl in the same 11 participants (p = 0.003). It is used here as a proxy for cable curls, and the biceps range is ±1 SD."
+    },
+    "plank": {
+      "basis": "direct",
+      "load": "Bodyweight, about 30 s holds (Schoenfeld 2014).",
+      "metric": "mean",
+      "muscles": {
+        "externalOblique": { "mvic": 40, "range": [20, 60], "src": ["schoenfeld2014", "snarr2014"], "estimate": true },
+        "rectusAbdominis": { "mvic": 35, "range": [20, 55], "src": ["schoenfeld2014", "calatayud2017", "oliva2020"], "estimate": true },
+        "deltAnt": { "mvic": 25, "range": [10, 40], "src": ["saglam2025"], "estimate": true },
+        "serratus": { "mvic": 25, "range": [10, 40], "src": [], "estimate": true },
+        "rectusFemoris": { "mvic": 15, "range": [5, 25], "src": [], "estimate": true }
+      },
+      "rom": "Isometric. Schoenfeld 2014: a long-lever plank with posterior pelvic tilt significantly increased upper rectus abdominis, lower abdominal and external oblique activity compared with the traditional plank. Snarr & Esco 2014: the standard floor plank gave the lowest external oblique activity of the variants tested, and unstable devices increased activity.",
+      "notes": "No standard-plank %MVIC value could be retrieved. Oliva-Lozano & Muyor 2020 (secondary summary) put a front plank with scapular adduction and posterior pelvic tilt at about 78 %MVIC rectus abdominis. That is a much harder variant and serves only as an upper reference. Lumbar erectors and gluteus maximus are usually below 10 %MVIC in a standard plank, so they are omitted (estimate). Saglam 2025 found anterior deltoid more active on a stable surface than on unstable ones."
+    },
+    "hanging-leg-raise": {
+      "basis": "direct",
+      "load": "Bodyweight (Escamilla 2006: hanging knee-up with arm straps; Axler & McGill 1997: hanging bent-knee and straight-leg raises).",
+      "metric": "mean",
+      "muscles": {
+        "rectusAbdominis": { "mvic": 80, "range": [50, 130], "src": ["escamilla2006", "axler1997"], "estimate": true },
+        "externalOblique": { "mvic": 60, "range": [40, 88], "src": ["escamilla2006", "axler1997"], "estimate": true },
+        "iliopsoas": { "mvic": 60, "range": [40, 90], "src": ["axler1997"], "estimate": true },
+        "forearmFlexors": { "mvic": 50, "range": [30, 70], "src": [], "estimate": true },
+        "rectusFemoris": { "mvic": 40, "range": [20, 60], "src": ["escamilla2006"], "estimate": true },
+        "lats": { "mvic": 25, "range": [10, 40], "src": ["escamilla2006"], "estimate": true }
+      },
+      "rom": "Not documented in the retrieved sources. Biomechanically, hip flexors dominate the first part, and abdominal activity is expected to rise when the pelvis curls up at the top.",
+      "notes": "Escamilla 2006: the hanging knee-up with straps was among the highest of the exercises tested for upper and lower rectus abdominis, internal oblique and latissimus, and tied for highest external oblique. A secondary web summary attributes >130 %MVC rectus abdominis and 88 %MVC external oblique to McGill's hanging straight-leg raise data. That claim was not checked against the original (likely Axler & McGill 1997) and only sets the upper end of the ranges. Straight-leg raises are harder than bent-knee raises."
+    },
+    "cable-crunch": {
+      "basis": "similar:loaded crunch (machine crunch and elastic-resisted Swiss-ball crunch, Sundstrup 2012); no kneeling-cable-crunch EMG study was found",
+      "load": "10RM (Sundstrup 2012).",
+      "metric": "peak",
+      "muscles": {
+        "rectusAbdominis": { "mvic": 84, "range": [84, 104], "src": ["sundstrup2012"], "estimate": true },
+        "externalOblique": { "mvic": 50, "range": [30, 70], "src": ["sundstrup2012"], "estimate": true },
+        "rectusFemoris": { "mvic": 15, "range": [5, 30], "src": ["sundstrup2012"], "estimate": true },
+        "lats": { "mvic": 15, "range": [5, 25], "src": [], "estimate": true }
+      },
+      "rom": "Not documented.",
+      "notes": "Sundstrup 2012 (42 untrained adults, normalised to MVIC): rectus abdominis 84 ± 3.8 %nEMG for the machine crunch vs 104 ± 3.8 for the Swiss-ball crunch with elastic resistance. Rectus abdominis and external oblique were the most active muscles, and the machine crunch had higher rectus femoris activity. The machine-crunch value is used here because it is the closest loaded analog."
+    },
+    "crunch": {
+      "basis": "direct",
+      "load": "Bodyweight (Youdas 2008; Escamilla 2006).",
+      "metric": "mean",
+      "muscles": {
+        "rectusAbdominis": { "mvic": 55, "range": [30, 80], "src": ["youdas2008", "escamilla2006"], "estimate": true },
+        "externalOblique": { "mvic": 30, "range": [15, 50], "src": ["youdas2008", "escamilla2006"], "estimate": true }
+      },
+      "rom": "Not documented in the retrieved sources.",
+      "notes": "Both studies measured the crunch, but their %MVIC values could not be retrieved, so these numbers are estimates. Youdas 2008: the Ab-Slide exceeded the crunch for the abdominals. Rectus femoris and hip flexors are low in the crunch (below 10 %MVIC) and are omitted (estimate)."
+    },
+    "dead-bug": {
+      "basis": "direct",
+      "load": "Bodyweight, metronome at 60, 90 and 120 bpm (Yun 2017).",
+      "metric": "mean",
+      "muscles": {
+        "externalOblique": { "mvic": 30, "range": [10, 55], "src": ["yun2017"], "estimate": true },
+        "rectusAbdominis": { "mvic": 25, "range": [10, 50], "src": ["yun2017"], "estimate": true },
+        "iliopsoas": { "mvic": 20, "range": [10, 35], "src": [], "estimate": true },
+        "rectusFemoris": { "mvic": 15, "range": [5, 30], "src": [], "estimate": true }
+      },
+      "rom": "Yun 2017: rectus abdominis, external oblique and internal oblique activity rose significantly with faster tempo and when arms and legs moved together rather than one limb pair at a time.",
+      "notes": "Yun 2017 (30 healthy adults) reported %MVIC, but the values were not retrieved, so all numbers are estimates."
+    }
+  },
+  "sources": {
+    "youdas2010": {
+      "cite": "Youdas et al. Surface electromyographic activation patterns and elbow joint motion during a pull-up, chin-up, or Perfect-Pullup rotational exercise. J Strength Cond Res 24(12):3404-3414, 2010.",
+      "doi": "10.1519/JSC.0b013e3181f1598c",
+      "url": "https://www.ovid.com/jnls/nsca-jscr/abstract/10.1519/jsc.0b013e3181f1598c~surface-electromyographic-activation-patterns-and-elbow"
+    },
+    "dickie2017": {
+      "cite": "Dickie, Faulkner, Barnes, Lark. Electromyographic analysis of muscle activation during pull-up variations. J Electromyogr Kinesiol 32:30-36, 2017.",
+      "doi": "10.1016/j.jelekin.2016.11.004",
+      "url": "https://www.researchgate.net/publication/311091421_Electromyographic_analysis_of_muscle_activation_during_pull-up_variations"
+    },
+    "doma2013": {
+      "cite": "Doma, Deakin, Ness. Kinematic and electromyographic comparisons between chin-ups and lat-pull down exercises. Sports Biomech 12(3):302-313, 2013.",
+      "doi": "10.1080/14763141.2012.760204",
+      "url": "https://www.semanticscholar.org/paper/Kinematic-and-electromyographic-comparisons-between-Doma-Deakin/9a3b4de97d77ce7b6517fa23a88fddaeed7c4d69"
+    },
+    "lusk2010": {
+      "cite": "Lusk et al. Grip width and forearm orientation effects on muscle activity during the lat pull-down. J Strength Cond Res 24(7):1895-1900, 2010.",
+      "doi": "",
+      "url": "https://pure.psu.edu/en/publications/grip-width-and-forearm-orientation-effects-on-muscle-activity-dur/"
+    },
+    "andersen2014": {
+      "cite": "Andersen, Fimland, Wiik, Skoglund, Saeterbakken. Effects of grip width on muscle strength and activation in the lat pull-down. J Strength Cond Res 28(4):1135-1142, 2014.",
+      "doi": "",
+      "url": "https://www.semanticscholar.org/paper/Effects-of-Grip-Width-on-Muscle-Strength-and-in-the-Andersen-Fimland/6659d7747b5d4ae8de7efdc1ea011ad176f8ad94"
+    },
+    "difonza2026": {
+      "cite": "Di Fonza et al. Electromyographic analysis of latissimus dorsi activation during common resistance training exercises: a narrative review. J Funct Morphol Kinesiol 11(3):315, 2026.",
+      "doi": "10.3390/jfmk11030315",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/42647355/"
+    },
+    "fenwick2009": {
+      "cite": "Fenwick, Brown, McGill. Comparison of different rowing exercises: trunk muscle activation and lumbar spine motion, load, and stiffness. J Strength Cond Res 23(2):350-358, 2009 (also indexed as 23(5):1408-1417, DOI 10.1519/JSC.0b013e3181b07334).",
+      "doi": "10.1519/JSC.0b013e3181942019",
+      "url": "https://journals.lww.com/nsca-jscr/fulltext/2009/03000/comparison_of_different_rowing_exercises__trunk.2.aspx"
+    },
+    "youdas2016": {
+      "cite": "Youdas et al. Activation of spinal stabilizers and shoulder complex muscles during an inverted row using a portable pull-up device and body weight resistance. J Strength Cond Res 30(7):1933-1941, 2016.",
+      "doi": "10.1519/JSC.0000000000001210",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/26422610/"
+    },
+    "snarr2013": {
+      "cite": "Snarr RL, Esco MR. Comparison of electromyographic activity when performing an inverted row with and without a suspension device. J Exerc Physiol Online 16(6):51-58, 2013.",
+      "doi": "",
+      "url": "https://www.asep.org/asep/asep/JEPonlineDecember2013_Snarr_Esco.pdf"
+    },
+    "vasconcelos2023": {
+      "cite": "Vasconcelos, Lopes, Almeida, Krause Neto, Soares. Effect of different grip position and shoulder-abduction angle on muscle strength and activation during the seated cable row. Int J Strength Cond, 2023.",
+      "doi": "",
+      "url": "https://www.researchgate.net/publication/371114847_Effect_Of_Different_Grip_Position_And_Shoulder-_Abduction_Angle_On_Muscle_Strength_And_Activation_During_The_Seated_Cable_Row"
+    },
+    "lehman2004": {
+      "cite": "Lehman GJ, Buchan DD, Lundy A, Myers N, Nalborczyk A. Variations in muscle activation levels during traditional latissimus dorsi weight training exercises: an experimental study. Dyn Med 3(1):4, 2004.",
+      "doi": "",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC13510307/"
+    },
+    "andersen2008": {
+      "cite": "Andersen et al. Muscle activation during selected strength exercises in women with chronic neck muscle pain. Phys Ther 88(6):703-711, 2008.",
+      "doi": "",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/18339796/"
+    },
+    "andersen2012": {
+      "cite": "Andersen et al. Scapular muscle activity from selected strengthening exercises performed at low and high intensities. J Strength Cond Res 26(9):2408-2416, 2012.",
+      "doi": "10.1519/JSC.0b013e31823f8d24",
+      "url": "https://journals.lww.com/nsca-jscr/fulltext/2012/09000/scapular_muscle_activity_from_selected.14.aspx"
+    },
+    "ekstrom2003": {
+      "cite": "Ekstrom RA, Donatelli RA, et al. Surface electromyographic analysis of exercises for the trapezius and serratus anterior muscles. J Orthop Sports Phys Ther 33(5):247-258, 2003.",
+      "doi": "10.2519/jospt.2003.33.5.247",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/12774999/"
+    },
+    "pizzari2014": {
+      "cite": "Pizzari, Wickham, Balster, Ganderton, Watson. Modifying a shrug exercise can facilitate the upward rotator muscles of the scapula. Clin Biomech 29(2):201-205, 2014.",
+      "doi": "10.1016/j.clinbiomech.2013.11.011",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/24342452/"
+    },
+    "reinold2004": {
+      "cite": "Reinold et al. Electromyographic analysis of the rotator cuff and deltoid musculature during common shoulder external rotation exercises. J Orthop Sports Phys Ther 34(7):385-394, 2004.",
+      "doi": "10.2519/jospt.2004.34.7.385",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/15296366/"
+    },
+    "schoenfeld2013": {
+      "cite": "Schoenfeld B, Sonmez RGT, Kolber MJ, Contreras B, Harris R, Ozen S. Effect of hand position on EMG activity of the posterior shoulder musculature during a horizontal abduction exercise. J Strength Cond Res 27(10):2644-2649, 2013.",
+      "doi": "10.1519/JSC.0b013e318281e1e9",
+      "url": "https://journals.lww.com/nsca-jscr/fulltext/2013/10000/effect_of_hand_position_on_emg_activity_of_the.2.aspx"
+    },
+    "fukunaga2022": {
+      "cite": "Fukunaga et al. Band pull-apart exercise: effects of movement direction and hand position on shoulder muscle activity. Int J Sports Phys Ther 17(3):400-408, 2022.",
+      "doi": "",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/35391860/"
+    },
+    "marcolin2018": {
+      "cite": "Marcolin G, Panizzolo FA, Petrone N, Moro T, Grigoletto D, Piccolo D, Paoli A. Differences in electromyographic activity of biceps brachii and brachioradialis while performing three variants of curl. PeerJ 6:e5165, 2018.",
+      "doi": "10.7717/peerj.5165",
+      "url": "https://peerj.com/articles/5165"
+    },
+    "coratella2023": {
+      "cite": "Coratella et al. Biceps brachii and brachioradialis excitation in biceps curl exercise: different handgrips, different synergy. Sports 11(3):64, 2023.",
+      "doi": "10.3390/sports11030064",
+      "url": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC10054060/"
+    },
+    "oliveira2009": {
+      "cite": "Oliveira LF, Matta TT, Alves DS, Garcia MAC, Vieira TMM. Effect of the shoulder position on the biceps brachii EMG in different dumbbell curls. J Sports Sci Med 8(1):24-29, 2009.",
+      "doi": "",
+      "url": "https://www.jssm.org/jssm-08-24.xml-Fulltext"
+    },
+    "parpa2025": {
+      "cite": "Parpa et al. An exploratory study of biceps brachii electromyographic activity during traditional dumbbell versus Bayesian cable curls. Muscles 4(4):45, 2025.",
+      "doi": "10.3390/muscles4040045",
+      "url": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC12550948/"
+    },
+    "escamilla2006": {
+      "cite": "Escamilla et al. Electromyographic analysis of traditional and nontraditional abdominal exercises: implications for rehabilitation and training. Phys Ther 86(5):656-671, 2006.",
+      "doi": "10.1093/ptj/86.5.656",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/16649890/"
+    },
+    "youdas2008": {
+      "cite": "Youdas, Guck, et al. An electromyographic analysis of the Ab-Slide exercise, abdominal crunch, supine double leg thrust, and side bridge in healthy young adults: implications for rehabilitation professionals. J Strength Cond Res 22(6):1939-1946, 2008.",
+      "doi": "",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/18978615/"
+    },
+    "axler1997": {
+      "cite": "Axler, McGill. Low back loads over a variety of abdominal exercises: searching for the safest abdominal challenge. Med Sci Sports Exerc 29(6):804-811, 1997.",
+      "doi": "",
+      "url": ""
+    },
+    "sundstrup2012": {
+      "cite": "Sundstrup et al. Swiss ball abdominal crunch with added elastic resistance is an effective alternative to training machines. Int J Sports Phys Ther 7(4):372-380, 2012.",
+      "doi": "",
+      "url": "https://nfa.elsevierpure.com/en/publications/swiss-ball-abdominal-crunch-with-added-elastic-resistance-is-an-e/"
+    },
+    "calatayud2017": {
+      "cite": "Calatayud, Casaña, et al. Progression of core stability exercises based on the extent of muscle activity. Am J Phys Med Rehabil 96(10):694-699, 2017.",
+      "doi": "10.1097/PHM.0000000000000713",
+      "url": "https://www.ncbi.nlm.nih.gov/pubmed/28157133"
+    },
+    "schoenfeld2014": {
+      "cite": "Schoenfeld et al. An electromyographic comparison of a modified version of the plank with a long lever and posterior tilt versus the traditional plank exercise. Sports Biomech 13(3):296-306, 2014.",
+      "doi": "10.1080/14763141.2014.942355",
+      "url": "https://www.tandfonline.com/doi/abs/10.1080/14763141.2014.942355"
+    },
+    "snarr2014": {
+      "cite": "Snarr RL, Esco MR. Electromyographical comparison of plank variations performed with and without instability devices. J Strength Cond Res 28(11):3298-3305, 2014.",
+      "doi": "10.1519/JSC.0000000000000521",
+      "url": "https://journals.lww.com/nsca-jscr/Fulltext/2014/11000/Electromyographical_Comparison_of_Plank_Variations.36.aspx"
+    },
+    "saglam2025": {
+      "cite": "Sağlam AF, Aydın EM, Demirkan E, Gündoğan B, Favre M. Effects of surface stability on muscle activation during plank exercise. J Hum Kinet, 2025.",
+      "doi": "10.5114/jhk/203417",
+      "url": "https://jhk.termedia.pl/Effects-of-Surface-Stability-on-Muscle-Activation-during-Plank-Exercise,203417,0,2.html"
+    },
+    "oliva2020": {
+      "cite": "Oliva-Lozano, Muyor. Core muscle activity during physical fitness exercises: a systematic review. Int J Environ Res Public Health, 2020 (PMID 32560185).",
+      "doi": "",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/32560185/"
+    },
+    "yun2017": {
+      "cite": "Yun et al. Changes in muscle activity of the abdominal muscles according to exercise method and speed during dead bug exercise. Phys Ther Rehabil Sci 6(1), 2017.",
+      "doi": "10.14474/ptrs.2017.6.1.1",
+      "url": "https://www.jptrs.org/journal/view.html?doi=10.14474%2Fptrs.2017.6.1.1"
+    }
+  }
+}

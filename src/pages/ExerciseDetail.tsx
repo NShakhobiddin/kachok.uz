@@ -3,6 +3,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import { BenefitMap } from '../components/BenefitMap';
 import { BodyMap } from '../components/BodyMap';
 import { LineChart } from '../components/charts';
+import { MuscleActivation } from '../components/MuscleActivation';
 import { ExerciseThumb } from '../components/ExerciseThumb';
 import { Figure } from '../components/figure/Figure';
 import { StandardsTable } from '../components/StrengthLevels';
@@ -137,6 +138,14 @@ export default function ExerciseDetail() {
           </span>
         </div>
       )}
+
+      <section className="section">
+        <div className="section-head">
+          <h2>Mushaklar 3D</h2>
+          <span className="small muted">qaysi mushak necha % ishlaydi</span>
+        </div>
+        <MuscleActivation ex={ex} />
+      </section>
 
       <section className="section">
         <div className="card row gap-16" style={{ alignItems: 'center' }}>

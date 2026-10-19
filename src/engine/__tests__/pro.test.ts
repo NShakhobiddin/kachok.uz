@@ -9,6 +9,11 @@ import { blockWeek, resolveMethod } from '../methods';
 import { adaptiveTdee, dailyIntake } from '../nutrition';
 import { navyBodyFat, whtr, whtrZone } from '../bodycomp';
 import { searchFoods } from '../../data/foods';
+import { readFileSync } from 'node:fs';
+import { EXERCISES } from '../../data/exercises';
+import { EMG_SOURCES } from '../../data/activation';
+import { M3_KEYS } from '../../data/muscles3d';
+import { activationFor, phaseFactor } from '../activation';
 import { DEFAULT_DAYS, generateProgram, hasEquipment } from '../program';
 
 describe('RPE jadvali va 1RM', () => {
@@ -257,5 +262,41 @@ describe('Moslashuvchan sarf va tana tarkibi', () => {
     expect(searchFoods('lagmon')[0].id).toBe('lagmon');
     expect(searchFoods('osh')[0].id).toBe('osh');
     expect(searchFoods('tovuq').length).toBeGreaterThanOrEqual(3);
+  });
+});
+
+describe('3D mushaklar va EMG faolligi', () => {
+  it('har mashqda EMG jadvali bor, qiymatlar va manbalar butun', () => {
+    for (const ex of EXERCISES) {
+      const a = activationFor(ex);
+      expect(a.fallback, ex.id).toBe(false);
+      expect(a.list.length, ex.id).toBeGreaterThanOrEqual(2);
+      for (const m of a.list) {
+        expect(M3_KEYS, `${ex.id}.${m.key}`).toContain(m.key);
+        expect(m.mvic).toBeGreaterThan(0);
+        expect(m.mvic).toBeLessThanOrEqual(200);
+        if (m.range) {
+          expect(m.mvic).toBeGreaterThanOrEqual(m.range[0]);
+          expect(m.mvic).toBeLessThanOrEqual(m.range[1]);
+        }
+        for (const s of m.src ?? []) expect(EMG_SOURCES[s], `${ex.id}.${m.key} → ${s}`).toBeDefined();
+      }
+      // ro'yxat kamayish tartibida, birinchisi — asosiy ishchi
+      expect(a.list[0].role).toBe('main');
+      for (let i = 1; i < a.list.length; i++) expect(a.list[i].mvic).toBeLessThanOrEqual(a.list[i - 1].mvic);
+    }
+  });
+  it('3D modelda har bir mushak kaliti uchun mesh bor', () => {
+    const glb = readFileSync(new URL('../../../public/models/muscles.glb', import.meta.url));
+    const len = glb.readUInt32LE(12);
+    const json = JSON.parse(glb.subarray(20, 20 + len).toString('utf8')) as { nodes: { name: string }[] };
+    const names = new Set(json.nodes.map((n) => n.name));
+    for (const k of M3_KEYS) expect(names.has(k), k).toBe(true);
+    for (const k of ['bones', 'other', 'tendon']) expect(names.has(k), k).toBe(true);
+  });
+  it('takror fazasi: konsentrik > ekssentrik > pauza; izometrikda to‘liq', () => {
+    expect(phaseFactor('up', false)).toBeGreaterThan(phaseFactor('down', false));
+    expect(phaseFactor('down', false)).toBeGreaterThan(phaseFactor('hold', false));
+    expect(phaseFactor('hold', true)).toBe(1);
   });
 });

@@ -1,0 +1,1912 @@
+{
+  "exercises": {
+    "bench-press": {
+      "basis": "direct",
+      "load": "60-85% 1RM across studies (Lauver 2016: 65% 1RM x6; Wojdala 2020: 70/85/100% 1RM; Botton 2013: 10RM; Barnett 1995: 80% 1RM; Rodriguez-Ridao 2020, Muyor 2023, Campos 2020: 60% 1RM)",
+      "metric": "mean",
+      "muscles": {
+        "pecMid": {
+          "mvic": 75,
+          "range": [
+            25,
+            100
+          ],
+          "src": [
+            "lauver2016",
+            "wojdala2020",
+            "rodriguezridao2020",
+            "stastny2017",
+            "vandentillaar2014"
+          ],
+          "estimate": false
+        },
+        "pecUpper": {
+          "mvic": 70,
+          "range": [
+            25,
+            98
+          ],
+          "src": [
+            "lauver2016",
+            "rodriguezridao2020",
+            "muyor2023"
+          ],
+          "estimate": false
+        },
+        "pecLower": {
+          "mvic": 65,
+          "range": [
+            27,
+            100
+          ],
+          "src": [
+            "rodriguezridao2020",
+            "lauver2016",
+            "arseneault2021"
+          ],
+          "estimate": true
+        },
+        "deltAnt": {
+          "mvic": 55,
+          "range": [
+            21,
+            70
+          ],
+          "src": [
+            "botton2013",
+            "campos2020",
+            "rodriguezridao2020",
+            "muyor2023",
+            "yan2025"
+          ],
+          "estimate": false
+        },
+        "tricepsLateral": {
+          "mvic": 70,
+          "range": [
+            12,
+            90
+          ],
+          "src": [
+            "wojdala2020",
+            "stastny2017",
+            "muyor2023"
+          ],
+          "estimate": true
+        },
+        "tricepsLong": {
+          "mvic": 55,
+          "range": [
+            30,
+            80
+          ],
+          "src": [
+            "barnett1995",
+            "saeterbakken2017"
+          ],
+          "estimate": true
+        },
+        "tricepsMedial": {
+          "mvic": 55,
+          "range": [
+            15,
+            80
+          ],
+          "src": [
+            "rodriguezridao2020"
+          ],
+          "estimate": true
+        }
+      },
+      "rom": "Pec major and anterior deltoid carry the sticking region (early-mid concentric) and their activity there rises with fatigue (van den Tillaar & Saeterbakken). Triceps demand is usually thought to peak toward lockout, but none of the sources reviewed quantified it.",
+      "notes": "Absolute %MVIC differs more than 3-fold between labs: ~25-27% MVIC at 60% 1RM (Rodriguez-Ridao 2020, Muyor 2023) vs ~100% MVIC at 65% 1RM (Lauver 2016: lower pec 100.1% flat; upper pec 98.2% in the 26-50% concentric window). Wojdala 2020: mean of AD/PM/TB 70.4% MVIC at 70% 1RM and 79.7% at 85% 1RM. Representative values target ~75-85% 1RM. Stastny 2017 review: pec major and triceps similar, both above anterior deltoid. Lauver's 'lower pectoralis' mapped to pecMid. Rodriguez-Ridao measured the triceps medial head (~15% MVIC). Muyor's unspecified triceps mapped to tricepsLateral (convention). Lats showed low activity in all conditions (Barnett 1995) and biceps is low with a barbell (Saeterbakken 2011), so both are omitted."
+    },
+    "db-bench": {
+      "basis": "direct",
+      "load": "1RM testing (Saeterbakken 2011, 12 trained men); 6RM (Welsch 2005); women, moderate loads (Luczak 2013)",
+      "metric": "mean",
+      "muscles": {
+        "pecMid": {
+          "mvic": 75,
+          "range": [
+            25,
+            100
+          ],
+          "src": [
+            "saeterbakken2011",
+            "welsch2005"
+          ],
+          "estimate": true
+        },
+        "pecUpper": {
+          "mvic": 70,
+          "range": [
+            25,
+            98
+          ],
+          "src": [
+            "saeterbakken2011",
+            "luczak2013"
+          ],
+          "estimate": true
+        },
+        "pecLower": {
+          "mvic": 60,
+          "range": [
+            25,
+            95
+          ],
+          "src": [
+            "saeterbakken2011"
+          ],
+          "estimate": true
+        },
+        "deltAnt": {
+          "mvic": 55,
+          "range": [
+            21,
+            70
+          ],
+          "src": [
+            "saeterbakken2011",
+            "welsch2005",
+            "luczak2013"
+          ],
+          "estimate": true
+        },
+        "tricepsLateral": {
+          "mvic": 55,
+          "range": [
+            10,
+            80
+          ],
+          "src": [
+            "saeterbakken2011"
+          ],
+          "estimate": true
+        },
+        "tricepsLong": {
+          "mvic": 45,
+          "range": [
+            10,
+            70
+          ],
+          "src": [
+            "saeterbakken2011"
+          ],
+          "estimate": true
+        },
+        "tricepsMedial": {
+          "mvic": 45,
+          "range": [
+            10,
+            70
+          ],
+          "src": [
+            "saeterbakken2011"
+          ],
+          "estimate": true
+        },
+        "biceps": {
+          "mvic": 15,
+          "range": [
+            5,
+            25
+          ],
+          "src": [
+            "saeterbakken2011"
+          ],
+          "estimate": true
+        }
+      },
+      "rom": "Not documented in the sources reviewed.",
+      "notes": "No %MVIC values found for the dumbbell bench. Values are scaled from bench-press using direct relative findings. Pec major and anterior deltoid were similar to barbell and Smith machine (Saeterbakken 2011; Welsch 2005). With dumbbells, triceps activity was lower and biceps higher (Saeterbakken 2011). The dumbbell 1RM was ~17% lower than the barbell 1RM."
+    },
+    "machine-chest-press": {
+      "basis": "direct",
+      "load": "60% 1RM x8 (Muyor 2023, 20 active adults); 80% 1RM (Coratella 2020, bodybuilders; Schanke 2012)",
+      "metric": "mean",
+      "muscles": {
+        "pecMid": {
+          "mvic": 60,
+          "range": [
+            25,
+            80
+          ],
+          "src": [
+            "coratella2020bp",
+            "schanke2012",
+            "muyor2023"
+          ],
+          "estimate": true
+        },
+        "pecUpper": {
+          "mvic": 55,
+          "range": [
+            30,
+            75
+          ],
+          "src": [
+            "muyor2023",
+            "coratella2020bp"
+          ],
+          "estimate": true
+        },
+        "pecLower": {
+          "mvic": 50,
+          "range": [
+            25,
+            70
+          ],
+          "src": [
+            "coratella2020bp"
+          ],
+          "estimate": true
+        },
+        "deltAnt": {
+          "mvic": 50,
+          "range": [
+            24,
+            60
+          ],
+          "src": [
+            "muyor2023",
+            "coratella2020bp"
+          ],
+          "estimate": true
+        },
+        "tricepsLateral": {
+          "mvic": 50,
+          "range": [
+            12,
+            65
+          ],
+          "src": [
+            "muyor2023",
+            "coratella2020bp"
+          ],
+          "estimate": true
+        },
+        "tricepsLong": {
+          "mvic": 40,
+          "range": [
+            12,
+            60
+          ],
+          "src": [
+            "coratella2020bp"
+          ],
+          "estimate": true
+        }
+      },
+      "rom": "Not documented in the sources reviewed.",
+      "notes": "Muyor 2023 (60% 1RM): clavicular pec ~30% MVIC on a neutral-grip seated chest press vs ~25% on a wide-grip bench press; anterior deltoid ~24% in all conditions; triceps ~12-16%. Coratella 2020 (competitive bodybuilders, 80% 1RM): the machine gave the lowest clavicular-head excitation and lower triceps and lateral-deltoid excitation than free-weight presses, so the two sources conflict on the clavicular head. ACE-sponsored thesis (Schanke 2012, NOT peer-reviewed): machine chest press pec activity was 79% of the barbell bench. Heavy-load values are estimates scaled from bench-press."
+    },
+    "push-up": {
+      "basis": "direct",
+      "load": "Bodyweight, standard hand position (Snarr & Esco 2013: 21 adults; Youdas 2010: 20 adults, 3 hand widths)",
+      "metric": "peak",
+      "muscles": {
+        "pecMid": {
+          "mvic": 75,
+          "range": [
+            64,
+            105
+          ],
+          "src": [
+            "snarr2013",
+            "youdas2010",
+            "calatayud2015"
+          ],
+          "estimate": false
+        },
+        "tricepsLateral": {
+          "mvic": 74,
+          "range": [
+            17,
+            109
+          ],
+          "src": [
+            "snarr2013",
+            "youdas2010",
+            "borreani2015"
+          ],
+          "estimate": false
+        },
+        "deltAnt": {
+          "mvic": 59,
+          "range": [
+            39,
+            79
+          ],
+          "src": [
+            "snarr2013"
+          ],
+          "estimate": false
+        },
+        "serratus": {
+          "mvic": 75,
+          "range": [
+            67,
+            87
+          ],
+          "src": [
+            "youdas2010"
+          ],
+          "estimate": false
+        },
+        "deltPost": {
+          "mvic": 15,
+          "range": [
+            11,
+            21
+          ],
+          "src": [
+            "youdas2010"
+          ],
+          "estimate": false
+        },
+        "tricepsLong": {
+          "mvic": 60,
+          "range": [
+            40,
+            90
+          ],
+          "src": [
+            "youdas2010",
+            "marcolin2015"
+          ],
+          "estimate": true
+        },
+        "pecUpper": {
+          "mvic": 50,
+          "range": [
+            30,
+            70
+          ],
+          "src": [
+            "borreani2015",
+            "marcolin2015"
+          ],
+          "estimate": true
+        },
+        "rectusAbdominis": {
+          "mvic": 20,
+          "range": [
+            10,
+            30
+          ],
+          "src": [
+            "calatayud2014"
+          ],
+          "estimate": true
+        }
+      },
+      "rom": "Not quantified across the ROM. A narrow hand position raises triceps (and pec) activity (Youdas 2010; Marcolin 2015).",
+      "notes": "Push-up values are peak-normalized (Snarr: pec 63.6, AD 58.9, triceps 74.3 %MVC; Youdas ranges: triceps 73-109, pec 95-105, serratus 67-87, posterior deltoid 11-21 %MVIC). Do not compare them directly with the mean values of other exercises. Mean-amplitude data are much lower, e.g. triceps ~17% MVIC on a stable 10-cm support (Borreani 2015). deltAnt range is Snarr's mean +/- 1 SD. Calatayud 2015: no difference in pec/anterior deltoid EMG between a 6RM bench press and an elastic-band push-up. The rectus abdominis figure (~20% MVIC) comes from a secondary citation of Calatayud 2014 and was not checked against the primary paper."
+    },
+    "dips": {
+      "basis": "direct",
+      "load": "Bodyweight (McKenzie 2022: 13 experienced men, 4 reps; Bagchi 2015: 10 men, 1 rep; Boehler 2011: bodyweight)",
+      "metric": "peak",
+      "muscles": {
+        "tricepsLateral": {
+          "mvic": 85,
+          "range": [
+            60,
+            110
+          ],
+          "src": [
+            "mckenzie2022",
+            "bagchi2015",
+            "boehler2011"
+          ],
+          "estimate": true
+        },
+        "tricepsLong": {
+          "mvic": 75,
+          "range": [
+            50,
+            100
+          ],
+          "src": [
+            "mckenzie2022",
+            "boehler2011"
+          ],
+          "estimate": true
+        },
+        "tricepsMedial": {
+          "mvic": 75,
+          "range": [
+            50,
+            100
+          ],
+          "src": [
+            "mckenzie2022"
+          ],
+          "estimate": true
+        },
+        "pecMid": {
+          "mvic": 65,
+          "range": [
+            40,
+            90
+          ],
+          "src": [
+            "mckenzie2022",
+            "bagchi2015",
+            "mckenzie2022fatigue"
+          ],
+          "estimate": true
+        },
+        "pecLower": {
+          "mvic": 70,
+          "range": [
+            40,
+            95
+          ],
+          "src": [
+            "mckenzie2022"
+          ],
+          "estimate": true
+        },
+        "deltAnt": {
+          "mvic": 55,
+          "range": [
+            35,
+            80
+          ],
+          "src": [
+            "mckenzie2022"
+          ],
+          "estimate": true
+        },
+        "pecUpper": {
+          "mvic": 30,
+          "range": [
+            15,
+            50
+          ],
+          "src": [
+            "mckenzie2022"
+          ],
+          "estimate": true
+        },
+        "lats": {
+          "mvic": 20,
+          "range": [
+            10,
+            35
+          ],
+          "src": [
+            "mckenzie2022"
+          ],
+          "estimate": true
+        }
+      },
+      "rom": "Pec major activity at maximal shoulder extension (the bottom) is substantial and rises sharply with fatigue, from ~65% to ~106% of the non-fatigued peak (McKenzie 2022 fatigue study). It is otherwise not quantified.",
+      "notes": "No peer-reviewed %MVIC data found. All values are estimates. McKenzie 2022 reports peak EMG in mV: triceps ~1.04 mV on the bar vs 0.83 mV on the bench. A secondary summary says the bar dip gave higher peaks than the bench dip in six muscles (pec major, anterior deltoid, triceps, upper trapezius, serratus anterior, lats). Bagchi 2015: vertical dips gave the highest triceps activation (not different from diamond push-ups); wide-grip dips gave the highest pec activation. ACE-sponsored thesis (Boehler 2011, NOT peer-reviewed): dips reached 87% of triangle push-up triceps EMG. pecLower > pecMid reflects the trunk-forward, shoulder-extended posture and is an assumption, not measured."
+    },
+    "incline-db-press": {
+      "basis": "direct",
+      "load": "Women, dumbbells (Luczak 2013; exact load not verified); values scaled from incline-bench",
+      "metric": "mean",
+      "muscles": {
+        "pecUpper": {
+          "mvic": 70,
+          "range": [
+            30,
+            120
+          ],
+          "src": [
+            "luczak2013",
+            "lauver2016",
+            "rodriguezridao2020"
+          ],
+          "estimate": true
+        },
+        "pecMid": {
+          "mvic": 55,
+          "range": [
+            20,
+            85
+          ],
+          "src": [
+            "luczak2013",
+            "lauver2016"
+          ],
+          "estimate": true
+        },
+        "pecLower": {
+          "mvic": 35,
+          "range": [
+            15,
+            60
+          ],
+          "src": [
+            "rodriguezridao2020"
+          ],
+          "estimate": true
+        },
+        "deltAnt": {
+          "mvic": 65,
+          "range": [
+            33,
+            85
+          ],
+          "src": [
+            "luczak2013",
+            "rodriguezridao2020"
+          ],
+          "estimate": true
+        },
+        "tricepsLateral": {
+          "mvic": 40,
+          "range": [
+            10,
+            65
+          ],
+          "src": [
+            "saeterbakken2011",
+            "saeterbakken2017"
+          ],
+          "estimate": true
+        },
+        "tricepsLong": {
+          "mvic": 35,
+          "range": [
+            10,
+            60
+          ],
+          "src": [
+            "saeterbakken2011"
+          ],
+          "estimate": true
+        },
+        "biceps": {
+          "mvic": 15,
+          "range": [
+            5,
+            30
+          ],
+          "src": [
+            "saeterbakken2011",
+            "saeterbakken2017"
+          ],
+          "estimate": true
+        },
+        "trapUpper": {
+          "mvic": 20,
+          "range": [
+            10,
+            35
+          ],
+          "src": [
+            "luczak2013"
+          ],
+          "estimate": true
+        }
+      },
+      "rom": "Luczak 2013: clavicular pec was higher on the incline than the flat press only in the eccentric (lowering) phase. In the concentric phase it was flat > incline > shoulder press.",
+      "notes": "Luczak 2013 (12 trained + 12 novice women, dumbbells): anterior deltoid and upper trapezius ran shoulder press > incline > flat. Sternal pec was flat = incline > shoulder press. Experience level made no difference. Absolute values are scaled from incline-bench, applying the dumbbell effects (similar pec/deltoid, lower triceps, higher biceps; Saeterbakken 2011). The user-listed 'Schoenfeld 2016 incline press' study could not be found."
+    },
+    "incline-bench": {
+      "basis": "direct",
+      "load": "65% 1RM x6 (Lauver 2016); 70% 1RM (Trebs 2010); 60% 1RM (Rodriguez-Ridao 2020); 80% 1RM (Coratella 2020); 6RM (Saeterbakken 2017). Representative for 30-45 deg.",
+      "metric": "mean",
+      "muscles": {
+        "pecUpper": {
+          "mvic": 80,
+          "range": [
+            30,
+            124
+          ],
+          "src": [
+            "lauver2016",
+            "rodriguezridao2020",
+            "trebs2010",
+            "coratella2020bp"
+          ],
+          "estimate": false
+        },
+        "pecMid": {
+          "mvic": 60,
+          "range": [
+            25,
+            87
+          ],
+          "src": [
+            "lauver2016",
+            "rodriguezridao2020",
+            "trebs2010",
+            "lopezvivancos2023"
+          ],
+          "estimate": false
+        },
+        "pecLower": {
+          "mvic": 35,
+          "range": [
+            15,
+            72
+          ],
+          "src": [
+            "arseneault2021",
+            "rodriguezridao2020",
+            "lauver2016"
+          ],
+          "estimate": true
+        },
+        "deltAnt": {
+          "mvic": 65,
+          "range": [
+            33,
+            85
+          ],
+          "src": [
+            "rodriguezridao2020",
+            "trebs2010",
+            "barnett1995"
+          ],
+          "estimate": true
+        },
+        "tricepsLateral": {
+          "mvic": 45,
+          "range": [
+            15,
+            70
+          ],
+          "src": [
+            "saeterbakken2017",
+            "rodriguezridao2020",
+            "lopezvivancos2023"
+          ],
+          "estimate": true
+        },
+        "tricepsLong": {
+          "mvic": 40,
+          "range": [
+            15,
+            65
+          ],
+          "src": [
+            "barnett1995",
+            "saeterbakken2017"
+          ],
+          "estimate": true
+        },
+        "tricepsMedial": {
+          "mvic": 45,
+          "range": [
+            15,
+            70
+          ],
+          "src": [
+            "rodriguezridao2020"
+          ],
+          "estimate": true
+        },
+        "biceps": {
+          "mvic": 15,
+          "range": [
+            5,
+            30
+          ],
+          "src": [
+            "saeterbakken2017",
+            "lopezvivancos2023"
+          ],
+          "estimate": true
+        }
+      },
+      "rom": "Lauver 2016: the upper-pec advantage of 30-45 deg over flat (122.5-124% vs 98.2% MVIC) appeared only in the 26-50% portion of the concentric phase. Over the whole concentric phase, upper-pec activity did not differ between angles.",
+      "notes": "The clavicular head peaks at ~30 deg (Rodriguez-Ridao: PMUP ~30% vs ~27% MVIC at 0 deg, 60% 1RM) to ~44 deg (Trebs 2010). Sternocostal activity falls with incline: Lauver lower pec was 100.1% flat, 86.6% at 30 deg and 71.9% at 45 deg. Anterior deltoid rises with incline (~33% MVIC inclined in Rodriguez-Ridao; Trebs; Barnett). Meta-analysis (Lopez-Vivancos 2023): flat > incline for the sternal portion, no significant difference for the clavicular portion. Saeterbakken 2017 (competitive athletes, 6RM): incline lowered triceps ~58% and raised biceps ~48% vs flat. Rodriguez-Ridao found triceps (medial head) unchanged across angles."
+    },
+    "cable-fly": {
+      "basis": "similar:pec-deck",
+      "load": "Schanke 2012 (ACE thesis): 80% 1RM, 5 reps, bent-forward cable crossover",
+      "metric": "mean",
+      "muscles": {
+        "pecMid": {
+          "mvic": 65,
+          "range": [
+            40,
+            85
+          ],
+          "src": [
+            "schanke2012",
+            "rochajunior2007"
+          ],
+          "estimate": true
+        },
+        "pecLower": {
+          "mvic": 60,
+          "range": [
+            35,
+            80
+          ],
+          "src": [
+            "schanke2012"
+          ],
+          "estimate": true
+        },
+        "pecUpper": {
+          "mvic": 45,
+          "range": [
+            25,
+            70
+          ],
+          "src": [
+            "schanke2012"
+          ],
+          "estimate": true
+        },
+        "deltAnt": {
+          "mvic": 40,
+          "range": [
+            19,
+            55
+          ],
+          "src": [
+            "campos2020",
+            "botton2013"
+          ],
+          "estimate": true
+        }
+      },
+      "rom": "Not documented by EMG. Cables keep tension near full adduction, unlike dumbbells (a mechanical argument, not measured).",
+      "notes": "No peer-reviewed %MVIC study of the cable fly was found. ACE-sponsored thesis (Schanke 2012, NOT peer-reviewed; 14 men, 80% 1RM): bent-forward cable crossover pec activity was 93% of the barbell bench (pec deck 98%). Values are estimated from pec-deck and bench-press. The split between heads depends on cable path (high-to-low vs low-to-high), and no peer-reviewed EMG documents it."
+    },
+    "pec-deck": {
+      "basis": "direct",
+      "load": "10RM (Rocha Junior 2007: 13 trained men; Botton 2013: 8 trained men)",
+      "metric": "mean",
+      "muscles": {
+        "pecMid": {
+          "mvic": 70,
+          "range": [
+            40,
+            95
+          ],
+          "src": [
+            "rochajunior2007",
+            "schanke2012"
+          ],
+          "estimate": true
+        },
+        "pecUpper": {
+          "mvic": 60,
+          "range": [
+            30,
+            85
+          ],
+          "src": [
+            "rochajunior2007"
+          ],
+          "estimate": true
+        },
+        "pecLower": {
+          "mvic": 55,
+          "range": [
+            30,
+            80
+          ],
+          "src": [
+            "rochajunior2007"
+          ],
+          "estimate": true
+        },
+        "deltAnt": {
+          "mvic": 50,
+          "range": [
+            19,
+            55
+          ],
+          "src": [
+            "botton2013",
+            "rochajunior2007",
+            "campos2020"
+          ],
+          "estimate": false
+        }
+      },
+      "rom": "Not documented in the sources reviewed.",
+      "notes": "Rocha Junior 2007 (10RM): no difference in pec major or anterior deltoid EMG between pec deck and bench press. Triceps was lower on the pec deck and is omitted. Botton 2013 (10RM): anterior deltoid ~50% on the pec deck vs ~55% on the bench and ~70% on the Smith shoulder press. These are presumed %MVIC; the units come from a database abstract record. ACE thesis (NOT peer-reviewed): pec deck 98% of bench. Pec values are estimates set slightly below bench-press."
+    },
+    "db-fly": {
+      "basis": "direct",
+      "load": "6RM (Solstad 2020: 17 trained men; Welsch 2005); 60% 1RM x12 (Campos 2020)",
+      "metric": "mean",
+      "muscles": {
+        "pecMid": {
+          "mvic": 60,
+          "range": [
+            35,
+            90
+          ],
+          "src": [
+            "solstad2020",
+            "welsch2005"
+          ],
+          "estimate": true
+        },
+        "pecUpper": {
+          "mvic": 50,
+          "range": [
+            25,
+            80
+          ],
+          "src": [
+            "solstad2020"
+          ],
+          "estimate": true
+        },
+        "pecLower": {
+          "mvic": 50,
+          "range": [
+            25,
+            80
+          ],
+          "src": [
+            "solstad2020"
+          ],
+          "estimate": true
+        },
+        "deltAnt": {
+          "mvic": 45,
+          "range": [
+            19,
+            55
+          ],
+          "src": [
+            "campos2020",
+            "welsch2005"
+          ],
+          "estimate": true
+        }
+      },
+      "rom": "Solstad 2020: the barbell bench beat the fly by ~42% in the upper phase but only ~21-23% in the middle and lower phases. Fly pec activation drops off near the top (arms vertical) and is relatively best in the lower, stretched range.",
+      "notes": "Solstad 2020: overall pec major was ~16% lower than the barbell bench. Welsch 2005 (6RM, 3 non-fatiguing reps): pec major and anterior deltoid were similar to barbell and dumbbell bench. Campos 2020 (60% 1RM): anterior deltoid 18.8% MVIC (vs 21.4% bench), medial 3.4%, posterior 2.5%. The pec values are estimates."
+    },
+    "ohp": {
+      "basis": "direct",
+      "load": "80% 1RM (Saeterbakken & Fimland 2013, 15 men); 60% 1RM x12 (Campos 2020; press implement not verified); bodybuilders (Coratella 2022)",
+      "metric": "mean",
+      "muscles": {
+        "deltAnt": {
+          "mvic": 70,
+          "range": [
+            33,
+            90
+          ],
+          "src": [
+            "saeterbakken2013",
+            "campos2020",
+            "botton2013",
+            "paoli2010"
+          ],
+          "estimate": true
+        },
+        "deltLat": {
+          "mvic": 50,
+          "range": [
+            28,
+            70
+          ],
+          "src": [
+            "campos2020",
+            "saeterbakken2013",
+            "coratella2022"
+          ],
+          "estimate": true
+        },
+        "deltPost": {
+          "mvic": 20,
+          "range": [
+            11,
+            30
+          ],
+          "src": [
+            "campos2020",
+            "saeterbakken2013"
+          ],
+          "estimate": true
+        },
+        "tricepsLateral": {
+          "mvic": 65,
+          "range": [
+            30,
+            90
+          ],
+          "src": [
+            "saeterbakken2013"
+          ],
+          "estimate": true
+        },
+        "tricepsLong": {
+          "mvic": 50,
+          "range": [
+            25,
+            75
+          ],
+          "src": [
+            "saeterbakken2013"
+          ],
+          "estimate": true
+        },
+        "trapUpper": {
+          "mvic": 50,
+          "range": [
+            25,
+            75
+          ],
+          "src": [
+            "coratella2022",
+            "luczak2013"
+          ],
+          "estimate": true
+        },
+        "serratus": {
+          "mvic": 45,
+          "range": [
+            20,
+            70
+          ],
+          "src": [],
+          "estimate": true
+        },
+        "pecUpper": {
+          "mvic": 25,
+          "range": [
+            10,
+            40
+          ],
+          "src": [
+            "coratella2022"
+          ],
+          "estimate": true
+        }
+      },
+      "rom": "Paoli 2010 (seated military press): full ROM gave the highest deltoid and trapezius activity, and partial ROM reduced both.",
+      "notes": "Saeterbakken & Fimland 2013: deltoid activity was higher standing than seated and with dumbbells than barbell. Posterior deltoid was ~25% higher standing vs seated with a barbell. Triceps was ~39% higher on the standing barbell press than the standing dumbbell press. Coratella 2022: the front barbell press excites pec major more than behind-the-neck. Campos 2020 (60% 1RM): anterior 33.3, medial 27.9, posterior 11.4 %MVIC (low end of the ranges). Serratus and upper trapezius are estimates; no standing-barbell %MVIC was found for them."
+    },
+    "db-shoulder-press": {
+      "basis": "direct",
+      "load": "80% 1RM (Saeterbakken & Fimland 2013, seated dumbbell condition); 60% 1RM x12 (Campos 2020); women (Luczak 2013)",
+      "metric": "mean",
+      "muscles": {
+        "deltAnt": {
+          "mvic": 65,
+          "range": [
+            33,
+            85
+          ],
+          "src": [
+            "saeterbakken2013",
+            "campos2020",
+            "luczak2013",
+            "paoli2010"
+          ],
+          "estimate": true
+        },
+        "deltLat": {
+          "mvic": 45,
+          "range": [
+            28,
+            65
+          ],
+          "src": [
+            "campos2020",
+            "saeterbakken2013"
+          ],
+          "estimate": true
+        },
+        "deltPost": {
+          "mvic": 15,
+          "range": [
+            11,
+            25
+          ],
+          "src": [
+            "campos2020",
+            "saeterbakken2013"
+          ],
+          "estimate": true
+        },
+        "tricepsLateral": {
+          "mvic": 45,
+          "range": [
+            20,
+            70
+          ],
+          "src": [
+            "saeterbakken2013"
+          ],
+          "estimate": true
+        },
+        "tricepsLong": {
+          "mvic": 35,
+          "range": [
+            15,
+            60
+          ],
+          "src": [
+            "saeterbakken2013"
+          ],
+          "estimate": true
+        },
+        "trapUpper": {
+          "mvic": 40,
+          "range": [
+            20,
+            65
+          ],
+          "src": [
+            "luczak2013"
+          ],
+          "estimate": true
+        },
+        "serratus": {
+          "mvic": 35,
+          "range": [
+            15,
+            60
+          ],
+          "src": [],
+          "estimate": true
+        },
+        "pecUpper": {
+          "mvic": 20,
+          "range": [
+            10,
+            35
+          ],
+          "src": [],
+          "estimate": true
+        }
+      },
+      "rom": "Paoli 2010 (seated military press): full ROM gave the highest shoulder-muscle activity.",
+      "notes": "Campos 2020 shoulder press at 60% 1RM: anterior 33.3, medial 27.9, posterior 11.4 %MVIC (implement and position not verified here). Saeterbakken & Fimland 2013: posterior deltoid was ~24% lower seated than standing with dumbbells. Seated dumbbell had a higher 1RM than standing dumbbell. Luczak 2013 (women): dumbbell shoulder press gave the highest anterior deltoid and upper trapezius of the dumbbell presses. Values are estimates scaled to heavy loads."
+    },
+    "machine-shoulder-press": {
+      "basis": "direct",
+      "load": "10RM Smith-machine shoulder press (Botton 2013); machine shoulder press in bodybuilders (Coratella 2022)",
+      "metric": "mean",
+      "muscles": {
+        "deltAnt": {
+          "mvic": 70,
+          "range": [
+            33,
+            70
+          ],
+          "src": [
+            "botton2013",
+            "campos2020"
+          ],
+          "estimate": false
+        },
+        "deltLat": {
+          "mvic": 40,
+          "range": [
+            25,
+            60
+          ],
+          "src": [
+            "coratella2022",
+            "campos2020"
+          ],
+          "estimate": true
+        },
+        "deltPost": {
+          "mvic": 10,
+          "range": [
+            5,
+            20
+          ],
+          "src": [
+            "coratella2022"
+          ],
+          "estimate": true
+        },
+        "tricepsLateral": {
+          "mvic": 50,
+          "range": [
+            25,
+            75
+          ],
+          "src": [
+            "saeterbakken2013"
+          ],
+          "estimate": true
+        },
+        "tricepsLong": {
+          "mvic": 40,
+          "range": [
+            20,
+            60
+          ],
+          "src": [],
+          "estimate": true
+        },
+        "trapUpper": {
+          "mvic": 35,
+          "range": [
+            15,
+            55
+          ],
+          "src": [
+            "coratella2022"
+          ],
+          "estimate": true
+        },
+        "serratus": {
+          "mvic": 25,
+          "range": [
+            10,
+            45
+          ],
+          "src": [],
+          "estimate": true
+        },
+        "pecUpper": {
+          "mvic": 20,
+          "range": [
+            10,
+            35
+          ],
+          "src": [],
+          "estimate": true
+        }
+      },
+      "rom": "Not documented in the sources reviewed.",
+      "notes": "Botton 2013 used a Smith-machine shoulder press, the closest available proxy: anterior deltoid ~70%, presumed %MVIC, significantly higher than bench or pec deck. Coratella 2022: posterior deltoid was less excited on the machine than the barbell press, and anterior deltoid was lower on the back machine press than the back barbell press. Upper trapezius did not differ between front and back variants."
+    },
+    "pike-push-up": {
+      "basis": "similar:push-up + ohp",
+      "load": "Bodyweight (estimate only)",
+      "metric": "mean",
+      "muscles": {
+        "deltAnt": {
+          "mvic": 65,
+          "range": [
+            40,
+            85
+          ],
+          "src": [
+            "snarr2013",
+            "campos2020"
+          ],
+          "estimate": true
+        },
+        "tricepsLateral": {
+          "mvic": 60,
+          "range": [
+            35,
+            85
+          ],
+          "src": [
+            "snarr2013"
+          ],
+          "estimate": true
+        },
+        "tricepsLong": {
+          "mvic": 45,
+          "range": [
+            25,
+            70
+          ],
+          "src": [],
+          "estimate": true
+        },
+        "deltLat": {
+          "mvic": 35,
+          "range": [
+            20,
+            55
+          ],
+          "src": [
+            "campos2020"
+          ],
+          "estimate": true
+        },
+        "serratus": {
+          "mvic": 45,
+          "range": [
+            25,
+            70
+          ],
+          "src": [
+            "youdas2010"
+          ],
+          "estimate": true
+        },
+        "trapUpper": {
+          "mvic": 35,
+          "range": [
+            15,
+            55
+          ],
+          "src": [],
+          "estimate": true
+        },
+        "pecUpper": {
+          "mvic": 30,
+          "range": [
+            15,
+            50
+          ],
+          "src": [
+            "rodriguezridao2020",
+            "trebs2010"
+          ],
+          "estimate": true
+        },
+        "rectusAbdominis": {
+          "mvic": 15,
+          "range": [
+            5,
+            25
+          ],
+          "src": [
+            "calatayud2014"
+          ],
+          "estimate": true
+        }
+      },
+      "rom": "Not documented.",
+      "notes": "No peer-reviewed EMG study of the pike push-up was found. A 'pike variations' EMG study with instability devices concerns a core exercise, not this press. Values are set between the push-up (Snarr 2013; Youdas 2010) and the overhead press (Campos 2020; Saeterbakken & Fimland 2013). The reasoning is that a more vertical pressing angle shifts work from pec to deltoids, consistent with incline-bench trends (Rodriguez-Ridao 2020; Trebs 2010)."
+    },
+    "lateral-raise": {
+      "basis": "direct",
+      "load": "60% 1RM x12 (Campos 2020, 13 trained men); 10RM (Botton 2013); competitive bodybuilders (Coratella 2020)",
+      "metric": "mean",
+      "muscles": {
+        "deltLat": {
+          "mvic": 55,
+          "range": [
+            30,
+            75
+          ],
+          "src": [
+            "campos2020",
+            "coratella2020lr",
+            "botton2013"
+          ],
+          "estimate": true
+        },
+        "deltAnt": {
+          "mvic": 30,
+          "range": [
+            21,
+            45
+          ],
+          "src": [
+            "campos2020",
+            "coratella2020lr"
+          ],
+          "estimate": true
+        },
+        "deltPost": {
+          "mvic": 30,
+          "range": [
+            24,
+            40
+          ],
+          "src": [
+            "campos2020",
+            "coratella2020lr"
+          ],
+          "estimate": true
+        },
+        "trapUpper": {
+          "mvic": 40,
+          "range": [
+            20,
+            60
+          ],
+          "src": [
+            "coratella2020lr"
+          ],
+          "estimate": true
+        },
+        "serratus": {
+          "mvic": 25,
+          "range": [
+            10,
+            40
+          ],
+          "src": [],
+          "estimate": true
+        }
+      },
+      "rom": "Medial deltoid activity is commonly said to rise with abduction toward ~90 deg (top), but none of the sources reviewed here quantified it.",
+      "notes": "Campos 2020 (60% 1RM): medial 30.3, anterior 21.2, posterior 24.0 %MVIC. The lateral raise had the highest medial and posterior deltoid of the four exercises tested. These moderate-load values likely understate a heavy set, so the representative values are scaled estimates. Coratella 2020 (sEMG RMS): neutral humeral rotation gave the greatest medial deltoid; internal rotation the greatest posterior deltoid and upper trapezius; the frontal raise the greatest anterior deltoid. Botton 2013: lateral raise (cable/dumbbell) beat the shoulder press for medial deltoid."
+    },
+    "cable-lateral-raise": {
+      "basis": "similar:lateral-raise",
+      "load": "Not specified (Botton 2013 included a cable/dumbbell lateral raise at 10RM)",
+      "metric": "mean",
+      "muscles": {
+        "deltLat": {
+          "mvic": 55,
+          "range": [
+            30,
+            75
+          ],
+          "src": [
+            "botton2013",
+            "campos2020",
+            "larsen2025"
+          ],
+          "estimate": true
+        },
+        "deltAnt": {
+          "mvic": 30,
+          "range": [
+            20,
+            45
+          ],
+          "src": [
+            "campos2020"
+          ],
+          "estimate": true
+        },
+        "deltPost": {
+          "mvic": 30,
+          "range": [
+            20,
+            40
+          ],
+          "src": [
+            "campos2020"
+          ],
+          "estimate": true
+        },
+        "trapUpper": {
+          "mvic": 35,
+          "range": [
+            20,
+            55
+          ],
+          "src": [
+            "coratella2020lr"
+          ],
+          "estimate": true
+        },
+        "serratus": {
+          "mvic": 25,
+          "range": [
+            10,
+            40
+          ],
+          "src": [],
+          "estimate": true
+        }
+      },
+      "rom": "The cable keeps more resistance in the bottom (adducted) range, while dumbbell torque peaks near 90 deg (resistance-profile argument in Larsen 2025). EMG across the ROM is not documented.",
+      "notes": "No cable-specific %MVIC data found. Larsen 2025, a hypertrophy study, cites earlier work showing cable and dumbbell lateral raises both exceed the shoulder press in sEMG amplitude, with no difference between them (consistent with Botton 2013). Values are copied from lateral-raise."
+    },
+    "pushdown": {
+      "basis": "direct",
+      "load": "70% 1RM x7, women (Boehler 2011 thesis); 30-60% 1RM to failure (Hussain 2020)",
+      "metric": "mean",
+      "muscles": {
+        "tricepsLateral": {
+          "mvic": 70,
+          "range": [
+            45,
+            95
+          ],
+          "src": [
+            "boehler2011",
+            "hussain2020"
+          ],
+          "estimate": true
+        },
+        "tricepsLong": {
+          "mvic": 70,
+          "range": [
+            40,
+            95
+          ],
+          "src": [
+            "kholinne2018",
+            "boehler2011",
+            "villalba2024"
+          ],
+          "estimate": true
+        },
+        "tricepsMedial": {
+          "mvic": 60,
+          "range": [
+            35,
+            90
+          ],
+          "src": [
+            "hussain2020",
+            "kholinne2018"
+          ],
+          "estimate": true
+        },
+        "forearmFlexors": {
+          "mvic": 20,
+          "range": [
+            10,
+            35
+          ],
+          "src": [
+            "villalba2024"
+          ],
+          "estimate": true
+        },
+        "forearmExtensors": {
+          "mvic": 15,
+          "range": [
+            5,
+            30
+          ],
+          "src": [
+            "villalba2024"
+          ],
+          "estimate": true
+        }
+      },
+      "rom": "Not documented in the sources reviewed.",
+      "notes": "No peer-reviewed %MVIC values were found. ACE-sponsored thesis (Boehler 2011, NOT peer-reviewed): bar pushdown reached 67% of triangle push-up triceps EMG, and rope and bar pushdowns showed a significant long-vs-lateral head difference (direction not verified). Kholinne 2018: with the arm at the side (0 deg shoulder elevation) the long head showed higher activation than the lateral and medial heads during elbow extension. Villalba 2024: a supinated handle raised long-head EMG, a pronated handle raised wrist-flexor activity. Hussain 2020: the three heads do not act in unison."
+    },
+    "overhead-extension": {
+      "basis": "direct",
+      "load": "1-2 reps at 40% of the MVIC load, 21 trained men (Alves 2018); 70% 1RM x7, women (Boehler 2011 thesis)",
+      "metric": "mean",
+      "muscles": {
+        "tricepsLong": {
+          "mvic": 70,
+          "range": [
+            40,
+            95
+          ],
+          "src": [
+            "alves2018",
+            "boehler2011"
+          ],
+          "estimate": true
+        },
+        "tricepsMedial": {
+          "mvic": 70,
+          "range": [
+            40,
+            95
+          ],
+          "src": [
+            "kholinne2018"
+          ],
+          "estimate": true
+        },
+        "tricepsLateral": {
+          "mvic": 60,
+          "range": [
+            35,
+            90
+          ],
+          "src": [
+            "alves2018",
+            "boehler2011"
+          ],
+          "estimate": true
+        }
+      },
+      "rom": "Alves 2018: concentric activity was highest in the initial and middle portions of the ROM (elbow flexed, long head stretched) for the long and lateral heads.",
+      "notes": "Kholinne 2018 (OpenSim plus sEMG, 10 adults): at 90 deg or more of shoulder elevation the medial head generated the highest force, and the long head lost the advantage it showed at 0 deg. ACE thesis (Boehler 2011, NOT peer-reviewed): overhead extension reached 76% of triangle push-up triceps EMG. All values are estimates."
+    },
+    "skull-crusher": {
+      "basis": "direct",
+      "load": "Lying dumbbell extension, 1-2 reps at 40% of the MVIC load (Alves 2018); lying barbell extension, 70% 1RM x7 (Boehler 2011 thesis)",
+      "metric": "mean",
+      "muscles": {
+        "tricepsLateral": {
+          "mvic": 65,
+          "range": [
+            35,
+            90
+          ],
+          "src": [
+            "alves2018",
+            "boehler2011"
+          ],
+          "estimate": true
+        },
+        "tricepsMedial": {
+          "mvic": 65,
+          "range": [
+            35,
+            90
+          ],
+          "src": [
+            "kholinne2018"
+          ],
+          "estimate": true
+        },
+        "tricepsLong": {
+          "mvic": 60,
+          "range": [
+            30,
+            85
+          ],
+          "src": [
+            "alves2018",
+            "boehler2011"
+          ],
+          "estimate": true
+        }
+      },
+      "rom": "Alves 2018: in the lying extension, concentric lateral-head activity was highest in the initial and middle ROM.",
+      "notes": "ACE thesis (Boehler 2011, NOT peer-reviewed): lying barbell triceps extension reached 62% of triangle push-up triceps EMG, with a significant long-vs-lateral head difference. No peer-reviewed %MVIC values were found. All values are estimates."
+    },
+    "close-grip-bench": {
+      "basis": "direct",
+      "load": "60% 1RM, grip 50% of biacromial width (Muyor 2023); 80% 1RM (Barnett 1995); 6RM (Saeterbakken 2021); isometric (Lehman 2005)",
+      "metric": "mean",
+      "muscles": {
+        "tricepsLateral": {
+          "mvic": 75,
+          "range": [
+            16,
+            95
+          ],
+          "src": [
+            "muyor2023",
+            "lehman2005",
+            "barnett1995"
+          ],
+          "estimate": true
+        },
+        "tricepsLong": {
+          "mvic": 65,
+          "range": [
+            30,
+            90
+          ],
+          "src": [
+            "barnett1995"
+          ],
+          "estimate": true
+        },
+        "tricepsMedial": {
+          "mvic": 60,
+          "range": [
+            15,
+            85
+          ],
+          "src": [
+            "rodriguezridao2020"
+          ],
+          "estimate": true
+        },
+        "pecUpper": {
+          "mvic": 65,
+          "range": [
+            25,
+            95
+          ],
+          "src": [
+            "barnett1995",
+            "arseneault2021"
+          ],
+          "estimate": true
+        },
+        "pecMid": {
+          "mvic": 60,
+          "range": [
+            25,
+            90
+          ],
+          "src": [
+            "lehman2005",
+            "saeterbakken2021"
+          ],
+          "estimate": true
+        },
+        "pecLower": {
+          "mvic": 50,
+          "range": [
+            20,
+            85
+          ],
+          "src": [
+            "arseneault2021"
+          ],
+          "estimate": true
+        },
+        "deltAnt": {
+          "mvic": 55,
+          "range": [
+            24,
+            70
+          ],
+          "src": [
+            "saeterbakken2021",
+            "muyor2023"
+          ],
+          "estimate": true
+        }
+      },
+      "rom": "Not documented in the sources reviewed.",
+      "notes": "Muyor 2023 (60% 1RM): triceps ~16% MVIC at 50% biacromial grip vs ~12% at 150%; anterior deltoid ~24% regardless of grip. Lehman 2005: narrowing the grip raises triceps and lowers sternocostal pec. Barnett 1995: a narrow grip raises clavicular pec and triceps long head. Arseneault 2021: a close pronated grip favoured the clavicular head. Saeterbakken 2021 (6RM): grip width had small effects on prime movers; a narrow grip lowered anterior deltoid in novices only. Values are estimates scaled from bench-press."
+    },
+    "bench-dip": {
+      "basis": "direct",
+      "load": "Bodyweight, 4 reps, 13 experienced men (McKenzie 2022)",
+      "metric": "peak",
+      "muscles": {
+        "tricepsLateral": {
+          "mvic": 65,
+          "range": [
+            45,
+            90
+          ],
+          "src": [
+            "mckenzie2022"
+          ],
+          "estimate": true
+        },
+        "tricepsLong": {
+          "mvic": 55,
+          "range": [
+            35,
+            80
+          ],
+          "src": [
+            "mckenzie2022"
+          ],
+          "estimate": true
+        },
+        "tricepsMedial": {
+          "mvic": 60,
+          "range": [
+            40,
+            85
+          ],
+          "src": [
+            "mckenzie2022"
+          ],
+          "estimate": true
+        },
+        "deltAnt": {
+          "mvic": 45,
+          "range": [
+            25,
+            70
+          ],
+          "src": [
+            "mckenzie2022"
+          ],
+          "estimate": true
+        },
+        "pecMid": {
+          "mvic": 30,
+          "range": [
+            15,
+            50
+          ],
+          "src": [
+            "mckenzie2022"
+          ],
+          "estimate": true
+        }
+      },
+      "rom": "The bench dip reaches greater peak shoulder extension at the bottom than bar or ring dips (McKenzie 2022).",
+      "notes": "McKenzie 2022 reports mV, not %MVIC: peak triceps was 0.83 mV on the bench dip vs ~1.04 mV on the bar dip, about 80% of the bar dip. The bar dip had higher peaks than the bench dip in six muscles (secondary summary). Values are scaled from the dips estimates and are all estimates."
+    }
+  },
+  "sources": {
+    "stastny2017": {
+      "cite": "Stastny P, et al. A systematic review of surface electromyography analyses of the bench press movement task. PLoS One 12(2):e0171632, 2017.",
+      "doi": "10.1371/journal.pone.0171632",
+      "url": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5295722/"
+    },
+    "saeterbakken2011": {
+      "cite": "Saeterbakken AH, van den Tillaar R, Fimland MS. A comparison of muscle activity and 1-RM strength of three chest-press exercises with different stability requirements. J Sports Sci 29(5):533-538, 2011.",
+      "doi": "10.1080/02640414.2010.543916",
+      "url": "https://www.semanticscholar.org/paper/A-comparison-of-muscle-activity-and-1-RM-strength-Saeterbakken-Tillaar/6baff2f6f89f8d4ac73b7ef95eff820d9c56721d"
+    },
+    "saeterbakken2017": {
+      "cite": "Saeterbakken AH, Mo DA, Scott S, Andersen V. The Effects of Bench Press Variations in Competitive Athletes on Muscle Activity and Performance. J Hum Kinet 57:61-71, 2017.",
+      "doi": "10.1515/hukin-2017-0047",
+      "url": "https://www.unboundmedicine.com/medline/citation/28713459/The_Effects_of_Bench_Press_Variations_in_Competitive_Athletes_on_Muscle_Activity_and_Performance_"
+    },
+    "saeterbakken2021": {
+      "cite": "Saeterbakken AH, et al. The Effect of Grip Width on Muscle Strength and Electromyographic Activity in Bench Press among Novice- and Resistance-Trained Men. Int J Environ Res Public Health 18(12):6444, 2021.",
+      "doi": "10.3390/ijerph18126444",
+      "url": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8296276/"
+    },
+    "saeterbakken2013": {
+      "cite": "Saeterbakken AH, Fimland MS. Effects of body position and loading modality on muscle activity and strength in shoulder presses. J Strength Cond Res 27(7):1824-1831, 2013.",
+      "doi": "",
+      "url": "https://www.semanticscholar.org/paper/Effects-of-Body-Position-and-Loading-Modality-on-in-Saeterbakken-Fimland/dfb9cf1da045b1295dfdb72706488dec5f707620"
+    },
+    "lauver2016": {
+      "cite": "Lauver JD, Cayot TE, Scheuermann BW. Influence of bench angle on upper extremity muscular activation during bench press exercise. Eur J Sport Sci 16(3):309-316, 2016.",
+      "doi": "10.1080/17461391.2015.1022605",
+      "url": "https://onlinelibrary.wiley.com/doi/10.1080/17461391.2015.1022605"
+    },
+    "trebs2010": {
+      "cite": "Trebs AA, Brandenburg JP, Pitney WA. An electromyography analysis of 3 muscles surrounding the shoulder joint during the performance of a chest press exercise at several angles. J Strength Cond Res 24(7):1925-1930, 2010.",
+      "doi": "",
+      "url": "https://www.semanticscholar.org/paper/An-Electromyography-Analysis-of-3-Muscles-the-Joint-Trebs-Brandenburg/babb8af9d8cec173a3ba948541e37394c72d6090"
+    },
+    "rodriguezridao2020": {
+      "cite": "Rodriguez-Ridao D, et al. Effect of Five Bench Inclinations on the Electromyographic Activity of the Pectoralis Major, Anterior Deltoid, and Triceps Brachii during the Bench Press Exercise. Int J Environ Res Public Health 17(19):7339, 2020.",
+      "doi": "10.3390/ijerph17197339",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/33049982/"
+    },
+    "muyor2023": {
+      "cite": "Muyor JM, Rodriguez-Ridao D, Oliva-Lozano JM. Comparison of Muscle Activity between the Horizontal Bench Press and the Seated Chest Press Exercises Using Several Grips. J Hum Kinet 87:23-34, 2023.",
+      "doi": "",
+      "url": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC10203828/"
+    },
+    "lopezvivancos2023": {
+      "cite": "Lopez-Vivancos A, et al. Electromyographic Activity of the Pectoralis Major Muscle during Traditional Bench Press and Other Variants of Pectoral Exercises: A Systematic Review and Meta-Analysis. Appl Sci 13(8):5203, 2023.",
+      "doi": "10.3390/app13085203",
+      "url": "https://www.mdpi.com/2076-3417/13/8/5203"
+    },
+    "arseneault2021": {
+      "cite": "Arseneault, Roy, Sercia. The Effect of 12 variations of the bench press exercise on the EMG activity of three heads of the pectoralis major. International Journal of Strength and Conditioning, 2021.",
+      "doi": "",
+      "url": "https://journal.iusca.org/index.php/Journal/article/view/39"
+    },
+    "barnett1995": {
+      "cite": "Barnett C, Kippers V, Turner P. Effects of variations of the bench press exercise on the EMG activity of five shoulder muscles. J Strength Cond Res 9(4):222-227, 1995.",
+      "doi": "",
+      "url": "https://www.semanticscholar.org/paper/Effects-of-Variations-of-the-Bench-Press-Exercise-Barnett-Kippers/f8b82261a82d8c71fa56ac4a4057820ad9f1b0a5"
+    },
+    "lehman2005": {
+      "cite": "Lehman GJ. The influence of grip width and forearm pronation/supination on upper-body myoelectric activity during the flat bench press. J Strength Cond Res 19(3):587-591, 2005.",
+      "doi": "",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/16095407/"
+    },
+    "wojdala2020": {
+      "cite": "Wojdala G, et al. Impact of the \"Sling Shot\" Supportive Device on Upper-Body Neuromuscular Activity during the Bench Press Exercise. Int J Environ Res Public Health 17(20):7695, 2020.",
+      "doi": "10.3390/ijerph17207695",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/33096856/"
+    },
+    "yan2025": {
+      "cite": "Yan et al. Study on the differences in peripheral fatigue responses elicitation effects of bench press training with different loads and tempos based on electromyography and motion sensors. Front Physiol, 2025.",
+      "doi": "10.3389/fphys.2025.1661217",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/41064658/"
+    },
+    "vandentillaar2014": {
+      "cite": "van den Tillaar R, Saeterbakken A. Effect of Fatigue Upon Performance and Electromyographic Activity in 6-RM Bench Press. J Hum Kinet 40:57-65, 2014.",
+      "doi": "10.2478/hukin-2014-0007",
+      "url": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4096084/"
+    },
+    "coratella2020bp": {
+      "cite": "Coratella G, Tornatore G, Longo S, Esposito F, Ce E. Specific prime movers' excitation during free-weight bench press variations and chest press machine in competitive bodybuilders. Eur J Sport Sci 20(5), 2020.",
+      "doi": "10.1080/17461391.2019.1655101",
+      "url": "https://www.tandfonline.com/doi/abs/10.1080/17461391.2019.1655101"
+    },
+    "schanke2012": {
+      "cite": "Schanke W (Porcari J, supervisor). Electromyographical analysis of the pectoralis major muscle during various chest exercises. MS thesis, University of Wisconsin-La Crosse, 2012 (ACE-sponsored; NOT peer-reviewed).",
+      "doi": "",
+      "url": "https://minds.wisconsin.edu/handle/1793/62857"
+    },
+    "welsch2005": {
+      "cite": "Welsch EA, Bird M, Mayhew JL. Electromyographic activity of the pectoralis major and anterior deltoid muscles during three upper-body lifts. J Strength Cond Res 19(2):449-452, 2005.",
+      "doi": "10.1519/14513.1",
+      "url": "https://www.researchgate.net/publication/7839016_Electromyographic_Activity_of_the_Pectoralis_Major_and_Anterior_Deltoid_Muscles_During_Three_Upper-Body_Lifts"
+    },
+    "solstad2020": {
+      "cite": "Solstad TEJ, et al. A Comparison of Muscle Activation between Barbell Bench Press and Dumbbell Flyes in Resistance-Trained Males. J Sports Sci Med 19(4):645-651, 2020.",
+      "doi": "",
+      "url": "https://www.jssm.org/jssm-19-645.xml-Fulltext"
+    },
+    "rochajunior2007": {
+      "cite": "Rocha Junior VA, et al. Comparison among the EMG activity of the pectoralis major, anterior deltoidis and triceps brachii during the bench press and peck deck exercises. Rev Bras Med Esporte 13(1):51-54, 2007.",
+      "doi": "10.1590/S1517-86922007000100012",
+      "url": "https://www.scielo.br/j/rbme/a/wZB7qVqH98pXGzH9p4kyg5Q/?lang=en"
+    },
+    "botton2013": {
+      "cite": "Botton CE, Wilhelm EN, Ughini CC, Pinto RS, Lima CS. Electromyographical analysis of the deltoid between different strength training exercises. Medicina Sportiva 17(2):67-71, 2013.",
+      "doi": "10.5604/17342260.1055261",
+      "url": "https://www.iat.uni-leipzig.de/datenbanken/iks/sponet/Record/4029334"
+    },
+    "campos2020": {
+      "cite": "Campos YAC, et al. Different Shoulder Exercises Affect the Activation of Deltoid Portions in Resistance-Trained Individuals. J Hum Kinet 75:5-14, 2020.",
+      "doi": "10.2478/hukin-2020-0033",
+      "url": "https://johk.pl/?p=5707"
+    },
+    "coratella2020lr": {
+      "cite": "Coratella G, et al. An Electromyographic Analysis of Lateral Raise Variations and Frontal Raise in Competitive Bodybuilders. Int J Environ Res Public Health 17(17):6015, 2020.",
+      "doi": "10.3390/ijerph17176015",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/32824894/"
+    },
+    "coratella2022": {
+      "cite": "Coratella G, et al. Front vs Back and Barbell vs Machine Overhead Press: An Electromyographic Analysis and Implications For Resistance Training. Front Physiol 13:825880, 2022.",
+      "doi": "10.3389/fphys.2022.825880",
+      "url": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC9354811/"
+    },
+    "paoli2010": {
+      "cite": "Paoli A, Marcolin G, Petrone N. Influence of different ranges of motion on selective recruitment of shoulder muscles in the sitting military press: an electromyographic study. J Strength Cond Res, 2010.",
+      "doi": "10.1519/JSC.0b013e3181d756ea",
+      "url": "https://www.researchgate.net/publication/44636010_Influence_of_Different_Ranges_of_Motion_on_Selective_Recruitment_of_Shoulder_Muscles_in_the_Sitting_Military_Press_An_Electromyographic_Study"
+    },
+    "luczak2013": {
+      "cite": "Luczak J, Bosak A, Riemann BL. Shoulder Muscle Activation of Novice and Resistance Trained Women during Variations of Dumbbell Press Exercises. J Sports Med 2013:612650, 2013.",
+      "doi": "10.1155/2013/612650",
+      "url": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4590897/"
+    },
+    "larsen2025": {
+      "cite": "Larsen S, et al. Dumbbell versus cable lateral raises for lateral deltoid hypertrophy: an experimental study. Front Physiol, 2025 (hypertrophy study; EMG statements are from its literature review).",
+      "doi": "10.3389/fphys.2025.1611468",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/40692697/"
+    },
+    "youdas2010": {
+      "cite": "Youdas JW, et al. Comparison of muscle-activation patterns during the conventional push-up and Perfect Pushup exercises. J Strength Cond Res 24(12):3352-3362, 2010.",
+      "doi": "",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/20664364/"
+    },
+    "snarr2013": {
+      "cite": "Snarr RL, Esco MR. Electromyographic Comparison of Traditional and Suspension Push-Ups. J Hum Kinet, 2013.",
+      "doi": "",
+      "url": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3916913/"
+    },
+    "borreani2015": {
+      "cite": "Borreani S, et al. Shoulder muscle activation during stable and suspended push-ups at different heights in healthy subjects. Phys Ther Sport, 2015.",
+      "doi": "",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/25882770/"
+    },
+    "calatayud2014": {
+      "cite": "Calatayud J, et al. Muscle Activation during Push-Ups with Different Suspension Training Systems. J Sports Sci Med 13(3):502-510, 2014.",
+      "doi": "",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/25177174/"
+    },
+    "calatayud2015": {
+      "cite": "Calatayud J, et al. Bench press and push-up at comparable levels of muscle activity results in similar strength gains. J Strength Cond Res 29(1):246-253, 2015.",
+      "doi": "10.1519/JSC.0000000000000589",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/24983847/"
+    },
+    "marcolin2015": {
+      "cite": "Marcolin G, Petrone N, Moro T, Battaglia G, Bianco A, Paoli A. Selective Activation of Shoulder, Trunk, and Arm Muscles: A Comparative Analysis of Different Push-Up Variants. J Athl Train 50(11):1126-1132, 2015.",
+      "doi": "10.4085/1062-6050-50.9.09",
+      "url": "https://files01.core.ac.uk/download/pdf/80166207.pdf"
+    },
+    "mckenzie2022": {
+      "cite": "McKenzie A, Crowley-McHattan Z, Meir R, Whitting J, Volschenk W. Bench, Bar, and Ring Dips: Do Kinematics and Muscle Activity Differ? Int J Environ Res Public Health 19(20):13211, 2022.",
+      "doi": "10.3390/ijerph192013211",
+      "url": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC9603242/"
+    },
+    "mckenzie2022fatigue": {
+      "cite": "McKenzie A, et al. Fatigue Increases Muscle Activations but Does Not Change Maximal Joint Angles during the Bar Dip. Int J Environ Res Public Health 19(21):14390, 2022.",
+      "doi": "10.3390/ijerph192114390",
+      "url": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC9659300/"
+    },
+    "bagchi2015": {
+      "cite": "Bagchi A. A comparative electromyographical investigation of triceps brachii and pectoralis major during four different freehand exercises. J Phys Educ Res, 2015.",
+      "doi": "",
+      "url": "https://www.researchgate.net/publication/331477905_A_COMPARATIVE_ELECTROMYOGRAPHICAL_INVESTIGATION_OF_TRICEPS_BRACHII_AND_PECTORALIS_MAJOR_DURING_FOUR_DIFFERENT_FREEHAND_EXERCISES"
+    },
+    "boehler2011": {
+      "cite": "Boehler B (Porcari J, supervisor). Electromyographic analysis of the triceps brachii muscle during a variety of triceps exercises. MS thesis, University of Wisconsin-La Crosse, 2011 (ACE-sponsored; NOT peer-reviewed; values relative to triangle push-up).",
+      "doi": "",
+      "url": "https://minds.wisconsin.edu/handle/1793/53487"
+    },
+    "kholinne2018": {
+      "cite": "Kholinne E, et al. The different role of each head of the triceps brachii muscle in elbow extension. Acta Orthop Traumatol Turc 52(3):201-205, 2018.",
+      "doi": "10.1016/j.aott.2018.02.005",
+      "url": "https://www.sciencedirect.com/science/article/pii/S1017995X17305898"
+    },
+    "alves2018": {
+      "cite": "Alves D, Matta T, Oliveira L. Effect of shoulder position on triceps brachii heads activity in dumbbell elbow extension exercises. J Sports Med Phys Fitness 58(9):1247-1252, 2018.",
+      "doi": "10.23736/S0022-4707.17.06849-9",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/28677940/"
+    },
+    "hussain2020": {
+      "cite": "Hussain J, et al. Muscle Fatigue in the Three Heads of Triceps Brachii During Intensity and Speed Variations of Triceps Push-Down Exercise. Front Physiol 11:112, 2020.",
+      "doi": "10.3389/fphys.2020.00112",
+      "url": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7047337/"
+    },
+    "villalba2024": {
+      "cite": "Villalba et al. Forearm Position Influences Triceps Brachii Activation During Triceps Push-Down Exercise. International Journal of Strength and Conditioning, 2024.",
+      "doi": "",
+      "url": "https://journal.iusca.org/index.php/Journal/article/download/250/349"
+    }
+  }
+}
