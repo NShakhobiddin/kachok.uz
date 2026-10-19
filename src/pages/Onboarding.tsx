@@ -46,6 +46,7 @@ export default function Onboarding() {
   const importData = useStore((s) => s.importData);
   const fileRef = useRef<HTMLInputElement>(null);
   const [step, setStep] = useState<Step>('welcome');
+  const [importErr, setImportErr] = useState(false);
   const [dir, setDir] = useState(1);
   const [p, setP] = useState<Omit<Profile, 'createdAt'>>({
     name: '',
@@ -112,6 +113,11 @@ export default function Onboarding() {
         <button className="btn btn-ghost btn-block mt-8" onClick={() => fileRef.current?.click()}>
           Zaxira nusxadan tiklash
         </button>
+        {importErr && (
+          <p className="small mt-8" role="alert" style={{ textAlign: 'center', color: 'var(--danger)' }}>
+            Fayl o‘qilmadi. Kachok’dan eksport qilingan .json faylni tanlang.
+          </p>
+        )}
         <input
           ref={fileRef}
           type="file"
@@ -121,7 +127,7 @@ export default function Onboarding() {
             const f = e.target.files?.[0];
             if (!f) return;
             if (importData(await f.text())) nav('/');
-            else alert("Fayl o‘qilmadi. Kachok’dan eksport qilingan .json faylni tanlang.");
+            else setImportErr(true);
           }}
         />
       </div>

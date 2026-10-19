@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { Barbell, PlateBadge } from '../components/Barbell';
 import { BodyMap } from '../components/BodyMap';
@@ -23,6 +23,7 @@ export default function Summary() {
   const seen = useStore((s) => s.seenAchievements);
   const markAchievements = useStore((s) => s.markAchievements);
   const lessonsDone = useStore((s) => s.lessonsDone);
+  const [copied, setCopied] = useState(false);
   const log = logs.find((l) => l.id === id);
   const prs = log && lastPRs.length && lastPRs[0].date === log.startedAt ? lastPRs : [];
   const finishedCount = logs.filter((l) => l.finishedAt).length;
@@ -54,7 +55,7 @@ export default function Summary() {
       if (navigator.share) await navigator.share({ text, title: 'Kachok' });
       else {
         await navigator.clipboard.writeText(text);
-        alert('Matn nusxalandi');
+        setCopied(true);
       }
     } catch {
       /* bekor qilindi */
@@ -164,6 +165,11 @@ export default function Summary() {
           Bosh sahifa
         </Link>
       </div>
+      {copied && (
+        <p className="small mt-8" role="status" style={{ textAlign: 'center', color: 'var(--green)' }}>
+          Natija matni nusxalandi — Telegramga joylashtiring.
+        </p>
+      )}
       <p className="small faint mt-16" style={{ textAlign: 'center' }}>
         Endi: oqsilli ovqat, suv va 7–9 soat uyqu.
       </p>

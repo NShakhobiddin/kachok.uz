@@ -41,6 +41,8 @@ export default function ProgramPage() {
     setPdfBusy(true);
     try {
       await exportProgramPdf(program, profile, kcalAdjust);
+    } catch {
+      /* foydalanuvchi bekor qildi yoki saqlash imkoni yo'q */
     } finally {
       setPdfBusy(false);
     }

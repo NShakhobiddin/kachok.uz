@@ -1,5 +1,5 @@
 import { lazy, Suspense, useEffect } from 'react';
-import { BrowserRouter, Navigate, NavLink, Route, Routes, useLocation } from 'react-router-dom';
+import { BrowserRouter, MemoryRouter, Navigate, NavLink, Route, Routes, useLocation } from 'react-router-dom';
 import { Icon } from './components/ui/Icon';
 import { useStore } from './store/useStore';
 import Home from './pages/Home';
@@ -76,10 +76,13 @@ function Shell() {
   );
 }
 
+// Ko'rgazma (artifact) variantida manzil satri yo'q — marshrutlar xotirada
+const Router = import.meta.env.VITE_TARGET === 'artifact' ? MemoryRouter : BrowserRouter;
+
 export default function App() {
   return (
-    <BrowserRouter>
+    <Router>
       <Shell />
-    </BrowserRouter>
+    </Router>
   );
 }

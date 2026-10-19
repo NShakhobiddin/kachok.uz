@@ -2,6 +2,7 @@
 import { EXERCISE_MAP } from '../data/exercises';
 import { GROUPS, GROUP_ORDER, WEEKLY_TARGET } from '../data/catalog';
 import { DAYS, fmtDate } from '../lib/date';
+import { saveFile } from '../lib/download';
 import type { Profile, Program } from '../types';
 import { mealPlan, nutritionPlan } from './nutrition';
 import { programWeek, weeklyVolume } from './program';
@@ -218,5 +219,5 @@ export async function exportProgramPdf(program: Program, profile: Profile, kcalA
   }
 
   const name = `kachok-dastur-${new Date().toISOString().slice(0, 10)}.pdf`;
-  doc.save(name);
+  await saveFile(name, doc.output('blob'));
 }

@@ -8,6 +8,7 @@ import { GROUPS, GROUP_ORDER, INJURIES } from '../data/catalog';
 import { ACTIVITY } from '../engine/nutrition';
 import { DEFAULT_DAYS } from '../engine/program';
 import { DAYS_SHORT } from '../lib/date';
+import { saveFile } from '../lib/download';
 import { exportData, useStore } from '../store/useStore';
 import type { ActivityLevel, Profile as P } from '../types';
 import { GOALS, LEVELS } from './Onboarding';
@@ -24,6 +25,8 @@ export default function Profile() {
   const reset = useStore((s) => s.reset);
   const [panel, setPanel] = useState<Panel>(null);
   const [draft, setDraft] = useState<P>(profile);
+  const [importMsg, setImportMsg] = useState<string | null>(null);
+  const [resetOpen, setResetOpen] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
   const open = (p: Panel) => {
     setDraft(profile);
@@ -37,11 +40,7 @@ export default function Profile() {
 
   const download = () => {
     const blob = new Blob([exportData()], { type: 'application/json' });
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = `kachok-zaxira-${new Date().toISOString().slice(0, 10)}.json`;
-    a.click();
-    setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+    saveFile(`kachok-zaxira-${new Date().toISOString().slice(0, 10)}.json`, blob).catch(() => setImportMsg('Fayl saqlanmadi. Qaytadan urinib ko‘ring.'));
   };
 
   return (
@@ -120,19 +119,19 @@ export default function Profile() {
           onChange={async (e) => {
             const f = e.target.files?.[0];
             if (!f) return;
-            alert(importData(await f.text()) ? 'Ma’lumotlar tiklandi' : "Fayl o‘qilmadi");
+            setImportMsg(importData(await f.text()) ? 'Ma’lumotlar tiklandi.' : 'Fayl o‘qilmadi. Kachok’dan olingan .json zaxira faylini tanlang.');
           }}
         />
+        {importMsg && (
+          <p className="small mt-8" role="status" style={{ color: importMsg.startsWith('Fayl') ? 'var(--danger)' : 'var(--green)' }}>
+            {importMsg}
+          </p>
+        )}
         <p className="tiny faint mt-8">Barcha ma’lumotlar faqat shu qurilmada saqlanadi. Telefonni almashtirishdan oldin zaxira nusxa oling.</p>
         <button
           className="btn btn-ghost btn-block mt-16"
           style={{ color: 'var(--danger)' }}
-          onClick={() => {
-            if (confirm("Barcha ma’lumotlar (mashg‘ulotlar tarixi, profil) o‘chiriladi. Davom etasizmi?")) {
-              reset();
-              nav('/onboarding');
-            }
-          }}
+          onClick={() => setResetOpen(true)}
         >
           Hammasini o‘chirish
         </button>
@@ -143,6 +142,25 @@ export default function Profile() {
         <br />
         <Link to="/sources">ACSM · ISSN · WHO · EFSA manbalari</Link>
       </p>
+
+      <Sheet open={resetOpen} onClose={() => setResetOpen(false)} label="Hammasini o‘chirish">
+        <h3 className="title">Hammasini o‘chirasizmi?</h3>
+        <p className="muted mt-8">Profil, dastur va butun mashg‘ulotlar tarixi shu qurilmadan o‘chiriladi. Buni qaytarib bo‘lmaydi — avval zaxira nusxa oling.</p>
+        <div className="row gap-8 mt-16">
+          <button className="btn btn-secondary grow" onClick={() => setResetOpen(false)}>
+            Bekor qilish
+          </button>
+          <button
+            className="btn btn-danger grow"
+            onClick={() => {
+              reset();
+              nav('/onboarding');
+            }}
+          >
+            O‘chirish
+          </button>
+        </div>
+      </Sheet>
 
       <Sheet open={panel !== null} onClose={() => setPanel(null)} label="Tahrirlash">
         <div className="stack gap-12">

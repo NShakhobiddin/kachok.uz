@@ -2,9 +2,13 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
 
+// VITE_TARGET=artifact — bitta HTML faylli ko'rgazma (oldindan ko'rish) varianti: PWA'siz, hammasi ichiga joylangan
+const artifact = process.env.VITE_TARGET === 'artifact';
+
 export default defineConfig({
   plugins: [
     react(),
+    !artifact &&
     VitePWA({
       registerType: 'autoUpdate',
       includeAssets: ['icon.svg', 'apple-touch-icon.png'],
@@ -30,5 +34,7 @@ export default defineConfig({
       },
     }),
   ],
-  build: { chunkSizeWarningLimit: 900 },
+  build: artifact
+    ? { assetsInlineLimit: 100_000_000, cssCodeSplit: false, chunkSizeWarningLimit: 5000, rollupOptions: { output: { inlineDynamicImports: true } } }
+    : { chunkSizeWarningLimit: 900 },
 });

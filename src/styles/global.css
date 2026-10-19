@@ -139,7 +139,10 @@ p {
 }
 
 .page {
-  padding: calc(var(--safe-t) + 14px) var(--pad) calc(var(--tabbar-h) + var(--safe-b) + 28px);
+  padding-top: calc(var(--safe-t) + 14px);
+  padding-bottom: calc(var(--tabbar-h) + var(--safe-b) + 28px);
+  padding-left: max(var(--pad), env(safe-area-inset-left, 0px));
+  padding-right: max(var(--pad), env(safe-area-inset-right, 0px));
 }
 .page.no-tab {
   padding-bottom: calc(var(--safe-b) + 28px);

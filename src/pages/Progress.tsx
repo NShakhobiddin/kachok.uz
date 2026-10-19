@@ -35,6 +35,7 @@ export default function Progress() {
   const curEx = exSel ?? exIds[0] ?? null;
   const series = useMemo(() => (curEx ? exerciseSeries(curEx, logs) : []), [curEx, logs]);
   const [open, setOpen] = useState<WorkoutLog | null>(null);
+  const [confirmDel, setConfirmDel] = useState(false);
   const history = useMemo(() => finished(logs).sort((a, b) => b.startedAt.localeCompare(a.startedAt)), [logs]);
   const ctx = { logs, totalWorkouts: t.workouts, totalVolume: t.volume, totalMinutes: t.minutes, prCount: prs.length, streak, lessonsDone: lessonsDone.length, lessonsTotal: LESSONS.length };
   const cmp = volumeComparison(t.volume);
@@ -194,7 +195,14 @@ export default function Progress() {
         </div>
       </section>
 
-      <Sheet open={!!open} onClose={() => setOpen(null)} label="Mashg‘ulot tafsiloti">
+      <Sheet
+        open={!!open}
+        onClose={() => {
+          setOpen(null);
+          setConfirmDel(false);
+        }}
+        label="Mashg‘ulot tafsiloti"
+      >
         {open && (
           <div className="stack gap-12">
             <div>
@@ -212,13 +220,13 @@ export default function Progress() {
             <button
               className="btn btn-danger btn-block mt-8"
               onClick={() => {
-                if (confirm("Bu mashg‘ulotni o‘chirasizmi?")) {
-                  deleteLog(open.id);
-                  setOpen(null);
-                }
+                if (!confirmDel) return setConfirmDel(true);
+                deleteLog(open.id);
+                setConfirmDel(false);
+                setOpen(null);
               }}
             >
-              <Icon name="trash" size={18} /> O‘chirish
+              <Icon name="trash" size={18} /> {confirmDel ? 'Tasdiqlash: butunlay o‘chirish' : 'O‘chirish'}
             </button>
           </div>
         )}

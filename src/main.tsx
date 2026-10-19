@@ -12,6 +12,6 @@ createRoot(document.getElementById('root')!).render(
   </StrictMode>,
 );
 
-if (import.meta.env.PROD && 'serviceWorker' in navigator) {
+if (import.meta.env.PROD && import.meta.env.VITE_TARGET !== 'artifact' && 'serviceWorker' in navigator) {
   import('virtual:pwa-register').then(({ registerSW }) => registerSW({ immediate: true })).catch(() => {});
 }
