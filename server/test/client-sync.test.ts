@@ -102,4 +102,18 @@ describe('ilova sinxronlashi', () => {
     await client.syncNow();
     expect((await has()).deleted).toBe(true);
   });
+
+  it('ovqat kundaligi kun bo‘yicha sinxronlanadi, kun bo‘shasa — o‘chadi', async () => {
+    const token = store.getState().account!.access;
+    const day = '2026-05-03';
+    const doc = async () => (await (await app.request('/sync', json('POST', { since: 0, changes: [] }, token))).json()).docs.find((d: { kind: string; id: string }) => d.kind === 'food' && d.id === day);
+    store.getState().addFood({ id: 'f1', date: day, meal: 1, foodId: 'osh', name: 'Osh', g: 350, kcal: 805, p: 24, f: 38, c: 91 });
+    store.getState().addFood({ id: 'f2', date: day, meal: 0, name: 'Qo‘lda', kcal: 300, p: 10, f: 5, c: 50 });
+    await client.syncNow();
+    expect((await doc()).data).toHaveLength(2);
+    store.getState().removeFood('f1');
+    store.getState().removeFood('f2');
+    await client.syncNow();
+    expect((await doc()).deleted).toBe(true);
+  });
 });

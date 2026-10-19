@@ -292,7 +292,12 @@ function MethodSheet({ open, onClose, profile, current }: { open: boolean; onClo
   return (
     <Sheet open={open} onClose={onClose} label="Dastur uslubi">
       <h3 className="title">Dastur uslubi</h3>
-      <p className="small muted mt-4">Har biri sport ilmida sinalgan metodika. Tanlasangiz, dastur shu uslubda qayta tuziladi — mashg‘ulot tarixi saqlanadi.</p>
+      <p className="small muted mt-4">
+        Har biri sport ilmida sinalgan metodika. Tanlasangiz, dastur shu uslubda qayta tuziladi — mashg‘ulot tarixi saqlanadi.{' '}
+        <Link to="/lesson/periodization" className="strong" style={{ color: 'var(--blue-2)' }}>
+          Qaysi biri sizga?
+        </Link>
+      </p>
       <div className="stack gap-8 mt-16" role="radiogroup" aria-label="Uslub">
         <button role="radio" aria-checked={pick === 'auto'} className={`method-opt ${pick === 'auto' ? 'on' : ''}`} onClick={() => setPick('auto')}>
           <span className="row between gap-8">

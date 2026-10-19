@@ -289,6 +289,73 @@ export const SOURCES: Source[] = [
     cite: 'Epley B. Poundage chart. In: Boyd Epley Workout. Lincoln, NE: Body Enterprises; 1985. p. 86.',
     finding: "1 takrorli maksimum (1RM) taxmini: vazn × (1 + takror/30).",
   },
+  {
+    id: 'zourdos2016',
+    short: 'Zourdos va boshq., 2016',
+    cite: 'Zourdos MC, Klemp A, Dolan C, et al. Novel resistance training-specific rating of perceived exertion scale measuring repetitions in reserve. J Strength Cond Res 30(1):267-275, 2016.',
+    doi: '10.1519/JSC.0000000000001049',
+    finding: "RIR asosidagi RPE shkalasi (RPE 10 = zaxira yo‘q, RPE 8 = 2 takror zaxira) haqiqiy tezlik va kuch bilan bog‘liq; tajribali sportchilar zaxirani aniqroq baholaydi.",
+  },
+  {
+    id: 'helms2018rpe',
+    short: 'Helms va boshq., 2018',
+    cite: 'Helms ER, Byrnes RK, Cooke DM, et al. RPE vs. percentage 1RM loading in periodized programs matched for sets and repetitions. Front Physiol 9:247, 2018.',
+    doi: '10.3389/fphys.2018.00247',
+    finding: "Set va takror teng bo‘lganda RPE (zaxira) bo‘yicha vazn tanlash qat’iy %1RM dan kam bo‘lmagan, o‘rtacha biroz ko‘proq kuch o‘sishini berdi.",
+  },
+  {
+    id: 'williams2017',
+    short: 'Williams va boshq., 2017',
+    cite: 'Williams TD, Tolusso DV, Fedewa MV, Esco MR. Comparison of periodized and non-periodized resistance training on maximal strength: a meta-analysis. Sports Med 47(10):2083-2100, 2017.',
+    doi: '10.1007/s40279-017-0734-y',
+    finding: "Rejali (periodizatsiyalangan) kuch mashqi o‘zgarmas dasturga qaraganda maksimal kuchni ko‘proq oshiradi.",
+  },
+  {
+    id: 'issurin2010',
+    short: 'Issurin, 2010',
+    cite: 'Issurin VB. New horizons for the methodology and physiology of training periodization. Sports Med 40(3):189-206, 2010.',
+    doi: '10.2165/11319770-000000000-00000',
+    finding: "Blok periodizatsiyasi: qisqa, bir maqsadga yo‘naltirilgan bloklar (to‘plash → kuchaytirish → namoyon qilish) charchoqni boshqarib, cho‘qqi natijaga olib keladi.",
+  },
+  {
+    id: 'rippetoe2014',
+    short: 'Rippetoe & Baker, 2014',
+    cite: 'Rippetoe M, Baker A. Practical Programming for Strength Training. 3rd ed. Wichita Falls, TX: The Aasgaard Company; 2014.',
+    finding: "Yangi boshlovchida tiklanish 48–72 soat — kuch har mashg‘ulotda oshirilishi mumkin (chiziqli progressiya); o‘sish sekinlashgach — haftalik, keyin blokli rejaga o‘tiladi.",
+  },
+  {
+    id: 'israetel2021',
+    short: 'Israetel va boshq., 2021',
+    cite: 'Israetel M, Feather J, Faleiro TV, Juneau CE. Scientific Principles of Hypertrophy Training. Renaissance Periodization; 2021.',
+    finding: "Mushak uchun hajm chegaralari (MEV, MAV, MRV), har hafta zaxira takrorni kamaytirib hajmni oshirish va blok oxirida yengillashtirish (mezotsikl).",
+  },
+  {
+    id: 'hall2008',
+    short: 'Hall, 2008',
+    cite: 'Hall KD. What is the required energy deficit per unit weight loss? Int J Obes 32(3):573-576, 2008.',
+    doi: '10.1038/sj.ijo.0803720',
+    finding: "Vazn o‘zgarishining energiya qiymati tana tarkibiga bog‘liq; amaliyotda ~7 700 kkal/kg yaqinlashuvi ishlatiladi.",
+  },
+  {
+    id: 'trexler2014',
+    short: 'Trexler va boshq., 2014',
+    cite: 'Trexler ET, Smith-Ryan AE, Norton LE. Metabolic adaptation to weight loss: implications for the athlete. J Int Soc Sports Nutr 11:7, 2014.',
+    doi: '10.1186/1550-2783-11-7',
+    finding: "Ozish paytida sarf formulada kutilganidan ko‘proq kamayadi (metabolik moslashuv) — kaloriyani haqiqiy natijaga qarab moslash kerak.",
+  },
+  {
+    id: 'ashwell2012',
+    short: 'Ashwell va boshq., 2012',
+    cite: 'Ashwell M, Gunn P, Gibson S. Waist-to-height ratio is a better screening tool than waist circumference and BMI for adult cardiometabolic risk factors: systematic review and meta-analysis. Obes Rev 13(3):275-286, 2012.',
+    doi: '10.1111/j.1467-789X.2011.00952.x',
+    finding: "Bel/bo‘y nisbati yurak-qon tomir va qandli diabet xavfini tana vazn indeksidan (BMI) yaxshiroq bashorat qiladi; 0.5 — oddiy chegara.",
+  },
+  {
+    id: 'hodgdon1984',
+    short: 'Hodgdon & Beckett, 1984',
+    cite: 'Hodgdon JA, Beckett MB. Prediction of percent body fat for U.S. Navy men and women from body circumferences and height. Naval Health Research Center, Reports No. 84-11 and 84-29. San Diego, CA; 1984.',
+    finding: "Bo‘y, bel, bo‘yin (ayollarda son ham) o‘lchamidan yog‘ foizi; laboratoriya usullariga nisbatan xatolik ~3–4%.",
+  },
 ];
 
 export const sourceById = (id: string) => SOURCES.find((s) => s.id === id);

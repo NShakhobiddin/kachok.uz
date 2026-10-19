@@ -1,7 +1,7 @@
 // Dastur uslublari (metodikalar). Har biri ilmiy asoslangan va sport amaliyotida sinalgan:
 // - Gipertrofiya: Renaissance Periodization (Israetel) — RIR har hafta kamayadi, setlar mushak fikriga qarab oshadi
 // - Kuch bloki: blok periodizatsiya (Issurin) — to'plash → kuchaytirish, %1RM bo'yicha
-// - Chiziqli progressiya: Rippetoe & Kilgore "Practical Programming" — har mashg'ulot +vazn
+// - Chiziqli progressiya: Rippetoe & Baker "Practical Programming" — har mashg'ulot +vazn
 // - Powerbuilding: og'ir (4–6 takror) va hajmli (8–15) kunlar (PHUL uslubi)
 import type { Level, Method, MuscleGroup, Profile } from '../types';
 
@@ -19,28 +19,28 @@ export const METHOD_INFO: Record<ConcreteMethod, { name: string; short: string; 
     short: 'Mushak massasi va shakl',
     who: 'Mushak o‘stirish, shakl va ozish paytida mushakni saqlash uchun — ko‘pchilik uchun eng yaxshi tanlov.',
     how: 'Har hafta zaxira takror kamayadi (3 → 2 → 1), har mushakka setlar sizning fikringizga qarab qo‘shiladi, blok oxirida yengillashtirish.',
-    source: 'Israetel va boshq. (Renaissance Periodization); Schoenfeld 2017; Pelland 2025',
+    source: 'Israetel va boshq. (Renaissance Periodization); Schoenfeld 2017; Pelland 2026',
   },
   strength: {
     name: 'Kuch bloki (%1RM)',
     short: 'Asosiy mashqlarda maksimal kuch',
     who: 'O‘tirib-turish, yotib jim, o‘lik tortishda kuchni oshirmoqchi bo‘lgan o‘rta va tajribali sportchilar uchun.',
     how: 'Asosiy mashqlar har hafta og‘irlashadi: 4×6 @75% → 4×5 @80% → 4×4 @85% → 3×3 @88%, keyin yengillashtirish. Yordamchi mashqlar — hajm uchun.',
-    source: 'Issurin 2010 (blok periodizatsiya); Helms RPE tizimi; ACSM 2009',
+    source: 'Issurin 2010 (blok periodizatsiya); Williams 2017; Helms 2018 (RPE)',
   },
   linear: {
     name: 'Chiziqli progressiya (3×5)',
     short: 'Yangi boshlovchining tez o‘sishi',
     who: 'Zalga endi kelganlar uchun: kuch har mashg‘ulotda o‘sadigan eng tez davr.',
     how: 'Asosiy mashqlar 3×5. Har safar barcha takrorlar bajarilsa: oyoq mashqlari +5 kg, yuqori tana +2.5 kg. Ikki marta yetmasa — vazn 10% kamayadi va yana ko‘tariladi.',
-    source: 'Rippetoe & Kilgore, Practical Programming for Strength Training',
+    source: 'Rippetoe & Baker, Practical Programming for Strength Training (3-nashr, 2014)',
   },
   powerbuilding: {
     name: 'Powerbuilding',
     short: 'Ham kuch, ham massa',
     who: 'Haftasiga 4+ kun shug‘ullanadigan, kuch va tashqi ko‘rinishni birga xohlaganlar uchun.',
     how: 'Og‘ir kunlar: asosiy mashqlar 4–6 takror. Hajm kunlari: 8–15 takror, ko‘proq izolyatsiya. Har mushak haftasiga 2 marta.',
-    source: 'PHUL (Brandon Campbell) uslubi; Schoenfeld 2016 (yuklama oraliqlari)',
+    source: 'PHUL (Power Hypertrophy Upper Lower) uslubi; Schoenfeld 2017 (og‘ir va yengil yuklama)',
   },
 };
 

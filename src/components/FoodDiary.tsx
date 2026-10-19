@@ -1,6 +1,7 @@
 // Ovqat kundaligi: kun bo'yicha yozuvlar, maqsadga nisbatan qoldiq, mahalliy taomlar bazasidan tez qo'shish
 // va kundalik + vazn asosidagi moslashuvchan sarf (adaptive TDEE).
 import { useMemo, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { FOOD_CATS, FOOD_DB, FOOD_MAP, portion, searchFoods, type FoodCat, type FoodItem } from '../data/foods';
 import type { NutritionPlan, TdeeEstimate } from '../engine/nutrition';
 import { fmtDate, isoDate } from '../lib/date';
@@ -377,7 +378,12 @@ export function TdeeCard({ est, on, setOn }: { est: TdeeEstimate; on: boolean; s
         <Stat k="O‘rtacha iste’mol" v={est.avgIntake ? `${est.avgIntake} kkal` : '—'} />
         <Stat k="Vazn trendi" v={est.trendPerWeek !== null ? `${est.trendPerWeek > 0 ? '+' : ''}${est.trendPerWeek} kg/hafta` : '—'} />
       </div>
-      <p className="tiny faint">Energiya balansi: sarf = iste’mol − 7700 × vazn o‘zgarishi (Hall 2008). Baho har hafta silliq yangilanadi (±150 kkal dan oshmaydi), kun bo‘yi chala yozilgan kunlar hisobga olinmaydi.</p>
+      <p className="tiny faint">
+        Energiya balansi: sarf = iste’mol − 7700 × vazn o‘zgarishi (Hall 2008). Baho har hafta silliq yangilanadi (±150 kkal dan oshmaydi), kun bo‘yi chala yozilgan kunlar hisobga olinmaydi.{' '}
+        <Link to="/lesson/tdee-body" className="strong" style={{ color: 'var(--blue-2)' }}>
+          Batafsil
+        </Link>
+      </p>
     </div>
   );
 }

@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from 'framer-motion';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { Barbell, PlateStack } from '../components/Barbell';
 import { Figure } from '../components/figure/Figure';
@@ -96,6 +96,23 @@ export default function Workout() {
   }, [active?.plan, logs, profile, meso, program, active?.readiness]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const remaining = active?.restEndsAt ? (active.restEndsAt - now) / 1000 : null;
+  // dam paneli balandligi: setlar uning ostida qolmasin (sahifa pastki bo'shlig'i va scroll-padding)
+  const [restH, setRestH] = useState(0);
+  const roRef = useRef<ResizeObserver | null>(null);
+  const restRef = useCallback((el: HTMLDivElement | null) => {
+    roRef.current?.disconnect();
+    roRef.current = null;
+    if (!el) return setRestH(0);
+    const ro = new ResizeObserver(() => setRestH(el.offsetHeight));
+    ro.observe(el);
+    roRef.current = ro;
+  }, []);
+  useEffect(() => {
+    document.documentElement.style.scrollPaddingBottom = restH ? `${restH + 24}px` : '';
+    return () => {
+      document.documentElement.style.scrollPaddingBottom = '';
+    };
+  }, [restH]);
   useEffect(() => {
     if (remaining === null) {
       restAlerted.current = false;
@@ -162,7 +179,7 @@ export default function Workout() {
   };
 
   return (
-    <div className="page no-tab" style={{ paddingTop: 'calc(var(--safe-t) + 8px)', paddingBottom: 'calc(var(--safe-b) + 140px)' }}>
+    <div className="page no-tab" style={{ paddingTop: 'calc(var(--safe-t) + 8px)', paddingBottom: `calc(var(--safe-b) + ${Math.max(140, restH + 40)}px)` }}>
       {/* Sarlavha */}
       <div className="row between gap-8" style={{ position: 'sticky', top: 0, zIndex: 20, background: 'var(--bg)', padding: '6px 0 10px' }}>
         <button className="icon-btn" onClick={() => nav('/')} aria-label="Kichraytirish (mashg‘ulot saqlanadi)">
@@ -394,6 +411,7 @@ export default function Workout() {
             exit={{ y: 220 }}
             transition={{ type: 'spring', damping: 26, stiffness: 300 }}
             className="rest-panel"
+            ref={restRef}
           >
             {lastDone && <EffortAsk key={`${lastDone.ex}-${lastDone.set}`} at={lastDone} sugs={sugs} />}
             <PlateRing remaining={remaining} total={active.restTotal} size={112} />

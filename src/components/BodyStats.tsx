@@ -1,5 +1,6 @@
 // Tana o'lchamlari: bel/bo'y nisbati shkalasi, US Navy yog' foizi, har o'lchamning 4 haftalik o'zgarishi va kiritish oynasi.
 import { useMemo, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { MEASURES, latestBodyFat, measureTrend, whtr, whtrZone, WHTR_ZONES, type MeasureKey } from '../engine/bodycomp';
 import { fmtDate, isoDate } from '../lib/date';
 import { useStore } from '../store/useStore';
@@ -111,7 +112,12 @@ export function BodyStats() {
               );
             })}
           </div>
-          <p className="tiny faint">O‘zgarish — taxminan 4 hafta oldingi o‘lchovga nisbatan. Oxirgi o‘lchov: {fmtDate(rows[0].t!.date)}.</p>
+          <p className="tiny faint">
+            O‘zgarish — taxminan 4 hafta oldingi o‘lchovga nisbatan. Oxirgi o‘lchov: {fmtDate(rows[0].t!.date)}.{' '}
+            <Link to="/lesson/tdee-body" className="strong" style={{ color: 'var(--blue-2)' }}>
+              Nega bel muhim?
+            </Link>
+          </p>
         </>
       )}
       <MeasureSheet open={open} onClose={() => setOpen(false)} />
