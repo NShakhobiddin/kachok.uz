@@ -209,6 +209,19 @@ export default function Muscle3D({ acts, anim, selected, onSelect, view, playing
 
     const tmp = new THREE.Color();
     let lastPhase: Phase | null = null;
+    let isolated: M3 | null | undefined;
+    // tanlangan mushakni ajratish: qolganlari yarim shaffof (chuqur mushaklar — masalan umurtqa rostlovchilar — ko'rinsin)
+    const isolate = (k: M3 | null) => {
+      isolated = k;
+      for (const [name, mat] of mats) {
+        const ghost = !!k && name !== k;
+        mat.transparent = ghost;
+        mat.opacity = ghost ? (name === 'bones' ? 0.32 : 0.16) : 1;
+        mat.depthWrite = !ghost;
+        mat.needsUpdate = true;
+      }
+      for (const m of meshes) m.renderOrder = k && m.name === k ? 1 : 0;
+    };
     let level = 0.6; // silliq faza darajasi
     const t0 = performance.now();
     let paused = 0;
@@ -242,6 +255,7 @@ export default function Muscle3D({ acts, anim, selected, onSelect, view, playing
       }
       controls.update();
 
+      if (mats.size && isolated !== L.selected) isolate(L.selected);
       const byKey = new Map(L.acts.map((a) => [a.key, a]));
       for (const [name, mat] of mats) {
         if (!isM3(name)) continue;

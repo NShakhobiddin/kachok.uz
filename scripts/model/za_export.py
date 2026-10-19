@@ -11,9 +11,11 @@ MAP = {
     'deltAnt': ['Clavicular part of deltoid muscle'],
     'deltLat': ['Acromial part of deltoid muscle'],
     'deltPost': ['Scapular spinal part of deltoid muscle'],
-    'trapUpper': ['Descending part of trapezius muscle'],
+    # Z-Anatomy'da "Descending"/"Ascending" nomlari geometriyaga teskari: bo'yindagi qism "Ascending" deb atalgan
+    # (balandlik bo'yicha tekshirilgan: Ascending z 1.42–1.58 m, Descending z 1.12–1.41 m)
+    'trapUpper': ['Ascending part of trapezius muscle'],
     'trapMid': ['Transverse part of trapezius muscle'],
-    'trapLower': ['Ascending part of trapezius muscle'],
+    'trapLower': ['Descending part of trapezius muscle'],
     'rhomboids': ['Rhomboid major muscle', 'Rhomboid minor muscle'],
     'lats': ['Latissimus dorsi muscle'],
     'teresMajor': ['Teres major muscle'],

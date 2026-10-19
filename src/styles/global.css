@@ -1468,7 +1468,7 @@ ol.steps li::before {
   position: absolute;
   left: 12px;
   right: 12px;
-  top: 52px;
+  bottom: 68px;
   padding: 10px 12px;
   border-radius: var(--r-md);
   background: rgba(13, 16, 20, 0.86);
