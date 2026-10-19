@@ -340,9 +340,12 @@ export interface Program {
 export interface SetLog {
   kg: number;
   reps: number;
+  /** zaxiradagi takrorlar (0 = chegaragacha) */
   rir?: number;
   done: boolean;
   warmup?: boolean;
+  /** maxsus set turi: drop-set yoki chegaragacha (failure) */
+  kind?: 'drop' | 'failure';
 }
 
 export interface ExerciseLog {
@@ -360,7 +363,12 @@ export interface WorkoutLog {
   durationMin: number;
   exercises: ExerciseLog[];
   readiness?: number;
+  /** eski (umumiy) fikr — oldingi versiyalardan */
   feedback?: { pump: number; soreness: number; joints: number };
+  /** har bir mushak guruhi bo'yicha fikr (RP uslubi) */
+  muscleFb?: Partial<Record<MuscleGroup, { pump: 1 | 2 | 3; work: 1 | 2 | 3; recovery: 1 | 2 | 3 | 4 }>>;
+  /** bo'g'imda og'riq bergan mashqlar */
+  painEx?: string[];
 }
 
 export interface BodyEntry {

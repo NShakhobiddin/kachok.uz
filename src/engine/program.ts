@@ -1,7 +1,7 @@
 // Dastur generatori: maqsad, tajriba, kunlar, vaqt, jihoz va jarohatlarga qarab haftalik reja tuzadi.
 // Asos: ACSM 2026 (har mushak haftasiga 2+ marta), Schoenfeld 2017 / Pelland 2026 (haftalik hajm),
 // Refalo 2023 (1–3 takror zaxira), Schoenfeld 2016 (murakkab mashqlarda uzunroq dam).
-import { EXERCISES } from '../data/exercises';
+import { EXERCISES, EXERCISE_MAP } from '../data/exercises';
 import { GROUP_ORDER, MUSCLES, WEEKLY_TARGET } from '../data/catalog';
 import type { EquipmentId, Exercise, Goal, Level, MuscleGroup, Pattern, PlannedExercise, Profile, Program, WorkoutDay } from '../types';
 
@@ -371,13 +371,15 @@ export function alternatives(exId: string, p: Profile): Exercise[] {
 }
 
 /** Dastur boshlanganidan beri nechanchi hafta (0 dan) */
-export function programWeek(program: Program, now = new Date()): number {
-  const start = new Date(program.startDate + 'T00:00:00');
-  const days = Math.floor((now.getTime() - start.getTime()) / 86400000);
-  return Math.max(0, Math.floor(days / 7));
-}
 
-export function isDeloadWeek(program: Program, now = new Date()): boolean {
-  const w = programWeek(program, now);
-  return w % program.mesoWeeks === program.mesoWeeks - 1;
+/** Har mushak guruhi haftasiga necha kun mashq qilinadi (asosiy mushak sifatida) */
+export function groupFrequency(program: Pick<Program, 'days'>): Record<MuscleGroup, number> {
+  const out = Object.fromEntries(GROUP_ORDER.map((g) => [g, 0])) as Record<MuscleGroup, number>;
+  for (const d of program.days) {
+    const gs = new Set<MuscleGroup>();
+    for (const pe of d.exercises) EXERCISE_MAP[pe.exerciseId]?.primary.forEach((m) => gs.add(MUSCLES[m].group));
+    gs.forEach((g) => out[g]++);
+  }
+  for (const g of GROUP_ORDER) out[g] = Math.max(2, out[g]);
+  return out;
 }

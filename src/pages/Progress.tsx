@@ -4,10 +4,11 @@ import { PlateBadge } from '../components/Barbell';
 import { ColumnChart, LineChart, TargetBars } from '../components/charts';
 import { Icon } from '../components/ui/Icon';
 import { Sheet } from '../components/ui/Sheet';
-import { GROUPS, GROUP_ORDER, WEEKLY_TARGET } from '../data/catalog';
+import { GROUPS, GROUP_ORDER, VOLUME_LANDMARKS, mrvAt } from '../data/catalog';
 import { EXERCISE_MAP } from '../data/exercises';
 import { LESSONS } from '../data/lessons';
 import { ACHIEVEMENTS } from '../data/motivation';
+import { groupFrequency } from '../engine/program';
 import { fmtKg } from '../engine/progression';
 import { allPRs, exerciseSeries, finished, lastWeeks, logSets, logVolume, totals, volumeComparison, weekStreak, weeklyInsights } from '../engine/stats';
 import { fmtDate, fmtDuration } from '../lib/date';
@@ -20,6 +21,8 @@ export default function Progress() {
   const logs = useStore((s) => s.logs);
   const profile = useStore((s) => s.profile)!;
   const lessonsDone = useStore((s) => s.lessonsDone);
+  const program = useStore((s) => s.program);
+  const freq = useMemo(() => groupFrequency(program ?? { days: [] }), [program]);
   const deleteLog = useStore((s) => s.deleteLog);
   const t = useMemo(() => totals(logs), [logs]);
   const weeks = useMemo(() => lastWeeks(logs, 8), [logs]);
@@ -107,7 +110,7 @@ export default function Progress() {
           <span className="small muted">{volWeek === cur ? 'bu hafta' : 'o‘tgan hafta'}</span>
         </div>
         <div className="card">
-          <TargetBars label="Haftalik setlar mushak guruhlari bo‘yicha" rows={GROUP_ORDER.map((g) => ({ label: GROUPS[g].name, value: volWeek.groups[g], lo: WEEKLY_TARGET[g][0], hi: WEEKLY_TARGET[g][1] }))} />
+          <TargetBars label="Haftalik setlar mushak guruhlari bo‘yicha" rows={GROUP_ORDER.map((g) => ({ label: GROUPS[g].name, value: volWeek.groups[g], mev: VOLUME_LANDMARKS[g].mev, mav: VOLUME_LANDMARKS[g].mav, mrv: mrvAt(g, freq[g]) }))} />
         </div>
       </section>
 

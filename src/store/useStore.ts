@@ -2,12 +2,18 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { exById } from '../data/exercises';
-import { generateProgram } from '../engine/program';
+import { generateProgram, weeklyVolume } from '../engine/program';
+import { mesoState, setChange, type MuscleFeedback } from '../engine/meso';
 import { detectPRs } from '../engine/stats';
 import { isoDate } from '../lib/date';
 import type { BodyEntry, ExerciseLog, MuscleGroup, PlannedExercise, Profile, Program, SetLog, WorkoutDay, WorkoutLog } from '../types';
-import { MUSCLES } from '../data/catalog';
+import { MUSCLES, mrvAt } from '../data/catalog';
 import type { PR } from '../engine/stats';
+
+export interface FinishFeedback {
+  muscles: Partial<Record<MuscleGroup, MuscleFeedback>>;
+  pain: string[];
+}
 
 export interface ActiveWorkout {
   log: WorkoutLog;
@@ -71,6 +77,8 @@ interface State {
   lessonsDone: string[];
   kcalAdjust: number;
   setDelta: Partial<Record<MuscleGroup, number>>;
+  /** setDelta qaysi blokka tegishli (yangi blokda qayta boshlanadi) */
+  setDeltaMeso?: number;
   seenAchievements: string[];
   lastPRs: PR[];
   settings: Settings;
@@ -79,6 +87,8 @@ interface State {
   /** ko'rilgan murabbiy xabarlari va dastur yangilanishi */
   seenNotes: string[];
   programAck?: string;
+  /** mashq bo'yicha doimiy eslatmalar ("o'rindiq 4-teshik, keng ushlash") */
+  exNotes: Record<string, string>;
 
   setProfile: (p: Profile, regenerate?: boolean) => void;
   updateProfile: (patch: Partial<Profile>) => void;
@@ -100,7 +110,7 @@ interface State {
   startRest: (sec: number) => void;
   adjustRest: (deltaSec: number) => void;
   stopRest: () => void;
-  finishWorkout: (feedback?: WorkoutLog['feedback']) => WorkoutLog | null;
+  finishWorkout: (fb?: FinishFeedback) => WorkoutLog | null;
   discardWorkout: () => void;
   deleteLog: (id: string) => void;
 
@@ -118,6 +128,9 @@ interface State {
   setSync: (patch: Partial<SyncState>) => void;
   markNote: (id: string) => void;
   ackProgram: (at: string) => void;
+  setExNote: (exId: string, text: string) => void;
+  /** mashg'ulotdagi almashtirish/qo'shimchalarni dastur kuniga yozish */
+  applyWorkoutToDay: (dayId: string, plan: PlannedExercise[]) => void;
 }
 
 const initial = {
@@ -138,6 +151,7 @@ const initial = {
   sync: { cursor: 0, hashes: {}, stamps: {}, status: 'idle' } as SyncState,
   seenNotes: [] as string[],
   programAck: undefined as string | undefined,
+  exNotes: {} as Record<string, string>,
 };
 
 export const INITIAL_SYNC: SyncState = { cursor: 0, hashes: {}, stamps: {}, status: 'idle' };
@@ -255,7 +269,7 @@ export const useStore = create<State>()(
         const a = get().active;
         if (a) set({ active: { ...a, restEndsAt: null } });
       },
-      finishWorkout: (feedback) => {
+      finishWorkout: (fb) => {
         const a = get().active;
         if (!a) return null;
         const exercises = a.log.exercises
@@ -267,19 +281,24 @@ export const useStore = create<State>()(
         }
         const finishedAt = new Date().toISOString();
         const durationMin = Math.max(1, Math.round((Date.now() - new Date(a.log.startedAt).getTime()) / 60000));
-        const log: WorkoutLog = { ...a.log, exercises, finishedAt, durationMin, feedback };
+        const log: WorkoutLog = { ...a.log, exercises, finishedAt, durationMin, muscleFb: fb?.muscles, painEx: fb?.pain?.length ? fb.pain : undefined };
         const prs = detectPRs(log, get().logs);
-        // RP uslubidagi moslashuv: og‘riq/charchoq bo‘lsa — set kamayadi, kuchli "pump" va yengil — oshadi
-        const setDelta = { ...get().setDelta };
-        if (feedback) {
-          const groups = new Set<MuscleGroup>();
-          exercises.forEach((e) => exById(e.exerciseId)?.primary.forEach((m) => groups.add(MUSCLES[m].group)));
-          let d = 0;
-          if (feedback.joints >= 2 || feedback.soreness >= 3) d = -1;
-          else if (feedback.pump >= 3 && feedback.soreness <= 1) d = 1;
-          groups.forEach((g) => (setDelta[g] = Math.max(-2, Math.min(2, (setDelta[g] ?? 0) + d))));
+        const logs = [...get().logs, log];
+        // RP uslubidagi moslashuv: har mushak uchun alohida — kam pump/oson/tez tiklanish → set qo'shiladi,
+        // hali og'riyotgan yoki juda og'ir → kamayadi. Haftalik hajm MRV dan oshmaydi.
+        const program = get().program;
+        const profile = get().profile;
+        const meso = program && profile ? mesoState(program, logs, profile.level).meso : 0;
+        const setDelta = get().setDeltaMeso === meso ? { ...get().setDelta } : {};
+        if (fb?.muscles && program) {
+          const vol = weeklyVolume(program);
+          for (const [g, f] of Object.entries(fb.muscles) as [MuscleGroup, MuscleFeedback][]) {
+            const freq = Math.max(1, program.days.filter((d) => d.exercises.some((pe) => exById(pe.exerciseId)?.primary.some((m) => MUSCLES[m].group === g))).length);
+            const maxUp = Math.max(0, Math.floor((mrvAt(g, freq) - vol[g]) / freq));
+            setDelta[g] = Math.max(-2, Math.min(maxUp, (setDelta[g] ?? 0) + setChange(f)));
+          }
         }
-        set({ logs: [...get().logs, log], active: null, lastPRs: prs, setDelta });
+        set({ logs, active: null, lastPRs: prs, setDelta, setDeltaMeso: meso });
         return log;
       },
       discardWorkout: () => set({ active: null }),
@@ -325,6 +344,13 @@ export const useStore = create<State>()(
       setSync: (patch) => set({ sync: { ...get().sync, ...patch } }),
       markNote: (id) => set({ seenNotes: Array.from(new Set([...get().seenNotes, id])).slice(-50) }),
       ackProgram: (at) => set({ programAck: at }),
+      setExNote: (exId, text) => {
+        const next = { ...get().exNotes };
+        if (text.trim()) next[exId] = text.trim().slice(0, 200);
+        else delete next[exId];
+        set({ exNotes: next });
+      },
+      applyWorkoutToDay: (dayId, plan) => set({ program: mapDay(get().program, dayId, (d) => ({ ...d, exercises: plan.map((p) => ({ ...p })) })) }),
     }),
     {
       name: 'kachok-v1',
@@ -355,6 +381,7 @@ export function exportData(): string {
     setDelta: s.setDelta,
     seenAchievements: s.seenAchievements,
     settings: s.settings,
+    exNotes: s.exNotes,
   };
   return JSON.stringify(data, null, 1);
 }

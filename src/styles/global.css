@@ -413,9 +413,25 @@ p {
   color: var(--text);
 }
 .chip.sm {
-  height: 26px;
-  padding: 0 9px;
+  height: 30px;
+  padding: 0 10px;
   font-size: 12px;
+}
+/* Kichik tugmalarning bosiladigan maydoni kamida 44 px (WCAG 2.5.5), ko'rinishi o'zgarmaydi */
+.chip,
+.icon-btn,
+.hit {
+  position: relative;
+}
+.chip::after,
+.icon-btn::after,
+.hit::after {
+  content: '';
+  position: absolute;
+  inset: -6px -2px;
+}
+.icon-btn::after {
+  inset: -3px;
 }
 .tag {
   display: inline-flex;
@@ -920,6 +936,7 @@ p {
   bottom: calc(var(--safe-b) + 12px);
   max-width: 536px;
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 14px;
   padding: 12px 14px;
@@ -1034,4 +1051,145 @@ ol.steps li::before {
   margin-left: 4px;
   color: var(--text-2);
   font-weight: 700;
+}
+
+/* Kuchlanish (RIR) so'rovi dam olish panelida */
+.effort {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--line);
+}
+.effort-chip {
+  flex: 1;
+  justify-content: center;
+  height: 40px;
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text);
+}
+.effort-chip.target {
+  border-color: var(--blue);
+  box-shadow: inset 0 0 0 1px var(--blue);
+}
+.rir-badge {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--blue-2);
+}
+
+/* Set turi va o'tgan natija tugmalari */
+.set-type {
+  border: 0;
+  cursor: pointer;
+}
+.set-type.w {
+  background: var(--yellow-soft);
+  color: var(--yellow);
+}
+.set-type.d {
+  background: var(--blue-soft);
+  color: var(--blue-2);
+}
+.set-type.f {
+  background: var(--red-soft);
+  color: var(--red);
+  font-size: 11px;
+}
+.set-row.warm .set-input {
+  opacity: 0.75;
+}
+.prev-cell {
+  gap: 2px;
+  line-height: 1.15;
+  align-items: flex-start;
+  text-align: left;
+  min-height: 40px;
+  justify-content: center;
+}
+.prev-cell:not(:disabled):active {
+  color: var(--text);
+}
+.ex-note {
+  padding: 10px 12px;
+  border-radius: var(--r-md);
+  background: var(--yellow-soft);
+  border: 1px solid rgba(255, 200, 61, 0.25);
+}
+.ex-note textarea {
+  background: transparent;
+  border: 0;
+  padding: 0;
+}
+
+.rm-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+}
+.rm-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 8px 4px;
+  border-radius: 10px;
+  background: var(--surface-2);
+  font-size: 14px;
+}
+
+.fb-chip {
+  flex: 1;
+  justify-content: center;
+  padding: 0 4px;
+  font-size: 11.5px;
+}
+
+/* Blok jadvali */
+.meso-grid {
+  display: flex;
+  gap: 6px;
+  align-items: flex-end;
+}
+.meso-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 2px 6px;
+  border-radius: 12px;
+  background: var(--surface-2);
+  color: var(--text-3);
+}
+.meso-col b {
+  font-family: var(--font-display);
+  font-size: 22px;
+  color: var(--text-2);
+}
+.meso-col i {
+  display: block;
+  width: 60%;
+  border-radius: 3px;
+  background: var(--surface-3);
+}
+.meso-col.past i {
+  background: var(--blue-ink);
+}
+.meso-col.cur {
+  background: var(--blue-soft);
+  box-shadow: inset 0 0 0 1px var(--blue);
+  color: var(--text);
+}
+.meso-col.cur b {
+  color: var(--text);
+}
+.meso-col.cur i {
+  background: var(--blue);
+}
+.meso-col.deload b {
+  color: var(--yellow);
 }

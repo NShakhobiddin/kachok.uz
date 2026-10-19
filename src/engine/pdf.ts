@@ -3,9 +3,10 @@ import { EXERCISE_MAP } from '../data/exercises';
 import { GROUPS, GROUP_ORDER, WEEKLY_TARGET } from '../data/catalog';
 import { DAYS, fmtDate } from '../lib/date';
 import { saveFile } from '../lib/download';
-import type { Profile, Program } from '../types';
+import type { Profile, Program, WorkoutLog } from '../types';
 import { mealPlan, nutritionPlan } from './nutrition';
-import { programWeek, weeklyVolume } from './program';
+import { weeklyVolume } from './program';
+import { mesoState } from './meso';
 
 /** Standart PDF shriftlari Latin-1 bilan ishlaydi — maxsus belgilarni almashtiramiz */
 export function pdfText(s: string): string {
@@ -36,15 +37,16 @@ const YELLOW: RGB = [245, 192, 51];
 const GREEN: RGB = [37, 165, 101];
 const MUTED: RGB = [110, 120, 135];
 
-export async function exportProgramPdf(program: Program, profile: Profile, kcalAdjust = 0): Promise<void> {
+export async function exportProgramPdf(program: Program, profile: Profile, kcalAdjust = 0, logs: WorkoutLog[] = []): Promise<void> {
   const [{ jsPDF }, { default: autoTable }] = await Promise.all([import('jspdf'), import('jspdf-autotable')]);
   const doc = new jsPDF({ unit: 'mm', format: 'a4' });
   const W = doc.internal.pageSize.getWidth();
   const H = doc.internal.pageSize.getHeight();
   const M = 14;
   const T = (s: string) => pdfText(s);
-  const week = programWeek(program) + 1;
-  const meso = ((week - 1) % program.mesoWeeks) + 1;
+  const ms = mesoState(program, logs, profile.level);
+  const week = ms.absWeek + 1;
+  const meso = ms.week + 1;
 
   // Sarlavha
   doc.setFillColor(...INK);

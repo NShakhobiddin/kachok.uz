@@ -5,6 +5,7 @@ import { addDays, fmtDuration, startOfWeek } from '../lib/date';
 import type { MuscleGroup, MuscleId, Profile, WorkoutLog } from '../types';
 import { addVolume } from './program';
 import { e1rm } from './progression';
+import { e1rmFromSet } from './rpe';
 
 export const finished = (logs: WorkoutLog[]) => logs.filter((l) => l.finishedAt);
 
@@ -118,7 +119,7 @@ export function exerciseSeries(exId: string, logs: WorkoutLog[]) {
       if (!sets.length) return null;
       return {
         date: l.startedAt,
-        e1rm: Math.round(Math.max(...sets.map((s) => e1rm(s.kg, s.reps))) * 10) / 10,
+        e1rm: Math.round(Math.max(...sets.map((s) => (s.rir !== undefined ? e1rmFromSet(s.kg, s.reps, s.rir) : e1rm(s.kg, s.reps)))) * 10) / 10,
         topKg: Math.max(...sets.map((s) => s.kg)),
         reps: Math.max(...sets.map((s) => s.reps)),
         volume: sets.reduce((a, s) => a + s.kg * s.reps, 0),

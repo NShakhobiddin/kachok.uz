@@ -4,12 +4,15 @@ import { TargetBars } from '../components/charts';
 import { DayEditor } from '../components/DayEditor';
 import { Icon } from '../components/ui/Icon';
 import { Sheet } from '../components/ui/Sheet';
-import { GROUPS, GROUP_ORDER, WEEKLY_TARGET } from '../data/catalog';
+import { GROUPS, GROUP_ORDER, VOLUME_LANDMARKS, mrvAt } from '../data/catalog';
 import { exportProgramPdf } from '../engine/pdf';
-import { estimateMinutes, programWeek, weeklyVolume } from '../engine/program';
+import { estimateMinutes, groupFrequency, weeklyVolume } from '../engine/program';
+import { mesoPlan } from '../engine/meso';
+import { useMeso } from '../lib/useToday';
 import { DAYS, DAYS_SHORT, weekdayIdx } from '../lib/date';
 import { useIsPro } from '../lib/features';
 import { useStore } from '../store/useStore';
+import type { Profile } from '../types';
 
 export default function ProgramPage() {
   const program = useStore((s) => s.program);
@@ -29,16 +32,16 @@ export default function ProgramPage() {
   const isPro = useIsPro();
   const nav = useNavigate();
   const vol = useMemo(() => (program ? weeklyVolume(program) : null), [program]);
+  const freq = useMemo(() => groupFrequency(program ?? { days: [] }), [program]);
+  const meso = useMeso();
   if (!program) return null;
   const day = days[Math.min(sel, days.length - 1)];
-  const week = programWeek(program) + 1;
-  const meso = ((week - 1) % program.mesoWeeks) + 1;
 
   const onPdf = async () => {
     if (!isPro) return nav('/premium?f=pdf');
     setPdfBusy(true);
     try {
-      await exportProgramPdf(program, profile, kcalAdjust);
+      await exportProgramPdf(program, profile, kcalAdjust, useStore.getState().logs);
     } catch {
       /* foydalanuvchi bekor qildi yoki saqlash imkoni yo'q */
     } finally {
@@ -63,20 +66,7 @@ export default function ProgramPage() {
         </div>
       </div>
 
-      <div className="card stack gap-12">
-        <div className="row between">
-          <span className="strong">
-            Blok: {meso}-hafta / {program.mesoWeeks}
-          </span>
-          <span className="small muted">{meso === program.mesoWeeks ? 'Yengillashtirish haftasi' : `${program.mesoWeeks}-hafta — yengil`}</span>
-        </div>
-        <div className="row" style={{ gap: 4 }} aria-hidden>
-          {Array.from({ length: program.mesoWeeks }, (_, i) => (
-            <i key={i} style={{ flex: 1, height: 8, borderRadius: 4, background: i < meso ? (i === program.mesoWeeks - 1 ? 'var(--yellow)' : 'var(--blue)') : 'var(--surface-3)' }} />
-          ))}
-        </div>
-        <p className="small muted">{program.splitWhy}</p>
-      </div>
+      {meso && <MesoCard weeks={program.mesoWeeks} level={profile.level} week={meso.week} block={meso.meso} done={meso.sessionsInWeek} perWeek={meso.perWeek} why={program.splitWhy} />}
 
       <div className="hscroll mt-16" role="tablist" aria-label="Kunlar">
         {days.map((d, i) => (
@@ -129,7 +119,7 @@ export default function ProgramPage() {
             </Link>
           </div>
           <div className="card">
-            <TargetBars label="Mushak guruhlari bo‘yicha haftalik setlar" rows={GROUP_ORDER.map((g) => ({ label: GROUPS[g].name, value: vol[g], lo: WEEKLY_TARGET[g][0], hi: WEEKLY_TARGET[g][1] }))} />
+            <TargetBars label="Mushak guruhlari bo‘yicha haftalik setlar" rows={GROUP_ORDER.map((g) => ({ label: GROUPS[g].name, value: vol[g], mev: VOLUME_LANDMARKS[g].mev, mav: VOLUME_LANDMARKS[g].mav, mrv: mrvAt(g, freq[g]) }))} />
             <p className="tiny faint mt-12">Asosiy mushak uchun set = 1, yordamchi mushak uchun = 0.5 (Pelland va boshq., 2026).</p>
           </div>
         </section>
@@ -153,6 +143,45 @@ export default function ProgramPage() {
           </button>
         </div>
       </Sheet>
+    </div>
+  );
+}
+
+/** Blok (mezotsikl) jadvali: har hafta maqsadli zaxira va yuklama, joriy hafta ajratilgan */
+function MesoCard({ weeks, level, week, block, done, perWeek, why }: { weeks: number; level: Profile['level']; week: number; block: number; done: number; perWeek: number; why: string }) {
+  const plan = mesoPlan(weeks, level);
+  const cur = plan[week];
+  return (
+    <div className="card stack gap-12">
+      <div className="row between">
+        <span className="strong">
+          {block + 1}-blok · {week + 1}-hafta / {weeks}
+        </span>
+        <span className="small muted num">
+          {done}/{perWeek} mashg‘ulot
+        </span>
+      </div>
+      <div className="meso-grid" role="table" aria-label="Blok haftalari">
+        {plan.map((w) => (
+          <div key={w.week} role="row" className={`meso-col ${w.week === week ? 'cur' : ''} ${w.week < week ? 'past' : ''} ${w.deload ? 'deload' : ''}`}>
+            <span className="tiny">{w.week + 1}-h</span>
+            <b className="num">{w.deload ? 'D' : w.rir}</b>
+            <i style={{ height: w.deload ? 8 : 10 + (w.week / Math.max(1, weeks - 2)) * 16 }} />
+          </div>
+        ))}
+      </div>
+      <p className="small">
+        {cur.deload ? (
+          <>
+            <b>Yengillashtirish haftasi.</b> Setlar yarmiga, vazn ~15% kamayadi — charchoq ketadi, keyingi blok kuchliroq boshlanadi.
+          </>
+        ) : (
+          <>
+            <b>Bu hafta: har setda {cur.rir} ta zaxira takror.</b> Har hafta zaxira kamayadi va mushak fikringizga qarab setlar qo‘shiladi; oxirgi hafta — yengillashtirish.
+          </>
+        )}
+      </p>
+      <p className="tiny faint">Raqam — maqsadli RIR (zaxiradagi takror). Hafta kalendar bo‘yicha emas, bajarilgan mashg‘ulotlar bo‘yicha o‘tadi. {why}</p>
     </div>
   );
 }

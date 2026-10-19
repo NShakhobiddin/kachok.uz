@@ -178,13 +178,21 @@ export function LineChart({ series, dots, height = 170, unit = '', label, fmtX }
 
 /* ---------- Gorizontal ustunlar + maqsad diapazoni ---------- */
 
-export function TargetBars({ rows, label }: { rows: { label: string; value: number; lo: number; hi: number }[]; label: string }) {
-  const max = niceMax(Math.max(...rows.map((r) => Math.max(r.value, r.hi))) * 1.05);
+/**
+ * Haftalik setlar va hajm chegaralari (RP): MEV — minimal samarali, MAV — eng samarali oraliq, MRV — tiklanish chegarasi.
+ */
+export function TargetBars({ rows, label }: { rows: { label: string; value: number; mev: number; mav: [number, number]; mrv: number }[]; label: string }) {
+  const max = niceMax(Math.max(...rows.map((r) => Math.max(r.value, r.mrv))) * 1.04);
+  const STATUS = {
+    low: { t: 'MEV dan kam', c: 'var(--text-2)' },
+    ok: { t: 'Samarali', c: 'var(--green)' },
+    high: { t: 'Yuqori', c: 'var(--yellow)' },
+    over: { t: 'MRV dan ko‘p', c: 'var(--red)' },
+  };
   return (
     <div className="stack gap-10" role="table" aria-label={label}>
       {rows.map((r) => {
-        const st = r.value < r.lo * 0.7 ? 'low' : r.value > r.hi ? 'high' : 'ok';
-        const stLabel = st === 'low' ? 'Kam' : st === 'high' ? "Ko‘p" : 'Me’yor';
+        const st = r.value < r.mev ? 'low' : r.value <= r.mav[1] ? 'ok' : r.value <= r.mrv ? 'high' : 'over';
         return (
           <div key={r.label} role="row" className="stack gap-4">
             <div className="row between small">
@@ -193,27 +201,28 @@ export function TargetBars({ rows, label }: { rows: { label: string; value: numb
               </span>
               <span role="cell" className="num muted">
                 {Math.round(r.value * 10) / 10} set{' '}
-                <span className="tag" style={{ marginLeft: 6, color: st === 'ok' ? 'var(--green)' : st === 'low' ? 'var(--text-2)' : 'var(--yellow)' }}>
-                  {stLabel}
+                <span className="tag" style={{ marginLeft: 6, color: STATUS[st].c }}>
+                  {STATUS[st].t}
                 </span>
               </span>
             </div>
-            <div style={{ position: 'relative', height: 10, borderRadius: 6, background: 'var(--surface-2)' }}>
-              <div
-                title={`Tavsiya: ${r.lo}–${r.hi} set`}
-                style={{ position: 'absolute', left: `${(r.lo / max) * 100}%`, width: `${((r.hi - r.lo) / max) * 100}%`, top: 0, bottom: 0, background: 'var(--green-soft)', borderLeft: '1px solid var(--green)', borderRight: '1px solid var(--green)' }}
-              />
+            <div style={{ position: 'relative', height: 10, borderRadius: 6, background: 'var(--surface-2)' }} title={`MEV ${r.mev} · MAV ${r.mav[0]}–${r.mav[1]} · MRV ${r.mrv}`}>
+              <div style={{ position: 'absolute', left: `${(r.mev / max) * 100}%`, width: `${((r.mav[1] - r.mev) / max) * 100}%`, top: 0, bottom: 0, background: 'var(--green-soft)', borderLeft: '1px solid var(--green)', borderRight: '1px solid var(--green)' }} />
+              <div style={{ position: 'absolute', left: `${(r.mrv / max) * 100}%`, top: -2, bottom: -2, width: 2, background: 'var(--red)', opacity: 0.7, borderRadius: 1 }} />
               <div style={{ position: 'absolute', left: 0, top: 2, bottom: 2, width: `${Math.min(100, (r.value / max) * 100)}%`, background: BLUE, borderRadius: '0 4px 4px 0', transition: 'width .5s var(--ease-out)' }} />
             </div>
           </div>
         );
       })}
-      <div className="row gap-12 tiny faint">
+      <div className="row wrap gap-12 tiny faint">
         <span className="row gap-6">
           <i style={{ width: 14, height: 6, borderRadius: 3, background: BLUE, display: 'inline-block' }} /> Haftalik setlar
         </span>
         <span className="row gap-6">
-          <i style={{ width: 14, height: 8, background: 'var(--green-soft)', border: '1px solid var(--green)', display: 'inline-block' }} /> Tavsiya etilgan oraliq
+          <i style={{ width: 14, height: 8, background: 'var(--green-soft)', border: '1px solid var(--green)', display: 'inline-block' }} /> MEV–MAV: samarali oraliq
+        </span>
+        <span className="row gap-6">
+          <i style={{ width: 2, height: 10, background: 'var(--red)', display: 'inline-block' }} /> MRV: tiklanish chegarasi
         </span>
       </div>
     </div>

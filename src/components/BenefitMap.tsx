@@ -56,7 +56,7 @@ export function BenefitMap({ items }: { items: { id: BenefitId; text: string }[]
         </div>
       </div>
       {items.length > 1 && (
-        <div className="row gap-6 center">
+        <div className="row center">
           {items.map((b, k) => (
             <button
               key={b.id}
@@ -65,8 +65,11 @@ export function BenefitMap({ items }: { items: { id: BenefitId; text: string }[]
                 setPaused(true);
               }}
               aria-label={BENEFITS[b.id].name}
-              style={{ width: k === i % items.length ? 22 : 8, height: 8, borderRadius: 4, background: k === i % items.length ? 'var(--green)' : 'var(--surface-3)', transition: 'all .25s' }}
-            />
+              aria-pressed={k === i % items.length}
+              style={{ padding: '14px 4px' }}
+            >
+              <span style={{ display: 'block', width: k === i % items.length ? 22 : 8, height: 8, borderRadius: 4, background: k === i % items.length ? 'var(--green)' : 'var(--surface-3)', transition: 'all .25s' }} />
+            </button>
           ))}
         </div>
       )}

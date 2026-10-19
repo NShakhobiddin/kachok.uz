@@ -50,6 +50,7 @@ export function collectDocs(): Map<string, Doc> {
     setDelta: s.setDelta,
     seenAchievements: s.seenAchievements,
     settings: s.settings,
+    exNotes: s.exNotes,
   });
   return out;
 }
@@ -176,7 +177,8 @@ export function startAutoSync() {
       s.kcalAdjust !== prev.kcalAdjust ||
       s.setDelta !== prev.setDelta ||
       s.seenAchievements !== prev.seenAchievements ||
-      s.settings !== prev.settings
+      s.settings !== prev.settings ||
+      s.exNotes !== prev.exNotes
     )
       touched.push('meta:state');
     if (!touched.length && s.logs === prev.logs && s.body === prev.body) return;

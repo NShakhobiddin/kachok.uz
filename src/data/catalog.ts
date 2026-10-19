@@ -41,6 +41,28 @@ export const GROUP_ORDER: MuscleGroup[] = ['chest', 'back', 'shoulders', 'biceps
  * Haftalik set maqsadi (to‘g‘ridan-to‘g‘ri setlar). Pastki chegara — sezilarli o‘sish uchun minimal hajm,
  * yuqori — ko‘pchilik tiklana oladigan hajm (Schoenfeld 2017, Pelland 2026).
  */
+/**
+ * Haftalik hajm chegaralari (ishchi setlar; yordamchi mushakka 0.5 set — Pelland 2025), Renaissance Periodization:
+ * MEV — o'sish uchun minimal, MAV — eng samarali oraliq, MRV — tiklana oladigan maksimum
+ * (haftasiga 2 / 3 / 4 / 5+ marta mashq qilinganda). Bu murabbiylik baholari — individual farq katta,
+ * shuning uchun dastur mushak bo'yicha fikr-mulohazaga qarab moslashadi.
+ */
+export const VOLUME_LANDMARKS: Record<MuscleGroup, { mev: number; mav: [number, number]; mrv: [number, number, number, number] }> = {
+  chest: { mev: 6, mav: [12, 20], mrv: [20, 25, 30, 35] },
+  back: { mev: 10, mav: [14, 22], mrv: [20, 25, 30, 35] },
+  shoulders: { mev: 8, mav: [16, 22], mrv: [25, 30, 35, 40] },
+  biceps: { mev: 8, mav: [14, 20], mrv: [20, 25, 30, 35] },
+  triceps: { mev: 6, mav: [10, 14], mrv: [16, 20, 25, 30] },
+  quads: { mev: 8, mav: [12, 18], mrv: [18, 22, 26, 30] },
+  hamstrings: { mev: 4, mav: [10, 16], mrv: [12, 16, 18, 18] },
+  glutes: { mev: 2, mav: [4, 12], mrv: [12, 18, 25, 30] },
+  calves: { mev: 8, mav: [12, 16], mrv: [16, 20, 25, 30] },
+  core: { mev: 2, mav: [10, 20], mrv: [25, 25, 25, 25] },
+};
+
+/** Mashq chastotasiga qarab MRV */
+export const mrvAt = (g: MuscleGroup, perWeek: number) => VOLUME_LANDMARKS[g].mrv[Math.max(0, Math.min(3, perWeek - 2))];
+
 export const WEEKLY_TARGET: Record<MuscleGroup, [number, number]> = {
   chest: [10, 20],
   back: [10, 22],
