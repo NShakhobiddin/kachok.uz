@@ -1,3 +1,4 @@
+import { motion } from 'framer-motion';
 import { lazy, Suspense, useEffect } from 'react';
 import { BrowserRouter, MemoryRouter, Navigate, NavLink, Route, Routes, useLocation } from 'react-router-dom';
 import { startAutoSync } from './api/sync';
@@ -36,9 +37,14 @@ function TabBar() {
     <nav className="tabbar" aria-label="Asosiy menyu">
       {TABS.map((t) => (
         <NavLink key={t.to} to={t.to} end={t.to === '/'} className={({ isActive }) => (isActive ? 'active' : '')}>
-          <Icon name={t.icon} size={23} />
-          {t.label}
-          {t.to === '/' && active && <span className="tab-live" aria-label="Faol mashg‘ulot" />}
+          {({ isActive }) => (
+            <>
+              {isActive && <motion.span layoutId="tab-pill" className="tab-pill" transition={{ type: 'spring', stiffness: 520, damping: 40 }} />}
+              <Icon name={t.icon} size={23} />
+              {t.label}
+              {t.to === '/' && active && <span className="tab-live" aria-label="Faol mashg‘ulot" />}
+            </>
+          )}
         </NavLink>
       ))}
     </nav>

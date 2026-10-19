@@ -5,6 +5,7 @@ import { BodyMap } from '../components/BodyMap';
 import { LineChart } from '../components/charts';
 import { ExerciseThumb } from '../components/ExerciseThumb';
 import { Figure } from '../components/figure/Figure';
+import { TempoBar, useTempo } from '../components/TempoBar';
 import { Icon } from '../components/ui/Icon';
 import { EQUIPMENT, INJURIES, MUSCLES } from '../data/catalog';
 import { exById } from '../data/exercises';
@@ -22,15 +23,67 @@ const PHASE: Record<Phase, { label: string; hint: string; color: string }> = {
   squeeze: { label: 'Qisish', hint: '1 soniya ushlang', color: 'var(--yellow)' },
 };
 
+const GUIDE_HELD = ['barbell', 'ezbar', 'dumbbell', 'kettlebell'];
+
+/** Asosiy sahna: animatsiya, faza, tezlik, shtanga yo'li va tempo */
+function ExerciseStage({ ex }: { ex: Exercise }) {
+  const [playing, setPlaying] = useState(true);
+  const [speed, setSpeed] = useState(1);
+  const [phase, setPhase] = useState<Phase>('hold');
+  const [guides, setGuides] = useState(false);
+  const tempo = useTempo(ex.anim);
+  const canGuide = ex.anim.view === 'side' && !!ex.anim.held && GUIDE_HELD.includes(ex.anim.held.kind);
+  const ph = PHASE[phase];
+  return (
+    <div className="mt-16">
+      <div className="stage" style={{ aspectRatio: '1 / 1' }}>
+        <Figure
+          spec={ex.anim}
+          primary={ex.primary}
+          secondary={ex.secondary}
+          playing={playing}
+          speed={speed}
+          onPhase={setPhase}
+          onTick={tempo.onTick}
+          guides={guides}
+          hero={1}
+          title={`${ex.name} animatsiyasi`}
+        />
+        <div style={{ position: 'absolute', left: 12, top: 12 }} className="row gap-8">
+          <span className="tag stage-tag">
+            <i className="dot" style={{ background: ph.color }} />
+            {ph.label} · {ph.hint}
+          </span>
+        </div>
+        {canGuide && (
+          <button className={`chip sm stage-chip ${guides ? 'on' : ''}`} style={{ position: 'absolute', right: 12, top: 12 }} onClick={() => setGuides((g) => !g)} aria-pressed={guides}>
+            Shtanga yo‘li
+          </button>
+        )}
+      </div>
+      <div className="row gap-12" style={{ alignItems: 'flex-start' }}>
+        <div className="grow" style={{ minWidth: 0 }}>
+          <TempoBar spec={ex.anim} head={tempo.head} />
+        </div>
+        <div className="row gap-6" style={{ marginTop: 8 }}>
+          <button className="chip sm" onClick={() => setSpeed((s) => (s === 1 ? 0.5 : 1))} aria-label="Tezlik">
+            {speed === 1 ? '1×' : '0.5×'}
+          </button>
+          <button className="icon-btn filled" style={{ width: 36, height: 36 }} onClick={() => setPlaying((p) => !p)} aria-label={playing ? 'To‘xtatish' : 'Davom ettirish'}>
+            <Icon name={playing ? 'pause' : 'play'} size={16} />
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function ExerciseDetail() {
   const { id } = useParams();
   const nav = useNavigate();
   const ex = exById(id ?? '');
   const profile = useStore((s) => s.profile);
   const logs = useStore((s) => s.logs);
-  const [playing, setPlaying] = useState(true);
-  const [speed, setSpeed] = useState(1);
-  const [phase, setPhase] = useState<Phase>('hold');
   const series = useMemo(() => (ex ? exerciseSeries(ex.id, logs) : []), [ex, logs]);
   if (!ex) return <div className="page empty">Mashq topilmadi.</div>;
 
@@ -38,7 +91,6 @@ export default function ExerciseDetail() {
   const cautionHit = profile ? (ex.caution ?? []).filter((i) => profile.injuries.includes(i)) : [];
   const eqNames = [...ex.equipment.map((e) => EQUIPMENT.find((x) => x.id === e)?.name), ex.equipmentAny ? ex.equipmentAny.map((e) => EQUIPMENT.find((x) => x.id === e)?.name).join(' yoki ') : null].filter(Boolean);
   const alts = profile ? alternatives(ex.id, profile).slice(0, 6) : [];
-  const ph = PHASE[phase];
   const best = series.length ? series.reduce((a, b) => (b.e1rm > a.e1rm ? b : a)) : null;
 
   return (
@@ -51,23 +103,7 @@ export default function ExerciseDetail() {
       </div>
       <h1 className="display display-l">{ex.name}</h1>
 
-      <div className="stage mt-16" style={{ aspectRatio: '1 / 0.95' }}>
-        <Figure spec={ex.anim} primary={ex.primary} secondary={ex.secondary} playing={playing} speed={speed} onPhase={setPhase} title={`${ex.name} animatsiyasi`} />
-        <div style={{ position: 'absolute', left: 12, top: 12 }} className="row gap-8">
-          <span className="tag" style={{ background: 'rgba(11,14,18,.7)', color: 'var(--text)' }}>
-            <i className="dot" style={{ background: ph.color }} />
-            {ph.label} · {ph.hint}
-          </span>
-        </div>
-        <div style={{ position: 'absolute', right: 10, bottom: 10 }} className="row gap-6">
-          <button className="chip sm" onClick={() => setSpeed((s) => (s === 1 ? 0.5 : 1))} aria-label="Tezlik">
-            {speed === 1 ? '1×' : '0.5×'}
-          </button>
-          <button className="icon-btn filled" style={{ width: 38, height: 38 }} onClick={() => setPlaying((p) => !p)} aria-label={playing ? "To‘xtatish" : 'Davom ettirish'}>
-            <Icon name={playing ? 'pause' : 'play'} size={16} />
-          </button>
-        </div>
-      </div>
+      <ExerciseStage ex={ex} />
 
       <div className="row wrap gap-6 mt-12">
         {ex.primary.map((m) => (
@@ -219,7 +255,7 @@ function MistakeCard({ ex, m }: { ex: Exercise; m: Exercise['mistakes'][number] 
         <div className="grid-2">
           <div className="stack gap-4">
             <div className="stage" style={{ aspectRatio: '1' }}>
-              <Figure spec={wrongSpec} primary={ex.primary} wrong title={`Noto‘g‘ri: ${m.title}`} />
+              <Figure spec={wrongSpec} primary={ex.primary} wrong hero={1} title={`Noto‘g‘ri: ${m.title}`} />
             </div>
             <span className="tiny strong" style={{ color: 'var(--danger)', textAlign: 'center' }}>
               ✕ Noto‘g‘ri
@@ -227,7 +263,7 @@ function MistakeCard({ ex, m }: { ex: Exercise; m: Exercise['mistakes'][number] 
           </div>
           <div className="stack gap-4">
             <div className="stage" style={{ aspectRatio: '1' }}>
-              <Figure spec={rightSpec!} primary={ex.primary} title="To‘g‘ri bajarilishi" />
+              <Figure spec={rightSpec!} primary={ex.primary} hero={1} title="To‘g‘ri bajarilishi" />
             </div>
             <span className="tiny strong" style={{ color: 'var(--green)', textAlign: 'center' }}>
               ✓ To‘g‘ri

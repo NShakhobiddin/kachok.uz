@@ -37,6 +37,7 @@
   --plate-red: #e5392e;
   --plate-red-dark: #9e1e17;
   --plate-blue: #2f63e8;
+  --plate-blue-dark: #173a99;
   --plate-yellow: #f5c033;
   --plate-green: #25a565;
   --plate-white: #e9ecef;
@@ -50,8 +51,58 @@
   --fig-prop-edge: #3a4655;
   --fig-floor: #2c3541;
   --iron: #9aa5b3;
-  --muscle-primary: #ff4a3d;
-  --muscle-secondary: #ffb43a;
+  --muscle-primary: #e8372a;
+  --muscle-primary-hi: #ff7257;
+  --muscle-primary-lo: #b8261c;
+  --muscle-secondary: #e9961c;
+  --muscle-secondary-hi: #ffc75a;
+  --muscle-fiber: #ffd9cf;
+  --muscle-fiber-2: #ffe7b8;
+
+  /* sportchi: bo'r rangidagi haykal, chap-yuqoridan yorug'lik, orqadan sovuq kontur nuri */
+  --skin-hi: #f6f3ee;
+  --skin: #ddd8d0;
+  --skin-lo: #9c958b;
+  --skin-rim: #c9d2de;
+  --skin-far: #6d6862;
+  --skin-groove: #8f887e;
+  --skin-ear: #c3bcb2;
+  --hair: #37322d;
+  --shorts: #1d2a52;
+  --shorts-hi: #34488a;
+  --shorts-far: #151d38;
+  --shoe: #2a2d33;
+  --shoe-far: #1d2024;
+  --sole: #e6e2db;
+  --sole-far: #8a867f;
+
+  /* anatomik xarita */
+  --map-body: #1e252e;
+  --map-edge: #10141a;
+  --map-groove: #2d3642;
+  --map-muscle: #2b3440;
+
+  /* sahna: zal platformasi */
+  --stage-spot: rgba(190, 210, 255, 0.1);
+  --floor-top: #1b1f25;
+  --floor-bottom: #111316;
+  --floor-edge: #333b45;
+  --fig-shadow: rgba(0, 0, 0, 0.55);
+  --guide: #6b97ff;
+
+  /* jihozlar */
+  --eq-frame: #3a4451;
+  --eq-frame-hi: #5b6675;
+  --eq-pad: #22262d;
+  --eq-pad-hi: #3f4651;
+  --eq-steel: #a9b3bf;
+  --eq-steel-hi: #f0f3f7;
+  --eq-steel-lo: #4b5460;
+  --eq-iron: #48505b;
+  --eq-iron-hi: #7f8996;
+  --eq-shadow: rgba(0, 0, 0, 0.45);
+  --eq-mat: #1c3557;
+  --eq-mat-hi: #2c5288;
 
   /* tipografiya */
   --font-display: 'Big Shoulders Display Variable', 'Arial Narrow', sans-serif;

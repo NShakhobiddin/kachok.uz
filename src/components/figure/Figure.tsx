@@ -1,486 +1,127 @@
-import { memo, useEffect, useId, useRef, useState } from 'react';
-import type { AnimSpec, FrontPose, Held, MuscleId, Phase, Prop, Pt, SidePose } from '../../types';
-import {
-  add,
-  ccw,
-  cw,
-  dir,
-  lerp,
-  lerpPt,
-  mul,
-  norm,
-  sample,
-  solveFront,
-  solveSide,
-  sub,
-  totalDuration,
-  type FrontSkeleton,
-  type SideLimb,
-  type SideSkeleton,
-} from '../../lib/figure';
+import { memo, useEffect, useId, useMemo, useRef, useState } from 'react';
+import type { AnimSpec, FrontPose, MuscleId, Phase, Pt, SidePose } from '../../types';
+import { add, ccw, lerpPt, mul, norm, sample, solveFront, solveSide, sub, totalDuration } from '../../lib/figure';
 import { usePrefersReducedMotion } from '../../lib/hooks';
+import type { MuscleGeo } from './anatomy';
+import { frontBody, sideBody, type Part, type Pump } from './body';
+import { HeldFront, HeldSide, PropShape } from './props';
 
-const C = {
-  near: 'var(--fig-near)',
-  far: 'var(--fig-far)',
-  cut: 'var(--fig-cut)',
-  prop: 'var(--fig-prop)',
-  propEdge: 'var(--fig-prop-edge)',
-  primary: 'var(--muscle-primary)',
-  secondary: 'var(--muscle-secondary)',
-  plate: 'var(--plate-red)',
-  plateDark: 'var(--plate-red-dark)',
-  iron: 'var(--iron)',
-};
+/* ---------- umumiy animatsiya sikli: barcha figuralar bitta requestAnimationFrame bilan ---------- */
 
-/* ---------- yordamchi chizish funksiyalari ---------- */
+const subs = new Set<(now: number) => void>();
+let rafId = 0;
+function loop(now: number) {
+  subs.forEach((f) => f(now));
+  rafId = subs.size ? requestAnimationFrame(loop) : 0;
+}
+function subscribe(f: (now: number) => void) {
+  subs.add(f);
+  if (!rafId) rafId = requestAnimationFrame(loop);
+  return () => {
+    subs.delete(f);
+  };
+}
 
 const f2 = (n: number) => Math.round(n * 10) / 10;
-const P = (p: Pt) => `${f2(p.x)} ${f2(p.y)}`;
 
-/** Ikki uchi har xil qalinlikdagi kapsula (konussimon a’zo) */
-export function capsule(a: Pt, ra: number, b: Pt, rb: number): string {
-  const d = sub(b, a);
-  const u = norm(d);
-  const n = ccw(u);
-  const p1 = add(a, mul(n, ra));
-  const p2 = add(b, mul(n, rb));
-  const p3 = add(b, mul(n, -rb));
-  const p4 = add(a, mul(n, -ra));
-  return `M${P(p1)} L${P(p2)} A${f2(rb)} ${f2(rb)} 0 0 1 ${P(p3)} L${P(p4)} A${f2(ra)} ${f2(ra)} 0 0 1 ${P(p1)} Z`;
+/* ---------- chizish yordamchilari ---------- */
+
+const STOPS: Record<string, [number, string][]> = {
+  skin: [
+    [0, 'var(--skin-hi)'],
+    [0.42, 'var(--skin)'],
+    [0.86, 'var(--skin-lo)'],
+    [1, 'var(--skin-rim)'],
+  ],
+  cyl: [
+    [0, 'var(--skin-lo)'],
+    [0.36, 'var(--skin-hi)'],
+    [0.62, 'var(--skin)'],
+    [1, 'var(--skin-lo)'],
+  ],
+  shorts: [
+    [0, 'var(--shorts-hi)'],
+    [1, 'var(--shorts)'],
+  ],
+};
+
+interface Grad {
+  id: string;
+  shade: string;
+  p1: Pt;
+  p2: Pt;
 }
 
-/** Yopiq silliq kontur (Catmull-Rom -> Bezier) */
-function smoothClosed(pts: Pt[]): string {
-  const n = pts.length;
-  let d = `M${P(pts[0])}`;
-  for (let i = 0; i < n; i++) {
-    const p0 = pts[(i - 1 + n) % n];
-    const p1 = pts[i];
-    const p2 = pts[(i + 1) % n];
-    const p3 = pts[(i + 2) % n];
-    const c1 = { x: p1.x + (p2.x - p0.x) / 6, y: p1.y + (p2.y - p0.y) / 6 };
-    const c2 = { x: p2.x - (p3.x - p1.x) / 6, y: p2.y - (p3.y - p1.y) / 6 };
-    d += ` C${P(c1)} ${P(c2)} ${P(p2)}`;
-  }
-  return d + 'Z';
-}
-
-/* ---------- Yon ko‘rinish: tana ---------- */
-
-function torsoFrame(s: SideSkeleton) {
-  const u = norm(sub(s.shoulder, s.hip));
-  const f = cw(u);
-  const Lt = Math.hypot(s.shoulder.x - s.hip.x, s.shoulder.y - s.hip.y);
-  const at = (along: number, off: number) => {
-    const bend = -s.curve * 13 * Math.sin(Math.PI * Math.min(1, Math.max(0, along)));
-    return add(add(s.hip, mul(u, along * Lt)), mul(f, off + bend));
-  };
-  return { u, f, at };
-}
-
-function torsoPath(s: SideSkeleton): string {
-  const { at } = torsoFrame(s);
-  const pts: [number, number][] = [
-    [-0.14, -6],
-    [-0.02, -11.5],
-    [0.2, -8.6],
-    [0.5, -10.2],
-    [0.78, -11.4],
-    [0.96, -8.5],
-    [1.05, -2.5],
-    [1.0, 6],
-    [0.88, 11.5],
-    [0.68, 11.2],
-    [0.46, 8.4],
-    [0.22, 9.2],
-    [0.02, 10],
-    [-0.12, 5],
-  ];
-  return smoothClosed(pts.map(([a, o]) => at(a, o)));
-}
-
-interface MuscleShape {
-  d: string;
-}
-
-function segOverlay(l: { a: Pt; b: Pt }, t0: number, t1: number, side: 1 | -1 | 0, off: number, r0: number, r1: number): string {
-  const d = norm(sub(l.b, l.a));
-  const front = ccw(d);
-  const o = mul(front, side * off);
-  return capsule(add(lerpPt(l.a, l.b, t0), o), r0, add(lerpPt(l.a, l.b, t1), o), r1);
-}
-
-function sideMuscles(s: SideSkeleton, id: MuscleId): MuscleShape[] {
-  const { at } = torsoFrame(s);
-  const thigh = { a: s.leg.a, b: s.leg.b };
-  const shin = { a: s.leg.b, b: s.leg.c };
-  const ua = { a: s.arm.a, b: s.arm.b };
-  const fa = { a: s.arm.b, b: s.arm.c };
-  const tc = (a0: number, o0: number, a1: number, o1: number, r0: number, r1: number) => capsule(at(a0, o0), r0, at(a1, o1), r1);
-  switch (id) {
-    case 'quads':
-      return [{ d: segOverlay(thigh, 0.2, 0.86, 1, 3.4, 6.2, 4) }];
-    case 'hamstrings':
-      return [{ d: segOverlay(thigh, 0.22, 0.84, -1, 3.6, 5.4, 3.6) }];
-    case 'adductors':
-      return [{ d: segOverlay(thigh, 0.12, 0.55, 0, 0, 4.4, 2.6) }];
-    case 'glutes':
-      return [{ d: tc(-0.1, -6.5, 0.06, -7.5, 6.5, 6) }];
-    case 'calves':
-      return [{ d: segOverlay(shin, 0.1, 0.55, -1, 2.4, 4.8, 3) }];
-    case 'chest':
-      return [{ d: tc(0.68, 7.4, 0.88, 6.6, 4.6, 4.8) }];
-    case 'abs':
-      return [{ d: tc(0.16, 6.2, 0.6, 7.2, 3.3, 3.3) }];
-    case 'obliques':
-      return [{ d: tc(0.16, 1, 0.55, 2.4, 4.2, 4.6) }];
-    case 'lats':
-      return [{ d: tc(0.42, -4.8, 0.82, -3.8, 4, 5.6) }];
-    case 'lowerBack':
-      return [{ d: tc(0.06, -7.4, 0.44, -8, 3.4, 3.2) }];
-    case 'upperBack':
-      return [{ d: tc(0.66, -8.2, 0.9, -7.6, 3.8, 4) }];
-    case 'traps':
-      return [{ d: tc(0.88, -5.5, 1.05, -1.5, 3.6, 3) }];
-    case 'frontDelts':
-      return [{ d: segOverlay(ua, -0.04, 0.32, 1, 2.6, 5.2, 3.6) }];
-    case 'sideDelts':
-      return [{ d: segOverlay(ua, -0.12, 0.28, 0, 0, 6.2, 4.2) }];
-    case 'rearDelts':
-      return [{ d: segOverlay(ua, -0.04, 0.32, -1, 2.6, 5.2, 3.6) }];
-    case 'biceps':
-      return [{ d: segOverlay(ua, 0.32, 0.86, 1, 2.1, 3.8, 2.8) }];
-    case 'triceps':
-      return [{ d: segOverlay(ua, 0.2, 0.86, -1, 2.2, 4, 2.8) }];
-    case 'forearms':
-      return [{ d: segOverlay(fa, 0.04, 0.6, 0, 0, 3.8, 2.8) }];
-  }
-}
-
-/* ---------- Old/orqa ko‘rinish ---------- */
-
-export function frontTorsoPath(s: FrontSkeleton): string {
-  const { cx, shoulderY: y, hipY } = s;
-  const pts: Pt[] = [
-    { x: cx - 20, y: y - 1 },
-    { x: cx - 8, y: y - 4 },
-    { x: cx + 8, y: y - 4 },
-    { x: cx + 20, y: y - 1 },
-    { x: cx + 17.5, y: y + 16 },
-    { x: cx + 13, y: y + 36 },
-    { x: cx + 15.5, y: hipY + 3 },
-    { x: cx + 6, y: hipY + 9 },
-    { x: cx - 6, y: hipY + 9 },
-    { x: cx - 15.5, y: hipY + 3 },
-    { x: cx - 13, y: y + 36 },
-    { x: cx - 17.5, y: y + 16 },
-  ];
-  return smoothClosed(pts);
-}
-
-function poly(pts: Pt[]) {
-  return smoothClosed(pts);
-}
-
-export function frontMuscles(s: FrontSkeleton, id: MuscleId, back: boolean): MuscleShape[] {
-  const { cx, shoulderY: y, hipY } = s;
-  const both = (fn: (k: 1 | -1) => string): MuscleShape[] => [{ d: fn(1) }, { d: fn(-1) }];
-  const limb = (l: SideLimb, which: 'u' | 'l', t0: number, t1: number, off: number, r0: number, r1: number, k: 1 | -1) => {
-    const seg = which === 'u' ? { a: l.a, b: l.b } : { a: l.b, b: l.c };
-    const d = norm(sub(seg.b, seg.a));
-    const o = mul(ccw(d), off * k);
-    return capsule(add(lerpPt(seg.a, seg.b, t0), o), r0, add(lerpPt(seg.a, seg.b, t1), o), r1);
-  };
-  const arm = (k: 1 | -1) => s.arms[k === 1 ? 0 : 1];
-  const leg = (k: 1 | -1) => s.legs[k === 1 ? 0 : 1];
-  if (!back) {
-    switch (id) {
-      case 'chest':
-        return both((k) => poly([
-          { x: cx + k * 2, y: y + 3 },
-          { x: cx + k * 17, y: y + 2 },
-          { x: cx + k * 16, y: y + 14 },
-          { x: cx + k * 3, y: y + 18 },
-        ]));
-      case 'abs':
-        return [{ d: poly([
-          { x: cx - 6, y: y + 21 },
-          { x: cx + 6, y: y + 21 },
-          { x: cx + 5.5, y: hipY - 2 },
-          { x: cx - 5.5, y: hipY - 2 },
-        ]) }];
-      case 'obliques':
-        return both((k) => poly([
-          { x: cx + k * 9, y: y + 22 },
-          { x: cx + k * 14.5, y: y + 24 },
-          { x: cx + k * 14, y: hipY - 3 },
-          { x: cx + k * 8, y: hipY - 5 },
-        ]));
-      case 'frontDelts':
-      case 'sideDelts':
-        return both((k) => limb(arm(k), 'u', -0.12, 0.3, id === 'sideDelts' ? -1.5 : 1.5, 6.4, 4.4, k));
-      case 'biceps':
-        return both((k) => limb(arm(k), 'u', 0.34, 0.86, 0, 3.8, 2.8, k));
-      case 'forearms':
-        return both((k) => limb(arm(k), 'l', 0.05, 0.6, 0, 3.6, 2.6, k));
-      case 'quads':
-        return both((k) => limb(leg(k), 'u', 0.18, 0.86, 0.5, 6.4, 4.2, k));
-      case 'adductors':
-        return both((k) => limb(leg(k), 'u', 0.1, 0.55, 3.6, 3.6, 2, -k as 1 | -1));
-      case 'calves':
-        return both((k) => limb(leg(k), 'l', 0.1, 0.5, 2.4, 3.2, 2.2, k));
-      case 'traps':
-        return both((k) => poly([
-          { x: cx + k * 5, y: y - 9 },
-          { x: cx + k * 16, y: y - 2 },
-          { x: cx + k * 7, y: y - 2 },
-        ]));
-      default:
-        return [];
+/** Avval barcha kesim konturlari, keyin bo'yoqlar: bir qatlam ichidagi a'zolar (son-boldir, yelka-bilak) choksiz qo'shiladi */
+function renderParts(parts: Part[], uid: string, key: string, grads: Grad[], wrong?: boolean) {
+  const outlines = parts
+    .map((p, i) =>
+      p.cut ? (
+        <path key={`${key}o${i}`} d={p.d} fill="none" stroke={wrong && p.shade !== 'shoe' ? 'var(--danger)' : 'var(--fig-cut)'} strokeWidth={wrong ? 2.2 : 2.4} strokeLinejoin="round" />
+      ) : null,
+    )
+    .filter(Boolean);
+  const fills = parts.map((p, i) => {
+    let fill = p.fill;
+    if (!fill) {
+      if (p.shade === 'far') fill = 'var(--skin-far)';
+      else if (p.axis && STOPS[p.shade]) {
+        const id = `${uid}${key}${i}`;
+        grads.push({ id, shade: p.shade, p1: p.axis.p1, p2: p.axis.p2 });
+        fill = `url(#${id})`;
+      } else fill = p.shade === 'shorts' ? 'var(--shorts)' : 'var(--skin)';
     }
-  }
-  switch (id) {
-    case 'traps':
-      return [{ d: poly([
-        { x: cx, y: y - 9 },
-        { x: cx + 17, y: y - 1 },
-        { x: cx + 4, y: y + 12 },
-        { x: cx, y: y + 30 },
-        { x: cx - 4, y: y + 12 },
-        { x: cx - 17, y: y - 1 },
-      ]) }];
-    case 'upperBack':
-      return both((k) => poly([
-        { x: cx + k * 4, y: y + 6 },
-        { x: cx + k * 13, y: y + 6 },
-        { x: cx + k * 11, y: y + 22 },
-        { x: cx + k * 3, y: y + 25 },
-      ]));
-    case 'lats':
-      return both((k) => poly([
-        { x: cx + k * 15, y: y + 9 },
-        { x: cx + k * 18, y: y + 20 },
-        { x: cx + k * 12.5, y: y + 42 },
-        { x: cx + k * 6, y: y + 40 },
-        { x: cx + k * 8, y: y + 22 },
-      ]));
-    case 'lowerBack':
-      return both((k) => poly([
-        { x: cx + k * 1.5, y: y + 32 },
-        { x: cx + k * 6, y: y + 32 },
-        { x: cx + k * 6.5, y: hipY - 1 },
-        { x: cx + k * 1.5, y: hipY - 1 },
-      ]));
-    case 'rearDelts':
-    case 'sideDelts':
-      return both((k) => limb(arm(k), 'u', -0.12, 0.3, 0, 6.4, 4.4, k));
-    case 'triceps':
-      return both((k) => limb(arm(k), 'u', 0.25, 0.86, 0, 4, 2.8, k));
-    case 'forearms':
-      return both((k) => limb(arm(k), 'l', 0.05, 0.6, 0, 3.6, 2.6, k));
-    case 'glutes':
-      return both((k) => poly([
-        { x: cx + k * 1.5, y: hipY - 4 },
-        { x: cx + k * 14.5, y: hipY - 2 },
-        { x: cx + k * 15, y: hipY + 10 },
-        { x: cx + k * 2, y: hipY + 12 },
-      ]));
-    case 'hamstrings':
-      return both((k) => limb(leg(k), 'u', 0.25, 0.86, 0, 5.4, 3.8, k));
-    case 'adductors':
-      return both((k) => limb(leg(k), 'u', 0.1, 0.5, 3.6, 3.4, 2, -k as 1 | -1));
-    case 'calves':
-      return both((k) => limb(leg(k), 'l', 0.08, 0.52, 0, 4.8, 3, k));
-    default:
-      return [];
-  }
+    return <path key={`${key}${i}`} d={p.d} fill={fill} />;
+  });
+  return [...outlines, ...fills];
 }
 
-/* ---------- Jihozlar ---------- */
-
-function PropShape({ p, floorY }: { p: Prop; floorY: number }) {
-  const w = p.w ?? 60;
-  const h = p.h ?? 8;
-  switch (p.kind) {
-    case 'bench':
-      return (
-        <g>
-          <rect x={p.x + 6} y={p.y + h} width={5} height={floorY - p.y - h} fill={C.propEdge} />
-          <rect x={p.x + w - 11} y={p.y + h} width={5} height={floorY - p.y - h} fill={C.propEdge} />
-          <rect x={p.x} y={p.y} width={w} height={h} rx={3.5} fill={C.prop} />
-        </g>
-      );
-    case 'inclineBench': {
-      const a = p.angle ?? 35;
-      const back = dir(270 + a);
-      const end = add({ x: p.x, y: p.y }, mul(back, w));
-      return (
-        <g>
-          <line x1={p.x} y1={p.y + 4} x2={p.x} y2={floorY} stroke={C.propEdge} strokeWidth={5} />
-          <line x1={p.x - w * 0.5} y1={floorY - 2} x2={p.x + 34} y2={floorY - 2} stroke={C.propEdge} strokeWidth={4} />
-          <line x1={end.x} y1={end.y} x2={p.x - w * 0.45} y2={floorY} stroke={C.propEdge} strokeWidth={3.5} />
-          <path d={capsule({ x: p.x, y: p.y + 3 }, 4, { x: p.x + 30, y: p.y + 3 }, 4)} fill={C.prop} />
-          <path d={capsule({ x: p.x - 2, y: p.y }, 4.2, end, 4.2)} fill={C.prop} />
-        </g>
-      );
-    }
-    case 'seat': {
-      // trenajyor o‘rindig‘i + suyanchiq (h = suyanchiq balandligi)
-      const back = h > 8 ? h : 0;
-      return (
-        <g>
-          <line x1={p.x + w / 2} y1={p.y + 4} x2={p.x + w / 2} y2={floorY} stroke={C.propEdge} strokeWidth={5} />
-          <line x1={p.x} y1={floorY - 2} x2={p.x + w} y2={floorY - 2} stroke={C.propEdge} strokeWidth={4} />
-          <rect x={p.x} y={p.y} width={w} height={8} rx={4} fill={C.prop} />
-          {back > 0 && (
-            <path
-              d={capsule({ x: p.x - 3, y: p.y + 2 }, 4, add({ x: p.x - 3, y: p.y + 2 }, mul(dir(p.angle ?? -8), back)), 4)}
-              fill={C.prop}
-            />
-          )}
-        </g>
-      );
-    }
-    case 'rack':
-      return (
-        <g opacity={0.9}>
-          <rect x={p.x} y={p.y} width={5} height={floorY - p.y} fill={C.propEdge} />
-          <rect x={p.x + 4} y={p.y + (p.h ?? 40)} width={8} height={4} rx={1} fill={C.propEdge} />
-        </g>
-      );
-    case 'pullupBar':
-      return (
-        <g>
-          <line x1={p.x - (w / 2)} y1={p.y} x2={p.x + w / 2} y2={p.y} stroke={C.iron} strokeWidth={4} strokeLinecap="round" />
-          <line x1={p.x - w / 2} y1={p.y} x2={p.x - w / 2} y2={p.y - 30} stroke={C.propEdge} strokeWidth={5} />
-          <line x1={p.x + w / 2} y1={p.y} x2={p.x + w / 2} y2={p.y - 30} stroke={C.propEdge} strokeWidth={5} />
-        </g>
-      );
-    case 'dipBars':
-      return (
-        <g>
-          <line x1={p.x - 14} y1={p.y} x2={p.x + 14} y2={p.y} stroke={C.iron} strokeWidth={4.5} strokeLinecap="round" />
-          <line x1={p.x + 10} y1={p.y} x2={p.x + 10} y2={floorY} stroke={C.propEdge} strokeWidth={5} />
-        </g>
-      );
-    case 'cableTower':
-      return (
-        <g>
-          <rect x={p.x - 5} y={Math.min(p.y, 30) - 10} width={10} height={floorY - Math.min(p.y, 30) + 10} rx={2} fill={C.propEdge} />
-          <circle cx={p.x} cy={p.y} r={4.5} fill={C.prop} stroke={C.iron} strokeWidth={1.5} />
-        </g>
-      );
-    case 'box':
-      return <rect x={p.x} y={p.y} width={w} height={h} rx={3} fill={C.prop} />;
-    case 'pad': {
-      const a = p.angle ?? 0;
-      const d = dir(90 + a);
-      return <path d={capsule({ x: p.x, y: p.y }, h / 2, add({ x: p.x, y: p.y }, mul(d, w)), h / 2)} fill={C.prop} />;
-    }
-    case 'mat':
-      return <rect x={p.x} y={floorY - 3} width={w} height={3} rx={1.5} fill={C.prop} />;
-    case 'machine':
-      return (
-        <g>
-          <rect x={p.x} y={p.y} width={w} height={h} rx={4} fill="none" stroke={C.propEdge} strokeWidth={4} />
-        </g>
-      );
-    case 'benchTop':
-      return <rect x={p.x - w / 2} y={p.y} width={w} height={h} rx={5} fill={C.prop} />;
-    case 'seatFront':
-      return (
-        <g>
-          <rect x={p.x - w / 2} y={p.y} width={w} height={7} rx={3.5} fill={C.prop} />
-          <rect x={p.x - 3} y={p.y + 7} width={6} height={floorY - p.y - 7} fill={C.propEdge} />
-        </g>
-      );
-    case 'legPressFrame': {
-      const a = p.angle ?? 45;
-      const d = dir(90 - a);
-      const end = add({ x: p.x, y: p.y }, mul(d, w));
-      return (
-        <g>
-          <line x1={p.x} y1={p.y} x2={end.x} y2={end.y} stroke={C.propEdge} strokeWidth={5} strokeLinecap="round" />
-          <line x1={p.x + 10} y1={floorY} x2={end.x} y2={end.y} stroke={C.propEdge} strokeWidth={3} />
-        </g>
-      );
-    }
-  }
+function Grooves({ list, opacity = 1 }: { list: string[]; opacity?: number }) {
+  return (
+    <g fill="none" stroke="var(--skin-groove)" strokeWidth={0.7} strokeLinecap="round" opacity={0.75 * opacity}>
+      {list.map((d, i) => (
+        <path key={i} d={d} />
+      ))}
+    </g>
+  );
 }
 
-function HeldSide({ held, s, near }: { held: Held; s: SideSkeleton; near: boolean }) {
-  const arm = near ? s.arm : s.arm2;
-  const hand = near ? s.hand : s.hand2;
-  const fd = norm(sub(arm.c, arm.b));
-  const op = near ? 1 : 0.55;
-  if (!near && held.single) return null;
-  switch (held.kind) {
-    case 'barbell':
-    case 'ezbar': {
-      if (!near) return null;
-      const r = held.kind === 'barbell' ? 21 : 14;
-      return (
-        <g>
-          <circle cx={hand.x} cy={hand.y} r={r} fill={C.plate} />
-          <circle cx={hand.x} cy={hand.y} r={r - 3.5} fill="none" stroke={C.plateDark} strokeWidth={1.4} />
-          <circle cx={hand.x} cy={hand.y} r={5} fill={C.iron} />
-          <circle cx={hand.x} cy={hand.y} r={2.2} fill={C.plateDark} />
-        </g>
-      );
-    }
-    case 'plate':
-      return near ? (
-        <g>
-          <circle cx={hand.x} cy={hand.y} r={12} fill={C.iron} />
-          <circle cx={hand.x} cy={hand.y} r={3} fill={C.plateDark} />
-        </g>
-      ) : null;
-    case 'dumbbell':
-      return (
-        <g opacity={op}>
-          <rect x={hand.x - 7} y={hand.y - 7} width={14} height={14} rx={3.5} fill={C.iron} transform={`rotate(45 ${hand.x} ${hand.y})`} />
-          <circle cx={hand.x} cy={hand.y} r={3} fill={C.cut} />
-        </g>
-      );
-    case 'kettlebell': {
-      if (!near) return null;
-      const c = add(hand, mul(fd, 11));
-      return (
-        <g>
-          <circle cx={hand.x} cy={hand.y} r={4.5} fill="none" stroke={C.iron} strokeWidth={2.5} />
-          <circle cx={c.x} cy={c.y} r={9} fill={C.iron} />
-        </g>
-      );
-    }
-    case 'cable':
-    case 'band':
-    case 'handle': {
-      const from = held.from ?? { x: hand.x + 40, y: hand.y };
-      return (
-        <g opacity={op}>
-          {held.kind !== 'handle' && (
-            <line
-              x1={from.x}
-              y1={from.y}
-              x2={hand.x}
-              y2={hand.y}
-              stroke={held.kind === 'band' ? 'var(--plate-green)' : C.iron}
-              strokeWidth={held.kind === 'band' ? 2.4 : 1.4}
-              strokeDasharray={held.kind === 'band' ? undefined : undefined}
-            />
-          )}
-          <circle cx={hand.x} cy={hand.y} r={4} fill={C.iron} />
-        </g>
-      );
-    }
-  }
+interface MuscleStyle {
+  primary: MuscleId[];
+  secondary: MuscleId[];
+  act: number;
+  uid: string;
+  dim?: number;
 }
 
-function Foot({ f, color }: { f: SideSkeleton['foot']; color: string }) {
-  const top = add(f.ankle, mul(f.fdir, 7));
-  const d = `M${P(add(f.ankle, mul(f.fdir, -3)))} L${P(f.heel)} L${P(f.toe)} L${P(top)} Z`;
-  return <path d={d} fill={color} stroke={color} strokeWidth={4} strokeLinejoin="round" />;
+function Muscles({ map, st }: { map: Partial<Record<MuscleId, MuscleGeo[]>>; st: MuscleStyle }) {
+  const dim = st.dim ?? 1;
+  const pick = (ids: MuscleId[]) => ids.flatMap((id) => map[id] ?? []);
+  const prim = pick(st.primary);
+  const sec = pick(st.secondary.filter((m) => !st.primary.includes(m)));
+  if (!prim.length && !sec.length) return null;
+  return (
+    <g>
+      {prim.length > 0 && (
+        <g filter={`url(#${st.uid}glow)`} opacity={0.5 * st.act * dim}>
+          {prim.map((m, i) => (
+            <path key={i} d={m.d} fill="var(--muscle-primary)" />
+          ))}
+        </g>
+      )}
+      <g>
+        {sec.map((m, i) => (
+          <path key={`s${i}`} d={m.d} fill={`url(#${st.uid}ms)`} opacity={(0.5 + 0.15 * st.act) * dim} />
+        ))}
+        {prim.map((m, i) => (
+          <path key={`p${i}`} d={m.d} fill={`url(#${st.uid}mp)`} opacity={(0.8 + 0.2 * st.act) * dim} />
+        ))}
+      </g>
+      <g fill="none" strokeLinecap="round">
+        {prim.flatMap((m, i) => m.fibers.map((f, j) => <path key={`pf${i}-${j}`} d={f} stroke="var(--muscle-fiber)" strokeWidth={0.6} opacity={(0.3 + 0.25 * st.act) * dim} />))}
+      </g>
+    </g>
+  );
 }
 
 /* ---------- Asosiy komponent ---------- */
@@ -497,19 +138,27 @@ export interface FigureProps {
   /** xato texnika (qizil kontur) */
   wrong?: boolean;
   onPhase?: (phase: Phase) => void;
+  /** har kadrda faza ichidagi progress (0..1) */
+  onProgress?: (phase: Phase, progress: number) => void;
   title?: string;
   /** kadrni figuraga moslab kesish (kichik rasmlar uchun) */
   fit?: boolean;
+  /** shtanga yo'li va boshqa yo'l-yo'riq chiziqlari */
+  guides?: boolean;
+  /** katta sahna: figura kadrni to'ldiradi (w/h nisbati) */
+  hero?: number;
+  /** har kadrda vaqt (ms) — React holatisiz DOM yangilash uchun */
+  onTick?: (timeMs: number) => void;
 }
 
-function FigureInner({ spec, primary = [], secondary = [], playing = true, at, speed = 1, className, wrong, onPhase, title, fit }: FigureProps) {
+function FigureInner({ spec, primary = [], secondary = [], playing = true, at, speed = 1, className, wrong, onPhase, onProgress, title, fit, guides, hero, onTick }: FigureProps) {
   const reduced = usePrefersReducedMotion();
   const [time, setTime] = useState(at ?? 0);
-  const raf = useRef(0);
+  const timeRef = useRef(at ?? 0);
   const ref = useRef<SVGSVGElement>(null);
   const visible = useRef(true);
   const lastPhase = useRef<Phase | null>(null);
-  const uid = useId().replace(/:/g, '');
+  const uid = 'f' + useId().replace(/[^a-zA-Z0-9]/g, '');
   const animate = playing && !reduced && at === undefined;
 
   useEffect(() => {
@@ -525,22 +174,20 @@ function FigureInner({ spec, primary = [], secondary = [], playing = true, at, s
       else if (reduced) setTime(totalDuration(spec.frames) * 0.55);
       return;
     }
-    let start = performance.now() - time / speed;
+    let start = performance.now() - timeRef.current / speed;
     let last = 0;
-    const tick = (now: number) => {
-      raf.current = requestAnimationFrame(tick);
+    const minDt = fit ? 32 : 15; // kichik rasmlar ~30 fps, asosiy sahna ~60 fps
+    return subscribe((now) => {
       if (!visible.current) {
-        start = now - time / speed;
+        start = now - timeRef.current / speed;
         return;
       }
-      if (now - last < 30) return; // ~33 fps — batareyani tejash
+      if (now - last < minDt) return;
       last = now;
-      setTime((now - start) * speed);
-    };
-    raf.current = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf.current);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [animate, spec, speed, at, reduced]);
+      timeRef.current = (now - start) * speed;
+      setTime(timeRef.current);
+    });
+  }, [animate, spec, speed, at, reduced, fit]);
 
   const smp = sample(spec, time);
   useEffect(() => {
@@ -548,76 +195,86 @@ function FigureInner({ spec, primary = [], secondary = [], playing = true, at, s
       lastPhase.current = smp.phase;
       onPhase(smp.phase);
     }
+    onProgress?.(smp.phase, smp.progress);
+    onTick?.(time);
   });
 
   const floorY = spec.floorY ?? 214;
-  const fr = fit ? fitFrame(spec) : spec.frame ?? { x: 20, y: 16, w: 200, h: 204 };
-  const glow = `glow-${uid}`;
+  // statik kichik rasm faqat ko'rsatilayotgan holatga moslanadi — figura kattaroq ko'rinadi
+  const fr = fit ? fitFrame(spec, animate ? undefined : time) : hero ? heroFrame(spec, hero) : (spec.frame ?? { x: 20, y: 16, w: 200, h: 204 });
   const act = smp.activation;
   const mirror = spec.facing === 'left' ? `translate(${fr.x * 2 + fr.w} 0) scale(-1 1)` : undefined;
+  const st: MuscleStyle = { primary, secondary, act, uid };
+  const pump: Pump = { active: new Set(primary), activation: act, breath: smp.breath };
+  const grads: Grad[] = [];
+  const barPath = useBarPath(spec, guides);
 
   let body: React.ReactNode;
+  let shadows: React.ReactNode = null;
   if (spec.view === 'side') {
-    const s = solveSide(smp.pose as SidePose, spec.anchor);
-    const limb = (l: SideLimb, r: [number, number, number, number], color: string) => (
-      <>
-        <path d={capsule(l.a, r[0], l.b, r[1])} fill={color} stroke={C.cut} strokeWidth={1.6} paintOrder="stroke" />
-        <path d={capsule(l.b, r[2], l.c, r[3])} fill={color} stroke={C.cut} strokeWidth={1.6} paintOrder="stroke" />
-      </>
-    );
+    const pose = smp.pose as SidePose;
+    const s = solveSide(pose, spec.anchor);
+    const b = sideBody(s, pump, pose.heel ?? 0, new Set([...primary, ...secondary]));
     const heldNearFront = spec.held && (spec.held.kind === 'barbell' || spec.held.kind === 'ezbar');
-    const muscles = (ids: MuscleId[], color: string, opacity: number) => (
-      <g filter={`url(#${glow})`} opacity={opacity}>
-        {ids.flatMap((id) => sideMuscles(s, id)).map((m, i) => (
-          <path key={i} d={m.d} fill={color} />
-        ))}
-      </g>
-    );
     const gear = spec.footGear;
     let gearEl: React.ReactNode = null;
     if (gear) {
       if (gear.kind === 'platform') {
         const mid = lerpPt(s.foot.heel, s.foot.toe, 0.45);
         const sd = norm(sub(s.foot.toe, s.foot.heel));
-        const dn = mul(cw(sd), 4.5);
-        const a = add(add(mid, mul(sd, 24)), dn);
-        const b = add(add(mid, mul(sd, -24)), dn);
-        gearEl = <line x1={a.x} y1={a.y} x2={b.x} y2={b.y} stroke={C.iron} strokeWidth={6} strokeLinecap="round" />;
+        const dn = mul({ x: -sd.y, y: sd.x }, 4.5);
+        const a = add(add(mid, mul(sd, 26)), dn);
+        const c = add(add(mid, mul(sd, -26)), dn);
+        gearEl = (
+          <g>
+            <line x1={a.x} y1={a.y} x2={c.x} y2={c.y} stroke="var(--eq-frame)" strokeWidth={7} strokeLinecap="round" />
+            <line x1={a.x} y1={a.y - 2} x2={c.x} y2={c.y - 2} stroke="var(--eq-frame-hi)" strokeWidth={1.2} strokeLinecap="round" />
+          </g>
+        );
       } else {
         const shinDir = norm(sub(s.leg.c, s.leg.b));
-        const side = gear.kind === 'anklePad' ? 1 : gear.kind === 'shinPad' ? -1 : 1;
+        const side = gear.kind === 'shinPad' ? -1 : 1;
         const base = gear.kind === 'kneePad' ? lerpPt(s.leg.a, s.leg.b, 0.88) : lerpPt(s.leg.b, s.leg.c, 0.9);
         const segDir = gear.kind === 'kneePad' ? norm(sub(s.leg.b, s.leg.a)) : shinDir;
-        const c = add(base, mul(ccw(segDir), side * 8.5));
-        gearEl = <circle cx={c.x} cy={c.y} r={6.5} fill={C.prop} stroke={C.iron} strokeWidth={1.5} />;
+        const c = add(base, mul(ccw(segDir), side * 9));
+        gearEl = (
+          <g>
+            <circle cx={c.x} cy={c.y} r={6.6} fill="var(--eq-pad)" />
+            <circle cx={c.x - 1.6} cy={c.y - 1.8} r={2.4} fill="var(--eq-pad-hi)" opacity={0.7} />
+          </g>
+        );
       }
     }
+    const sole = (f: typeof s.foot) => ({ x: (f.heel.x + f.toe.x) / 2, y: Math.max(f.heel.y, f.toe.y) });
+    shadows = [s.foot, s.foot2].map((f, i) => {
+      const p = sole(f);
+      const lift = floorY - p.y;
+      if (lift > 22) return null;
+      return <ellipse key={i} cx={p.x} cy={floorY + 0.4} rx={13 - lift * 0.2} ry={2.2} fill="var(--fig-shadow)" opacity={(1 - lift / 22) * (i ? 0.6 : 1)} />;
+    });
     body = (
       <g transform={mirror}>
         {/* uzoq tomon */}
-        {limb(s.leg2, [9.5, 6.2, 6.2, 4], C.far)}
-        <Foot f={s.foot2} color={C.far} />
-        {limb(s.arm2, [6.2, 4.6, 4.6, 3.5], C.far)}
-        <circle cx={s.hand2.x} cy={s.hand2.y} r={3.8} fill={C.far} />
+        {renderParts(b.far.parts, uid, 'f', grads)}
+        <Muscles map={b.far.muscles} st={{ ...st, dim: 0.6 }} />
         {spec.held && <HeldSide held={spec.held} s={s} near={false} />}
         {/* tana */}
-        <path d={capsule(s.shoulder, 4.6, s.neck, 4.2)} fill={C.near} />
-        <circle cx={s.head.x} cy={s.head.y} r={10.5} fill={C.near} />
-        <path d={torsoPath(s)} fill={C.near} stroke={wrong ? 'var(--danger)' : C.cut} strokeWidth={wrong ? 1.4 : 0} />
-        {muscles(secondary.filter((m) => !['biceps', 'triceps', 'forearms', 'frontDelts', 'sideDelts', 'rearDelts', 'quads', 'hamstrings', 'calves', 'adductors'].includes(m)), C.secondary, 0.35 + 0.35 * act)}
-        {muscles(primary.filter((m) => !['biceps', 'triceps', 'forearms', 'frontDelts', 'sideDelts', 'rearDelts', 'quads', 'hamstrings', 'calves', 'adductors'].includes(m)), C.primary, 0.5 + 0.5 * act)}
+        {renderParts(b.torso.parts, uid, 't', grads, wrong)}
+        <Grooves list={b.torso.grooves} />
+        <Muscles map={b.torso.muscles} st={st} />
+        {wrong && <path d={b.outlineNear[0]} fill="none" stroke="var(--danger)" strokeWidth={1.2} />}
         {gearEl}
         {/* yaqin oyoq */}
-        {limb(s.leg, [10.5, 6.6, 6.6, 4.2], C.near)}
-        <Foot f={s.foot} color={C.near} />
-        {muscles(secondary.filter((m) => ['quads', 'hamstrings', 'calves', 'adductors'].includes(m)), C.secondary, 0.35 + 0.35 * act)}
-        {muscles(primary.filter((m) => ['quads', 'hamstrings', 'calves', 'adductors'].includes(m)), C.primary, 0.5 + 0.5 * act)}
+        {renderParts(b.leg.parts, uid, 'l', grads, wrong)}
+        <Grooves list={b.leg.grooves} />
+        <Muscles map={b.leg.muscles} st={st} />
+        {b.glutes && <Muscles map={{ glutes: b.glutes }} st={st} />}
+        {guides && barPath && <path d={barPath} fill="none" stroke="var(--guide)" strokeWidth={1} strokeDasharray="1.2 2.6" strokeLinecap="round" />}
         {heldNearFront && <HeldSide held={spec.held!} s={s} near />}
         {/* yaqin qo‘l */}
-        {limb(s.arm, [6.8, 5, 5, 3.7], C.near)}
-        <circle cx={s.hand.x} cy={s.hand.y} r={4} fill={C.near} stroke={C.cut} strokeWidth={1.2} paintOrder="stroke" />
-        {muscles(secondary.filter((m) => ['biceps', 'triceps', 'forearms', 'frontDelts', 'sideDelts', 'rearDelts'].includes(m)), C.secondary, 0.35 + 0.35 * act)}
-        {muscles(primary.filter((m) => ['biceps', 'triceps', 'forearms', 'frontDelts', 'sideDelts', 'rearDelts'].includes(m)), C.primary, 0.5 + 0.5 * act)}
+        {renderParts(b.arm.parts, uid, 'a', grads, wrong)}
+        <Grooves list={b.arm.grooves} />
+        <Muscles map={b.arm.muscles} st={st} />
         {spec.held && !heldNearFront && <HeldSide held={spec.held} s={s} near />}
       </g>
     );
@@ -625,108 +282,71 @@ function FigureInner({ spec, primary = [], secondary = [], playing = true, at, s
     const back = spec.view === 'back';
     const cx = fr.x + fr.w / 2;
     const s = solveFront(smp.pose as FrontPose, cx, floorY);
+    const fb = frontBody(s, back, pump);
     const armsFront = (s.fwd ?? 0) > 25;
-    const limb = (l: SideLimb, r: [number, number, number, number]) => (
-      <>
-        <path d={capsule(l.a, r[0], l.b, r[1])} fill={C.near} stroke={C.cut} strokeWidth={1.4} paintOrder="stroke" />
-        <path d={capsule(l.b, r[2], l.c, r[3])} fill={C.near} stroke={C.cut} strokeWidth={1.4} paintOrder="stroke" />
-      </>
-    );
-    const muscles = (ids: MuscleId[], color: string, opacity: number) => (
-      <g filter={`url(#${glow})`} opacity={opacity}>
-        {ids.flatMap((id) => frontMuscles(s, id, back)).map((m, i) => (
-          <path key={i} d={m.d} fill={color} />
-        ))}
+    const arms = (
+      <g>
+        {renderParts(fb.arms, uid, 'a', grads, wrong)}
+        <Grooves list={fb.armGrooves} />
+        <Muscles map={fb.armMuscles} st={st} />
       </g>
     );
-    const held = spec.held;
-    const arms = (
-      <>
-        {s.arms.map((a, i) => (
-          <g key={i}>
-            {limb(a, [6.6, 4.8, 4.8, 3.6])}
-            <circle cx={s.hands[i].x} cy={s.hands[i].y} r={4} fill={C.near} />
-          </g>
-        ))}
-      </>
-    );
-    const feet = s.legs.map((l, i) => {
-      const k = i === 0 ? 1 : -1;
-      return <ellipse key={i} cx={l.c.x + k * 2} cy={l.c.y + 4} rx={6} ry={3.6} fill={C.near} />;
+    shadows = s.legs.map((l, i) => {
+      const lift = floorY - (l.c.y + 7);
+      if (lift > 22) return null;
+      return <ellipse key={i} cx={l.c.x + (i ? -1 : 1) * 1.5} cy={floorY + 0.4} rx={9 - lift * 0.15} ry={2} fill="var(--fig-shadow)" opacity={1 - lift / 22} />;
     });
-    let heldEl: React.ReactNode = null;
-    if (held) {
-      const [r, l] = s.hands;
-      if (held.kind === 'barbell' && held.both) {
-        heldEl = (
-          <g>
-            {held.from && <line x1={cx} y1={(l.y + r.y) / 2} x2={held.from.x} y2={held.from.y} stroke={C.iron} strokeWidth={1.4} />}
-            <line x1={l.x - 14} y1={l.y} x2={r.x + 14} y2={r.y} stroke={C.iron} strokeWidth={3.4} strokeLinecap="round" />
-          </g>
-        );
-      } else if (held.kind === 'band' && held.both) {
-        heldEl = <line x1={l.x} y1={l.y} x2={r.x} y2={r.y} stroke="var(--plate-green)" strokeWidth={2.6} strokeLinecap="round" />;
-      } else if (held.kind === 'handle' && held.both) {
-        heldEl = <line x1={l.x - 12} y1={l.y + 2} x2={r.x + 12} y2={r.y + 2} stroke={C.iron} strokeWidth={3.4} strokeLinecap="round" />;
-      } else if (held.kind === 'dumbbell') {
-        heldEl = s.hands.map((h, i) => (
-          <g key={i}>
-            <rect x={h.x - 9} y={h.y - 3.2} width={18} height={6.4} rx={2} fill={C.iron} />
-            <rect x={h.x - 11} y={h.y - 6} width={5} height={12} rx={1.6} fill={C.iron} />
-            <rect x={h.x + 6} y={h.y - 6} width={5} height={12} rx={1.6} fill={C.iron} />
-          </g>
-        ));
-      } else if (held.kind === 'cable' && held.from) {
-        const fromR = held.from;
-        const fromL = { x: 2 * cx - fromR.x, y: fromR.y };
-        heldEl = (
-          <g>
-            <line x1={fromR.x} y1={fromR.y} x2={r.x} y2={r.y} stroke={C.iron} strokeWidth={1.4} />
-            <line x1={fromL.x} y1={fromL.y} x2={l.x} y2={l.y} stroke={C.iron} strokeWidth={1.4} />
-            <circle cx={r.x} cy={r.y} r={4} fill={C.iron} />
-            <circle cx={l.x} cy={l.y} r={4} fill={C.iron} />
-          </g>
-        );
-      }
-    }
     body = (
       <g>
         {!armsFront && arms}
-        {s.legs.map((l, i) => (
-          <g key={i}>{limb(l, [9.8, 6.4, 6.4, 4.2])}</g>
-        ))}
-        {feet}
-        <path d={capsule({ x: cx, y: s.shoulderY - 2 }, 5, { x: cx, y: s.head.y + 6 }, 4.5)} fill={C.near} />
-        <path d={frontTorsoPath(s)} fill={C.near} stroke={wrong ? 'var(--danger)' : 'none'} strokeWidth={1.4} />
-        <circle cx={s.head.x} cy={s.head.y} r={10.5} fill={C.near} />
-        {muscles(secondary, C.secondary, 0.35 + 0.35 * act)}
-        {muscles(primary.filter((m) => !['biceps', 'triceps', 'forearms', 'frontDelts', 'sideDelts', 'rearDelts'].includes(m)), C.primary, 0.5 + 0.5 * act)}
+        {renderParts(fb.legs, uid, 'l', grads, wrong)}
+        {renderParts(fb.torso, uid, 't', grads, wrong)}
+        <Grooves list={fb.grooves} />
+        <Muscles map={fb.muscles} st={st} />
+        {renderParts([fb.shorts], uid, 's', grads, wrong)}
+        <Muscles map={fb.late} st={st} />
+        {renderParts(fb.head, uid, 'h', grads, wrong)}
         {armsFront && arms}
-        {muscles(primary.filter((m) => ['biceps', 'triceps', 'forearms', 'frontDelts', 'sideDelts', 'rearDelts'].includes(m)), C.primary, 0.5 + 0.5 * act)}
-        {heldEl}
+        {spec.held && <HeldFront held={spec.held} s={s} cx={cx} />}
       </g>
     );
   }
 
   return (
-    <svg
-      ref={ref}
-      className={className}
-      viewBox={`${fr.x} ${fr.y} ${fr.w} ${fr.h}`}
-      role="img"
-      aria-label={title}
-      preserveAspectRatio="xMidYMid meet"
-    >
+    <svg ref={ref} className={className} viewBox={`${fr.x} ${fr.y} ${fr.w} ${fr.h}`} role="img" aria-label={title} preserveAspectRatio="xMidYMid meet">
       <defs>
-        <filter id={glow} x="-30%" y="-30%" width="160%" height="160%">
-          <feGaussianBlur stdDeviation="2.2" result="b" />
-          <feMerge>
-            <feMergeNode in="b" />
-            <feMergeNode in="SourceGraphic" />
-          </feMerge>
+        <filter id={`${uid}glow`} x="-50%" y="-50%" width="200%" height="200%">
+          <feGaussianBlur stdDeviation="2.6" />
         </filter>
+        <linearGradient id={`${uid}mp`} x1="0" y1="0" x2="0.4" y2="1">
+          <stop offset="0" stopColor="var(--muscle-primary-hi)" />
+          <stop offset="0.55" stopColor="var(--muscle-primary)" />
+          <stop offset="1" stopColor="var(--muscle-primary-lo)" />
+        </linearGradient>
+        <linearGradient id={`${uid}ms`} x1="0" y1="0" x2="0.4" y2="1">
+          <stop offset="0" stopColor="var(--muscle-secondary-hi)" />
+          <stop offset="1" stopColor="var(--muscle-secondary)" />
+        </linearGradient>
+        <radialGradient id={`${uid}spot`} cx="50%" cy="38%" r="62%">
+          <stop offset="0" stopColor="var(--stage-spot)" />
+          <stop offset="1" stopColor="var(--stage-spot)" stopOpacity="0" />
+        </radialGradient>
+        <linearGradient id={`${uid}floor`} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor="var(--floor-top)" />
+          <stop offset="1" stopColor="var(--floor-bottom)" />
+        </linearGradient>
+        {grads.map((g) => (
+          <linearGradient key={g.id} id={g.id} gradientUnits="userSpaceOnUse" x1={f2(g.p1.x)} y1={f2(g.p1.y)} x2={f2(g.p2.x)} y2={f2(g.p2.y)}>
+            {STOPS[g.shade].map(([o, c]) => (
+              <stop key={o} offset={o} stopColor={c} />
+            ))}
+          </linearGradient>
+        ))}
       </defs>
-      <line x1={fr.x} y1={floorY} x2={fr.x + fr.w} y2={floorY} stroke="var(--fig-floor)" strokeWidth={1.2} />
+      {!fit && <rect x={fr.x} y={fr.y} width={fr.w} height={fr.h} fill={`url(#${uid}spot)`} />}
+      <rect x={fr.x - 2} y={floorY} width={fr.w + 4} height={Math.max(2, fr.y + fr.h - floorY + 2)} fill={`url(#${uid}floor)`} />
+      <line x1={fr.x} y1={floorY} x2={fr.x + fr.w} y2={floorY} stroke="var(--floor-edge)" strokeWidth={0.8} />
+      <g transform={mirror}>{shadows}</g>
       {(spec.props ?? []).map((p, i) => (
         <g key={i} transform={mirror}>
           <PropShape p={p} floorY={floorY} />
@@ -739,43 +359,118 @@ function FigureInner({ spec, primary = [], secondary = [], playing = true, at, s
 
 export const Figure = memo(FigureInner);
 
-const fitCache = new WeakMap<AnimSpec, { x: number; y: number; w: number; h: number }>();
+/** Shtanga/qo'l yo'li: bir sikl davomida yaqin qo'l qayerdan o'tadi (yon ko'rinish) */
+function useBarPath(spec: AnimSpec, on?: boolean) {
+  return useMemo(() => {
+    if (!on || spec.view !== 'side' || !spec.held || !['barbell', 'ezbar', 'dumbbell', 'kettlebell'].includes(spec.held.kind)) return null;
+    const total = totalDuration(spec.frames);
+    const pts: Pt[] = [];
+    for (let i = 0; i <= 48; i++) pts.push(solveSide(sample(spec, (total * i) / 48).pose as SidePose, spec.anchor).hand);
+    const xs = pts.map((p) => p.x);
+    const ys = pts.map((p) => p.y);
+    if (Math.max(...xs) - Math.min(...xs) + Math.max(...ys) - Math.min(...ys) < 6) return null;
+    return pts.map((p, i) => `${i ? 'L' : 'M'}${f2(p.x)} ${f2(p.y)}`).join(' ');
+  }, [spec, on]);
+}
 
-/** Figuraning ikki chekka holati bo‘yicha kvadrat kadr (kichik rasmlar uchun) */
-export function fitFrame(spec: AnimSpec) {
-  const hit = fitCache.get(spec);
+type Box = { x: number; y: number; w: number; h: number };
+const fitCache = new WeakMap<AnimSpec, Box>();
+const heroCache = new WeakMap<AnimSpec, Map<number, Box>>();
+
+/** Katta sahna kadri: figura, jihozlar va pol to'liq ko'rinadi, ortiqcha bo'shliq yo'q */
+export function heroFrame(spec: AnimSpec, aspect: number): Box {
+  let byAspect = heroCache.get(spec);
+  if (!byAspect) heroCache.set(spec, (byAspect = new Map()));
+  const hit = byAspect.get(aspect);
   if (hit) return hit;
   const floorY = spec.floorY ?? 214;
+  const base = spec.frame ?? { x: 20, y: 16, w: 200, h: 204 };
+  const pts = figurePoints(spec);
+  for (const p of spec.props ?? []) {
+    const w = p.w ?? 0;
+    if (p.kind === 'pullupBar') pts.push({ x: p.x - w / 2, y: p.y - 6, r: 2 }, { x: p.x + w / 2, y: p.y - 6, r: 2 });
+    else if (p.kind === 'cableTower') pts.push({ x: p.x, y: p.y, r: 10 });
+    else if (p.kind !== 'mat' && p.kind !== 'machine') pts.push({ x: p.x, y: p.y, r: 2 }, { x: p.x + w, y: p.y, r: 2 });
+  }
+  if (spec.held?.from) pts.push({ ...spec.held.from, r: 6 });
+  let x0 = Math.min(...pts.map((p) => p.x - p.r)) - 8;
+  let x1 = Math.max(...pts.map((p) => p.x + p.r)) + 8;
+  let y0 = Math.min(...pts.map((p) => p.y - p.r)) - 10;
+  const y1 = floorY + 10;
+  // asl kadrdan chiqib ketmaslik (jihozlarning qolgan qismi kesilib qolmasin)
+  x0 = Math.max(x0, base.x - 10);
+  x1 = Math.min(x1, base.x + base.w + 10);
+  y0 = Math.max(y0, base.y - 10);
+  let w = x1 - x0;
+  let h = y1 - y0;
+  if (w / h < aspect) {
+    const nw = h * aspect;
+    x0 -= (nw - w) / 2;
+    w = nw;
+  } else {
+    const nh = w / aspect;
+    y0 -= nh - h;
+    h = nh;
+  }
+  const out = { x: x0, y: y0, w, h };
+  byAspect.set(aspect, out);
+  return out;
+}
+
+function figurePoints(spec: AnimSpec, poses: (SidePose | FrontPose)[] = spec.frames.map((f) => f.pose)) {
+  const floorY = spec.floorY ?? 214;
   const pts: { x: number; y: number; r: number }[] = [];
-  for (const f of spec.frames) {
+  for (const pose of poses) {
+    const f = { pose };
     if (spec.view === 'side') {
       const s = solveSide(f.pose as SidePose, spec.anchor);
-      const heldR = spec.held?.kind === 'barbell' ? 22 : spec.held?.kind === 'ezbar' ? 15 : spec.held ? 9 : 5;
-      pts.push({ ...s.head, r: 12 }, { ...s.shoulder, r: 12 }, { ...s.hip, r: 12 }, { ...s.hand, r: heldR }, { ...s.hand2, r: 5 });
-      for (const l of [s.leg, s.leg2, s.arm, s.arm2]) pts.push({ ...l.b, r: 7 }, { ...l.c, r: 6 });
-      for (const ft of [s.foot, s.foot2]) pts.push({ ...ft.toe, r: 3 }, { ...ft.heel, r: 3 });
+      const heldR = spec.held?.kind === 'barbell' ? 23 : spec.held?.kind === 'ezbar' ? 16 : spec.held ? 10 : 6;
+      pts.push({ ...s.head, r: 13 }, { ...s.shoulder, r: 13 }, { ...s.hip, r: 14 }, { ...s.hand, r: heldR }, { ...s.hand2, r: 6 });
+      for (const l of [s.leg, s.leg2, s.arm, s.arm2]) pts.push({ ...l.b, r: 8 }, { ...l.c, r: 7 });
+      for (const ft of [s.foot, s.foot2]) pts.push({ ...ft.toe, r: 4 }, { ...ft.heel, r: 4 });
     } else {
       const fr0 = spec.frame ?? { x: 20, y: 16, w: 200, h: 204 };
       const s = solveFront(f.pose as FrontPose, fr0.x + fr0.w / 2, floorY);
-      const hr = spec.held?.kind === 'dumbbell' ? 12 : 5;
-      pts.push({ ...s.head, r: 12 }, { ...s.hands[0], r: hr }, { ...s.hands[1], r: hr });
-      for (const l of [...s.arms, ...s.legs]) pts.push({ ...l.b, r: 7 }, { ...l.c, r: 7 });
+      const hr = spec.held?.kind === 'dumbbell' ? 13 : spec.held?.kind === 'barbell' ? 26 : 6;
+      pts.push({ ...s.head, r: 13 }, { ...s.hands[0], r: hr }, { ...s.hands[1], r: hr });
+      for (const l of [...s.arms, ...s.legs]) pts.push({ ...l.b, r: 9 }, { ...l.c, r: 9 });
     }
   }
+  return pts;
+}
+
+const poseFitCache = new WeakMap<AnimSpec, Map<number, Box>>();
+
+/** Kvadrat kadr (kichik rasmlar uchun): butun harakat yoki faqat at vaqtdagi holat bo'yicha */
+export function fitFrame(spec: AnimSpec, at?: number): Box {
+  if (at !== undefined) {
+    let m = poseFitCache.get(spec);
+    if (!m) poseFitCache.set(spec, (m = new Map()));
+    const key = Math.round(at);
+    const hit = m.get(key);
+    if (hit) return hit;
+    const box = squareBox(figurePoints(spec, [sample(spec, at).pose]));
+    m.set(key, box);
+    return box;
+  }
+  const hit = fitCache.get(spec);
+  if (hit) return hit;
+  const out = squareBox(figurePoints(spec));
+  fitCache.set(spec, out);
+  return out;
+}
+
+function squareBox(pts: { x: number; y: number; r: number }[]): Box {
   let x0 = Math.min(...pts.map((p) => p.x - p.r));
-  let x1 = Math.max(...pts.map((p) => p.x + p.r));
+  const x1 = Math.max(...pts.map((p) => p.x + p.r));
   let y0 = Math.min(...pts.map((p) => p.y - p.r));
-  let y1 = Math.max(...pts.map((p) => p.y + p.r));
-  const size = Math.max(x1 - x0, y1 - y0) + 14;
+  const y1 = Math.max(...pts.map((p) => p.y + p.r));
+  const size = Math.max(x1 - x0, y1 - y0) + 4;
   const cx = (x0 + x1) / 2;
   const cy = (y0 + y1) / 2;
   x0 = cx - size / 2;
   y0 = cy - size / 2;
-  x1 = size;
-  y1 = size;
-  const out = { x: x0, y: y0, w: x1, h: y1 };
-  fitCache.set(spec, out);
-  return out;
+  return { x: x0, y: y0, w: size, h: size };
 }
 
 /** Ikki asosiy holat vaqtlari: boshlang‘ich va qarama-qarshi (statik ko‘rinish uchun) */
@@ -784,5 +479,3 @@ export function poseTimes(spec: AnimSpec): [number, number] {
   if (f.length < 3) return [0, f[0].dur * 0.99];
   return [1, f[0].dur + f[1].dur + 1];
 }
-
-export { lerp };

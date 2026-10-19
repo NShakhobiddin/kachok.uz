@@ -4,9 +4,11 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Barbell } from '../components/Barbell';
 import { BodyMap } from '../components/BodyMap';
 import { CoachBanner } from '../components/CoachBanner';
+import { ExerciseThumb } from '../components/ExerciseThumb';
 import { Icon } from '../components/ui/Icon';
 import { Sheet } from '../components/ui/Sheet';
 import { MUSCLES } from '../data/catalog';
+import { EXERCISE_MAP } from '../data/exercises';
 import { LESSONS } from '../data/lessons';
 import { FACTS, QUOTES, dailyPick } from '../data/motivation';
 import { sourceById } from '../data/sources';
@@ -49,6 +51,7 @@ export default function Home() {
 
   const fresh = (Object.entries(recovery) as [MuscleId, number][]).filter(([, v]) => v < 0.8).map(([m]) => m);
   const totalSets = plan.reduce((a, x) => a + x.sug.sets, 0);
+  const firstEx = plan[0] ? EXERCISE_MAP[plan[0].pe.exerciseId] : undefined;
   const estMin = day?.estMin ?? 0;
 
   return (
@@ -89,9 +92,13 @@ export default function Home() {
             </span>
             {t.deload && <span className="tag" style={{ color: 'var(--yellow)' }}>Yengil hafta</span>}
           </div>
-          <div>
-            <h2 className="display display-l">{day.title}</h2>
-            <p className="muted small mt-4">{day.focus}</p>
+          <div className="row gap-12" style={{ alignItems: 'flex-start' }}>
+            <div className="grow" style={{ minWidth: 0 }}>
+              <h2 className="display display-l">{day.title}</h2>
+              <p className="muted small mt-4">{day.focus}</p>
+              {firstEx && <p className="tiny faint mt-8">Birinchi mashq: {firstEx.name}</p>}
+            </div>
+            {firstEx && <ExerciseThumb ex={firstEx} size={96} playing />}
           </div>
           <Barbell plates={plan.map(() => ({ progress: 0 }))} label={`${plan.length} ta mashq rejada`} />
           <div className="row gap-16 small">

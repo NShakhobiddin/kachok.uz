@@ -5,7 +5,7 @@ import { BENEFITS } from '../data/catalog';
 import { sourceById } from '../data/sources';
 import { solveFront } from '../lib/figure';
 import type { BenefitId } from '../types';
-import { capsule, frontTorsoPath } from './figure/Figure';
+import { BodySilhouette } from './BodyMap';
 import { Icon } from './ui/Icon';
 
 export function BenefitMap({ items }: { items: { id: BenefitId; text: string }[] }) {
@@ -25,20 +25,7 @@ export function BenefitMap({ items }: { items: { id: BenefitId; text: string }[]
     <div className="card stack gap-12">
       <div className="row gap-12" style={{ alignItems: 'stretch' }}>
         <svg viewBox="0 18 100 204" style={{ width: 118, flex: 'none' }} role="img" aria-label="Foyda joylashuvi">
-          {sk.arms.map((a, k) => (
-            <g key={k}>
-              <path d={capsule(a.a, 6.6, a.b, 4.8)} fill="var(--surface-3)" />
-              <path d={capsule(a.b, 4.8, a.c, 3.6)} fill="var(--surface-3)" />
-            </g>
-          ))}
-          {sk.legs.map((l, k) => (
-            <g key={k}>
-              <path d={capsule(l.a, 9.8, l.b, 6.4)} fill="var(--surface-3)" />
-              <path d={capsule(l.b, 6.4, l.c, 4.2)} fill="var(--surface-3)" />
-            </g>
-          ))}
-          <path d={frontTorsoPath(sk)} fill="var(--surface-3)" />
-          <circle cx={sk.head.x} cy={sk.head.y} r={10.5} fill="var(--surface-3)" />
+          <BodySilhouette sk={sk} back={false} />
           {items.map((b, k) => {
             const p = BENEFITS[b.id];
             const on = k === i % items.length;

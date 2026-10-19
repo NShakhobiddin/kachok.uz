@@ -192,7 +192,7 @@ export default function Workout() {
         <motion.div key={idx} initial={{ opacity: 0, x: 16 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.22 }} className="mt-16 stack gap-12">
           <div className="row gap-12">
             <div className="stage" style={{ width: 112, height: 112, flex: 'none' }}>
-              <Figure spec={ex.anim} primary={ex.primary} secondary={ex.secondary} title={ex.name} />
+              <Figure spec={ex.anim} primary={ex.primary} secondary={ex.secondary} title={ex.name} hero={1} />
             </div>
             <div className="grow stack gap-4" style={{ minWidth: 0 }}>
               <span className="eyebrow">
@@ -399,9 +399,14 @@ function TargetCard({ ex, sug, repMax, barKg }: { ex: Exercise; sug: Suggestion;
         </span>
       </div>
       <div className="row gap-8" style={{ alignItems: 'baseline' }}>
-        <span style={{ fontSize: 30, fontWeight: 800, letterSpacing: '-0.02em' }}>
-          {sug.kg ? `${fmtKg(sug.kg)} kg` : ex.loadType === 'bodyweight' ? "O‘z vazni" : '— kg'}
-        </span>
+        {sug.kg ? (
+          <span className="score">
+            {fmtKg(sug.kg)}
+            <small>kg</small>
+          </span>
+        ) : (
+          <span className="score">{ex.loadType === 'bodyweight' ? "O‘z vazni" : '—'}</span>
+        )}
         <span className="title muted num">
           × {sug.reps}
           {repMax > sug.reps ? `–${repMax}` : ''} {ex.timed ? 's' : ''}
@@ -441,7 +446,7 @@ function TechniqueSheet({ ex }: { ex: Exercise }) {
     <div className="stack gap-12">
       <h3 className="title">{ex.name}</h3>
       <div className="stage" style={{ aspectRatio: '1 / 0.8' }}>
-        <Figure spec={ex.anim} primary={ex.primary} secondary={ex.secondary} />
+        <Figure spec={ex.anim} primary={ex.primary} secondary={ex.secondary} hero={1 / 0.8} />
       </div>
       <ol className="steps">
         {ex.steps.map((s, i) => (

@@ -2,7 +2,8 @@
 import { motion } from 'framer-motion';
 import { exById } from '../data/exercises';
 import type { SceneId } from '../data/lessons';
-import { applyMistake, emphasizeMistake } from '../lib/figure';
+import { applyMistake, emphasizeMistake, solveFront } from '../lib/figure';
+import { BodySilhouette } from './BodyMap';
 import { Figure } from './figure/Figure';
 
 const loop = (duration: number, delay = 0) => ({ duration, delay, repeat: Infinity, repeatType: 'reverse' as const, ease: 'easeInOut' as const });
@@ -105,18 +106,17 @@ function FatCells() {
   );
 }
 
+const SCENE_BODY = solveFront({ ua: 170, fa: 174 }, 160, 198);
+
 function Spot() {
   return (
     <Svg label="Yog' butun tanadan bir xil kamayadi">
-      <motion.g animate={{ opacity: [1, 0.35] }} transition={loop(2.2)}>
-        <ellipse cx={160} cy={110} rx={64} ry={84} fill="var(--yellow-soft)" stroke="var(--plate-yellow)" strokeWidth={1.5} />
+      <motion.g style={{ transformOrigin: '160px 120px' }} animate={{ scale: [1.09, 1.01], opacity: [0.9, 0.25] }} transition={loop(2.2)}>
+        <BodySilhouette sk={SCENE_BODY} back={false} fill="var(--yellow-soft)" />
       </motion.g>
-      <circle cx={160} cy={44} r={14} fill="var(--fig-near)" />
-      <path d="M134 62 H186 L180 120 L186 176 H134 L140 120 Z" fill="var(--fig-near)" />
-      <path d="M134 64 L112 120 M186 64 L208 120" stroke="var(--fig-near)" strokeWidth={10} strokeLinecap="round" />
-      <path d="M146 176 V206 M174 176 V206" stroke="var(--fig-near)" strokeWidth={12} strokeLinecap="round" />
+      <BodySilhouette sk={SCENE_BODY} back={false} fill="var(--skin)" />
       {[0, 1, 2, 3].map((i) => (
-        <motion.text key={i} x={[60, 260, 70, 250][i]} y={[70, 70, 170, 170][i]} textAnchor="middle" fontSize={18} fill="var(--plate-yellow)" animate={{ y: [[70, 70, 170, 170][i], [60, 60, 160, 160][i]], opacity: [1, 0] }} transition={{ duration: 1.6, delay: i * 0.4, repeat: Infinity }}>
+        <motion.text key={i} x={[90, 230, 100, 220][i]} y={[70, 70, 160, 160][i]} textAnchor="middle" fontSize={18} fill="var(--plate-yellow)" animate={{ y: [[70, 70, 160, 160][i], [60, 60, 150, 150][i]], opacity: [1, 0] }} transition={{ duration: 1.6, delay: i * 0.4, repeat: Infinity }}>
           −
         </motion.text>
       ))}
@@ -367,12 +367,22 @@ function Sleep() {
 }
 
 function Brace() {
+  const waist = SCENE_BODY.shoulderY + 38;
   return (
     <Svg label="Nafas olib qorinni tarang qilish">
-      <path d="M120 30 H200 L208 190 H112 Z" fill="var(--fig-near)" />
-      <motion.ellipse cx={160} cy={130} rx={58} ry={24} fill="none" stroke="var(--blue)" strokeWidth={4} animate={{ rx: [52, 64], opacity: [0.5, 1] }} transition={loop(1.4)} />
+      <defs>
+        <clipPath id="brace-clip">
+          <rect x={0} y={0} width={320} height={194} />
+        </clipPath>
+      </defs>
+      <g clipPath="url(#brace-clip)">
+        <g transform="translate(160 100) scale(1.45) translate(-160 -100)">
+          <BodySilhouette sk={SCENE_BODY} back={false} fill="var(--skin)" />
+        </g>
+      </g>
+      <motion.ellipse cx={160} cy={100 + (waist - 100) * 1.45} rx={34} ry={11} fill="none" stroke="var(--blue)" strokeWidth={4} animate={{ rx: [30, 40], opacity: [0.5, 1] }} transition={loop(1.4)} />
       {[-1, 1].map((k) => (
-        <motion.path key={k} d={`M${160 + k * 100} 130 l${-k * 18} 0 m${k * 8} -8 l${-k * 8} 8 l${k * 8} 8`} stroke="var(--blue-2)" strokeWidth={2.5} fill="none" strokeLinecap="round" animate={{ x: [0, -k * 10] }} transition={loop(1.4)} />
+        <motion.path key={k} d={`M${160 + k * 92} ${100 + (waist - 100) * 1.45} l${-k * 18} 0 m${k * 8} -8 l${-k * 8} 8 l${k * 8} 8`} stroke="var(--blue-2)" strokeWidth={2.5} fill="none" strokeLinecap="round" animate={{ x: [0, -k * 10] }} transition={loop(1.4)} />
       ))}
       <text x={160} y={212} textAnchor="middle" {...M}>
         360° QORIN BOSIMI = UMURTQA KORSETI
@@ -554,7 +564,7 @@ function FigScene({ id, wrong }: { id: string; wrong?: boolean }) {
       <div className="row" style={{ height: '100%', gap: 6 }}>
         <div className="stack grow" style={{ height: '100%' }}>
           <div className="grow" style={{ minHeight: 0 }}>
-            <Figure spec={m?.demo ? applyMistake(emphasizeMistake(ex.anim, m.demo), m.demo) : ex.anim} primary={ex.primary} wrong className="fill" />
+            <Figure spec={m?.demo ? applyMistake(emphasizeMistake(ex.anim, m.demo), m.demo) : ex.anim} primary={ex.primary} wrong className="fill" hero={0.72} />
           </div>
           <span className="tiny strong" style={{ color: 'var(--danger)', textAlign: 'center' }}>
             ✕ Noto‘g‘ri
@@ -562,7 +572,7 @@ function FigScene({ id, wrong }: { id: string; wrong?: boolean }) {
         </div>
         <div className="stack grow" style={{ height: '100%' }}>
           <div className="grow" style={{ minHeight: 0 }}>
-            <Figure spec={m?.demo ? emphasizeMistake(ex.anim, m.demo) : ex.anim} primary={ex.primary} secondary={ex.secondary} className="fill" />
+            <Figure spec={m?.demo ? emphasizeMistake(ex.anim, m.demo) : ex.anim} primary={ex.primary} secondary={ex.secondary} className="fill" hero={0.72} />
           </div>
           <span className="tiny strong" style={{ color: 'var(--green)', textAlign: 'center' }}>
             ✓ To‘g‘ri
@@ -571,7 +581,7 @@ function FigScene({ id, wrong }: { id: string; wrong?: boolean }) {
       </div>
     );
   }
-  return <Figure spec={ex.anim} primary={ex.primary} secondary={ex.secondary} className="fill" />;
+  return <Figure spec={ex.anim} primary={ex.primary} secondary={ex.secondary} className="fill" hero={320 / 230} />;
 }
 
 export function Scene({ id }: { id: SceneId }) {

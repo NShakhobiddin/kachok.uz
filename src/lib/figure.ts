@@ -277,6 +277,39 @@ export function solveFront(p: FrontPose, cx: number, floorY: number): FrontSkele
 
 export const ease = (t: number) => 0.5 - 0.5 * Math.cos(Math.PI * t);
 
+/** cubic-bezier(x1, y1, x2, y2) — CSS bilan bir xil egri */
+function bezier(x1: number, y1: number, x2: number, y2: number) {
+  const cx = 3 * x1;
+  const bx = 3 * (x2 - x1) - cx;
+  const ax = 1 - cx - bx;
+  const cy = 3 * y1;
+  const by = 3 * (y2 - y1) - cy;
+  const ay = 1 - cy - by;
+  const X = (t: number) => ((ax * t + bx) * t + cx) * t;
+  const dX = (t: number) => (3 * ax * t + 2 * bx) * t + cx;
+  return (x: number) => {
+    let t = x;
+    for (let i = 0; i < 6; i++) {
+      const d = dX(t);
+      if (Math.abs(d) < 1e-6) break;
+      t -= (X(t) - x) / d;
+    }
+    t = Math.min(1, Math.max(0, t));
+    return ((ay * t + by) * t + cy) * t;
+  };
+}
+
+/** Kuch fazasi (konsentrik): tez tezlanadi, qulflanishga yaqin sekinlashadi */
+export const easeUp = bezier(0.36, 0, 0.18, 1);
+
+/** Nazorat fazasi (ekssentrik): deyarli bir tekis tezlik, boshi va oxiri yumshoq */
+export function easeDown(t: number, ramp = 0.22) {
+  const v = 1 / (1 - ramp);
+  if (t < ramp) return (v * t * t) / (2 * ramp);
+  if (t < 1 - ramp) return v * (t - ramp / 2);
+  return 1 - (v * (1 - t) * (1 - t)) / (2 * ramp);
+}
+
 function lerpOpt(a: number | undefined, b: number | undefined, fa: number | undefined, fb: number | undefined, t: number) {
   const x = a ?? fa;
   const y = b ?? fb;
@@ -345,6 +378,8 @@ export interface Sampled<P> {
   /** joriy faza ichidagi progress */
   progress: number;
   index: number;
+  /** nafas: 0 — chiqarilgan, 1 — to'liq olingan (ko'krak biroz kengayadi) */
+  breath: number;
 }
 
 /** Vaqt bo‘yicha pozani olish (aylana animatsiya) */
@@ -357,18 +392,22 @@ export function sample(spec: AnimSpec, timeMs: number): Sampled<SidePose | Front
     if (t <= f.dur || i === frames.length - 1) {
       const next = frames[(i + 1) % frames.length];
       const k = f.dur === 0 ? 1 : Math.min(1, t / f.dur);
-      const e = f.phase === 'hold' || f.phase === 'squeeze' ? 0 : ease(k);
+      const e = f.phase === 'hold' || f.phase === 'squeeze' ? 0 : f.phase === 'up' ? easeUp(k) : easeDown(k);
       const pose =
         spec.view === 'side'
           ? lerpSide(f.pose as SidePose, next.pose as SidePose, e)
           : lerpFront(f.pose as FrontPose, next.pose as FrontPose, e);
       const activation =
         f.phase === 'up' ? 0.75 + 0.25 * Math.sin(Math.PI * k) : f.phase === 'squeeze' ? 1 : f.phase === 'down' ? 0.6 : 0.35;
-      return { pose, phase: f.phase, activation, progress: k, index: i };
+      // nafas: zo'riqishdan oldin olinadi, kuch fazasida chiqariladi
+      const prev = frames[(i - 1 + frames.length) % frames.length].phase;
+      const breath =
+        f.phase === 'up' ? 1 - ease(k) : f.phase === 'squeeze' ? 0 : f.phase === 'hold' ? (prev === 'down' ? 1 : ease(k)) : prev === 'squeeze' ? ease(k) : 1;
+      return { pose, phase: f.phase, activation, progress: k, index: i, breath };
     }
     t -= f.dur;
   }
-  return { pose: frames[0].pose, phase: frames[0].phase, activation: 0.4, progress: 0, index: 0 };
+  return { pose: frames[0].pose, phase: frames[0].phase, activation: 0.4, progress: 0, index: 0, breath: 0 };
 }
 
 /** Xato texnikani ko‘rsatish uchun spetsifikatsiyani o‘zgartirish */

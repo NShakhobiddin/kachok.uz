@@ -38,6 +38,8 @@ const PARQ = [
   "Shifokor faqat tibbiy nazorat ostida shug‘ullanishingizni aytganmi?",
 ];
 
+const WELCOME_SPEC = backSquat();
+
 const STEPS = ['welcome', 'about', 'goal', 'body', 'level', 'schedule', 'equipment', 'limits', 'activity', 'health', 'done'] as const;
 type Step = (typeof STEPS)[number];
 
@@ -96,7 +98,7 @@ export default function Onboarding() {
           </span>
         </div>
         <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="stage mt-16" style={{ aspectRatio: '1 / 0.92' }}>
-          <Figure spec={backSquat()} primary={['quads', 'glutes']} secondary={['adductors', 'lowerBack']} title="O‘tirib-turish animatsiyasi" />
+          <Figure spec={WELCOME_SPEC} primary={['quads', 'glutes']} secondary={['hamstrings', 'lowerBack']} title="O‘tirib-turish animatsiyasi" hero={1 / 0.92} />
           <div style={{ position: 'absolute', left: 14, top: 12 }} className="eyebrow">
             Son oldi · dumba
           </div>

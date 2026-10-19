@@ -1,5 +1,7 @@
 import * as A from '../data/anims';
 import { Figure, poseTimes } from '../components/figure/Figure';
+import { Scene } from '../components/Scenes';
+import type { SceneId } from '../data/lessons';
 import type { AnimSpec, MuscleId } from '../types';
 
 const LIST: [string, AnimSpec, MuscleId[]][] = [
@@ -62,8 +64,24 @@ const LIST: [string, AnimSpec, MuscleId[]][] = [
   ['deadBug', A.deadBug(), ['abs']],
 ];
 
+const SCENES: SceneId[] = ['balance-deficit', 'balance-surplus', 'tdee', 'fat-cells', 'spot', 'fiber', 'mps', 'stairs', 'dose', 'rir', 'deload', 'plate', 'protein-day', 'trend', 'sleep', 'brace', 'warmup', 'health', 'bone', 'heart', 'brain', 'grades', 'water', 'pain', 'cardio', 'fig:back-squat', 'wrong:back-squat'];
+
 export default function Lab() {
-  const only = new URLSearchParams(location.search).get('only');
+  const q = new URLSearchParams(location.search);
+  if (q.get('scenes'))
+    return (
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8, padding: 8, background: 'var(--bg)' }}>
+        {SCENES.map((id) => (
+          <div key={id} style={{ background: 'var(--stage)', borderRadius: 10, padding: 4 }}>
+            <div style={{ color: '#fff', font: '12px monospace' }}>{id}</div>
+            <div className="stage" style={{ aspectRatio: '320 / 230', padding: 6 }}>
+              <Scene id={id} />
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  const only = q.get('only');
   const items = only ? LIST.filter((l) => only.split(',').includes(l[0])) : LIST;
   return (
     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 8, padding: 8, background: 'var(--bg)' }}>

@@ -144,6 +144,19 @@ p {
   padding-left: max(var(--pad), env(safe-area-inset-left, 0px));
   padding-right: max(var(--pad), env(safe-area-inset-right, 0px));
 }
+.page {
+  animation: page-in 0.26s var(--ease-out) both;
+}
+@keyframes page-in {
+  from {
+    opacity: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .page {
+    animation: none;
+  }
+}
 .page.no-tab {
   padding-bottom: calc(var(--safe-b) + 28px);
 }
@@ -632,6 +645,20 @@ p {
 .tabbar a.active {
   color: var(--text);
 }
+.tabbar a > svg {
+  position: relative;
+}
+.tab-pill {
+  position: absolute;
+  top: 5px;
+  left: 50%;
+  width: 54px;
+  height: 32px;
+  margin-left: -27px;
+  border-radius: 12px;
+  background: var(--blue-soft);
+  box-shadow: inset 0 0 0 1px rgba(107, 151, 255, 0.22);
+}
 .tabbar a.active svg {
   color: var(--blue-2);
 }
@@ -842,6 +869,8 @@ p {
   color: #062414;
 }
 .set-input {
+  font-family: var(--font-display);
+  letter-spacing: 0.01em;
   height: 42px;
   width: 100%;
   min-width: 0;
@@ -849,8 +878,8 @@ p {
   border: 1.5px solid var(--line);
   background: var(--surface-2);
   text-align: center;
-  font-size: 17px;
-  font-weight: 800;
+  font-size: 24px;
+  font-weight: 700;
   font-variant-numeric: tabular-nums;
   outline: none;
 }
@@ -938,4 +967,71 @@ ol.steps li::before {
 .fill {
   width: 100%;
   height: 100%;
+}
+
+/* ---------- Sahna: tempo va boshqaruv ---------- */
+
+.stage-tag {
+  background: rgba(11, 14, 18, 0.72);
+  color: var(--text);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+.stage-chip {
+  background: rgba(11, 14, 18, 0.72);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+.tempo {
+  margin-top: 12px;
+}
+.tempo-track {
+  position: relative;
+  display: flex;
+  gap: 3px;
+  height: 6px;
+}
+.tempo-track > i {
+  display: block;
+  border-radius: 3px;
+}
+.tempo-head {
+  position: absolute;
+  top: -5px;
+  left: 0;
+  width: 3px;
+  height: 16px;
+  margin-left: -1.5px;
+  border-radius: 2px;
+  background: var(--text);
+  box-shadow: 0 0 0 3px var(--bg);
+}
+.tempo-labels {
+  display: flex;
+  gap: 3px;
+  margin-top: 7px;
+  font-size: 11.5px;
+  color: var(--text-3);
+  white-space: nowrap;
+  overflow: hidden;
+}
+.tempo-labels b {
+  color: var(--text-2);
+  font-weight: 700;
+}
+
+/* Tablo raqamlari: vazn va takror — musobaqa tablosidagidek */
+.score {
+  font-family: var(--font-display);
+  font-size: 54px;
+  font-weight: 800;
+  line-height: 0.9;
+  letter-spacing: 0.005em;
+  font-variant-numeric: tabular-nums;
+}
+.score small {
+  font-size: 0.42em;
+  margin-left: 4px;
+  color: var(--text-2);
+  font-weight: 700;
 }

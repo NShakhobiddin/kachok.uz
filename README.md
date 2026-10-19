@@ -8,7 +8,7 @@ Telefonda ishlaydigan veb-ilova (PWA): sizga moslangan mashq dasturi, har bir ma
 |---|---|
 | **Dastur tuzish** | Maqsad (massa, ozish, shakl, kuch, sog'liq), tajriba, haftasiga 2–6 kun, mashg'ulot vaqti (30–90 daq), zaldagi jihozlar va jarohatlarga qarab haftalik reja tuzadi. Har mushak haftasiga 2 marta, 10–20 set oralig'ida avtomatik muvozanatlanadi. |
 | **Jihozga moslash** | 24 turdagi jihozdan belgilaysiz (yoki "To'liq zal / Oddiy zal / Uy / O'z vaznim") — faqat bor jihozdagi mashqlar tanlanadi. |
-| **63 ta mashq, ~40 animatsiya** | Har bir mashq: qaysi mushak ishlaydi (asosiy — qizil, yordamchi — sariq), bosqichma-bosqich texnika, nafas, maslahatlar. Animatsiyada kuch fazasi va nazoratli faza ko'rsatiladi, sekinlashtirish mumkin. |
+| **63 ta mashq, ~40 animatsiya** | Anatomik sportchi figurasi: mushaklar tana shakliga yopishgan, tolalari ko'rinadi va qisqarganda qalinlashadi (bitseps tirsak bukilganda, boldir tovon ko'tarilganda). Kuch fazasi tez, nazorat fazasi bir tekis — haqiqiy tempoda; nafas olish ham ko'rinadi. Har mashqda tempo chizig'i (soniyalari bilan), shtanga yo'li, sekinlashtirish. Asosiy mushak — qizil, yordamchi — sariq. |
 | **Xatolardan ogohlantirish** | Har bir mashqda keng tarqalgan xatolar: noto'g'ri va to'g'ri bajarilish yonma-yon animatsiyada, nega xavfli va qanday tuzatish. Jarohatingizga zid mashqlar belgilanadi va dasturga kiritilmaydi. |
 | **Tibbiy foyda** | Har bir mashq tanaga qayerda foyda berishi (suyak, yurak, qand, bel, kayfiyat...) tana siluetida animatsiyada ko'rsatiladi — manbasi bilan. |
 | **Kunlik tavsiya** | Har set uchun bugungi vazn va takror: "ikki bosqichli progressiya" (avval takror, keyin vazn), sababi bilan ("+2.5 kg: o'tgan safar barcha setlarda 12 takror"). Yengillashtirish (deload) haftasi va kunlik tayyorgarlik so'rovi yuklamani moslaydi. |
@@ -29,7 +29,7 @@ Har bir raqam xalqaro pozitsiyalar va meta-tahlillardan olingan: ACSM 2026, ISSN
 
 ## Dizayn
 
-Ranglar musobaqa disklari kodidan olingan va ma'no tashiydi: **ko'k** (20 kg) — asosiy harakat, **qizil** (25 kg) — ishlayotgan mushak va ogohlantirish, **sariq** (15 kg) — rekord va yutuq, **yashil** (10 kg) — bajarildi va sog'liq. Imzo elementi — mashg'ulot progressi shtangaga disk taqish ko'rinishida. Shriftlar: Big Shoulders Display (sarlavhalar), Manrope (matn), JetBrains Mono (belgilar). Qorong'i mavzu zal yoritilishi uchun.
+Markazda — zal platformasida turgan "bo'r" rangidagi anatomik sportchi: chap-yuqoridan yorug'lik, orqadan sovuq kontur nuri, ishlayotgan mushak ichidan yonadi. Disklar old tomondan yarim shaffof — orqasidagi tana ko'rinib turadi. Vazn va takrorlar musobaqa tablosidagidek katta raqamlarda. Ranglar musobaqa disklari kodidan olingan va ma'no tashiydi: **ko'k** (20 kg) — asosiy harakat, **qizil** (25 kg) — ishlayotgan mushak va ogohlantirish, **sariq** (15 kg) — rekord va yutuq, **yashil** (10 kg) — bajarildi va sog'liq. Imzo elementi — mashg'ulot progressi shtangaga disk taqish ko'rinishida. Shriftlar: Big Shoulders Display (sarlavhalar), Manrope (matn), JetBrains Mono (belgilar). Qorong'i mavzu zal yoritilishi uchun.
 
 ## Ishga tushirish
 
@@ -82,7 +82,7 @@ Narxlar (`server/src/billing/plans.ts`) hozircha taxminiy: Pro — 29 000 so'm/o
 
 ## Texnologiyalar
 
-React 19 · TypeScript · Vite 6 · Zustand (offline holat) · Framer Motion · jsPDF · vite-plugin-pwa (Workbox). Animatsiyalar — o'zimizning SVG skelet dvigateli (`src/lib/figure.ts`: to'g'ridan-to'g'ri va teskari kinematika, langar nuqtalar), shuning uchun video yoki GIF yuklanmaydi va hammasi internetsiz ishlaydi.
+React 19 · TypeScript · Vite 6 · Zustand (offline holat) · Framer Motion · jsPDF · vite-plugin-pwa (Workbox). Animatsiyalar — o'zimizning SVG dvigatelimiz: skelet (`src/lib/figure.ts`: to'g'ridan-to'g'ri va teskari kinematika, langar nuqtalar, tempo egri chiziqlari) va anatomiya (`src/components/figure/`: suyak bo'ylab profillardan quriladigan tana konturi, mushak shakllari, jihozlar). Video yoki GIF yuklanmaydi — hammasi internetsiz ishlaydi, barcha figuralar bitta umumiy kadr siklida ~60 fps.
 
 ```
 src/
