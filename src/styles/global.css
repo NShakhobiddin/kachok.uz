@@ -1242,3 +1242,157 @@ ol.steps li::before {
 .method-opt:disabled {
   opacity: 0.55;
 }
+
+/* Ovqat kundaligi */
+.diary-bar {
+  height: 8px;
+  border-radius: 6px;
+  background: var(--surface-3);
+  overflow: hidden;
+}
+.diary-bar i {
+  display: block;
+  height: 100%;
+  border-radius: 6px;
+  transition: width 0.3s var(--ease-out);
+}
+.food-row {
+  width: 100%;
+  min-height: 52px;
+  padding: 8px 0;
+  border-top: 1px solid var(--line);
+}
+.food-cat {
+  border-top: 1px solid var(--line);
+}
+.food-cat summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 48px;
+  font-weight: 700;
+  cursor: pointer;
+  list-style: none;
+}
+.food-cat summary::-webkit-details-marker {
+  display: none;
+}
+.food-cat[open] summary svg {
+  transform: rotate(180deg);
+}
+.conf-bar {
+  display: flex;
+  gap: 4px;
+}
+.conf-bar i {
+  flex: 1;
+  height: 6px;
+  border-radius: 4px;
+  background: var(--surface-3);
+}
+.conf-bar i.on {
+  background: var(--green);
+}
+
+/* Mashg'ulot kalendari */
+.heat {
+  display: grid;
+  grid-template-columns: 18px repeat(20, minmax(0, 1fr));
+  grid-template-rows: 14px auto;
+  gap: 4px 3px;
+}
+.heat-month {
+  font-size: 10px;
+  color: var(--text-3);
+  white-space: nowrap;
+  overflow: visible;
+  line-height: 14px;
+}
+.heat-days {
+  display: grid;
+  grid-template-rows: repeat(7, minmax(0, 1fr));
+  gap: 3px;
+  font-size: 10px;
+  color: var(--text-3);
+}
+.heat-days span {
+  display: flex;
+  align-items: center;
+  min-height: 0;
+  line-height: 1;
+}
+.heat-col {
+  display: grid;
+  grid-template-rows: repeat(7, auto);
+  gap: 3px;
+}
+.heat-cell {
+  display: inline-block;
+  aspect-ratio: 1;
+  border-radius: 3px;
+  background: var(--surface-3);
+  padding: 0;
+}
+.heat-cell.l1 {
+  background: rgba(58, 116, 255, 0.35);
+}
+.heat-cell.l2 {
+  background: rgba(58, 116, 255, 0.6);
+}
+.heat-cell.l3 {
+  background: rgba(58, 116, 255, 0.85);
+}
+.heat-cell.l4 {
+  background: var(--blue-2);
+}
+.heat-cell.today {
+  box-shadow: inset 0 0 0 1.5px var(--text-2);
+}
+.heat-cell.sel {
+  box-shadow: inset 0 0 0 2px var(--text);
+}
+.heat-cell:disabled {
+  opacity: 0.25;
+}
+
+/* Bel/bo'y shkalasi */
+.whtr-scale {
+  position: relative;
+  display: flex;
+  gap: 2px;
+  height: 10px;
+}
+.whtr-scale i {
+  display: block;
+  height: 100%;
+}
+.whtr-scale i:first-child {
+  border-radius: 5px 0 0 5px;
+}
+.whtr-scale i:last-of-type {
+  border-radius: 0 5px 5px 0;
+}
+.whtr-ticks {
+  position: relative;
+  height: 14px;
+}
+.whtr-ticks span {
+  position: absolute;
+  transform: translateX(-50%);
+}
+.whtr-ticks span:first-child {
+  transform: none;
+}
+.whtr-ticks span:last-child {
+  transform: translateX(-100%);
+}
+.whtr-scale b {
+  position: absolute;
+  top: -4px;
+  width: 4px;
+  height: 18px;
+  margin-left: -2px;
+  border-radius: 2px;
+  background: var(--text);
+  box-shadow: 0 0 0 2px var(--bg-2);
+}

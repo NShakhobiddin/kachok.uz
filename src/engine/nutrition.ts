@@ -59,9 +59,15 @@ function surplusPct(goal: Goal, level: Level): number {
   }
 }
 
-export function nutritionPlan(p: Profile, kcalAdjust = 0): NutritionPlan {
+/** Formula bo'yicha kunlik sarf: Mifflin–St Jeor × faollik + mashg'ulotlar */
+export function formulaTdee(p: Profile): number {
+  return bmr(p.sex, p.weightKg, p.heightCm, p.age) * ACTIVITY[p.activity].k + trainingKcalPerDay(p.weightKg, p.sessionMin, p.daysPerWeek);
+}
+
+/** tdeeOverride — moslashuvchan (kundalik va vazn asosidagi) sarf berilsa, formula o'rniga ishlatiladi */
+export function nutritionPlan(p: Profile, kcalAdjust = 0, tdeeOverride?: number): NutritionPlan {
   const b = bmr(p.sex, p.weightKg, p.heightCm, p.age);
-  const tdee = b * ACTIVITY[p.activity].k + trainingKcalPerDay(p.weightKg, p.sessionMin, p.daysPerWeek);
+  const tdee = tdeeOverride ?? formulaTdee(p);
   const notes: string[] = [];
   let kcal: number;
   let ratePct: number;
@@ -371,3 +377,98 @@ export const SUPPLEMENTS: { name: string; grade: 'A' | 'B' | 'C' | 'X'; dose: st
   { name: 'D vitamini', grade: 'C', dose: 'Faqat tahlil asosida', text: "Yetishmovchilik bo‘lsa foydali (qishda keng tarqalgan). Shifokor bilan."},
   { name: 'BCAA, "yog‘ yoqardilar", testosteron kuchaytirgichlar', grade: 'X', dose: '—', text: "Yetarli oqsil iste’mol qilganda BCAA foyda bermaydi. Yog' yoqish va gormon 'kuchaytiruvchi' vositalar ishonchli dalilga ega emas, ba’zilari xavfli." },
 ];
+
+/* ---------------- Moslashuvchan sarf (adaptive TDEE) ---------------- */
+// Energiya balansi: sarf = o'rtacha iste'mol − ρ · (vazn o'zgarishi / kun), ρ ≈ 7700 kkal/kg (Hall 2008, aralash to'qima).
+// Vazn o'zgarishi — oyna ichidagi o'lchovlar bo'yicha chiziqli regressiya (suv tebranishiga chidamli).
+// Har hafta baho formuladan (Mifflin–St Jeor) boshlab, kuzatilganga tomon silliq siljiydi: 50% qadam, haftasiga ±150 kkal dan oshmaydi.
+
+const RHO = 7700;
+const DAY = 86400000;
+const dayNum = (iso: string) => Math.round(Date.parse(iso.slice(0, 10) + 'T00:00:00Z') / DAY);
+const isoOf = (n: number) => new Date(n * DAY).toISOString().slice(0, 10);
+
+export interface TdeeEstimate {
+  /** formula bo'yicha (boshlang'ich taxmin) */
+  prior: number;
+  /** joriy baho */
+  tdee: number;
+  /** oxirgi oynada kuzatilgan xom qiymat */
+  observed: number | null;
+  /** 0..1 — necha hafta ma'lumot bilan yangilangan */
+  confidence: number;
+  updates: number;
+  /** oxirgi 21 kunda: to'liq yozilgan kunlar va tortilishlar */
+  loggedDays: number;
+  weighIns: number;
+  avgIntake: number | null;
+  /** vazn trendi, kg/hafta */
+  trendPerWeek: number | null;
+  history: { date: string; tdee: number }[];
+}
+
+/** Kunlik iste'mol (kkal), faqat "to'liq" kunlar: formula sarfining 40% idan kam yozilgan kun — chala deb hisoblanadi */
+export function dailyIntake(entries: { date: string; kcal: number }[], prior: number): Map<number, number> {
+  const sum = new Map<number, number>();
+  for (const e of entries) sum.set(dayNum(e.date), (sum.get(dayNum(e.date)) ?? 0) + e.kcal);
+  for (const [d, k] of sum) if (k < prior * 0.4) sum.delete(d);
+  return sum;
+}
+
+function slopePerDay(pts: { x: number; y: number }[]): number | null {
+  if (pts.length < 2) return null;
+  const mx = pts.reduce((a, p) => a + p.x, 0) / pts.length;
+  const my = pts.reduce((a, p) => a + p.y, 0) / pts.length;
+  const sxx = pts.reduce((a, p) => a + (p.x - mx) ** 2, 0);
+  if (!sxx) return null;
+  return pts.reduce((a, p) => a + (p.x - mx) * (p.y - my), 0) / sxx;
+}
+
+const WINDOW = 21;
+
+/** Bir oynadagi (end kunigacha 21 kun) kuzatilgan sarf; ma'lumot yetarli bo'lmasa — null */
+function windowObs(intake: Map<number, number>, weights: { x: number; y: number }[], end: number, prior: number) {
+  const from = end - WINDOW + 1;
+  const kcals = [...intake.entries()].filter(([d]) => d >= from && d <= end).map(([, k]) => k);
+  const ws = weights.filter((w) => w.x >= from && w.x <= end);
+  const span = ws.length ? ws[ws.length - 1].x - ws[0].x : 0;
+  const slope = slopePerDay(ws);
+  const avg = kcals.length ? kcals.reduce((a, b) => a + b, 0) / kcals.length : null;
+  const ok = kcals.length >= 8 && ws.length >= 4 && span >= 10 && slope !== null && avg !== null;
+  const obs = ok ? Math.min(prior * 1.6, Math.max(prior * 0.6, avg! - RHO * slope!)) : null;
+  return { obs, avg, slope, logged: kcals.length, weighIns: ws.length };
+}
+
+export function adaptiveTdee(food: { date: string; kcal: number }[], body: BodyEntry[], prior: number, today: string, weeks = 8): TdeeEstimate {
+  const intake = dailyIntake(food, prior);
+  const weights = body
+    .filter((b) => b.weightKg)
+    .map((b) => ({ x: dayNum(b.date), y: b.weightKg! }))
+    .sort((a, b) => a.x - b.x);
+  const t = dayNum(today);
+  let est = prior;
+  let updates = 0;
+  const history: { date: string; tdee: number }[] = [];
+  for (let k = weeks - 1; k >= 0; k--) {
+    const end = t - 7 * k;
+    const w = windowObs(intake, weights, end, prior);
+    if (w.obs !== null) {
+      est += Math.max(-150, Math.min(150, 0.5 * (w.obs - est)));
+      updates++;
+      history.push({ date: isoOf(end), tdee: Math.round(est) });
+    }
+  }
+  const last = windowObs(intake, weights, t, prior);
+  return {
+    prior: Math.round(prior),
+    tdee: Math.round(est / 10) * 10,
+    observed: last.obs !== null ? Math.round(last.obs) : null,
+    confidence: Math.min(1, updates / 3),
+    updates,
+    loggedDays: last.logged,
+    weighIns: last.weighIns,
+    avgIntake: last.avg !== null ? Math.round(last.avg) : null,
+    trendPerWeek: last.slope !== null && last.weighIns >= 3 ? Math.round(last.slope * 7 * 100) / 100 : null,
+    history,
+  };
+}

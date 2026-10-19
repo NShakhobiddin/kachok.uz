@@ -6,7 +6,7 @@ import { generateProgram, weeklyVolume } from '../engine/program';
 import { mesoState, setChange, type MuscleFeedback } from '../engine/meso';
 import { detectPRs } from '../engine/stats';
 import { isoDate } from '../lib/date';
-import type { BodyEntry, ExerciseLog, MuscleGroup, PlannedExercise, Profile, Program, SetLog, WorkoutDay, WorkoutLog } from '../types';
+import type { BodyEntry, ExerciseLog, FoodEntry, MuscleGroup, PlannedExercise, Profile, Program, SetLog, WorkoutDay, WorkoutLog } from '../types';
 import { MUSCLES, mrvAt } from '../data/catalog';
 import type { PR } from '../engine/stats';
 
@@ -64,6 +64,8 @@ export interface Settings {
   vibrate: boolean;
   showRir: boolean;
   barKg: number;
+  /** kaloriya rejasida formula o'rniga kundalik va vazn asosidagi sarf (TDEE) */
+  adaptiveTdee?: boolean;
 }
 
 interface State {
@@ -72,6 +74,8 @@ interface State {
   logs: WorkoutLog[];
   active: ActiveWorkout | null;
   body: BodyEntry[];
+  /** ovqat kundaligi */
+  food: FoodEntry[];
   water: Record<string, number>;
   readiness: Record<string, number>;
   lessonsDone: string[];
@@ -115,6 +119,8 @@ interface State {
   deleteLog: (id: string) => void;
 
   addBody: (e: BodyEntry) => void;
+  addFood: (e: FoodEntry) => void;
+  removeFood: (id: string) => void;
   addWater: (ml: number) => void;
   setReadiness: (score: number) => void;
   completeLesson: (id: string) => void;
@@ -139,6 +145,7 @@ const initial = {
   logs: [] as WorkoutLog[],
   active: null,
   body: [] as BodyEntry[],
+  food: [] as FoodEntry[],
   water: {} as Record<string, number>,
   readiness: {} as Record<string, number>,
   lessonsDone: [] as string[],
@@ -308,11 +315,14 @@ export const useStore = create<State>()(
         const rest = get().body.filter((b) => b.date !== e.date);
         const prev = get().body.find((b) => b.date === e.date);
         set({ body: [...rest, { ...prev, ...e }].sort((a, b) => a.date.localeCompare(b.date)) });
-        if (e.weightKg) {
+        // profil vazni — faqat eng so'nggi o'lchov bo'yicha
+        if (e.weightKg && !get().body.some((b) => b.weightKg && b.date > e.date)) {
           const p = get().profile;
           if (p) set({ profile: { ...p, weightKg: e.weightKg } });
         }
       },
+      addFood: (e) => set({ food: [...get().food, e] }),
+      removeFood: (id) => set({ food: get().food.filter((x) => x.id !== id) }),
       addWater: (ml) => {
         const d = isoDate();
         set({ water: { ...get().water, [d]: Math.max(0, (get().water[d] ?? 0) + ml) } });
@@ -388,6 +398,7 @@ export function exportData(): string {
     program: s.program,
     logs: s.logs,
     body: s.body,
+    food: s.food,
     water: s.water,
     readiness: s.readiness,
     lessonsDone: s.lessonsDone,

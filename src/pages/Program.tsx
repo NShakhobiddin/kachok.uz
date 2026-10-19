@@ -11,6 +11,7 @@ import { exportProgramPdf } from '../engine/pdf';
 import { estimateMinutes, groupFrequency, weeklyVolume } from '../engine/program';
 import { fmtKg, suggest } from '../engine/progression';
 import { mesoPlan, type MesoState } from '../engine/meso';
+import { useNutrition } from '../lib/useNutrition';
 import { mesoCtx, useMeso } from '../lib/useToday';
 import { DAYS, DAYS_SHORT, weekdayIdx } from '../lib/date';
 import { useIsPro } from '../lib/features';
@@ -38,6 +39,7 @@ export default function ProgramPage() {
   const vol = useMemo(() => (program ? weeklyVolume(program) : null), [program]);
   const freq = useMemo(() => groupFrequency(program ?? { days: [] }), [program]);
   const meso = useMeso();
+  const nut = useNutrition();
   if (!program) return null;
   const day = days[Math.min(sel, days.length - 1)];
 
@@ -45,7 +47,7 @@ export default function ProgramPage() {
     if (!isPro) return nav('/premium?f=pdf');
     setPdfBusy(true);
     try {
-      await exportProgramPdf(program, profile, kcalAdjust, useStore.getState().logs);
+      await exportProgramPdf(program, profile, kcalAdjust, useStore.getState().logs, nut.useAdaptive ? nut.est.tdee : undefined);
     } catch {
       /* foydalanuvchi bekor qildi yoki saqlash imkoni yo'q */
     } finally {

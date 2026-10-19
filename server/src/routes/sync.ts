@@ -4,7 +4,7 @@ import { Hono } from 'hono';
 import { z } from 'zod';
 import { requireAuth, type AppEnv, type Deps } from '../app.js';
 
-export const DOC_KINDS = ['profile', 'program', 'log', 'body', 'meta'] as const;
+export const DOC_KINDS = ['profile', 'program', 'log', 'body', 'food', 'meta'] as const;
 const MAX_DOC_BYTES = 256 * 1024;
 const PAGE = 500;
 

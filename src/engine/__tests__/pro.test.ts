@@ -6,6 +6,9 @@ import { e1rmFromSet, loadFor, pct1rm, refE1rm } from '../rpe';
 import type { PlannedExercise, Profile, Program, WorkoutLog } from '../../types';
 import { EQUIPMENT_PRESETS } from '../../data/catalog';
 import { blockWeek, resolveMethod } from '../methods';
+import { adaptiveTdee, dailyIntake } from '../nutrition';
+import { navyBodyFat, whtr, whtrZone } from '../bodycomp';
+import { searchFoods } from '../../data/foods';
 import { DEFAULT_DAYS, generateProgram, hasEquipment } from '../program';
 
 describe('RPE jadvali va 1RM', () => {
@@ -212,5 +215,47 @@ describe('Dastur uslublari', () => {
     expect(suggest(sq, pe('back-squat'), miss1, ctx).kg).toBe(100);
     const miss2 = [...miss1, mk(1, 'back-squat', [[100, 5], [100, 5], [100, 4]])];
     expect(suggest(sq, pe('back-squat'), miss2, ctx)).toMatchObject({ kg: 90, kind: 'down' });
+  });
+});
+
+describe('Moslashuvchan sarf va tana tarkibi', () => {
+  const day = (i: number) => new Date(Date.UTC(2026, 4, 1) + i * 86400000).toISOString().slice(0, 10);
+  it('kundalik + vazn: haqiqiy sarf formulasidan past bo‘lsa — baho pastga siljiydi', () => {
+    // haqiqiy sarf 2200, formula 2500, iste'mol 2000 → kuniga −0.026 kg
+    const food = Array.from({ length: 28 }, (_, i) => ({ date: day(i), kcal: 2000 + ((i * 37) % 120) - 60 }));
+    const body = Array.from({ length: 28 }, (_, i) => ({ date: day(i), weightKg: 80 - (i * 200) / 7700 + Math.sin(i * 2.1) * 0.4 }));
+    const est = adaptiveTdee(food, body, 2500, day(27));
+    expect(est.updates).toBe(3);
+    expect(est.tdee).toBeLessThan(2350);
+    expect(est.tdee).toBeGreaterThan(2150);
+    expect(est.observed!).toBeGreaterThan(2000);
+    expect(est.observed!).toBeLessThan(2450);
+    expect(est.trendPerWeek!).toBeLessThan(0);
+  });
+  it('ma’lumot kam bo‘lsa — formula o‘zgarmaydi; chala kunlar hisobga olinmaydi', () => {
+    const est = adaptiveTdee([{ date: day(0), kcal: 2000 }], [{ date: day(0), weightKg: 80 }], 2500, day(5));
+    expect(est.tdee).toBe(2500);
+    expect(est.confidence).toBe(0);
+    expect(dailyIntake([{ date: day(0), kcal: 600 }, { date: day(1), kcal: 1900 }], 2500).size).toBe(1);
+  });
+  it('bir haftada ±150 kkal dan ko‘p sakramaydi', () => {
+    const food = Array.from({ length: 21 }, (_, i) => ({ date: day(i), kcal: 1500 }));
+    const body = Array.from({ length: 21 }, (_, i) => ({ date: day(i), weightKg: 80 }));
+    const est = adaptiveTdee(food, body, 2500, day(20));
+    expect(est.history.map((h) => h.tdee)).toEqual([2350, 2200]);
+    expect(est.observed).toBe(1500);
+  });
+  it('US Navy yog‘ foizi va WHtR', () => {
+    expect(navyBodyFat('male', 180, 85, 38)).toBeCloseTo(16.1, 1);
+    expect(navyBodyFat('female', 165, 72, 32)).toBeNull();
+    expect(navyBodyFat('female', 165, 72, 32, 98)).toBeGreaterThan(20);
+    expect(whtr(85, 180)).toBeCloseTo(0.472, 3);
+    expect(whtrZone(0.47).name).toBe('Sog‘lom');
+    expect(whtrZone(0.55).tone).toBe('warn');
+  });
+  it('ovqat qidiruvi apostrofsiz ham topadi', () => {
+    expect(searchFoods('lagmon')[0].id).toBe('lagmon');
+    expect(searchFoods('osh')[0].id).toBe('osh');
+    expect(searchFoods('tovuq').length).toBeGreaterThanOrEqual(3);
   });
 });

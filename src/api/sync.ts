@@ -1,10 +1,10 @@
 // Oflayn-birinchi sinxronlash. Qurilma — asosiy manba; server — zaxira va qurilmalar orasidagi ko'prik.
 // Har bir yozuv alohida hujjat: profil, dastur, har bir mashg'ulot, har kungi vazn, sozlamalar.
 import { useStore } from '../store/useStore';
-import type { BodyEntry, Profile, Program, WorkoutLog } from '../types';
+import type { BodyEntry, FoodEntry, Profile, Program, WorkoutLog } from '../types';
 import { api, apiEnabled, refreshMe } from './client';
 
-type Kind = 'profile' | 'program' | 'log' | 'body' | 'meta';
+type Kind = 'profile' | 'program' | 'log' | 'body' | 'food' | 'meta';
 interface Doc {
   kind: Kind;
   id: string;
@@ -42,6 +42,10 @@ export function collectDocs(): Map<string, Doc> {
   if (s.program) put('program', 'current', s.program);
   for (const l of s.logs) if (l.finishedAt) put('log', l.id, l);
   for (const b of s.body) put('body', b.date, b);
+  // ovqat kundaligi — har kun bitta hujjat
+  const byDay = new Map<string, FoodEntry[]>();
+  for (const e of s.food) byDay.set(e.date, [...(byDay.get(e.date) ?? []), e]);
+  for (const [date, list] of byDay) put('food', date, list);
   put('meta', 'state', {
     water: s.water,
     readiness: s.readiness,
@@ -58,7 +62,7 @@ export function collectDocs(): Map<string, Doc> {
 /** Serverdan kelgan hujjatlarni qurilma holatiga qo'llash */
 function applyRemote(docs: RemoteDoc[], hashes: Record<string, string>, stamps: Record<string, number>, preferServer: boolean) {
   const st = useStore.getState();
-  let { profile, program, logs, body } = st;
+  let { profile, program, logs, body, food } = st;
   let meta: Record<string, unknown> | null = null;
   for (const d of docs) {
     const k = key(d.kind, d.id);
@@ -69,6 +73,7 @@ function applyRemote(docs: RemoteDoc[], hashes: Record<string, string>, stamps: 
       delete hashes[k];
       if (d.kind === 'log') logs = logs.filter((l) => l.id !== d.id);
       if (d.kind === 'body') body = body.filter((b) => b.date !== d.id);
+      if (d.kind === 'food') food = food.filter((e) => e.date !== d.id);
       continue;
     }
     const h = hash(d.data);
@@ -78,9 +83,10 @@ function applyRemote(docs: RemoteDoc[], hashes: Record<string, string>, stamps: 
     else if (d.kind === 'program') program = d.data as Program;
     else if (d.kind === 'log') logs = [...logs.filter((l) => l.id !== d.id), d.data as WorkoutLog];
     else if (d.kind === 'body') body = [...body.filter((b) => b.date !== d.id), d.data as BodyEntry].sort((a, b) => a.date.localeCompare(b.date));
+    else if (d.kind === 'food') food = [...food.filter((e) => e.date !== d.id), ...(d.data as FoodEntry[])];
     else if (d.kind === 'meta') meta = d.data as Record<string, unknown>;
   }
-  useStore.setState({ profile, program, logs, body, ...(meta ?? {}) });
+  useStore.setState({ profile, program, logs, body, food, ...(meta ?? {}) });
 }
 
 let running: Promise<void> | null = null;
@@ -129,7 +135,7 @@ async function run() {
     for (const k of Object.keys(hashes)) {
       if (local.has(k)) continue;
       const [kind, ...rest] = k.split(':');
-      if (kind !== 'log' && kind !== 'body') continue;
+      if (kind !== 'log' && kind !== 'body' && kind !== 'food') continue;
       changes.push({ kind: kind as Kind, id: rest.join(':'), data: null, updatedAt: now, deleted: true });
       delete hashes[k];
       stamps[k] = now;
@@ -181,7 +187,7 @@ export function startAutoSync() {
       s.exNotes !== prev.exNotes
     )
       touched.push('meta:state');
-    if (!touched.length && s.logs === prev.logs && s.body === prev.body) return;
+    if (!touched.length && s.logs === prev.logs && s.body === prev.body && s.food === prev.food) return;
     if (touched.length) {
       const at = Date.now();
       s.setSync({ edited: { ...s.sync.edited, ...Object.fromEntries(touched.map((k) => [k, at])) } });

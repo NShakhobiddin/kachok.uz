@@ -382,5 +382,29 @@ export interface WorkoutLog {
 export interface BodyEntry {
   date: string;
   weightKg?: number;
+  /** tana o'lchamlari (sm): bel — kindik sathida, bo'yin — kekirdak ostida, son — dumba sathida */
   waistCm?: number;
+  neckCm?: number;
+  hipCm?: number;
+  chestCm?: number;
+  armCm?: number;
+  thighCm?: number;
+}
+
+/** Ovqat kundaligidagi bitta yozuv */
+export interface FoodEntry {
+  id: string;
+  /** YYYY-MM-DD */
+  date: string;
+  /** 0 nonushta · 1 tushlik · 2 kechki · 3 tamaddi */
+  meal: 0 | 1 | 2 | 3;
+  foodId?: string;
+  name: string;
+  g?: number;
+  /** "1 kosa", "2 dona" */
+  label?: string;
+  kcal: number;
+  p: number;
+  f: number;
+  c: number;
 }

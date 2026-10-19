@@ -12,9 +12,9 @@ import { EXERCISE_MAP } from '../data/exercises';
 import { LESSONS } from '../data/lessons';
 import { FACTS, QUOTES, dailyPick } from '../data/motivation';
 import { sourceById } from '../data/sources';
-import { nutritionPlan } from '../engine/nutrition';
 import { muscleRecovery, weekStreak } from '../engine/stats';
 import { DAYS, DAYS_SHORT, MONTHS, daysBetween, fmtDuration, greeting, isoDate } from '../lib/date';
+import { useNutrition } from '../lib/useNutrition';
 import { useDayPlan, useToday } from '../lib/useToday';
 import { useStore } from '../store/useStore';
 import type { MuscleId, WorkoutDay } from '../types';
@@ -25,7 +25,6 @@ export default function Home() {
   const logs = useStore((s) => s.logs);
   const active = useStore((s) => s.active);
   const startWorkout = useStore((s) => s.startWorkout);
-  const kcalAdjust = useStore((s) => s.kcalAdjust);
   const t = useToday();
   const [pickDay, setPickDay] = useState(false);
   const [chosen, setChosen] = useState<WorkoutDay | null>(null);
@@ -34,7 +33,7 @@ export default function Home() {
   const now = new Date();
   const streak = useMemo(() => weekStreak(logs, profile.daysPerWeek), [logs, profile.daysPerWeek]);
   const recovery = useMemo(() => muscleRecovery(logs), [logs]);
-  const np = useMemo(() => nutritionPlan(profile, kcalAdjust), [profile, kcalAdjust]);
+  const { np, eatenToday } = useNutrition();
   const lastLog = [...logs].filter((l) => l.finishedAt).sort((a, b) => b.startedAt.localeCompare(a.startedAt))[0];
   const daysSince = lastLog ? daysBetween(new Date(lastLog.startedAt), now) : null;
   const weekMinutes = t.weekLogs.reduce((a, l) => a + l.durationMin, 0);
@@ -217,12 +216,12 @@ export default function Home() {
           </div>
           <Link to="/nutrition" className="card tight stack gap-4" style={{ color: 'inherit' }}>
             <span className="row gap-6 small muted">
-              <Icon name="food" size={16} style={{ color: 'var(--green)' }} /> Kunlik maqsad
+              <Icon name="food" size={16} style={{ color: 'var(--green)' }} /> {eatenToday > 0 ? 'Bugun yeyildi' : 'Kunlik maqsad'}
             </span>
             <span style={{ fontSize: 26, fontWeight: 800 }}>
-              {np.kcal} <span className="small muted">kkal</span>
+              {eatenToday > 0 ? Math.round(eatenToday) : np.kcal} <span className="small muted">{eatenToday > 0 ? `/ ${np.kcal}` : 'kkal'}</span>
             </span>
-            <span className="tiny faint">Oqsil {np.protein} g</span>
+            <span className="tiny faint">{eatenToday > 0 ? `Qoldi ${Math.max(0, np.kcal - Math.round(eatenToday))} kkal` : `Oqsil ${np.protein} g`}</span>
           </Link>
         </div>
       </section>

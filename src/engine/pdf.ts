@@ -38,7 +38,7 @@ const YELLOW: RGB = [245, 192, 51];
 const GREEN: RGB = [37, 165, 101];
 const MUTED: RGB = [110, 120, 135];
 
-export async function exportProgramPdf(program: Program, profile: Profile, kcalAdjust = 0, logs: WorkoutLog[] = []): Promise<void> {
+export async function exportProgramPdf(program: Program, profile: Profile, kcalAdjust = 0, logs: WorkoutLog[] = [], tdee?: number): Promise<void> {
   const [{ jsPDF }, { default: autoTable }] = await Promise.all([import('jspdf'), import('jspdf-autotable')]);
   const doc = new jsPDF({ unit: 'mm', format: 'a4' });
   const W = doc.internal.pageSize.getWidth();
@@ -173,7 +173,7 @@ export async function exportProgramPdf(program: Program, profile: Profile, kcalA
   y = (doc as any).lastAutoTable.finalY + 10;
 
   // Ovqatlanish
-  const np = nutritionPlan(profile, kcalAdjust);
+  const np = nutritionPlan(profile, kcalAdjust, tdee);
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(14);
   doc.text(T('Kunlik ovqatlanish'), M, y);

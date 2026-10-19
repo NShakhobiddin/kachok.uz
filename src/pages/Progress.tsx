@@ -2,7 +2,9 @@ import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { PlateBadge } from '../components/Barbell';
 import { ColumnChart, LineChart, TargetBars } from '../components/charts';
+import { BodyStats } from '../components/BodyStats';
 import { StrengthLevels } from '../components/StrengthLevels';
+import { TrainingHeatmap } from '../components/TrainingHeatmap';
 import { Icon } from '../components/ui/Icon';
 import { Sheet } from '../components/ui/Sheet';
 import { GROUPS, GROUP_ORDER, VOLUME_LANDMARKS, mrvAt } from '../data/catalog';
@@ -62,6 +64,9 @@ export default function Progress() {
             Bugungi mashqqa o‘tish
           </Link>
         </div>
+        <section className="section">
+          <BodyStats />
+        </section>
         <Achievements ctx={ctx} />
       </div>
     );
@@ -107,6 +112,14 @@ export default function Progress() {
 
       <section className="section">
         <div className="section-head">
+          <h2>Mashg‘ulot kalendari</h2>
+          <span className="small muted">20 hafta</span>
+        </div>
+        <TrainingHeatmap logs={logs} perWeek={profile.daysPerWeek} />
+      </section>
+
+      <section className="section">
+        <div className="section-head">
           <h2>Mushaklar bo‘yicha hajm</h2>
           <span className="small muted">{volWeek === cur ? 'bu hafta' : 'o‘tgan hafta'}</span>
         </div>
@@ -121,6 +134,14 @@ export default function Progress() {
           <span className="small muted">dunyo me’yorlari bo‘yicha</span>
         </div>
         <StrengthLevels />
+      </section>
+
+      <section className="section">
+        <div className="section-head">
+          <h2>Tana tarkibi</h2>
+          <span className="small muted">bel · yog‘ foizi</span>
+        </div>
+        <BodyStats />
       </section>
 
       {curEx && (
