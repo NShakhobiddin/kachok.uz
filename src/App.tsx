@@ -1,5 +1,6 @@
 import { lazy, Suspense, useEffect } from 'react';
 import { BrowserRouter, MemoryRouter, Navigate, NavLink, Route, Routes, useLocation } from 'react-router-dom';
+import { startAutoSync } from './api/sync';
 import { Icon } from './components/ui/Icon';
 import { useStore } from './store/useStore';
 import Home from './pages/Home';
@@ -16,6 +17,10 @@ const Profile = lazy(() => import('./pages/Profile'));
 const LessonView = lazy(() => import('./pages/LessonView'));
 const Sources = lazy(() => import('./pages/Sources'));
 const Lab = lazy(() => import('./pages/Lab'));
+const Account = lazy(() => import('./pages/Account'));
+const Coach = lazy(() => import('./pages/Coach'));
+const CoachClient = lazy(() => import('./pages/CoachClient'));
+const Premium = lazy(() => import('./pages/Premium'));
 
 const TABS = [
   { to: '/', icon: 'home', label: 'Bugun' },
@@ -40,7 +45,9 @@ function TabBar() {
   );
 }
 
-const NO_TAB = ['/onboarding', '/workout', '/summary', '/lesson', '/lab'];
+const NO_TAB = ['/onboarding', '/workout', '/summary', '/lesson', '/lab', '/account', '/premium'];
+// profil to'ldirilmasdan ham ochiladigan sahifalar
+const NO_PROFILE_OK = ['/onboarding', '/lab', '/exercise', '/library', '/lesson', '/sources', '/account', '/premium', '/coach'];
 
 function Shell() {
   const profile = useStore((s) => s.profile);
@@ -49,8 +56,7 @@ function Shell() {
     window.scrollTo(0, 0);
   }, [loc.pathname]);
   const hideTab = NO_TAB.some((p) => loc.pathname.startsWith(p));
-  if (!profile && !loc.pathname.startsWith('/onboarding') && !loc.pathname.startsWith('/lab') && !loc.pathname.startsWith('/exercise') && !loc.pathname.startsWith('/library') && !loc.pathname.startsWith('/lesson') && !loc.pathname.startsWith('/sources'))
-    return <Navigate to="/onboarding" replace />;
+  if (!profile && !NO_PROFILE_OK.some((p) => loc.pathname.startsWith(p))) return <Navigate to="/onboarding" replace />;
   return (
     <div className="app">
       <Suspense fallback={<div className="page" />}>
@@ -67,6 +73,10 @@ function Shell() {
           <Route path="/profile" element={<Profile />} />
           <Route path="/lesson/:id" element={<LessonView />} />
           <Route path="/sources" element={<Sources />} />
+          <Route path="/account" element={<Account />} />
+          <Route path="/premium" element={<Premium />} />
+          <Route path="/coach" element={<Coach />} />
+          <Route path="/coach/:id" element={<CoachClient />} />
           {import.meta.env.DEV && <Route path="/lab" element={<Lab />} />}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
@@ -80,6 +90,7 @@ function Shell() {
 const Router = import.meta.env.VITE_TARGET === 'artifact' ? MemoryRouter : BrowserRouter;
 
 export default function App() {
+  useEffect(() => startAutoSync(), []);
   return (
     <Router>
       <Shell />

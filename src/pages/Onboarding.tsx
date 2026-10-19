@@ -1,6 +1,7 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import { useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { apiEnabled } from '../api/client';
 import { Figure } from '../components/figure/Figure';
 import { Icon } from '../components/ui/Icon';
 import { Choice, Stepper } from '../components/ui/controls';
@@ -110,9 +111,20 @@ export default function Onboarding() {
         <button className="btn btn-primary btn-block" onClick={() => go(1)}>
           Dasturimni tuzish <Icon name="right" size={20} />
         </button>
-        <button className="btn btn-ghost btn-block mt-8" onClick={() => fileRef.current?.click()}>
-          Zaxira nusxadan tiklash
-        </button>
+        {apiEnabled ? (
+          <div className="grid-2 mt-8">
+            <button className="btn btn-ghost" onClick={() => nav('/account')}>
+              Akkauntim bor
+            </button>
+            <button className="btn btn-ghost" onClick={() => fileRef.current?.click()}>
+              Zaxiradan tiklash
+            </button>
+          </div>
+        ) : (
+          <button className="btn btn-ghost btn-block mt-8" onClick={() => fileRef.current?.click()}>
+            Zaxira nusxadan tiklash
+          </button>
+        )}
         {importErr && (
           <p className="small mt-8" role="alert" style={{ textAlign: 'center', color: 'var(--danger)' }}>
             Fayl o‘qilmadi. Kachok’dan eksport qilingan .json faylni tanlang.

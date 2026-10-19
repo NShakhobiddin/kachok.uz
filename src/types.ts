@@ -332,6 +332,8 @@ export interface Program {
   days: WorkoutDay[];
   /** mezotsikl uzunligi (hafta), oxirgisi — yengillashtirish (deload) */
   mesoWeeks: number;
+  /** murabbiy yuborgan dastur */
+  coach?: { name: string; at: string };
   startDate: string;
 }
 

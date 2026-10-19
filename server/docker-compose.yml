@@ -1,0 +1,23 @@
+# Mahalliy server uchun: docker compose up -d
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: kachok
+      POSTGRES_PASSWORD: kachok
+      POSTGRES_DB: kachok
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+  api:
+    build: .
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      DATABASE_URL: postgres://kachok:kachok@db:5432/kachok
+    depends_on:
+      - db
+    ports:
+      - "8787:8787"
+volumes:
+  pgdata:

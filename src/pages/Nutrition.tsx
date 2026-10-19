@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { LineChart, MacroBar } from '../components/charts';
+import { ProGate } from '../components/ProGate';
 import { Icon } from '../components/ui/Icon';
 import { Sheet } from '../components/ui/Sheet';
 import { Stepper } from '../components/ui/controls';
@@ -146,32 +147,34 @@ export default function Nutrition() {
             Sut mahsulotlarisiz
           </button>
         </div>
-        <div className="stack gap-8">
-          {meals.map((m, i) => (
-            <div key={m.name} className="card tight">
-              <button className="row between gap-12" style={{ width: '100%', textAlign: 'left' }} onClick={() => setOpenMeal(openMeal === i ? null : i)} aria-expanded={openMeal === i}>
-                <div className="row gap-12">
-                  <span className="mono small faint">{m.time}</span>
-                  <span className="strong">{m.name}</span>
-                </div>
-                <span className="row gap-8 small muted num">
-                  {m.kcal} kkal · O {m.p} g
-                  <Icon name={openMeal === i ? 'up' : 'down'} size={16} />
-                </span>
-              </button>
-              {openMeal === i && (
-                <div className="stack mt-8">
-                  {m.items.map((it) => (
-                    <div key={it.food.id} className="row between small" style={{ padding: '7px 0', borderTop: '1px solid var(--line)' }}>
-                      <span>{it.food.name}</span>
-                      <span className="strong num">{it.label}</span>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
+        <ProGate feature="meals">
+          <div className="stack gap-8">
+            {meals.map((m, i) => (
+              <div key={m.name} className="card tight">
+                <button className="row between gap-12" style={{ width: '100%', textAlign: 'left' }} onClick={() => setOpenMeal(openMeal === i ? null : i)} aria-expanded={openMeal === i}>
+                  <div className="row gap-12">
+                    <span className="mono small faint">{m.time}</span>
+                    <span className="strong">{m.name}</span>
+                  </div>
+                  <span className="row gap-8 small muted num">
+                    {m.kcal} kkal · O {m.p} g
+                    <Icon name={openMeal === i ? 'up' : 'down'} size={16} />
+                  </span>
+                </button>
+                {openMeal === i && (
+                  <div className="stack mt-8">
+                    {m.items.map((it) => (
+                      <div key={it.food.id} className="row between small" style={{ padding: '7px 0', borderTop: '1px solid var(--line)' }}>
+                        <span>{it.food.name}</span>
+                        <span className="strong num">{it.label}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </ProGate>
         <p className="tiny faint mt-8">Miqdorlar maqsadingizga moslab hisoblandi (USDA ma’lumotlari asosida, taxminiy). Mahsulotlarni teng qiymatlilariga almashtirish mumkin: tovuq ↔ baliq ↔ mol go‘shti, guruch ↔ grechka ↔ kartoshka.</p>
       </section>
 

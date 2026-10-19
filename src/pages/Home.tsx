@@ -3,6 +3,7 @@ import { useMemo, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Barbell } from '../components/Barbell';
 import { BodyMap } from '../components/BodyMap';
+import { CoachBanner } from '../components/CoachBanner';
 import { Icon } from '../components/ui/Icon';
 import { Sheet } from '../components/ui/Sheet';
 import { MUSCLES } from '../data/catalog';
@@ -66,6 +67,8 @@ export default function Home() {
           {profile.name ? <span style={{ fontWeight: 800, fontSize: 17 }}>{profile.name[0].toUpperCase()}</span> : <Icon name="user" />}
         </Link>
       </header>
+
+      <CoachBanner />
 
       {active ? (
         <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="card raised stack gap-12" style={{ borderColor: 'var(--blue)' }}>

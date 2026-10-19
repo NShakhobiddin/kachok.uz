@@ -8,7 +8,9 @@ import { GROUPS, GROUP_ORDER, INJURIES } from '../data/catalog';
 import { ACTIVITY } from '../engine/nutrition';
 import { DEFAULT_DAYS } from '../engine/program';
 import { DAYS_SHORT } from '../lib/date';
+import { apiEnabled } from '../api/client';
 import { saveFile } from '../lib/download';
+import { BILLING } from '../lib/features';
 import { exportData, useStore } from '../store/useStore';
 import type { ActivityLevel, Profile as P } from '../types';
 import { GOALS, LEVELS } from './Onboarding';
@@ -23,6 +25,7 @@ export default function Profile() {
   const setSettings = useStore((s) => s.setSettings);
   const importData = useStore((s) => s.importData);
   const reset = useStore((s) => s.reset);
+  const account = useStore((s) => s.account);
   const [panel, setPanel] = useState<Panel>(null);
   const [draft, setDraft] = useState<P>(profile);
   const [importMsg, setImportMsg] = useState<string | null>(null);
@@ -61,6 +64,22 @@ export default function Profile() {
           </p>
         </div>
       </div>
+
+      {apiEnabled && (
+        <section className="section">
+          <div className="card flush">
+            <Item
+              icon="user"
+              label={account ? 'Akkaunt va sinxronlash' : 'Akkauntga kirish'}
+              value={account ? `+${account.user.phone.slice(0, 3)} ${account.user.phone.slice(3, 5)} ···` : 'Bulutda saqlash'}
+              onClick={() => nav('/account')}
+              last={!(account?.user.role === 'coach') && !BILLING}
+            />
+            {account?.user.role === 'coach' && <Item icon="list" label="Mijozlarim" onClick={() => nav('/coach')} last={!BILLING} />}
+            {BILLING && <Item icon="spark" label="Kachok Pro" value={account?.entitlements?.pro.active ? 'Faol' : undefined} onClick={() => nav('/premium')} last />}
+          </div>
+        </section>
+      )}
 
       <section className="section">
         <div className="eyebrow" style={{ marginBottom: 8 }}>
@@ -127,7 +146,10 @@ export default function Profile() {
             {importMsg}
           </p>
         )}
-        <p className="tiny faint mt-8">Barcha ma’lumotlar faqat shu qurilmada saqlanadi. Telefonni almashtirishdan oldin zaxira nusxa oling.</p>
+        <p className="tiny faint mt-8">
+          {account ? 'Ma’lumotlar telefonda va bulutda saqlanadi.' : 'Barcha ma’lumotlar faqat shu qurilmada saqlanadi. Telefonni almashtirishdan oldin zaxira nusxa oling'}
+          {!account && apiEnabled ? ' yoki akkauntga kiring.' : !account ? '.' : ''}
+        </p>
         <button
           className="btn btn-ghost btn-block mt-16"
           style={{ color: 'var(--danger)' }}
@@ -145,7 +167,8 @@ export default function Profile() {
 
       <Sheet open={resetOpen} onClose={() => setResetOpen(false)} label="Hammasini o‘chirish">
         <h3 className="title">Hammasini o‘chirasizmi?</h3>
-        <p className="muted mt-8">Profil, dastur va butun mashg‘ulotlar tarixi shu qurilmadan o‘chiriladi. Buni qaytarib bo‘lmaydi — avval zaxira nusxa oling.</p>
+        <p className="muted mt-8">Profil, dastur va butun mashg‘ulotlar tarixi shu qurilmadan o‘chiriladi.{' '}
+          {account ? 'Akkauntdan ham chiqasiz — bulutdagi nusxa saqlanib qoladi, qayta kirsangiz tiklanadi.' : 'Buni qaytarib bo‘lmaydi — avval zaxira nusxa oling.'}</p>
         <div className="row gap-8 mt-16">
           <button className="btn btn-secondary grow" onClick={() => setResetOpen(false)}>
             Bekor qilish

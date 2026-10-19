@@ -19,6 +19,9 @@ Telefonda ishlaydigan veb-ilova (PWA): sizga moslangan mashq dasturi, har bir ma
 | **Motivatsiya** | Haftalik seriya (kunlik emas — dam olish kunlari ham mashqning qismi), 19 ta yutuq (disk shaklida), kunlik maqol va ilmiy fakt, qaytish xabari, mashg'ulotdan keyingi xulosa va ulashish. |
 | **PDF** | Haftalik dasturni chop etish uchun PDF: har kun jadvali, vazn/takror yoziladigan bo'sh kataklar, haftalik hajm, ovqatlanish rejasi va qoidalar. |
 | **Xavfsizlik** | Boshlashdan oldin xalqaro PAR-Q+ sog'liq so'rovnomasi; og'riq qoidasi; jarohatlarga mos mashq tanlash. |
+| **Akkaunt va bulut** | Telefon raqam + SMS kod bilan kirish. Ilova avval telefonda ishlaydi (internetsiz ham), internet bo'lsa o'zgarishlar bulutga yoziladi. Yangi telefonda kirsangiz profil, dastur va butun tarix qaytadi. Ziddiyatda eng so'nggi tahrir yutadi. |
+| **Murabbiy rejimi** | Murabbiy taklif kodi yaratadi, mijoz kodni kiritib ulanadi. Murabbiy mijozlarining haftalik faolligi, vazn grafigi, rekordlari, har bir mashg'ulotdagi kg × takrorlarini ko'radi, dasturini tahrirlab yuboradi va xabar yozadi. Mijoz "Bugun" sahifasida yangi dastur va xabarni ko'radi. |
+| **Pro va to'lov** | Payme va Click orqali to'lov (oylik/yillik), 7 kunlik bepul sinov. Hozircha pullik: PDF, kunlik ovqat rejasi, murabbiy uchun 2 tadan ko'p mijoz. `VITE_BILLING` yoqilmaguncha hammasi bepul. |
 
 ## Ilmiy asos
 
@@ -37,7 +40,43 @@ npm test           # dvigatellar testlari (2 700+ profil kombinatsiyasi)
 npm run build      # dist/ — istalgan statik hostingga (Vercel, Netlify, Nginx)
 ```
 
-`vercel.json` va `public/_redirects` SPA marshrutlash uchun tayyor. Ma'lumotlar foydalanuvchi qurilmasida saqlanadi (localStorage); Profil bo'limida JSON zaxira nusxa olish/tiklash bor.
+`vercel.json` va `public/_redirects` SPA marshrutlash uchun tayyor. Ma'lumotlar avvalo foydalanuvchi qurilmasida saqlanadi (localStorage); Profil bo'limida JSON zaxira nusxa olish/tiklash bor.
+
+Akkaunt, murabbiy va to'lov uchun server kerak. `.env.example` dan `.env.local` yarating:
+
+| O'zgaruvchi | Ma'nosi |
+|---|---|
+| `VITE_API_URL` | API manzili, masalan `https://api.kachok.uz`. Bo'sh bo'lsa akkaunt bo'limlari yashiriladi, ilova faqat telefonda ishlaydi. |
+| `VITE_BILLING` | `1` — Pro imkoniyatlari pullik. Bo'sh — hammasi bepul. Qaysi imkoniyat pullik ekani: [`src/lib/features.ts`](src/lib/features.ts). |
+
+## Server (API)
+
+`server/` — Node 22 + Hono + PostgreSQL. Telefon orqali kirish (SMS kod), bulutli sinxronlash, murabbiy rejimi, Payme va Click to'lovlari.
+
+```bash
+cd server
+npm install
+cp .env.example .env   # JWT_SECRET ni almashtiring
+npm run dev            # http://localhost:8787 (kompilyatsiya qilib ishga tushiradi)
+npm run watch          # ikkinchi oynada: kod o'zgarsa qayta kompilyatsiya
+npm test               # API testlari: kirish, sinxronlash, murabbiy, Payme, Click
+```
+
+`DATABASE_URL` bo'sh bo'lsa ichki PGlite (fayl yoki xotira) ishlatiladi — PostgreSQL o'rnatmasdan sinash uchun. `SMS_PROVIDER=console` da kod SMS o'rniga ilovada ko'rsatiladi (faqat sinov; production'da ishga tushmaydi).
+
+Production: `docker compose up -d` (PostgreSQL 16 + API) yoki `npm run build && npm start`. Jadvallar ishga tushganda avtomatik yaratiladi (`server/src/db/migrations`).
+
+**Muhim — ma'lumotlarni lokalizatsiya qilish.** "Shaxsga doir ma'lumotlar to'g'risida"gi qonunning 27¹-moddasiga ko'ra O'zbekiston fuqarolarining shaxsiy ma'lumotlari O'zbekiston hududidagi serverlarda saqlanishi kerak. Shuning uchun server va bazani mahalliy data-markazda (masalan, Uztelecom, UZCLOUD yoki boshqa mahalliy provayder) joylashtiring va ishga tushirishdan oldin yurist bilan tekshiring.
+
+### Ulash uchun kerak bo'ladigan akkauntlar
+
+| Xizmat | Nima qilish kerak | Sozlama |
+|---|---|---|
+| **Eskiz.uz** (SMS) | Akkaunt ochish, jo'natuvchi nomini tasdiqlatish | `SMS_PROVIDER=eskiz`, `ESKIZ_EMAIL`, `ESKIZ_PASSWORD`, `ESKIZ_FROM` |
+| **Payme Business** | Merchant ochish, kabinetda "Endpoint URL" ga `https://<api>/billing/payme` yozish | `PAYME_MERCHANT_ID`, `PAYME_KEY`, sinovda `PAYME_TEST=1` |
+| **Click** | Merchant ochish, Prepare URL `https://<api>/billing/click/prepare`, Complete URL `https://<api>/billing/click/complete` | `CLICK_SERVICE_ID`, `CLICK_MERCHANT_ID`, `CLICK_SECRET_KEY` |
+
+Narxlar (`server/src/billing/plans.ts`) hozircha taxminiy: Pro — 29 000 so'm/oy yoki 249 000 so'm/yil, Murabbiy — 99 000 so'm/oy. Obuna avtomatik yangilanmaydi; muddat ichida to'lansa kunlar qo'shiladi. Sinov muddati — `TRIAL_DAYS` (standart 7).
 
 ## Texnologiyalar
 
@@ -45,19 +84,24 @@ React 19 · TypeScript · Vite 6 · Zustand (offline holat) · Framer Motion · 
 
 ```
 src/
+  api/         server bilan ishlash va oflayn-birinchi sinxronlash
   data/        mashqlar, animatsiyalar, darslar, manbalar, katalog
   engine/      dastur generatori, progressiya, ovqatlanish, statistika, PDF (+ testlar)
-  lib/         figura geometriyasi, sana, hooklar
-  components/  Figure, BodyMap, Barbell, charts, Scenes, ...
-  pages/       Bugun, Dastur, Mashqlar, Ovqat, Natija, Mashg'ulot, Darslar, Profil
+  lib/         figura geometriyasi, sana, hooklar, pullik imkoniyatlar
+  components/  Figure, BodyMap, Barbell, charts, Scenes, DayEditor, ...
+  pages/       Bugun, Dastur, Mashqlar, Ovqat, Natija, Mashg'ulot, Darslar, Profil,
+               Akkaunt, Murabbiy, Mijoz, Pro
+server/
+  src/routes/  auth (SMS kod), sync, coach, billing
+  src/billing/ Payme Merchant API, Click SHOP API, tariflar va obuna
+  test/        API va ilova sinxronlashi testlari
 ```
 
 ## Mobil ilovaga yo'l
 
-1. **Capacitor** bilan shu kodni iOS/Android'ga o'rash (kod o'zgarmaydi), push-bildirishnomalar va fon taymeri qo'shish.
-2. Hisob va bulutli sinxronizatsiya (Supabase yoki Firebase) — telefonlar orasida ma'lumot.
+1. ~~Akkaunt va bulutli sinxronlash~~, ~~murabbiy rejimi~~, ~~Payme/Click to'lovi~~ — tayyor (yuqoriga qarang).
+2. **Capacitor** bilan shu kodni iOS/Android'ga o'rash (kod o'zgarmaydi), push-bildirishnomalar (murabbiy xabari, mashg'ulot eslatmasi) va fon taymeri qo'shish.
 3. Rus tili va o'zbek kirill yozuvi.
-4. To'lov: Click/Payme orqali premium (murabbiy bilan chat, kengaytirilgan tahlil).
 
 ---
 

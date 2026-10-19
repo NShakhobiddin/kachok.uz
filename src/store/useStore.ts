@@ -19,6 +19,40 @@ export interface ActiveWorkout {
   plan: PlannedExercise[];
 }
 
+export interface AccountUser {
+  id: string;
+  phone: string;
+  name: string;
+  role: 'athlete' | 'coach';
+}
+
+export interface Entitlements {
+  pro: { active: boolean; until: string | null; trial: boolean };
+  coach: { active: boolean; until: string | null };
+}
+
+export interface Account {
+  user: AccountUser;
+  access: string;
+  refresh: string;
+  entitlements?: Entitlements;
+  coach?: { id: string; name: string } | null;
+}
+
+export interface SyncState {
+  /** serverdagi oxirgi o'qilgan o'zgarish raqami */
+  cursor: number;
+  /** har bir hujjatning oxirgi sinxronlangan xeshi */
+  hashes: Record<string, string>;
+  /** hujjat versiyasi vaqti (ziddiyatda eng yangisi yutadi) */
+  stamps: Record<string, number>;
+  /** qurilmada oxirgi marta qachon o'zgartirilgan (oflayn tahrir ham to'g'ri vaqt bilan yuborilsin) */
+  edited?: Record<string, number>;
+  lastSyncAt?: number;
+  status: 'idle' | 'syncing' | 'error';
+  error?: string;
+}
+
 export interface Settings {
   sound: boolean;
   vibrate: boolean;
@@ -40,6 +74,11 @@ interface State {
   seenAchievements: string[];
   lastPRs: PR[];
   settings: Settings;
+  account: Account | null;
+  sync: SyncState;
+  /** ko'rilgan murabbiy xabarlari va dastur yangilanishi */
+  seenNotes: string[];
+  programAck?: string;
 
   setProfile: (p: Profile, regenerate?: boolean) => void;
   updateProfile: (patch: Partial<Profile>) => void;
@@ -74,6 +113,11 @@ interface State {
   setSettings: (patch: Partial<Settings>) => void;
   importData: (json: string) => boolean;
   reset: () => void;
+  setAccount: (a: Account | null) => void;
+  patchAccount: (patch: Partial<Account>) => void;
+  setSync: (patch: Partial<SyncState>) => void;
+  markNote: (id: string) => void;
+  ackProgram: (at: string) => void;
 }
 
 const initial = {
@@ -90,7 +134,13 @@ const initial = {
   seenAchievements: [] as string[],
   lastPRs: [] as PR[],
   settings: { sound: true, vibrate: true, showRir: true, barKg: 20 },
+  account: null as Account | null,
+  sync: { cursor: 0, hashes: {}, stamps: {}, status: 'idle' } as SyncState,
+  seenNotes: [] as string[],
+  programAck: undefined as string | undefined,
 };
+
+export const INITIAL_SYNC: SyncState = { cursor: 0, hashes: {}, stamps: {}, status: 'idle' };
 
 const uid = () => Math.random().toString(36).slice(2, 10);
 
@@ -265,7 +315,16 @@ export const useStore = create<State>()(
           return false;
         }
       },
+      // qurilmadagi ma'lumotlar o'chiriladi; akkauntdan ham chiqiladi — bulutdagi nusxa saqlanib qoladi
       reset: () => set({ ...initial }),
+      setAccount: (a) => set(a ? { account: a } : { account: null, sync: { ...INITIAL_SYNC } }),
+      patchAccount: (patch) => {
+        const a = get().account;
+        if (a) set({ account: { ...a, ...patch } });
+      },
+      setSync: (patch) => set({ sync: { ...get().sync, ...patch } }),
+      markNote: (id) => set({ seenNotes: Array.from(new Set([...get().seenNotes, id])).slice(-50) }),
+      ackProgram: (at) => set({ programAck: at }),
     }),
     {
       name: 'kachok-v1',

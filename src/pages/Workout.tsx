@@ -14,7 +14,7 @@ import { fmtClock } from '../lib/date';
 import { useNow } from '../lib/hooks';
 import { useStore } from '../store/useStore';
 import type { Exercise } from '../types';
-import { ExercisePicker } from './Program';
+import { ExercisePicker } from '../components/DayEditor';
 
 function beep() {
   try {
@@ -337,6 +337,7 @@ export default function Workout() {
         {ex && swapOpen && (
           <ExercisePicker
             title="Band yoki og‘riq bo‘lsa — almashtiring"
+            equipment={profile.equipment}
             list={alternatives(ex.id, profile).filter((e) => hasEquipment(e, profile.equipment))}
             onPick={(id) => {
               st.swapActive(idx, id);
@@ -351,6 +352,7 @@ export default function Workout() {
           <ExercisePicker
             title="Mashq qo‘shish"
             search
+            equipment={profile.equipment}
             list={EXERCISES.filter((e) => hasEquipment(e, profile.equipment))}
             onPick={(id) => {
               st.addActiveExercise(id);
