@@ -39,7 +39,7 @@ export const MEASURES: { key: MeasureKey; name: string; how: string }[] = [
   { key: 'neckCm', name: 'Bo‘yin', how: 'Kekirdak ostida, lenta biroz pastga qiya' },
   { key: 'hipCm', name: 'Son-dumba', how: 'Dumbaning eng chiqqan joyidan, oyoqlar jips' },
   { key: 'chestCm', name: 'Ko‘krak', how: 'Ko‘krak uchlari sathida, qo‘llar tushirilgan' },
-  { key: 'armCm', name: 'Bilak (yelka)', how: 'Bitsepsning eng yo‘g‘on joyi, qo‘l bo‘shashgan' },
+  { key: 'armCm', name: 'Qo‘l (bitseps)', how: 'Bitsepsning eng yo‘g‘on joyi, qo‘l bo‘shashgan' },
   { key: 'thighCm', name: 'Son', how: 'Sonning eng yo‘g‘on joyi, tik turib' },
 ];
 
