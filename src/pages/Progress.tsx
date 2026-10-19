@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { PlateBadge } from '../components/Barbell';
 import { ColumnChart, LineChart, TargetBars } from '../components/charts';
+import { StrengthLevels } from '../components/StrengthLevels';
 import { Icon } from '../components/ui/Icon';
 import { Sheet } from '../components/ui/Sheet';
 import { GROUPS, GROUP_ORDER, VOLUME_LANDMARKS, mrvAt } from '../data/catalog';
@@ -112,6 +113,14 @@ export default function Progress() {
         <div className="card">
           <TargetBars label="Haftalik setlar mushak guruhlari bo‘yicha" rows={GROUP_ORDER.map((g) => ({ label: GROUPS[g].name, value: volWeek.groups[g], mev: VOLUME_LANDMARKS[g].mev, mav: VOLUME_LANDMARKS[g].mav, mrv: mrvAt(g, freq[g]) }))} />
         </div>
+      </section>
+
+      <section className="section">
+        <div className="section-head">
+          <h2>Kuch darajasi</h2>
+          <span className="small muted">dunyo me’yorlari bo‘yicha</span>
+        </div>
+        <StrengthLevels />
       </section>
 
       {curEx && (

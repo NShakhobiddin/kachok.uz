@@ -5,7 +5,9 @@ import { BodyMap } from '../components/BodyMap';
 import { LineChart } from '../components/charts';
 import { ExerciseThumb } from '../components/ExerciseThumb';
 import { Figure } from '../components/figure/Figure';
+import { StandardsTable } from '../components/StrengthLevels';
 import { TempoBar, useTempo } from '../components/TempoBar';
+import { liftByExercise } from '../engine/standards';
 import { Icon } from '../components/ui/Icon';
 import { EQUIPMENT, INJURIES, MUSCLES } from '../data/catalog';
 import { exById } from '../data/exercises';
@@ -91,6 +93,7 @@ export default function ExerciseDetail() {
   const cautionHit = profile ? (ex.caution ?? []).filter((i) => profile.injuries.includes(i)) : [];
   const eqNames = [...ex.equipment.map((e) => EQUIPMENT.find((x) => x.id === e)?.name), ex.equipmentAny ? ex.equipmentAny.map((e) => EQUIPMENT.find((x) => x.id === e)?.name).join(' yoki ') : null].filter(Boolean);
   const alts = profile ? alternatives(ex.id, profile).slice(0, 6) : [];
+  const lift = liftByExercise(ex.id);
   const best = series.length ? series.reduce((a, b) => (b.e1rm > a.e1rm ? b : a)) : null;
 
   return (
@@ -154,6 +157,12 @@ export default function ExerciseDetail() {
           </div>
         </div>
       </section>
+
+      {lift && (
+        <section className="section">
+          <StandardsTable lift={lift.id} exName={lift.name} />
+        </section>
+      )}
 
       <section className="section">
         <div className="section-head">

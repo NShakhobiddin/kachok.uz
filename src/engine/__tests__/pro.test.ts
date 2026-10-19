@@ -92,3 +92,20 @@ describe('Avtoregulyatsiya', () => {
     expect(s.kg).toBe(102.5);
   });
 });
+
+describe('Kuch me’yorlari', () => {
+  it('80 kg erkak: o‘tirib-turish chegaralari tana vazniga nisbatan', async () => {
+    const { thresholds, liftLevel } = await import('../standards');
+    expect(thresholds('squat', 'male', 80)).toEqual([60, 100, 120, 180, 220]);
+    const l = liftLevel('squat', 120, 'male', 80);
+    expect(l.level).toBe(3);
+    expect(l.percentile).toBe(50);
+    expect(l.next?.name).toBe('Ilg‘or');
+  });
+  it('og‘irroq odam uchun nisbat chegarasi pastroq', async () => {
+    const { thresholds } = await import('../standards');
+    const heavy = thresholds('bench', 'male', 110)[2] / 110;
+    const light = thresholds('bench', 'male', 65)[2] / 65;
+    expect(heavy).toBeLessThan(light);
+  });
+});

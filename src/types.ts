@@ -83,6 +83,8 @@ export type Pattern =
   | 'traps';
 
 export type Goal = 'fatLoss' | 'muscle' | 'strength' | 'recomp' | 'health';
+/** Dastur uslubi (metodika) */
+export type Method = 'auto' | 'hypertrophy' | 'strength' | 'linear' | 'powerbuilding';
 export type Sex = 'male' | 'female';
 export type Level = 'beginner' | 'intermediate' | 'advanced';
 
@@ -300,6 +302,8 @@ export interface Profile {
   /** PAR-Q xavf belgilari */
   healthFlags: string[];
   dietPrefs: { noPork: boolean; lactoseFree: boolean; vegetarian: boolean };
+  /** dastur uslubi; berilmasa — maqsad va darajaga qarab avtomatik */
+  method?: Method;
   createdAt: string;
 }
 
@@ -311,6 +315,8 @@ export interface PlannedExercise {
   rir: number;
   restSec: number;
   note?: string;
+  /** yuklama sxemasi: 'block' — haftaga qarab %1RM (kuch bloki), 'linear' — har mashg'ulot +vazn */
+  scheme?: 'block' | 'linear';
 }
 
 export interface WorkoutDay {
@@ -334,6 +340,8 @@ export interface Program {
   mesoWeeks: number;
   /** murabbiy yuborgan dastur */
   coach?: { name: string; at: string };
+  /** qaysi uslubda tuzilgan */
+  method?: Exclude<Method, 'auto'>;
   startDate: string;
 }
 
