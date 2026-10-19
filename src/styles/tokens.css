@@ -1,0 +1,73 @@
+/*
+  Kachok dizayn tizimi.
+  Ranglar musobaqa disklari (IWF) kodidan olingan va har biri ma'no tashiydi:
+    ko'k  (20 kg)  — asosiy harakat, Samarqand koshinlari ko'ki
+    qizil (25 kg)  — ishlayotgan mushak, ogohlantirish, intensivlik
+    sariq (15 kg)  — rekord (PR), yutuq, yordamchi mushak
+    yashil (10 kg) — bajarildi, tiklanish, sog'liq
+    oq    (5 kg)   — matn
+*/
+:root {
+  color-scheme: dark;
+
+  --bg: #0b0e12;
+  --bg-2: #10141a;
+  --surface: #151a21;
+  --surface-2: #1b222b;
+  --surface-3: #232c37;
+  --line: #2a333e;
+  --line-2: #364150;
+
+  --text: #eef1f4;
+  --text-2: #a7b0bb;
+  --text-3: #6f7a87;
+
+  --blue: #3a74ff;
+  --blue-2: #6b97ff;
+  --blue-ink: #0a1a3d;
+  --blue-soft: rgba(58, 116, 255, 0.14);
+  --red: #f0473b;
+  --red-soft: rgba(240, 71, 59, 0.14);
+  --yellow: #ffc83d;
+  --yellow-soft: rgba(255, 200, 61, 0.14);
+  --green: #2fc47c;
+  --green-soft: rgba(47, 196, 124, 0.14);
+  --danger: #ff5a4e;
+
+  --plate-red: #e5392e;
+  --plate-red-dark: #9e1e17;
+  --plate-blue: #2f63e8;
+  --plate-yellow: #f5c033;
+  --plate-green: #25a565;
+  --plate-white: #e9ecef;
+
+  /* figura */
+  --stage: #12171d;
+  --fig-near: #d3dae3;
+  --fig-far: #6c7786;
+  --fig-cut: var(--stage);
+  --fig-prop: #2b3541;
+  --fig-prop-edge: #3a4655;
+  --fig-floor: #2c3541;
+  --iron: #9aa5b3;
+  --muscle-primary: #ff4a3d;
+  --muscle-secondary: #ffb43a;
+
+  /* tipografiya */
+  --font-display: 'Big Shoulders Display Variable', 'Arial Narrow', sans-serif;
+  --font-body: 'Manrope Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono Variable', ui-monospace, 'SFMono-Regular', monospace;
+
+  --r-sm: 10px;
+  --r-md: 14px;
+  --r-lg: 20px;
+  --r-xl: 28px;
+
+  --pad: 16px;
+  --tabbar-h: 68px;
+  --safe-b: env(safe-area-inset-bottom, 0px);
+  --safe-t: env(safe-area-inset-top, 0px);
+
+  --shadow-1: 0 1px 0 rgba(255, 255, 255, 0.04) inset, 0 10px 30px -12px rgba(0, 0, 0, 0.6);
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+}

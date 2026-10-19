@@ -1,0 +1,36 @@
+{
+  "name": "kachok",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Kachok \u2014 zalda ishlatiladigan aqlli murabbiy: mashq dasturi, ovqatlanish, statistika (PWA)",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc -b --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@fontsource-variable/big-shoulders-display": "^5.3.0",
+    "@fontsource-variable/jetbrains-mono": "^5.3.0",
+    "@fontsource-variable/manrope": "^5.3.0",
+    "framer-motion": "^12.43.0",
+    "jspdf": "^3.0.4",
+    "jspdf-autotable": "^5.0.2",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1",
+    "react-router-dom": "^7.6.3",
+    "zustand": "^5.0.8"
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.5",
+    "@types/react": "^19.1.12",
+    "@types/react-dom": "^19.1.9",
+    "@vitejs/plugin-react": "^4.7.0",
+    "typescript": "^5.9.3",
+    "vite": "^6.4.4",
+    "vite-plugin-pwa": "^1.0.3",
+    "vitest": "^3.2.4"
+  }
+}
