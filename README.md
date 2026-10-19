@@ -37,6 +37,8 @@ npm test           # dvigatellar testlari (2 700+ profil kombinatsiyasi)
 npm run build      # dist/ — istalgan statik hostingga (Vercel, Netlify, Nginx)
 ```
 
+**GitHub Pages:** `main` ga har push'da ilova avtomatik `https://nshakhobiddin.github.io/kachok.uz/` manziliga joylanadi (`.github/workflows/pages.yml`). Bir martalik sozlash: repo **Settings → Pages → Source: GitHub Actions**.
+
 `vercel.json` va `public/_redirects` SPA marshrutlash uchun tayyor. Ma'lumotlar foydalanuvchi qurilmasida saqlanadi (localStorage); Profil bo'limida JSON zaxira nusxa olish/tiklash bor.
 
 ## Texnologiyalar
