@@ -44,10 +44,10 @@ export function DayEditor({ day, profile, onSwap, onUpdate, onRemove, onAdd }: D
                 <div className="tiny faint">{ex.en}</div>
                 <div className="small mt-4 num">
                   <b>
-                    {pe.sets} × {pe.repMin}–{pe.repMax}
+                    {pe.sets} × {pe.repMin === pe.repMax ? pe.repMin : `${pe.repMin}–${pe.repMax}`}
                     {ex.timed ? ' s' : ''}
                   </b>
-                  <span className="muted"> · RIR {pe.rir} · dam {Math.round(pe.restSec / 15) / 4} daq</span>
+                  <span className="muted"> · {pe.scheme === 'block' ? '%1RM blok' : pe.scheme === 'linear' ? 'har safar +vazn' : `RIR ${pe.rir}`} · dam {Math.round(pe.restSec / 15) / 4} daq</span>
                 </div>
                 {missing && <div className="tiny mt-4" style={{ color: 'var(--yellow)' }}>Jihozlar ro‘yxatida yo‘q — almashtiring</div>}
               </Link>

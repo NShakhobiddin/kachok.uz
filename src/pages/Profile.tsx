@@ -5,6 +5,7 @@ import { Icon } from '../components/ui/Icon';
 import { Sheet } from '../components/ui/Sheet';
 import { Choice, Stepper, Toggle } from '../components/ui/controls';
 import { GROUPS, GROUP_ORDER, INJURIES } from '../data/catalog';
+import { METHOD_INFO, resolveMethod } from '../engine/methods';
 import { ACTIVITY } from '../engine/nutrition';
 import { DEFAULT_DAYS } from '../engine/program';
 import { DAYS_SHORT } from '../lib/date';
@@ -210,6 +211,11 @@ export default function Profile() {
               <h3 className="title mt-8">Daraja</h3>
               {LEVELS.map((l) => (
                 <Choice key={l.id} on={draft.level === l.id} onClick={() => setDraft({ ...draft, level: l.id })} title={l.title} desc={l.desc} />
+              ))}
+              <h3 className="title mt-8">Dastur uslubi</h3>
+              <Choice on={(draft.method ?? 'auto') === 'auto'} onClick={() => setDraft({ ...draft, method: 'auto' })} title="Avtomatik" desc={`Maqsad va darajaga qarab — hozir: ${METHOD_INFO[resolveMethod({ ...draft, method: 'auto' })].name}`} />
+              {(['hypertrophy', 'strength', 'linear', 'powerbuilding'] as const).map((m) => (
+                <Choice key={m} on={draft.method === m} onClick={() => setDraft({ ...draft, method: m })} title={METHOD_INFO[m].name} desc={m === 'powerbuilding' && draft.daysPerWeek < 4 ? `${METHOD_INFO[m].short} · haftasiga 4+ kun kerak` : METHOD_INFO[m].short} />
               ))}
             </>
           )}

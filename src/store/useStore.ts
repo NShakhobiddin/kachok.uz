@@ -350,7 +350,21 @@ export const useStore = create<State>()(
         else delete next[exId];
         set({ exNotes: next });
       },
-      applyWorkoutToDay: (dayId, plan) => set({ program: mapDay(get().program, dayId, (d) => ({ ...d, exercises: plan.map((p) => ({ ...p })) })) }),
+      // faqat mashq tanlovi saqlanadi: kunlik moslashuvlar (yengillashtirish, mushak fikri, haftalik RIR) dasturga yozilmaydi
+      applyWorkoutToDay: (dayId, plan) =>
+        set({
+          program: mapDay(get().program, dayId, (d) => ({
+            ...d,
+            exercises: plan.map((p, i) => {
+              const same = d.exercises.find((x) => x.exerciseId === p.exerciseId);
+              if (same) return { ...same };
+              const slot = d.exercises[i];
+              if (!slot) return { ...p };
+              const keepScheme = slot.scheme && exById(slot.exerciseId)?.pattern === exById(p.exerciseId)?.pattern;
+              return { ...slot, exerciseId: p.exerciseId, scheme: keepScheme ? slot.scheme : undefined };
+            }),
+          })),
+        }),
     }),
     {
       name: 'kachok-v1',

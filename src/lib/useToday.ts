@@ -4,7 +4,7 @@ import { MUSCLES } from '../data/catalog';
 import { mesoState, type MesoState } from '../engine/meso';
 import { suggest, type Suggestion } from '../engine/progression';
 import { useStore } from '../store/useStore';
-import type { PlannedExercise, WorkoutDay } from '../types';
+import type { PlannedExercise, Program, WorkoutDay } from '../types';
 import { isoDate, startOfWeek, weekdayIdx } from './date';
 
 export function useMeso(): MesoState | null {
@@ -38,6 +38,16 @@ export function useToday() {
   }, [program, logs, readiness, meso]);
 }
 
+/** Blok holatidan tavsiya konteksti: hafta, blok uzunligi va (chiziqli progressiyadan tashqari) haftalik RIR */
+export function mesoCtx(meso: MesoState | null, program: Program | null) {
+  return {
+    deload: meso?.deload ?? false,
+    rir: meso && !meso.deload && program?.method !== 'linear' ? meso.rir : undefined,
+    week: meso?.week,
+    mesoWeeks: program?.mesoWeeks,
+  };
+}
+
 /** Mashg‘ulot uchun har bir mashq bo‘yicha bugungi tavsiya */
 export function useDayPlan(day: WorkoutDay | null): { pe: PlannedExercise; sug: Suggestion }[] {
   const logs = useStore((s) => s.logs);
@@ -45,6 +55,7 @@ export function useDayPlan(day: WorkoutDay | null): { pe: PlannedExercise; sug: 
   const setDeltaRaw = useStore((s) => s.setDelta);
   const setDeltaMeso = useStore((s) => s.setDeltaMeso);
   const readiness = useStore((s) => s.readiness[isoDate()]);
+  const program = useStore((s) => s.program);
   const meso = useMeso();
   return useMemo(() => {
     if (!day || !profile) return [];
@@ -56,18 +67,18 @@ export function useDayPlan(day: WorkoutDay | null): { pe: PlannedExercise; sug: 
       .map((pe) => {
         const ex = EXERCISE_MAP[pe.exerciseId];
         const g = MUSCLES[ex.primary[0]].group;
-        const delta = used.has(g) ? 0 : (setDelta[g] ?? 0);
-        used.add(g);
+        // %1RM / chiziqli sxemadagi asosiy mashqlarning seti blok rejasi bo'yicha — fikr yordamchi mashqqa tushadi
+        const delta = pe.scheme || used.has(g) ? 0 : (setDelta[g] ?? 0);
+        if (!pe.scheme) used.add(g);
         const sug = suggest(ex, pe, logs, {
           bodyKg: profile.weightKg,
           sex: profile.sex,
           level: profile.level,
-          deload: meso?.deload ?? false,
-          rir: meso && !meso.deload ? meso.rir : undefined,
+          ...mesoCtx(meso, program),
           readiness,
           setDelta: delta,
         });
         return { pe, sug };
       });
-  }, [day, profile, logs, setDeltaRaw, setDeltaMeso, readiness, meso]);
+  }, [day, profile, logs, setDeltaRaw, setDeltaMeso, readiness, meso, program]);
 }

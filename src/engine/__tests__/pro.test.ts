@@ -3,7 +3,10 @@ import { EXERCISE_MAP } from '../../data/exercises';
 import { mesoPlan, mesoState, setChange, weekRir } from '../meso';
 import { suggest } from '../progression';
 import { e1rmFromSet, loadFor, pct1rm, refE1rm } from '../rpe';
-import type { PlannedExercise, Program, WorkoutLog } from '../../types';
+import type { PlannedExercise, Profile, Program, WorkoutLog } from '../../types';
+import { EQUIPMENT_PRESETS } from '../../data/catalog';
+import { blockWeek, resolveMethod } from '../methods';
+import { DEFAULT_DAYS, generateProgram, hasEquipment } from '../program';
 
 describe('RPE jadvali va 1RM', () => {
   it('Helms/Tuchscherer jadvali kataklari', () => {
@@ -107,5 +110,107 @@ describe('Kuch me’yorlari', () => {
     const heavy = thresholds('bench', 'male', 110)[2] / 110;
     const light = thresholds('bench', 'male', 65)[2] / 65;
     expect(heavy).toBeLessThan(light);
+  });
+});
+
+describe('Dastur uslublari', () => {
+  const base = {
+    name: 'T', sex: 'male', age: 30, heightCm: 178, weightKg: 80, goal: 'muscle', level: 'intermediate', daysPerWeek: 3, sessionMin: 60,
+    trainingDays: DEFAULT_DAYS[3], equipment: EQUIPMENT_PRESETS[0].items, injuries: [], focus: [], activity: 'light', healthFlags: [],
+    dietPrefs: { noPork: true, lactoseFree: false, vegetarian: false }, createdAt: '2026-01-01',
+  } as Profile;
+
+  it('avtomatik tanlov: kuch maqsadida boshlovchi — chiziqli, tajribali — blok', () => {
+    expect(resolveMethod({ ...base, goal: 'strength', level: 'beginner' })).toBe('linear');
+    expect(resolveMethod({ ...base, goal: 'strength' })).toBe('strength');
+    expect(resolveMethod(base)).toBe('hypertrophy');
+    expect(resolveMethod({ ...base, method: 'powerbuilding', daysPerWeek: 3 })).toBe('hypertrophy');
+    expect(resolveMethod({ ...base, method: 'powerbuilding', daysPerWeek: 4 })).toBe('powerbuilding');
+  });
+
+  it('kuch bloki: 75 → 80 → 85 → 88 %, keyin yengillashtirish', () => {
+    expect([0, 1, 2, 3, 4].map((w) => blockWeek(w, 5).pct)).toEqual([0.75, 0.8, 0.85, 0.88, 0.65]);
+    expect(blockWeek(4, 5).deload).toBe(true);
+    // uzunroq blok — reja cho'ziladi, monoton o'sadi
+    const long = [0, 1, 2, 3, 4, 5].map((w) => blockWeek(w, 7).pct);
+    for (let i = 1; i < long.length; i++) expect(long[i]).toBeGreaterThanOrEqual(long[i - 1]);
+  });
+
+  it('chiziqli A/B: har kuni o‘tirib-turish 3×5, o‘lik tortish 2×5', () => {
+    const prog = generateProgram({ ...base, method: 'linear', level: 'beginner' });
+    expect(prog.method).toBe('linear');
+    expect(prog.days.map((d) => d.title)).toEqual(['Kuch A', 'Kuch B', 'Kuch A′']);
+    for (const d of prog.days) {
+      const sq = d.exercises.find((e) => e.exerciseId === 'back-squat');
+      expect(sq, d.title).toMatchObject({ sets: 3, repMin: 5, repMax: 5, scheme: 'linear' });
+    }
+    expect(prog.days[1].exercises.find((e) => e.exerciseId === 'deadlift')).toMatchObject({ sets: 2, repMin: 5, scheme: 'linear' });
+  });
+
+  it('kuch bloki: asosiy mashqlar %1RM sxemasida, yordamchilar oddiy', () => {
+    const prog = generateProgram({ ...base, method: 'strength' });
+    expect(prog.mesoWeeks).toBe(5);
+    const all = prog.days.flatMap((d) => d.exercises);
+    expect(all.filter((e) => e.scheme === 'block').length).toBeGreaterThanOrEqual(6);
+    expect(all.filter((e) => e.scheme === 'block').every((e) => e.sets === 4 && e.repMin === 6)).toBe(true);
+    expect(all.some((e) => !e.scheme)).toBe(true);
+  });
+
+  it('powerbuilding: 2 og‘ir + 2 hajm kuni', () => {
+    const prog = generateProgram({ ...base, method: 'powerbuilding', daysPerWeek: 4, trainingDays: DEFAULT_DAYS[4] });
+    expect(prog.days.map((d) => d.title)).toEqual(['Yuqori — kuch', 'Pastki — kuch', 'Yuqori — hajm', 'Pastki — hajm']);
+    expect(prog.days[0].exercises[0]).toMatchObject({ repMin: 4, repMax: 6 });
+    expect(prog.days[2].exercises.every((e) => e.repMin >= 6)).toBe(true);
+  });
+
+  it('har uslub × kunlar × jihoz — yaroqli dastur', () => {
+    for (const method of ['hypertrophy', 'strength', 'linear', 'powerbuilding'] as const)
+      for (const days of [2, 3, 4, 5, 6])
+        for (const preset of EQUIPMENT_PRESETS)
+          for (const level of ['beginner', 'advanced'] as const) {
+            const prog = generateProgram({ ...base, method, level, daysPerWeek: days, trainingDays: DEFAULT_DAYS[days], equipment: preset.items });
+            expect(prog.days.length).toBe(days);
+            for (const d of prog.days) {
+              expect(d.exercises.length, `${method} ${preset.id} ${days} ${d.title}`).toBeGreaterThanOrEqual(preset.id === 'bodyweight' ? 1 : 3);
+              expect(new Set(d.exercises.map((e) => e.exerciseId)).size).toBe(d.exercises.length);
+              for (const pe of d.exercises) expect(hasEquipment(EXERCISE_MAP[pe.exerciseId], preset.items)).toBe(true);
+            }
+          }
+  });
+
+  const sq = EXERCISE_MAP['back-squat'];
+  const bench = EXERCISE_MAP['bench-press'];
+  const mk = (i: number, exId: string, sets: [number, number, number?][]): WorkoutLog => ({
+    id: 'm' + i, title: '', startedAt: `2026-05-${String(10 + i).padStart(2, '0')}T10:00:00Z`, finishedAt: 'x', durationMin: 60,
+    exercises: [{ exerciseId: exId, sets: sets.map(([kg, reps, rir]) => ({ kg, reps, rir, done: true })) }],
+  });
+  const ctx = { bodyKg: 80, sex: 'male' as const, level: 'intermediate' as const };
+
+  it('blok tavsiyasi: 3-hafta 4×4 @85% 1RM', () => {
+    const logs = [mk(1, 'back-squat', [[100, 5, 2], [100, 5, 2], [100, 5, 2]])];
+    const pe: PlannedExercise = { exerciseId: 'back-squat', sets: 4, repMin: 6, repMax: 6, rir: 2, restSec: 240, scheme: 'block' };
+    const s = suggest(sq, pe, logs, { ...ctx, week: 2, mesoWeeks: 5 });
+    const e1 = e1rmFromSet(100, 5, 2);
+    expect(s.sets).toBe(4);
+    expect(s.reps).toBe(4);
+    expect(s.kg).toBe(Math.round((e1 * 0.85) / 2.5) * 2.5);
+    expect(s.rir).toBeGreaterThanOrEqual(0.5);
+    expect(s.rir).toBeLessThanOrEqual(2);
+    expect(s.reason).toMatch(/3-hafta/);
+    const dl = suggest(sq, pe, logs, { ...ctx, week: 4, mesoWeeks: 5 });
+    expect(dl.kind).toBe('deload');
+    expect(dl.reps).toBe(5);
+  });
+
+  it('chiziqli: oyoq +5 kg, yuqori tana +2.5 kg, ikki marta yetmasa −10%', () => {
+    const pe = (id: string): PlannedExercise => ({ exerciseId: id, sets: 3, repMin: 5, repMax: 5, rir: 2, restSec: 180, scheme: 'linear' });
+    expect(suggest(sq, pe('back-squat'), [mk(1, 'back-squat', [[60, 5], [60, 5], [60, 5]])], ctx).kg).toBe(65);
+    expect(suggest(bench, pe('bench-press'), [mk(1, 'bench-press', [[40, 5], [40, 5], [40, 5]])], ctx).kg).toBe(42.5);
+    // chegarada (RIR 0) — qadam yarmi
+    expect(suggest(sq, pe('back-squat'), [mk(1, 'back-squat', [[60, 5, 1], [60, 5, 0], [60, 5, 0]])], ctx).kg).toBe(62.5);
+    const miss1 = [mk(2, 'back-squat', [[100, 5], [100, 4], [100, 3]])];
+    expect(suggest(sq, pe('back-squat'), miss1, ctx).kg).toBe(100);
+    const miss2 = [...miss1, mk(1, 'back-squat', [[100, 5], [100, 5], [100, 4]])];
+    expect(suggest(sq, pe('back-squat'), miss2, ctx)).toMatchObject({ kg: 90, kind: 'down' });
   });
 });

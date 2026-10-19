@@ -5,14 +5,17 @@ import { DayEditor } from '../components/DayEditor';
 import { Icon } from '../components/ui/Icon';
 import { Sheet } from '../components/ui/Sheet';
 import { GROUPS, GROUP_ORDER, VOLUME_LANDMARKS, mrvAt } from '../data/catalog';
+import { EXERCISE_MAP } from '../data/exercises';
+import { blockWeek, METHOD_INFO, resolveMethod, type ConcreteMethod } from '../engine/methods';
 import { exportProgramPdf } from '../engine/pdf';
 import { estimateMinutes, groupFrequency, weeklyVolume } from '../engine/program';
-import { mesoPlan } from '../engine/meso';
-import { useMeso } from '../lib/useToday';
+import { fmtKg, suggest } from '../engine/progression';
+import { mesoPlan, type MesoState } from '../engine/meso';
+import { mesoCtx, useMeso } from '../lib/useToday';
 import { DAYS, DAYS_SHORT, weekdayIdx } from '../lib/date';
 import { useIsPro } from '../lib/features';
 import { useStore } from '../store/useStore';
-import type { Profile } from '../types';
+import type { Method, Profile, Program } from '../types';
 
 export default function ProgramPage() {
   const program = useStore((s) => s.program);
@@ -28,6 +31,7 @@ export default function ProgramPage() {
   const todayIdx = days.findIndex((d) => d.weekday === weekdayIdx());
   const [sel, setSel] = useState(Math.max(0, todayIdx));
   const [confirmRegen, setConfirmRegen] = useState(false);
+  const [methodOpen, setMethodOpen] = useState(false);
   const [pdfBusy, setPdfBusy] = useState(false);
   const isPro = useIsPro();
   const nav = useNavigate();
@@ -66,7 +70,7 @@ export default function ProgramPage() {
         </div>
       </div>
 
-      {meso && <MesoCard weeks={program.mesoWeeks} level={profile.level} week={meso.week} block={meso.meso} done={meso.sessionsInWeek} perWeek={meso.perWeek} why={program.splitWhy} />}
+      {meso && <MethodCard program={program} profile={profile} meso={meso} onChange={() => setMethodOpen(true)} />}
 
       <div className="hscroll mt-16" role="tablist" aria-label="Kunlar">
         {days.map((d, i) => (
@@ -125,6 +129,8 @@ export default function ProgramPage() {
         </section>
       )}
 
+      <MethodSheet open={methodOpen} onClose={() => setMethodOpen(false)} profile={profile} current={program.method ?? resolveMethod(profile)} />
+
       <Sheet open={confirmRegen} onClose={() => setConfirmRegen(false)} label="Qayta tuzish">
         <h3 className="title">Dasturni qayta tuzasizmi?</h3>
         <p className="muted mt-8">Profil, jihozlar va maqsadingiz asosida yangi dastur tuziladi. Qo‘lda kiritilgan o‘zgarishlar o‘chadi, mashg‘ulot tarixi saqlanadi.</p>
@@ -147,33 +153,74 @@ export default function ProgramPage() {
   );
 }
 
-/** Blok (mezotsikl) jadvali: har hafta maqsadli zaxira va yuklama, joriy hafta ajratilgan */
-function MesoCard({ weeks, level, week, block, done, perWeek, why }: { weeks: number; level: Profile['level']; week: number; block: number; done: number; perWeek: number; why: string }) {
-  const plan = mesoPlan(weeks, level);
+/** Uslub kartasi: qaysi metodika, blok jadvali (RIR yoki %1RM) va asosiy mashqlarning bu haftalik yuklamasi */
+function MethodCard({ program, profile, meso, onChange }: { program: Program; profile: Profile; meso: MesoState; onChange: () => void }) {
+  const method: ConcreteMethod = program.method ?? 'hypertrophy';
+  const info = METHOD_INFO[method];
+  const weeks = program.mesoWeeks;
+  const plan = mesoPlan(weeks, profile.level);
+  const { week, sessionsInWeek: done, perWeek } = meso;
   const cur = plan[week];
+  const bw = method === 'strength' ? blockWeek(week, weeks) : null;
   return (
     <div className="card stack gap-12">
-      <div className="row between">
-        <span className="strong">
-          {block + 1}-blok · {week + 1}-hafta / {weeks}
-        </span>
-        <span className="small muted num">
-          {done}/{perWeek} mashg‘ulot
-        </span>
+      <div className="row between gap-12">
+        <div className="stack" style={{ gap: 2, minWidth: 0 }}>
+          <span className="eyebrow">Uslub</span>
+          <span className="strong">{info.name}</span>
+        </div>
+        <button className="chip sm" onClick={onChange}>
+          <Icon name="swap" size={15} /> O‘zgartirish
+        </button>
       </div>
-      <div className="meso-grid" role="table" aria-label="Blok haftalari">
-        {plan.map((w) => (
-          <div key={w.week} role="row" className={`meso-col ${w.week === week ? 'cur' : ''} ${w.week < week ? 'past' : ''} ${w.deload ? 'deload' : ''}`}>
-            <span className="tiny">{w.week + 1}-h</span>
-            <b className="num">{w.deload ? 'D' : w.rir}</b>
-            <i style={{ height: w.deload ? 8 : 10 + (w.week / Math.max(1, weeks - 2)) * 16 }} />
+
+      {method === 'linear' ? (
+        <div className="row between small">
+          <span className="strong">{meso.absWeek + 1}-hafta</span>
+          <span className="muted num">
+            {done}/{perWeek} mashg‘ulot
+          </span>
+        </div>
+      ) : (
+        <>
+          <div className="row between small">
+            <span className="strong">
+              {meso.meso + 1}-blok · {week + 1}-hafta / {weeks}
+            </span>
+            <span className="muted num">
+              {done}/{perWeek} mashg‘ulot
+            </span>
           </div>
-        ))}
-      </div>
+          <div className="meso-grid" role="table" aria-label="Blok haftalari">
+            {plan.map((w) => {
+              const b = method === 'strength' ? blockWeek(w.week, weeks) : null;
+              return (
+                <div key={w.week} role="row" className={`meso-col ${w.week === week ? 'cur' : ''} ${w.week < week ? 'past' : ''} ${w.deload ? 'deload' : ''}`}>
+                  <span className="tiny">{w.week + 1}-h</span>
+                  <b className="num">{w.deload ? 'D' : b ? Math.round(b.pct * 100) : w.rir}</b>
+                  <i style={{ height: w.deload ? 8 : 10 + (w.week / Math.max(1, weeks - 2)) * 16 }} />
+                </div>
+              );
+            })}
+          </div>
+        </>
+      )}
+
       <p className="small">
-        {cur.deload ? (
+        {method === 'linear' ? (
           <>
-            <b>Yengillashtirish haftasi.</b> Setlar yarmiga, vazn ~15% kamayadi — charchoq ketadi, keyingi blok kuchliroq boshlanadi.
+            <b>Har mashg‘ulotda og‘irroq.</b> Asosiy mashqlarda barcha takrorlar bajarilsa — oyoq +5 kg, yuqori tana +2.5 kg. Ikki marta yetmasa, vazn 10% tushadi va yana ko‘tariladi.
+          </>
+        ) : cur.deload ? (
+          <>
+            <b>Yengillashtirish haftasi.</b> Setlar kamayadi, vazn yengillashadi — charchoq ketadi, keyingi blok kuchliroq boshlanadi.
+          </>
+        ) : bw ? (
+          <>
+            <b>
+              Bu hafta asosiy mashqlar: {bw.sets}×{bw.reps} @ {Math.round(bw.pct * 100)}% 1RM.
+            </b>{' '}
+            Yordamchi mashqlar — {cur.rir} zaxira takror bilan.
           </>
         ) : (
           <>
@@ -181,7 +228,102 @@ function MesoCard({ weeks, level, week, block, done, perWeek, why }: { weeks: nu
           </>
         )}
       </p>
-      <p className="tiny faint">Raqam — maqsadli RIR (zaxiradagi takror). Hafta kalendar bo‘yicha emas, bajarilgan mashg‘ulotlar bo‘yicha o‘tadi. {why}</p>
+
+      {(method === 'strength' || method === 'linear') && <KeyLifts program={program} profile={profile} meso={meso} />}
+
+      <p className="tiny faint">
+        {method === 'linear' ? '' : method === 'strength' ? 'Raqam — asosiy mashqlar uchun %1RM.' : 'Raqam — maqsadli RIR (zaxiradagi takror).'} Hafta kalendar bo‘yicha emas, bajarilgan mashg‘ulotlar bo‘yicha o‘tadi. {program.splitWhy.replace(`${info.name}. `, '')}
+      </p>
     </div>
+  );
+}
+
+/** Kuch sxemasidagi asosiy mashqlar: keyingi mashg'ulotdagi vazn */
+function KeyLifts({ program, profile, meso }: { program: Program; profile: Profile; meso: MesoState }) {
+  const logs = useStore((s) => s.logs);
+  const rows = useMemo(() => {
+    const seen = new Set<string>();
+    const out: { id: string; name: string; text: string; e1rm?: number }[] = [];
+    for (const d of program.days)
+      for (const pe of d.exercises) {
+        const ex = EXERCISE_MAP[pe.exerciseId];
+        if (!pe.scheme || !ex || seen.has(ex.id)) continue;
+        seen.add(ex.id);
+        const sug = suggest(ex, pe, logs, { bodyKg: profile.weightKg, sex: profile.sex, level: profile.level, ...mesoCtx(meso, program) });
+        out.push({ id: ex.id, name: ex.name, text: `${sug.sets}×${sug.reps}${sug.kg ? ` · ${fmtKg(sug.kg)} kg` : ''}`, e1rm: pe.scheme === 'block' ? sug.e1rm : undefined });
+      }
+    return out;
+  }, [program, profile, meso, logs]);
+  if (!rows.length) return null;
+  return (
+    <div className="stack" style={{ gap: 0 }}>
+      <span className="eyebrow" style={{ marginBottom: 4 }}>
+        Keyingi mashg‘ulotda
+      </span>
+      {rows.map((r) => (
+        <Link key={r.id} to={`/exercise/${r.id}`} className="row between gap-12 small" style={{ color: 'inherit', padding: '9px 0', borderTop: '1px solid var(--line)' }}>
+          <span className="strong">{r.name}</span>
+          <span className="num" style={{ textAlign: 'right' }}>
+            <b>{r.text}</b>
+            {r.e1rm ? <span className="tiny muted" style={{ display: 'block' }}>1RM ≈ {Math.round(r.e1rm)} kg</span> : null}
+          </span>
+        </Link>
+      ))}
+    </div>
+  );
+}
+
+const METHOD_ORDER: ConcreteMethod[] = ['hypertrophy', 'strength', 'linear', 'powerbuilding'];
+
+/** Uslub tanlash: 4 metodika + avtomatik; tanlansa dastur shu uslubda qayta tuziladi */
+function MethodSheet({ open, onClose, profile, current }: { open: boolean; onClose: () => void; profile: Profile; current: ConcreteMethod }) {
+  const updateProfile = useStore((s) => s.updateProfile);
+  const regenerate = useStore((s) => s.regenerate);
+  const [pick, setPick] = useState<Method>(profile.method ?? 'auto');
+  const auto = resolveMethod({ ...profile, method: 'auto' });
+  const apply = () => {
+    updateProfile({ method: pick });
+    regenerate();
+    onClose();
+  };
+  const changed = (pick === 'auto' ? auto : pick) !== current || pick !== (profile.method ?? 'auto');
+  return (
+    <Sheet open={open} onClose={onClose} label="Dastur uslubi">
+      <h3 className="title">Dastur uslubi</h3>
+      <p className="small muted mt-4">Har biri sport ilmida sinalgan metodika. Tanlasangiz, dastur shu uslubda qayta tuziladi — mashg‘ulot tarixi saqlanadi.</p>
+      <div className="stack gap-8 mt-16" role="radiogroup" aria-label="Uslub">
+        <button role="radio" aria-checked={pick === 'auto'} className={`method-opt ${pick === 'auto' ? 'on' : ''}`} onClick={() => setPick('auto')}>
+          <span className="row between gap-8">
+            <b>Avtomatik</b>
+            <span className="tiny muted">tavsiya</span>
+          </span>
+          <span className="small muted">Maqsad va tajribangizga qarab: hozir — {METHOD_INFO[auto].name}</span>
+        </button>
+        {METHOD_ORDER.map((m) => {
+          const info = METHOD_INFO[m];
+          const locked = m === 'powerbuilding' && profile.daysPerWeek < 4;
+          return (
+            <button key={m} role="radio" aria-checked={pick === m} disabled={locked} className={`method-opt ${pick === m ? 'on' : ''}`} onClick={() => setPick(m)}>
+              <span className="row between gap-8">
+                <b>{info.name}</b>
+                {m === current && <span className="tiny strong" style={{ color: 'var(--blue-2)' }}>joriy</span>}
+              </span>
+              <span className="small">{info.short}</span>
+              {pick === m && (
+                <span className="stack gap-6 mt-4">
+                  <span className="small muted">{info.who}</span>
+                  <span className="small">{info.how}</span>
+                  <span className="tiny faint">Manba: {info.source}</span>
+                </span>
+              )}
+              {locked && <span className="tiny" style={{ color: 'var(--yellow)' }}>Haftasiga kamida 4 kun kerak</span>}
+            </button>
+          );
+        })}
+      </div>
+      <button className="btn btn-primary btn-block mt-16" disabled={!changed} onClick={apply}>
+        {changed ? 'Tanlash va dasturni qayta tuzish' : 'Joriy uslub'}
+      </button>
+    </Sheet>
   );
 }

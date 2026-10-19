@@ -97,7 +97,7 @@ export function StandardsTable({ lift, exName }: { lift: LiftId; exName: string 
           <div key={l.id} className={`row between small std-row ${lvl === i + 1 ? 'on' : ''}`}>
             <span className="row gap-8">
               <i className="dot" style={{ background: l.plate, width: 10, height: 10 }} /> {l.name}
-              <span className="tiny faint">top {100 - l.pct}%</span>
+              <span className="tiny faint">{l.pct}% dan kuchli</span>
             </span>
             <b className="num">
               {lift === 'pullup' ? `${th[i]} takror` : `${fmtKg(th[i])} kg`}

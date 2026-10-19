@@ -10,7 +10,7 @@ import { GROUPS, MUSCLES } from '../data/catalog';
 import { FB_TEXT, type MuscleFeedback } from '../engine/meso';
 import { EXERCISES, EXERCISE_MAP } from '../data/exercises';
 import { alternatives, hasEquipment } from '../engine/program';
-import { useMeso } from '../lib/useToday';
+import { mesoCtx, useMeso } from '../lib/useToday';
 import { e1rm, exerciseHistory, fmtKg, platesPerSide, roundLoad, suggest, type Suggestion } from '../engine/progression';
 import { e1rmFromSet, loadFor, RIR_LABEL, rirText } from '../engine/rpe';
 import { fmtClock } from '../lib/date';
@@ -91,9 +91,9 @@ export default function Workout() {
     return active.plan.map((pe) => {
       const ex = EXERCISE_MAP[pe.exerciseId];
       // setlar soni mashg'ulot boshlanganda belgilangan (active.plan) — bu yerda faqat vazn va RIR
-      return { ...suggest(ex, pe, logs, { bodyKg: profile.weightKg, sex: profile.sex, level: profile.level, deload: meso?.deload, rir: meso && !meso.deload ? meso.rir : undefined, readiness: active.readiness }), sets: pe.sets };
+      return { ...suggest(ex, pe, logs, { bodyKg: profile.weightKg, sex: profile.sex, level: profile.level, ...mesoCtx(meso, program), readiness: active.readiness }), sets: pe.sets };
     });
-  }, [active?.plan, logs, profile, meso, active?.readiness]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [active?.plan, logs, profile, meso, program, active?.readiness]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const remaining = active?.restEndsAt ? (active.restEndsAt - now) / 1000 : null;
   useEffect(() => {

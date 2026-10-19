@@ -1,5 +1,6 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect } from 'react';
+import { createPortal } from 'react-dom';
 
 export function Sheet({ open, onClose, children, label }: { open: boolean; onClose: () => void; children: React.ReactNode; label?: string }) {
   useEffect(() => {
@@ -13,7 +14,8 @@ export function Sheet({ open, onClose, children, label }: { open: boolean; onClo
       document.body.style.overflow = prev;
     };
   }, [open, onClose]);
-  return (
+  // body ga portal: sahifa animatsiyasi (opacity) yaratadigan qatlam kontekstida pastki menyu ostida qolmasin
+  return createPortal(
     <AnimatePresence>
       {open && (
         <>
@@ -39,6 +41,7 @@ export function Sheet({ open, onClose, children, label }: { open: boolean; onClo
           </motion.div>
         </>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body,
   );
 }

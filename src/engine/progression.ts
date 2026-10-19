@@ -1,7 +1,9 @@
 // Progressiv yuklama: "ikki bosqichli progressiya" (avval takror, keyin vazn), yengillashtirish
 // haftasi va kunlik tayyorgarlikka moslash. Har bir tavsiya sababi bilan ko‘rsatiladi.
+import { MUSCLES } from '../data/catalog';
 import type { Exercise, Level, PlannedExercise, Sex, WorkoutLog } from '../types';
-import { e1rmFromSet, loadFor, refE1rm, sessionE1rm } from './rpe';
+import { blockWeek, LOWER_GROUPS } from './methods';
+import { e1rmFromSet, loadFor, pct1rm, refE1rm, sessionE1rm } from './rpe';
 
 export interface SetTarget {
   kg: number | null;
@@ -128,6 +130,101 @@ export interface SuggestCtx {
   setDelta?: number;
   /** blok haftasiga ko'ra maqsadli zaxira (RIR) — rejadagidan ustun */
   rir?: number;
+  /** blok ichidagi hafta (0 dan) va blok uzunligi — kuch blokidagi %1RM uchun */
+  week?: number;
+  mesoWeeks?: number;
+}
+
+/** Shu takror soni va %1RM uchun taxminiy zaxira (RPE jadvali bo'yicha, 0.5 qadam) */
+export function rirAt(reps: number, pct: number): number {
+  let best = 0;
+  for (let r = 0; r <= 6; r += 0.5) if (Math.abs(pct1rm(reps, r) - pct) < Math.abs(pct1rm(reps, best) - pct)) best = r;
+  return best;
+}
+
+/** Tarixdan ishonchli 1RM: RIR yozilgan bo'lsa — RPE jadvali (EMA), bo'lmasa — eng yaxshi set (Epley) */
+function historyE1rm(hist: ReturnType<typeof exerciseHistory>): number | null {
+  if (!hist.length) return null;
+  const rpe = refE1rm(hist.map((h) => h.sets));
+  if (rpe) return rpe;
+  const best = Math.max(...hist[0].sets.filter((x) => x.reps <= 12).map((x) => e1rm(x.kg, x.reps)), 0);
+  return best || null;
+}
+
+/** Kuch bloki: asosiy mashq haftaga qarab %1RM bilan (Issurin; Helms) */
+function suggestBlock(ex: Exercise, pe: PlannedExercise, hist: ReturnType<typeof exerciseHistory>, ctx: SuggestCtx, out: Suggestion): Suggestion {
+  const w = blockWeek(ctx.week ?? 0, ctx.mesoWeeks ?? 5);
+  let e1 = historyE1rm(hist);
+  let estimated = false;
+  if (!e1) {
+    // boshlang'ich vazn ~10 takror 3 zaxira bilan — undan 1RM
+    const start = startingWeight(ex, ctx.bodyKg, ctx.sex, ctx.level);
+    e1 = start ? start / pct1rm(10, 3) : null;
+    estimated = true;
+  }
+  // vaqt cheklangan bo'lsa dasturdagi set soni — yuqori chegara
+  out.sets = Math.min(w.sets, Math.max(2, pe.sets));
+  out.reps = w.reps;
+  out.rir = rirAt(w.reps, w.pct);
+  if (e1) {
+    out.kg = roundLoad(ex, e1 * w.pct);
+    out.e1rm = Math.round(e1 * 10) / 10;
+    out.estimated = estimated;
+  }
+  const prevTop = hist[0] ? Math.max(...hist[0].sets.map((x) => x.kg)) : 0;
+  out.kind = w.deload ? 'deload' : !hist.length ? 'first' : (out.kg ?? 0) > prevTop ? 'up' : (out.kg ?? 0) < prevTop ? 'down' : 'same';
+  out.reason = w.deload
+    ? `Kuch bloki — yengillashtirish: ${w.sets}×${w.reps} @ ${Math.round(w.pct * 100)}%. Charchoq ketadi, kuch keyingi blokda namoyon bo‘ladi.`
+    : `Kuch bloki, ${(ctx.week ?? 0) + 1}-hafta: ${w.sets}×${w.reps} @ ${Math.round(w.pct * 100)}% 1RM${e1 ? ` (1RM ≈ ${Math.round(e1)} kg${estimated ? ', taxminiy' : ''})` : ''}. Har set ~${out.rir} takror zaxira bilan tugashi kerak.`;
+  if (!w.deload && ctx.readiness !== undefined && ctx.readiness < 2.6) {
+    out.sets = Math.max(1, out.sets - 1);
+    if (out.kg) out.kg = roundLoad(ex, out.kg * 0.95);
+    out.kind = 'easy';
+    out.reason = `Bugun tana charchagan: ${out.sets}×${w.reps}, vazn 5% yengilroq. Blok rejasi buzilmaydi.`;
+  }
+  out.warmups = warmupSets(ex, out.kg, out.reps);
+  return out;
+}
+
+/** Chiziqli progressiya: barcha takrorlar bajarilsa — har mashg'ulot +vazn (Rippetoe) */
+function suggestLinear(ex: Exercise, pe: PlannedExercise, hist: ReturnType<typeof exerciseHistory>, ctx: SuggestCtx, out: Suggestion): Suggestion {
+  const lower = LOWER_GROUPS.includes(MUSCLES[ex.primary[0]].group) || ex.pattern === 'hinge';
+  const step = ex.loadType === 'barbell' ? (lower ? 5 : 2.5) : Math.max(ex.increment, 1);
+  const last = hist[0];
+  out.reps = pe.repMin;
+  if (!last) {
+    const start = startingWeight(ex, ctx.bodyKg, ctx.sex, ctx.level);
+    // ~10 takrorli boshlang'ich vazndan 5 takror 3 zaxira bilan — birinchi kun oson bo'lsin
+    out.kg = start ? roundLoad(ex, (start / pct1rm(10, 3)) * pct1rm(pe.repMin, 3)) : null;
+    out.estimated = out.kg !== null;
+    out.kind = 'first';
+    out.reason = 'Birinchi kun ataylab yengil: texnikani o‘rnating. Keyingi har mashg‘ulotda vazn oshadi.';
+  } else {
+    const top = Math.max(...last.sets.map((x) => x.kg));
+    const work = last.sets.filter((x) => x.kg === top);
+    const done = work.length >= pe.sets && work.every((x) => x.reps >= pe.repMin);
+    const missPrev = hist[1] && Math.max(...hist[1].sets.map((x) => x.kg)) === top && hist[1].sets.some((x) => x.kg === top && x.reps < pe.repMin);
+    // oxirgi set chegaragacha bo'lgan bo'lsa (RIR 0) — qadamni yarmiga tushiramiz: o'sish sekinlashmoqda
+    const grind = work.some((x) => x.rir !== undefined && x.rir <= 0.5);
+    if (done) {
+      const inc = grind ? step / 2 : step;
+      out.kg = roundLoad(ex, top + inc);
+      if (out.kg <= top) out.kg = top + inc;
+      out.kind = 'up';
+      out.reason = grind
+        ? `+${fmtKg(out.kg - top)} kg: barcha takrorlar bajarildi, lekin chegarada — qadam kichraytirildi.`
+        : `+${fmtKg(out.kg - top)} kg: o‘tgan safar ${work.length}×${pe.repMin} to‘liq bajarildi. Chiziqli progressiya — har safar og‘irroq.`;
+    } else if (missPrev) {
+      out.kg = roundLoad(ex, top * 0.9);
+      out.kind = 'down';
+      out.reason = 'Ikki marta ketma-ket yetmadi — vazn 10% ga tushirildi (reset). 2–3 mashg‘ulotda yana o‘tib ketasiz.';
+    } else {
+      out.kg = top;
+      out.kind = 'same';
+      out.reason = `Shu vaznni takrorlang: maqsad — barcha setlarda ${pe.repMin} takror.`;
+    }
+  }
+  return out;
 }
 
 export function suggest(ex: Exercise, pe: PlannedExercise, logs: WorkoutLog[], ctx: SuggestCtx): Suggestion {
@@ -140,7 +237,10 @@ export function suggest(ex: Exercise, pe: PlannedExercise, logs: WorkoutLog[], c
 
   const bodyweight = ex.loadType === 'bodyweight' && ex.increment === 0;
 
-  if (!last) {
+  if (pe.scheme === 'block' && !bodyweight && ex.loadType !== 'band') return suggestBlock(ex, pe, hist, ctx, out);
+  const linear = pe.scheme === 'linear' && !bodyweight && ex.loadType !== 'band';
+  if (linear) suggestLinear(ex, pe, hist, ctx, out);
+  else if (!last) {
     const est = startingWeight(ex, ctx.bodyKg, ctx.sex, ctx.level);
     out.kg = est;
     out.estimated = est !== null;
@@ -200,7 +300,7 @@ export function suggest(ex: Exercise, pe: PlannedExercise, logs: WorkoutLog[], c
   // 1RM: o'tgan mashg'ulot asosiy, lekin u "yomon kun" bo'lsa (o'rtachadan past) oxirgi 1–3 mashg'ulot EMA si olinadi
   const lastSession = last ? sessionE1rm(last.sets) : null;
   const lastE1 = lastSession ? Math.max(lastSession, refE1rm(hist.map((h) => h.sets)) ?? 0) : null;
-  if (last && lastE1 && !bodyweight && ex.loadType !== 'band' && out.kg) {
+  if (!linear && last && lastE1 && !bodyweight && ex.loadType !== 'band' && out.kg) {
     const best = last.sets.filter((x) => x.rir !== undefined).reduce((a, b) => (e1rmFromSet(b.kg, b.reps, b.rir) > e1rmFromSet(a.kg, a.reps, a.rir) ? b : a));
     const prevTop = Math.max(...last.sets.map((x) => x.kg));
     const raw = loadFor(lastE1, out.reps, rir);

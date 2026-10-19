@@ -7,6 +7,7 @@ import type { Profile, Program, WorkoutLog } from '../types';
 import { mealPlan, nutritionPlan } from './nutrition';
 import { weeklyVolume } from './program';
 import { mesoState } from './meso';
+import { blockWeek, METHOD_INFO } from './methods';
 
 /** Standart PDF shriftlari Latin-1 bilan ishlaydi — maxsus belgilarni almashtiramiz */
 export function pdfText(s: string): string {
@@ -47,6 +48,7 @@ export async function exportProgramPdf(program: Program, profile: Profile, kcalA
   const ms = mesoState(program, logs, profile.level);
   const week = ms.absWeek + 1;
   const meso = ms.week + 1;
+  const bw = blockWeek(ms.week, program.mesoWeeks);
 
   // Sarlavha
   doc.setFillColor(...INK);
@@ -65,7 +67,7 @@ export async function exportProgramPdf(program: Program, profile: Profile, kcalA
   doc.setFontSize(9);
   doc.setTextColor(190, 198, 208);
   doc.text(
-    T(`${profile.name || 'Sportchi'} · ${GOALS[profile.goal]} · ${program.split} · ${week}-hafta (blok: ${meso}/${program.mesoWeeks})`),
+    T(`${profile.name || 'Sportchi'} · ${GOALS[profile.goal]} · ${METHOD_INFO[program.method ?? 'hypertrophy'].name} · ${week}-hafta (blok: ${meso}/${program.mesoWeeks})`),
     M,
     35,
   );
@@ -77,7 +79,9 @@ export async function exportProgramPdf(program: Program, profile: Profile, kcalA
   doc.setTextColor(...MUTED);
   const intro = doc.splitTextToSize(
     T(
-      "Har bir setdan keyin vazn va takrorni katakka yozing (masalan 60x10). RIR — setdan keyin yana necha marta qila olishingiz. Barcha setlarda yuqori takrorga yetsangiz, keyingi safar vaznni oshiring.",
+      "Har bir setdan keyin vazn va takrorni katakka yozing (masalan 60x10). RIR — setdan keyin yana necha marta qila olishingiz. Barcha setlarda yuqori takrorga yetsangiz, keyingi safar vaznni oshiring." +
+        (program.method === 'strength' ? ' @% — bir martalik maksimumingiz (1RM) dan foiz; har hafta oshadi.' : '') +
+        (program.method === 'linear' ? ' "+kg" — barcha takrorlar bajarilsa, keyingi safar: oyoq +5 kg, yuqori tana +2.5 kg.' : ''),
     ),
     W - 2 * M,
   );
@@ -112,8 +116,14 @@ export async function exportProgramPdf(program: Program, profile: Profile, kcalA
         return [
           String(i + 1),
           T(`${ex?.name ?? pe.exerciseId}\n${ex?.en ?? ''}`),
-          T(`${pe.sets} x ${pe.repMin}-${pe.repMax}${ex?.timed ? ' s' : ''}`),
-          String(pe.rir),
+          T(
+            pe.scheme === 'block'
+              ? `${bw.sets} x ${bw.reps} @${Math.round(bw.pct * 100)}%`
+              : pe.scheme === 'linear'
+                ? `${pe.sets} x ${pe.repMin} +kg`
+                : `${pe.sets} x ${pe.repMin === pe.repMax ? pe.repMin : `${pe.repMin}-${pe.repMax}`}${ex?.timed ? ' s' : ''}`,
+          ),
+          pe.scheme === 'block' ? '—' : String(pe.rir),
           `${Math.round(pe.restSec / 60 * 10) / 10}'`,
           ...setCols.map((_, k) => (k < pe.sets ? '' : '—')),
         ];
