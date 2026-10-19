@@ -92,7 +92,7 @@ const Router = import.meta.env.VITE_TARGET === 'artifact' ? MemoryRouter : Brows
 export default function App() {
   useEffect(() => startAutoSync(), []);
   return (
-    <Router>
+    <Router basename={import.meta.env.BASE_URL}>
       <Shell />
     </Router>
   );

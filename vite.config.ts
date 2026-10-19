@@ -4,8 +4,11 @@ import { VitePWA } from 'vite-plugin-pwa';
 
 // VITE_TARGET=artifact — bitta HTML faylli ko'rgazma (oldindan ko'rish) varianti: PWA'siz, hammasi ichiga joylangan
 const artifact = process.env.VITE_TARGET === 'artifact';
+// GitHub Pages kabi pastki manzilda joylash uchun, masalan VITE_BASE=/kachok.uz/
+const base = process.env.VITE_BASE || '/';
 
 export default defineConfig({
+  base,
   plugins: [
     react(),
     !artifact &&
@@ -17,7 +20,8 @@ export default defineConfig({
         short_name: 'Kachok',
         description: 'Sizga moslangan mashq dasturi, animatsion texnika, ovqatlanish va natijalar statistikasi.',
         lang: 'uz',
-        start_url: '/',
+        start_url: base,
+        scope: base,
         display: 'standalone',
         orientation: 'portrait',
         background_color: '#0D1014',
@@ -30,7 +34,7 @@ export default defineConfig({
       },
       workbox: {
         globPatterns: ['**/*.{js,css,html,svg,png,woff2}'],
-        navigateFallback: '/index.html',
+        navigateFallback: `${base}index.html`,
       },
     }),
   ],
