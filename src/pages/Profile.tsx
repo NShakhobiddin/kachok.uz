@@ -12,6 +12,7 @@ import { DAYS_SHORT } from '../lib/date';
 import { apiEnabled } from '../api/client';
 import { saveFile } from '../lib/download';
 import { BILLING } from '../lib/features';
+import { APP_VERSION, forceUpdate } from '../lib/pwa';
 import { exportData, useStore } from '../store/useStore';
 import type { ActivityLevel, Profile as P } from '../types';
 import { GOALS, LEVELS } from './Onboarding';
@@ -160,7 +161,13 @@ export default function Profile() {
         </button>
       </section>
 
-      <p className="tiny faint mt-24" style={{ textAlign: 'center' }}>
+      <div className="row center gap-8 mt-24 tiny faint" style={{ flexWrap: 'wrap' }}>
+        <span className="num">Versiya: {APP_VERSION}</span>
+        <button className="tiny strong" style={{ color: 'var(--blue-2)', minHeight: 32 }} onClick={() => void forceUpdate()}>
+          Yangilanishni tekshirish
+        </button>
+      </div>
+      <p className="tiny faint mt-8" style={{ textAlign: 'center' }}>
         Kachok 1.0 · Tavsiyalar ma’lumot uchun, tibbiy maslahat o‘rnini bosmaydi.
         <br />
         <Link to="/sources">ACSM · ISSN · WHO · EFSA manbalari</Link>

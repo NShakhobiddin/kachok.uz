@@ -5,6 +5,7 @@ import '@fontsource-variable/manrope';
 import '@fontsource-variable/jetbrains-mono';
 import './styles/global.css';
 import App from './App';
+import { registerPwa } from './lib/pwa';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -12,6 +13,4 @@ createRoot(document.getElementById('root')!).render(
   </StrictMode>,
 );
 
-if (import.meta.env.PROD && import.meta.env.VITE_TARGET !== 'artifact' && 'serviceWorker' in navigator) {
-  import('virtual:pwa-register').then(({ registerSW }) => registerSW({ immediate: true })).catch(() => {});
-}
+registerPwa();

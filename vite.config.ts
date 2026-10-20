@@ -1,3 +1,4 @@
+import { execSync } from 'node:child_process';
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
@@ -6,9 +7,22 @@ import { VitePWA } from 'vite-plugin-pwa';
 const artifact = process.env.VITE_TARGET === 'artifact';
 // GitHub Pages kabi pastki manzilda joylash uchun, masalan VITE_BASE=/kachok.uz/
 const base = process.env.VITE_BASE || '/';
+// ilovada ko'rinadigan versiya: qaysi commit va qachon yig'ilgan (eski kesh bilan adashmaslik uchun)
+const commit = (() => {
+  if (process.env.GITHUB_SHA) return process.env.GITHUB_SHA.slice(0, 7);
+  try {
+    return execSync('git rev-parse --short HEAD').toString().trim();
+  } catch {
+    return 'dev';
+  }
+})();
 
 export default defineConfig({
   base,
+  define: {
+    __APP_VERSION__: JSON.stringify(commit),
+    __BUILD_TIME__: JSON.stringify(new Date().toISOString()),
+  },
   plugins: [
     react(),
     !artifact &&
