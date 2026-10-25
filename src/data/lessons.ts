@@ -424,11 +424,17 @@ export const LESSONS: Lesson[] = [
     id: 'safety',
     title: 'Jarohatsiz mashq qilish',
     category: 'Xavfsizlik',
-    minutes: 4,
+    minutes: 6,
     icon: 'alert',
     plate: 'red',
-    summary: 'Razminka, nafas, texnika va og‘riq qoidalari.',
+    summary: 'Razminka, nafas, to‘sinlar va sug‘urta, og‘riq shkalasi.',
     slides: [
+      {
+        title: 'Kuch mashqi — xavfsiz sport',
+        text: "Og‘ir atletikada jarohat 1000 soat mashg‘ulotga bir necha ta — ko‘p jamoaviy sport turlaridan kam. Aksincha, kuch mashqlari boshqa sport jarohatlarini qariyb uch barobar kamaytiradi. Ko‘p jarohat yelka, bel va tizzada — va deyarli hammasi texnika, charchoq yoki shoshilib vazn qo‘shishdan.",
+        scene: 'health',
+        source: 'lauersen2014',
+      },
       {
         title: 'Razminka — 5–8 daqiqa',
         text: "Yengil kardio + birinchi mashqda 2–3 ta isinish seti (masalan 40%, 60%, 80%). Razminka o‘lchangan natijalarning ~80% ida samaradorlikni oshirgan.",
@@ -452,14 +458,28 @@ export const LESSONS: Lesson[] = [
         scene: 'wrong:deadlift',
       },
       {
-        title: "Og‘riq qoidasi",
-        text: "Mushakdagi 'yonish' va ertasi kungi og‘riq — normal. Bo‘g‘imdagi o‘tkir, sanchiqli yoki tarqaluvchi og‘riq — darhol to‘xtang va mashqni almashtiring. 2 haftadan oshsa — shifokorga.",
+        title: 'To‘sinlar, qisqich, sug‘urtachi',
+        text: "Og‘ir o‘tirish, yotib jim va boshdan yuqori jim — ramada, to‘sinlar eng past nuqtangizdan biroz pastda. Shtanga bosh barmoq bilan o‘rab ushlanadi, disklar qisqich bilan. Setdan oldin bilib oling: ko‘tara olmasangiz shtangani qayerga tashlaysiz — har mashq sahifasidagi «Xavfsizlik» bo‘limida yozilgan.",
+        scene: 'fig:bench-press',
+        source: 'haff2016',
+      },
+      {
+        title: "Og‘riq shkalasi 0–10",
+        text: "Mushakdagi «yonish» va ertasi kungi og‘riq — normal. Bo‘g‘imdagi og‘riqni baholang: 0–2 — davom eting; 3–5 — vazn yoki amplitudani kamaytiring, og‘riq ertasi tongga o‘tishi kerak; 6 va undan yuqori — to‘xtang va almashtiring. Uvishish, tarqaluvchi og‘riq yoki «qars» etish — darhol to‘xtang.",
         scene: 'pain',
+        source: 'silbernagel2007',
       },
     ],
     quiz: [
       { q: 'Mashqdan oldin nima yaxshiroq?', options: ["Uzoq statik cho‘zilish", 'Dinamik razminka va isinish setlari'], correct: 1, explain: "Statik cho‘zilish kuchni vaqtincha pasaytiradi." },
       { q: "Bo‘g‘imda o‘tkir og‘riq bo‘lsa?", options: ['Davom etish', "To‘xtash va mashqni almashtirish"], correct: 1, explain: "O‘tkir og‘riq — ogohlantirish signali." },
+      {
+        q: 'Yolg‘iz, to‘sinsiz skameykada yotib jim qilyapsiz. Qisqich taqasizmi?',
+        options: ['Ha, har doim', 'Yo‘q — ko‘tara olmasam disklarni to‘kib yuborish uchun'],
+        correct: 1,
+        explain: 'To‘sin va sug‘urtachi bo‘lmasa, shtangani qiyshaytirib disklarni tushirish — ostida qolmaslikning yagona yo‘li. Eng yaxshisi — ramada, to‘sinlar bilan.',
+      },
+      { q: 'Og‘riq 4/10 edi va ertasi tongga o‘tib ketdi. Nima qilasiz?', options: ['Mashqni butunlay tashlayman', 'Davom etaman, vazn va amplitudani nazorat qilaman'], correct: 1, explain: 'Og‘riq nazorati modeli: 5/10 gacha, ertasiga o‘tib ketsa va haftadan-haftaga kuchaymasa — davom etish mumkin.' },
     ],
   },
   {

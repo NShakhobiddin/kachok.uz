@@ -93,7 +93,8 @@ export default function Profile() {
           <Item icon="calendar" label="Jadval" value={`${profile.daysPerWeek} kun · ${profile.sessionMin} daq`} onClick={() => open('schedule')} />
           <Item icon="dumbbell" label="Zal jihozlari" value={`${profile.equipment.length} ta`} onClick={() => open('equipment')} />
           <Item icon="alert" label="Cheklovlar va ustuvorlik" value={profile.injuries.length ? `${profile.injuries.length} ta` : "Yo‘q"} onClick={() => open('limits')} />
-          <Item icon="bolt" label="Kundalik faollik" value={ACTIVITY[profile.activity].name} onClick={() => open('activity')} last />
+          <Item icon="bolt" label="Kundalik faollik" value={ACTIVITY[profile.activity].name} onClick={() => open('activity')} />
+          <Item icon="shield" label="Xavfsizlik markazi" onClick={() => nav('/safety')} last />
         </div>
       </section>
 
@@ -272,6 +273,7 @@ export default function Profile() {
           {panel === 'limits' && (
             <>
               <h3 className="title">Og‘riq yoki jarohat</h3>
+              <p className="small muted">Belgilangan bo‘g‘im uchun xavfli mashqlar dasturdan chiqariladi, qolganlarida esa mashq sahifasi va mashg‘ulot paytida moslashtirish ko‘rsatiladi.</p>
               <div className="row wrap gap-8">
                 {INJURIES.map((inj) => {
                   const on = draft.injuries.includes(inj.id);

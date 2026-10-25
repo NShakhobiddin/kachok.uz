@@ -2,12 +2,15 @@ import { useMemo, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { BodyMap } from '../components/BodyMap';
 import { ExerciseThumb } from '../components/ExerciseThumb';
+import { RiskTag } from '../components/Safety';
 import { Icon } from '../components/ui/Icon';
 import { Segmented, Toggle } from '../components/ui/controls';
 import { MUSCLES } from '../data/catalog';
 import { EXERCISES } from '../data/exercises';
 import { LESSONS } from '../data/lessons';
+import { safetyFor } from '../data/safety';
 import { hasEquipment } from '../engine/program';
+import { personalSafety } from '../engine/safety';
 import { useStore } from '../store/useStore';
 import type { MuscleId } from '../types';
 
@@ -50,6 +53,8 @@ function Exercises() {
   const [picked, setPicked] = useState<MuscleId[]>([]);
   const [mine, setMine] = useState(!!profile);
   const [showMap, setShowMap] = useState(false);
+  const injuries = profile?.injuries ?? [];
+  const [safeOnly, setSafeOnly] = useState(false);
   const list = useMemo(() => {
     const areaM = AREAS.find((a) => a.k === area)?.muscles ?? [];
     const filterM = picked.length ? picked : areaM;
@@ -57,12 +62,26 @@ function Exercises() {
       if (q && !(e.name + ' ' + e.en).toLowerCase().includes(q.toLowerCase())) return false;
       if (filterM.length && !e.primary.some((m) => filterM.includes(m))) return false;
       if (mine && profile && !hasEquipment(e, profile.equipment)) return false;
+      if (safeOnly && personalSafety(e, injuries).avoid.length) return false;
       return true;
     }).sort((a, b) => b.score - a.score);
-  }, [q, area, picked, mine, profile]);
+  }, [q, area, picked, mine, profile, safeOnly, injuries]);
 
   return (
     <div className="stack gap-12">
+      <Link to="/safety" className="card tight row gap-12" style={{ color: 'inherit' }}>
+        <span className="lib-safety-ico">
+          <Icon name="shield" />
+        </span>
+        <span className="grow" style={{ minWidth: 0 }}>
+          <b className="small" style={{ display: 'block' }}>
+            Xavfsizlik markazi
+          </b>
+          <span className="tiny muted">Xavfli mashqlar, og‘riq shkalasi, darhol to‘xtash belgilari</span>
+        </span>
+        <Icon name="right" size={18} style={{ color: 'var(--text-3)' }} />
+      </Link>
+
       <div className="row gap-8">
         <div className="grow" style={{ position: 'relative' }}>
           <Icon name="search" size={18} style={{ position: 'absolute', left: 14, top: 16, color: 'var(--text-3)' }} />
@@ -112,6 +131,12 @@ function Exercises() {
           <Toggle on={mine} onChange={setMine} label="Faqat zalimdagi jihozlar" />
         </label>
       )}
+      {injuries.length > 0 && (
+        <label className="row between small" style={{ padding: '4px 2px' }}>
+          <span className="muted">Cheklovlarimga mos kelmaydiganlarini yashirish</span>
+          <Toggle on={safeOnly} onChange={setSafeOnly} label="Cheklovlarga mos kelmaydigan mashqlarni yashirish" />
+        </label>
+      )}
 
       <div className="tiny faint">{list.length} ta mashq</div>
       <div className="stack gap-8">
@@ -131,6 +156,7 @@ function Exercises() {
                   </span>
                 ))}
                 <span className="tag">{['', 'Oson', "O‘rta", 'Murakkab'][e.level]}</span>
+                <SafetyTag id={e.id} level={personalSafety(e, injuries).level} />
               </div>
             </div>
             <Icon name="right" size={18} style={{ color: 'var(--text-3)' }} />
@@ -139,6 +165,26 @@ function Exercises() {
         {list.length === 0 && <div className="empty">Bu filtrga mos mashq yo‘q. Filtrlarni o‘zgartiring.</div>}
       </div>
     </div>
+  );
+}
+
+/** xavf darajasi (o'rta/yuqori) va foydalanuvchi cheklovi bo'yicha belgi */
+function SafetyTag({ id, level }: { id: string; level: 'avoid' | 'caution' | null }) {
+  const risk = safetyFor(id)?.risk;
+  return (
+    <>
+      {risk && risk >= 2 && <RiskTag risk={risk} />}
+      {level === 'avoid' && (
+        <span className="tag" style={{ color: 'var(--red)', background: 'var(--red-soft)', borderColor: 'transparent' }}>
+          Sizga mos emas
+        </span>
+      )}
+      {level === 'caution' && (
+        <span className="tag" style={{ color: 'var(--yellow)', background: 'var(--yellow-soft)', borderColor: 'transparent' }}>
+          Ehtiyotkorlik bilan
+        </span>
+      )}
+    </>
   );
 }
 

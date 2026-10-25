@@ -22,6 +22,7 @@ const Account = lazy(() => import('./pages/Account'));
 const Coach = lazy(() => import('./pages/Coach'));
 const CoachClient = lazy(() => import('./pages/CoachClient'));
 const Premium = lazy(() => import('./pages/Premium'));
+const Safety = lazy(() => import('./pages/Safety'));
 
 const TABS = [
   { to: '/', icon: 'home', label: 'Bugun' },
@@ -79,6 +80,7 @@ function Shell() {
           <Route path="/profile" element={<Profile />} />
           <Route path="/lesson/:id" element={<LessonView />} />
           <Route path="/sources" element={<Sources />} />
+          <Route path="/safety" element={<Safety />} />
           <Route path="/account" element={<Account />} />
           <Route path="/premium" element={<Premium />} />
           <Route path="/coach" element={<Coach />} />

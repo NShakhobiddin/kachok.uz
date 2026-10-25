@@ -110,6 +110,8 @@ interface State {
   addSet: (exIdx: number, set?: Partial<SetLog>) => void;
   removeSet: (exIdx: number, setIdx: number) => void;
   swapActive: (exIdx: number, newId: string) => void;
+  /** mashg'ulot paytida bo'g'imda og'riq — tarixga yoziladi, keyingi safar ogohlantirish chiqadi */
+  markPain: (exerciseId: string) => void;
   addActiveExercise: (exId: string) => void;
   startRest: (sec: number) => void;
   adjustRest: (deltaSec: number) => void;
@@ -250,6 +252,11 @@ export const useStore = create<State>()(
         const plan = a.plan.map((p, i) => (i === exIdx ? { ...p, exerciseId: newId } : p));
         set({ active: { ...a, plan, log: { ...a.log, exercises } } });
       },
+      markPain: (exerciseId) => {
+        const a = get().active;
+        if (!a || a.log.painEx?.includes(exerciseId)) return;
+        set({ active: { ...a, log: { ...a.log, painEx: [...(a.log.painEx ?? []), exerciseId] } } });
+      },
       addActiveExercise: (exId) => {
         const a = get().active;
         if (!a) return;
@@ -288,7 +295,7 @@ export const useStore = create<State>()(
         }
         const finishedAt = new Date().toISOString();
         const durationMin = Math.max(1, Math.round((Date.now() - new Date(a.log.startedAt).getTime()) / 60000));
-        const log: WorkoutLog = { ...a.log, exercises, finishedAt, durationMin, muscleFb: fb?.muscles, painEx: fb?.pain?.length ? fb.pain : undefined };
+        const log: WorkoutLog = { ...a.log, exercises, finishedAt, durationMin, muscleFb: fb?.muscles, painEx: fb ? (fb.pain.length ? fb.pain : undefined) : a.log.painEx };
         const prs = detectPRs(log, get().logs);
         const logs = [...get().logs, log];
         // RP uslubidagi moslashuv: har mushak uchun alohida — kam pump/oson/tez tiklanish → set qo'shiladi,

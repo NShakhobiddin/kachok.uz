@@ -20,6 +20,10 @@ import type { Exercise, MuscleGroup } from '../types';
 import { ExercisePicker } from '../components/DayEditor';
 import { Choice, Toggle } from '../components/ui/controls';
 import { HistorySheet } from '../components/HistorySheet';
+import { FAILURE_TEXT, PreSetCheck } from '../components/Safety';
+import { PainCheck } from '../components/PainCheck';
+import { safetyFor } from '../data/safety';
+import { loadJump, needsPreSetCheck, reducedLoad } from '../engine/safety';
 
 function beep() {
   try {
@@ -71,6 +75,9 @@ export default function Workout() {
   const setExNote = useStore((s) => s.setExNote);
   const [addOpen, setAddOpen] = useState(false);
   const [techOpen, setTechOpen] = useState(false);
+  const [painOpen, setPainOpen] = useState(false);
+  /** setdan oldingi xavfsizlik ro'yxati yopilgan mashqlar (shu mashg'ulotda) */
+  const [safetySeen, setSafetySeen] = useState<string[]>([]);
   const [pr, setPr] = useState<string | null>(null);
   const restAlerted = useRef(false);
   const leaving = useRef(false);
@@ -137,7 +144,8 @@ export default function Workout() {
   const doneSets = active.log.exercises.reduce((a, e) => a + e.sets.filter((s) => s.done).length, 0);
   const totalSets = active.log.exercises.reduce((a, e) => a + e.sets.length, 0);
   const allDoneHere = exLog?.sets.length > 0 && exLog.sets.every((s) => s.done);
-  const lastWithEx = ex ? [...logs].filter((l) => l.finishedAt && l.exercises.some((e) => e.exerciseId === ex.id)).sort((a, b) => b.startedAt.localeCompare(a.startedAt))[0] : undefined;
+  // og'riq tufayli to'xtatilgan (seti bajarilmagan) mashq ham hisobga olinadi
+  const lastWithEx = ex ? [...logs].filter((l) => l.finishedAt && (l.exercises.some((e) => e.exerciseId === ex.id) || l.painEx?.includes(ex.id))).sort((a, b) => b.startedAt.localeCompare(a.startedAt))[0] : undefined;
   const painLast = !!ex && !!lastWithEx?.painEx?.includes(ex.id);
   const doneExercises = active.log.exercises.filter((e) => e.sets.some((s) => s.done && !s.warmup));
   const finishGroups = [...new Set(doneExercises.flatMap((e) => EXERCISE_MAP[e.exerciseId]?.primary.map((m) => MUSCLES[m].group) ?? []))];
@@ -145,6 +153,20 @@ export default function Workout() {
   const programDay = program?.days.find((d) => d.id === active.log.dayId);
   const canSaveDay = !!programDay && programDay.exercises.map((p) => p.exerciseId).join() !== active.plan.map((p) => p.exerciseId).join();
   const isLast = idx === active.log.exercises.length - 1;
+  const safety = ex ? safetyFor(ex.id) : undefined;
+  const workingDone = !!exLog?.sets.some((s) => s.done && !s.warmup);
+  const showPreSet = !!ex && needsPreSetCheck(ex, profile.injuries) && !workingDone && !safetySeen.includes(ex.id);
+  // birinchi marta (taxminiy vazn) taqqoslash ma'nosiz — faqat tarix asosidagi tavsiyada
+  const jump = ex && safety && safety.risk >= 2 && sug?.kind !== 'first' ? Math.max(0, ...exLog.sets.filter((s) => !s.warmup).map((s) => loadJump(s.kg, sug?.kg, ex.increment) ?? 0)) : 0;
+  const failureSet = !!safety?.failure && exLog?.sets.some((s) => s.kind === 'failure');
+  const reduceRemaining = () => {
+    exLog.sets.forEach((s, j) => {
+      if (s.done) return;
+      const kg = s.kg || sug?.kg || 0;
+      if (kg > 0) st.updateSet(idx, j, { kg: reducedLoad(kg, ex.increment) });
+    });
+    setPainOpen(false);
+  };
 
   const completeSet = (j: number) => {
     const s = exLog.sets[j];
@@ -252,6 +274,9 @@ export default function Workout() {
                 <button className="chip sm" onClick={() => setNoteEdit((v) => !v)} aria-expanded={noteEdit}>
                   <Icon name="edit" size={14} /> Eslatma
                 </button>
+                <button className="chip sm" onClick={() => setPainOpen(true)} style={active.log.painEx?.includes(ex.id) ? { borderColor: 'var(--red)', background: 'var(--red-soft)' } : undefined}>
+                  <Icon name="alert" size={14} /> Og‘riq
+                </button>
               </div>
             </div>
           </div>
@@ -269,6 +294,8 @@ export default function Workout() {
               </div>
             </div>
           )}
+
+          {showPreSet && <PreSetCheck key={ex.id} ex={ex} injuries={profile.injuries} onDone={() => setSafetySeen((x) => [...x, ex.id])} />}
 
           {(noteEdit || exNotes[ex.id]) && (
             <div className="ex-note">
@@ -368,6 +395,21 @@ export default function Workout() {
               )}
             </div>
           </div>
+
+          {jump > 0 && (
+            <div className="notice gold small" role="status">
+              <Icon name="alert" size={18} />
+              <span>
+                <b>Tavsiyadan {jump}% og‘ir.</b> Vaznning keskin oshishi — jarohatning keng tarqalgan sababi. Birinchi takrorlarda texnikani tekshiring; buzilsa, vaznni qaytaring.
+              </span>
+            </div>
+          )}
+          {failureSet && safety?.failure && (
+            <div className={`notice ${safety.failure === 'form' ? 'warn' : 'gold'} small`} role="status">
+              <Icon name="alert" size={18} />
+              <span>{FAILURE_TEXT[safety.failure]}</span>
+            </div>
+          )}
 
           {allDoneHere && !isLast && (
             <button className="btn btn-primary btn-block" onClick={() => st.setActiveIndex(idx + 1)}>
@@ -484,6 +526,25 @@ export default function Workout() {
         {ex && <TechniqueSheet ex={ex} />}
       </Sheet>
 
+      <Sheet open={painOpen} onClose={() => setPainOpen(false)} label="Og‘riq">
+        {painOpen && ex && (
+          <PainCheck
+            ex={ex}
+            onMark={() => st.markPain(ex.id)}
+            onReduce={reduceRemaining}
+            onSwap={() => {
+              setPainOpen(false);
+              setSwapOpen(true);
+            }}
+            onSkip={() => {
+              setPainOpen(false);
+              if (isLast) setFinishOpen(true);
+              else st.setActiveIndex(idx + 1);
+            }}
+          />
+        )}
+      </Sheet>
+
       <Sheet open={swapOpen} onClose={() => setSwapOpen(false)} label="Almashtirish">
         {ex && swapOpen && (
           <ExercisePicker
@@ -521,6 +582,7 @@ export default function Workout() {
             groups={finishGroups}
             exercises={finishExercises}
             canSaveDay={canSaveDay}
+            initialPain={active.log.painEx}
             onDiscard={() => {
               leaving.current = true;
               st.discardWorkout();
@@ -608,6 +670,14 @@ function TechniqueSheet({ ex }: { ex: Exercise }) {
           <li key={i}>{s}</li>
         ))}
       </ol>
+      {safetyFor(ex.id)?.bail && (
+        <div className="notice info small">
+          <Icon name="shield" size={18} />
+          <span>
+            <b>Ko‘tara olmasangiz:</b> {safetyFor(ex.id)!.bail}
+          </span>
+        </div>
+      )}
       <div className="stack gap-6">
         {ex.mistakes.slice(0, 2).map((m) => (
           <div key={m.title} className="notice warn small">
@@ -631,6 +701,7 @@ function FinishSheet({
   groups,
   exercises,
   canSaveDay,
+  initialPain,
   onFinish,
   onDiscard,
 }: {
@@ -639,11 +710,12 @@ function FinishSheet({
   groups: MuscleGroup[];
   exercises: { id: string; name: string }[];
   canSaveDay: boolean;
+  initialPain?: string[];
   onFinish: (fb: FinishFeedback, saveDay: boolean) => void;
   onDiscard: () => void;
 }) {
   const [fb, setFb] = useState<Partial<Record<MuscleGroup, Partial<MuscleFeedback>>>>({});
-  const [pain, setPain] = useState<string[]>([]);
+  const [pain, setPain] = useState<string[]>(initialPain ?? []);
   const [saveDay, setSaveDay] = useState(true);
   const set = (g: MuscleGroup, k: keyof MuscleFeedback, v: number) => setFb((x) => ({ ...x, [g]: { ...x[g], [k]: v } }));
   if (doneSets === 0)

@@ -356,6 +356,47 @@ export const SOURCES: Source[] = [
     cite: 'Hodgdon JA, Beckett MB. Prediction of percent body fat for U.S. Navy men and women from body circumferences and height. Naval Health Research Center, Reports No. 84-11 and 84-29. San Diego, CA; 1984.',
     finding: "Bo‘y, bel, bo‘yin (ayollarda son ham) o‘lchamidan yog‘ foizi; laboratoriya usullariga nisbatan xatolik ~3–4%.",
   },
+  {
+    id: 'keogh2017',
+    short: 'Keogh & Winwood, 2017',
+    cite: 'Keogh JWL, Winwood PW. The epidemiology of injuries across the weight-training sports. Sports Med 47(3):479-501, 2017.',
+    doi: '10.1007/s40279-016-0575-0',
+    finding: "Og‘ir atletika turlarida jarohat chastotasi past — 1000 soat mashg‘ulotga bir necha ta, ko‘p jamoaviy sport turlaridan kam. Eng ko‘p zararlanadigan joylar — yelka, bel, tizza, tirsak va bilak; asosan cho‘zilish va pay zo‘riqishi.",
+  },
+  {
+    id: 'lauersen2014',
+    short: 'Lauersen va boshq., 2014',
+    cite: 'Lauersen JB, Bertelsen DM, Andersen LB. The effectiveness of exercise interventions to prevent sports injuries: a systematic review and meta-analysis of randomised controlled trials. Br J Sports Med 48(11):871-877, 2014.',
+    doi: '10.1136/bjsports-2013-092538',
+    finding: "25 ta randomizatsiyalangan tadqiqot (26 610 kishi): kuch mashqlari sport jarohatlarini qariyb uch barobar kamaytirgan; cho‘zilish mashqlari esa ta’sir ko‘rsatmagan.",
+  },
+  {
+    id: 'kerr2010',
+    short: 'Kerr va boshq., 2010',
+    cite: 'Kerr ZY, Collins CL, Comstock RD. Epidemiology of weight training-related injuries presenting to United States emergency departments, 1990 to 2007. Am J Sports Med 38(4):765-771, 2010.',
+    doi: '10.1177/0363546509351560',
+    finding: "Shoshilinch yordamga murojaat qilingan og‘irlik mashqi jarohatlarining ~90% i erkin og‘irliklar (shtanga, gantel) bilan bog‘liq; eng ko‘pi — mushak cho‘zilishi va pay lat yeyishi.",
+  },
+  {
+    id: 'haff2016',
+    short: 'NSCA (Haff & Triplett), 2016',
+    cite: 'Haff GG, Triplett NT (eds). Essentials of Strength Training and Conditioning. 4th ed. Champaign, IL: Human Kinetics; 2016.',
+    finding: "Boshdan yuqori, orqada, old yelkada va yuz ustida bajariladigan erkin og‘irlik mashqlarida sug‘urtachi kerak; shtanga bosh barmoq bilan to‘liq o‘rab ushlanadi; vazn «2 uchun 2» qoidasi bilan oshiriladi.",
+  },
+  {
+    id: 'silbernagel2007',
+    short: 'Silbernagel va boshq., 2007',
+    cite: 'Silbernagel KG, Thomeé R, Eriksson BI, Karlsson J. Continued sporting activity, using a pain-monitoring model, during rehabilitation in patients with Achilles tendinopathy: a randomized controlled study. Am J Sports Med 35(6):897-906, 2007.',
+    doi: '10.1177/0363546506298279',
+    finding: "Og‘riq nazorati modeli: mashq paytida og‘riq 0–10 shkalada 5 dan oshmasa, ertasi tongga o‘tib ketsa va haftadan-haftaga kuchaymasa — faol bo‘lish tiklanishni sekinlashtirmagan.",
+  },
+  {
+    id: 'elmaraghy2012',
+    short: 'ElMaraghy & Devereaux, 2012',
+    cite: 'ElMaraghy AW, Devereaux MW. A systematic review and comprehensive classification of pectoralis major tears. J Shoulder Elbow Surg 21(3):412-422, 2012.',
+    doi: '10.1016/j.jse.2011.04.035',
+    finding: "Ko‘krak katta mushagi uzilishlarining eng ko‘p uchraydigan sababi — og‘ir yotib jim, ayniqsa shtangani pastga tushirish fazasi; aksariyati yosh erkaklarda.",
+  },
 ];
 
 export const sourceById = (id: string) => SOURCES.find((s) => s.id === id);

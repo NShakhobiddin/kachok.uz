@@ -1,16 +1,18 @@
-import { useMemo, useState } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useEffect, useMemo, useState } from 'react';
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { BenefitMap } from '../components/BenefitMap';
 import { BodyMap } from '../components/BodyMap';
 import { LineChart } from '../components/charts';
 import { MuscleActivation } from '../components/MuscleActivation';
+import { PersonalSafetyNotice, RiskTag, SafetySection } from '../components/Safety';
+import { safetyFor } from '../data/safety';
 import { ExerciseThumb } from '../components/ExerciseThumb';
 import { Figure } from '../components/figure/Figure';
 import { StandardsTable } from '../components/StrengthLevels';
 import { TempoBar, useTempo } from '../components/TempoBar';
 import { liftByExercise } from '../engine/standards';
 import { Icon } from '../components/ui/Icon';
-import { EQUIPMENT, INJURIES, MUSCLES } from '../data/catalog';
+import { EQUIPMENT, MUSCLES } from '../data/catalog';
 import { exById } from '../data/exercises';
 import { alternatives } from '../engine/program';
 import { exerciseSeries } from '../engine/stats';
@@ -88,10 +90,17 @@ export default function ExerciseDetail() {
   const profile = useStore((s) => s.profile);
   const logs = useStore((s) => s.logs);
   const series = useMemo(() => (ex ? exerciseSeries(ex.id, logs) : []), [ex, logs]);
+  const { hash } = useLocation();
+  // /exercise/:id#safety — sahifa ochilib, tepaga qaytgandan keyin xavfsizlik bo'limiga o'tish
+  useEffect(() => {
+    if (hash !== '#safety') return;
+    const t = setTimeout(() => document.getElementById('safety')?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 350);
+    return () => clearTimeout(t);
+  }, [hash, ex?.id]);
   if (!ex) return <div className="page empty">Mashq topilmadi.</div>;
 
-  const avoidHit = profile ? (ex.avoid ?? []).filter((i) => profile.injuries.includes(i)) : [];
-  const cautionHit = profile ? (ex.caution ?? []).filter((i) => profile.injuries.includes(i)) : [];
+  const injuries = profile?.injuries ?? [];
+  const safety = safetyFor(ex.id);
   const eqNames = [...ex.equipment.map((e) => EQUIPMENT.find((x) => x.id === e)?.name), ex.equipmentAny ? ex.equipmentAny.map((e) => EQUIPMENT.find((x) => x.id === e)?.name).join(' yoki ') : null].filter(Boolean);
   const alts = profile ? alternatives(ex.id, profile).slice(0, 6) : [];
   const lift = liftByExercise(ex.id);
@@ -120,24 +129,14 @@ export default function ExerciseDetail() {
             <i className="dot" style={{ background: 'var(--muscle-secondary)' }} /> {MUSCLES[m].name}
           </span>
         ))}
+        {safety && (
+          <button onClick={() => document.getElementById('safety')?.scrollIntoView({ behavior: 'smooth', block: 'start' })} aria-label="Xavfsizlik bo‘limiga o‘tish">
+            <RiskTag risk={safety.risk} />
+          </button>
+        )}
       </div>
 
-      {avoidHit.length > 0 && (
-        <div className="notice warn mt-12">
-          <Icon name="alert" />
-          <span>
-            <b>Sizga tavsiya etilmaydi</b> — {avoidHit.map((i) => INJURIES.find((x) => x.id === i)?.name).join(', ')} muammosi tufayli. Quyidagi muqobillardan birini tanlang.
-          </span>
-        </div>
-      )}
-      {cautionHit.length > 0 && (
-        <div className="notice gold mt-12">
-          <Icon name="info" />
-          <span>
-            <b>Ehtiyotkorlik bilan</b> ({cautionHit.map((i) => INJURIES.find((x) => x.id === i)?.name).join(', ')}): yengil vazn, og‘riqsiz amplituda.
-          </span>
-        </div>
-      )}
+      <PersonalSafetyNotice ex={ex} injuries={injuries} />
 
       <section className="section">
         <div className="section-head">
@@ -208,9 +207,11 @@ export default function ExerciseDetail() {
         </div>
       </section>
 
+      <SafetySection ex={ex} injuries={injuries} />
+
       <section className="section">
         <div className="section-head">
-          <h2>Xatolar va xavf</h2>
+          <h2>Ko‘p uchraydigan xatolar</h2>
           <span className="small muted">{ex.mistakes.length} ta</span>
         </div>
         <div className="stack gap-12">
