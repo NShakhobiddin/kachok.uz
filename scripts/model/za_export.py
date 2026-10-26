@@ -1,4 +1,5 @@
 # Z-Anatomy (CC BY-SA 4.0) -> Kachok GLB: mushaklar kalit bo'yicha birlashtiriladi, soddalashtiriladi, suyaklar bitta mesh.
+# Har bir uchga tola yo'nalishi yoziladi (.fib): mushak qismining asosiy o'qi (PCA) — shader tola chiziqlarini shu bo'ylab chizadi.
 import bpy, bmesh, re, sys, json
 
 src, out = sys.argv[-2], sys.argv[-1]
@@ -87,7 +88,7 @@ groups['bones'] = [o for o in bone_col.all_objects if o.type == 'MESH' and len(o
 def tris_of(objs):
     return sum(sum(len(p.vertices) - 2 for p in o.data.polygons) for o in objs)
 
-BUDGET = {'other': 55000, 'bones': 55000, 'tendon': 5000}
+BUDGET = {'other': 90000, 'bones': 60000, 'tendon': 12000}
 mapped_total = sum(tris_of(v) for k, v in groups.items() if k not in BUDGET)
 MAPPED_BUDGET = 260000
 report = {'missing': sorted(missing), 'groups': {}}
@@ -98,8 +99,8 @@ os.makedirs(out, exist_ok=True)
 ratios = {}
 for key, objs in groups.items():
     total = tris_of(objs)
-    # kalit bo'yicha maqsad: yengil mushaklar to'liq qoladi, og'irlari 6–14 ming uchburchakgacha
-    target = BUDGET[key] if key in BUDGET else min(total, max(6000, min(14000, total * 0.3)))
+    # kalit bo'yicha maqsad: yengil mushaklar to'liq qoladi, og'irlari 8–30 ming uchburchakgacha
+    target = BUDGET[key] if key in BUDGET else min(total, max(8000, min(30000, total * 0.6)))
     ratio = min(1.0, target / total)
     ratios[key] = ratio
     for o in objs:
@@ -111,7 +112,7 @@ dg = bpy.context.evaluated_depsgraph_get()
 dg.update()
 manifest = {}
 for key, objs in groups.items():
-    P, I, off = [], [], 0
+    P, I, F, off = [], [], [], 0
     for o in objs:
         ev = o.evaluated_get(dg)
         me = ev.to_mesh()
@@ -124,10 +125,21 @@ for key, objs in groups.items():
         co = (np.c_[co, np.ones(n)] @ M.T)[:, :3]
         tri = np.empty(len(me.loop_triangles) * 3, dtype=np.int64)
         me.loop_triangles.foreach_get('vertices', tri)
+        # ko'zgu (manfiy masshtab) bilan yasalgan o'ng tomon qismlari: uchburchak aylanishi teskari — normallar ichkariga qaramasin
+        if np.linalg.det(M[:3, :3]) < 0:
+            tri = tri.reshape(-1, 3)[:, ::-1].reshape(-1).copy()
         ev.to_mesh_clear()
+        # tola yo'nalishi: shu qismning eng uzun o'qi (asosiy komponent)
+        if n >= 3:
+            c0 = co - co.mean(axis=0)
+            w, v = np.linalg.eigh(c0.T @ c0)
+            axis = v[:, np.argmax(w)]
+        else:
+            axis = np.array([0.0, 0.0, 1.0])
+        F.append(np.tile(axis.astype(np.float32), (n, 1)))
         P.append(co.astype(np.float32)); I.append(tri + off); off += n
-    P = np.concatenate(P); I = np.concatenate(I).astype(np.uint32)
-    P.tofile(os.path.join(out, key + '.pos')); I.tofile(os.path.join(out, key + '.idx'))
+    P = np.concatenate(P); I = np.concatenate(I).astype(np.uint32); F = np.concatenate(F).astype(np.float32)
+    P.tofile(os.path.join(out, key + '.pos')); I.tofile(os.path.join(out, key + '.idx')); F.tofile(os.path.join(out, key + '.fib'))
     manifest[key] = {'verts': int(len(P)), 'tris': int(len(I) // 3), 'parts': len(objs), 'srcTris': tris_of(objs), 'ratio': ratios[key],
                      'names': sorted(set(re.sub(r'\.(l|r)$', '', o.name) for o in objs))}
     print(key, len(objs), tris_of(objs), '->', len(I) // 3, flush=True)

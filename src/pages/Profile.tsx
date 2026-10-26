@@ -56,7 +56,7 @@ export default function Profile() {
         </button>
       </div>
       <div className="row gap-16">
-        <span style={{ width: 64, height: 64, borderRadius: 20, background: 'var(--plate-blue)', display: 'grid', placeItems: 'center', fontSize: 28, fontWeight: 800, color: '#fff' }}>
+        <span style={{ width: 64, height: 64, borderRadius: 22, background: 'var(--accent)', display: 'grid', placeItems: 'center', fontSize: 28, fontWeight: 800, fontFamily: 'var(--font-display)', fontStretch: '125%', color: 'var(--accent-ink)' }}>
           {(profile.name || 'K')[0].toUpperCase()}
         </span>
         <div>

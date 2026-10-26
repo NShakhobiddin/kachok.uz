@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { PlateBadge } from '../components/Barbell';
 import { ColumnChart, LineChart, TargetBars } from '../components/charts';
+import { BodyHero } from '../components/BodyHero';
 import { BodyStats } from '../components/BodyStats';
 import { StrengthLevels } from '../components/StrengthLevels';
 import { TrainingHeatmap } from '../components/TrainingHeatmap';
@@ -10,11 +11,13 @@ import { Sheet } from '../components/ui/Sheet';
 import { GROUPS, GROUP_ORDER, VOLUME_LANDMARKS, mrvAt } from '../data/catalog';
 import { EXERCISE_MAP } from '../data/exercises';
 import { LESSONS } from '../data/lessons';
+import { M3_INFO, type M3 } from '../data/muscles3d';
+import { weekLoad } from '../engine/bodyLoad';
 import { ACHIEVEMENTS } from '../data/motivation';
 import { groupFrequency } from '../engine/program';
 import { fmtKg } from '../engine/progression';
 import { allPRs, exerciseSeries, finished, lastWeeks, logSets, logVolume, totals, volumeComparison, weekStreak, weeklyInsights } from '../engine/stats';
-import { fmtDate, fmtDuration } from '../lib/date';
+import { fmtDate, fmtDuration, startOfWeek } from '../lib/date';
 import { useStore } from '../store/useStore';
 import type { WorkoutLog } from '../types';
 
@@ -54,13 +57,15 @@ export default function Progress() {
         <div className="page-head">
           <h1 className="display">Natija</h1>
         </div>
-        <div className="card empty stack gap-12" style={{ alignItems: 'center' }}>
-          <PlateBadge color="var(--plate-blue)" size={72} />
+        <div className="card glow week-body stack gap-12">
+          <div className="week-body-3d">
+            <BodyHero load={[]} label="Anatomik model: hali mashg‘ulot yo‘q" />
+          </div>
           <p className="title" style={{ color: 'var(--text)' }}>
-            Birinchi mashg‘ulotdan keyin bu yerda statistika paydo bo‘ladi
+            Birinchi mashg‘ulotdan keyin ishlagan mushaklaringiz shu yerda yonadi
           </p>
-          <p className="small">Haftalik vaqt tahlili, rekordlar, mushaklar bo‘yicha hajm va kuch o‘sishi grafigi.</p>
-          <Link to="/" className="btn btn-primary">
+          <p className="small muted">Haftalik yuklama xaritasi, rekordlar, vaqt tahlili va kuch o‘sishi grafigi.</p>
+          <Link to="/" className="btn btn-primary btn-block">
             Bugungi mashqqa o‘tish
           </Link>
         </div>
@@ -77,7 +82,9 @@ export default function Progress() {
         <h1 className="display">Natija</h1>
       </div>
 
-      <div className="grid-2">
+      <WeekBody />
+
+      <div className="grid-2 mt-16">
         <Tile label="Mashg‘ulotlar" value={String(t.workouts)} />
         <Tile label="Umumiy vaqt" value={t.minutes >= 60 ? `${Math.round(t.minutes / 6) / 10} soat` : `${t.minutes} daq`} />
         <Tile label="Ko‘tarilgan" value={`${(t.volume / 1000).toFixed(1)} t`} sub={cmp.text} />
@@ -270,11 +277,62 @@ export default function Progress() {
 
 function Tile({ label, value, sub }: { label: string; value: string; sub?: string }) {
   return (
-    <div className="card tight stack gap-4">
-      <span className="small muted">{label}</span>
-      <span style={{ fontSize: 26, fontWeight: 800 }}>{value}</span>
+    <div className="card tight stack gap-6">
+      <span className="eyebrow">{label}</span>
+      <span className="poster" style={{ fontSize: 34 }}>
+        {value}
+      </span>
       {sub && <span className="tiny faint">≈ {sub}</span>}
     </div>
+  );
+}
+
+/** Haftalik yuklama 3D xaritada: qaysi mushak bu hafta qancha "samarali set" oldi */
+function WeekBody() {
+  const logs = useStore((s) => s.logs);
+  const load = useMemo(() => weekLoad(logs, startOfWeek()), [logs]);
+  const [view, setView] = useState<'front' | 'back'>('front');
+  const [sel, setSel] = useState<M3 | null>(null);
+  const cur = sel ? load.find((a) => a.key === sel) : null;
+  const top = load.slice(0, 5);
+  return (
+    <section className="card glow week-body">
+      <div className="row between" style={{ position: 'relative', zIndex: 1 }}>
+        <span className="eyebrow accent">Bu hafta ishlagan mushaklar</span>
+        <div className="segmented seg-mini" role="radiogroup" aria-label="Ko‘rinish">
+          {(['front', 'back'] as const).map((v) => (
+            <button key={v} role="radio" aria-checked={view === v} className={view === v ? 'on' : ''} onClick={() => setView(v)}>
+              {v === 'front' ? 'Old' : 'Orqa'}
+            </button>
+          ))}
+        </div>
+      </div>
+      <div className="week-body-3d">
+        <BodyHero load={load} view={view} selected={sel} onSelect={setSel} label={`Haftalik yuklama: ${top.map((a) => `${M3_INFO[a.key].name} ${a.sets} set`).join(', ') || 'hali yo‘q'}`} />
+      </div>
+      {cur || sel ? (
+        <div className="week-body-card" role="status">
+          <b className="small">{M3_INFO[sel!].name}</b>
+          <span className="small muted">{cur ? `${cur.sets} samarali set bu hafta` : 'Bu hafta deyarli ishlamadi'}</span>
+        </div>
+      ) : (
+        <div className="stack gap-6 mt-8" style={{ position: 'relative', zIndex: 1 }}>
+          {top.length === 0 && <span className="small muted">Bu hafta hali mashg‘ulot yo‘q — o‘tgan haftalar pastdagi grafiklarda.</span>}
+          {top.map((a) => (
+            <button key={a.key} className="load-row" onClick={() => setSel(a.key)}>
+              <span className="small grow ellipsis">{M3_INFO[a.key].name}</span>
+              <span className="load-bar" aria-hidden="true">
+                <i style={{ width: `${a.mvic}%` }} />
+              </span>
+              <span className="small strong num" style={{ width: 44, textAlign: 'right' }}>
+                {a.sets}
+              </span>
+            </button>
+          ))}
+          {top.length > 0 && <span className="tiny faint">Raqam — samarali setlar: bajarilgan set × mushakning shu mashqdagi faollik ulushi. Mushakka bosing.</span>}
+        </div>
+      )}
+    </section>
   );
 }
 

@@ -231,7 +231,7 @@ export function TargetBars({ rows, label }: { rows: { label: string; value: numb
 
 /* ---------- Makronutrientlar (qism-butun) ---------- */
 
-export const MACRO_COLORS = { p: '#e5392e', c: '#3a74ff', f: '#c08a16' };
+export const MACRO_COLORS = { p: '#d4fa50', c: '#e6e4da', f: '#ffb547' };
 
 export function MacroBar({ p, f, c }: { p: number; f: number; c: number }) {
   const kp = p * 4;

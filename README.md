@@ -114,4 +114,4 @@ Tavsiyalar ma'lumot uchun, tibbiy maslahat o'rnini bosmaydi.
 
 ## Litsenziyalar
 
-Ilova kodi — ushbu repozitoriy egasiga tegishli. 3D anatomik model (`public/models/muscles.glb`) — Z-Anatomy asosidagi moslashtirilgan versiya, **CC BY-SA 4.0** (BodyParts3D, © DBCLS); tafsilotlar [`public/models/LICENSE.md`](public/models/LICENSE.md). EMG tadqiqot jadvallari: [`docs/emg/`](docs/emg/).
+Ilova kodi — ushbu repozitoriy egasiga tegishli. 3D anatomik model (`public/models/muscles-v2.glb`) — Z-Anatomy asosidagi moslashtirilgan versiya, **CC BY-SA 4.0** (BodyParts3D, © DBCLS); tafsilotlar [`public/models/LICENSE.md`](public/models/LICENSE.md). EMG tadqiqot jadvallari: [`docs/emg/`](docs/emg/).

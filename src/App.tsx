@@ -40,8 +40,10 @@ function TabBar() {
         <NavLink key={t.to} to={t.to} end={t.to === '/'} className={({ isActive }) => (isActive ? 'active' : '')}>
           {({ isActive }) => (
             <>
-              {isActive && <motion.span layoutId="tab-pill" className="tab-pill" transition={{ type: 'spring', stiffness: 520, damping: 40 }} />}
-              <Icon name={t.icon} size={23} />
+              <span className="tab-ico">
+                {isActive && <motion.span layoutId="tab-pill" className="tab-pill" transition={{ type: 'spring', stiffness: 520, damping: 40 }} />}
+                <Icon name={t.icon} size={20} />
+              </span>
               {t.label}
               {t.to === '/' && active && <span className="tab-live" aria-label="Faol mashg‘ulot" />}
             </>

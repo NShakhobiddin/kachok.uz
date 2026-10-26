@@ -1,7 +1,7 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Link, Navigate, useNavigate } from 'react-router-dom';
-import { Barbell, PlateStack } from '../components/Barbell';
+import { PlateStack } from '../components/Barbell';
 import { Figure } from '../components/figure/Figure';
 import { PlateRing } from '../components/PlateRing';
 import { Icon } from '../components/ui/Icon';
@@ -211,7 +211,7 @@ export default function Workout() {
           <span className="small strong ellipsis" style={{ maxWidth: 180 }}>
             {active.log.title}
           </span>
-          <span className="mono tiny faint num">
+          <span className="tiny faint num" style={{ fontFamily: 'var(--font-display)', fontStretch: '112%', fontWeight: 700 }}>
             {fmtClock(elapsed)} · {doneSets}/{totalSets} set
           </span>
         </div>
@@ -220,7 +220,14 @@ export default function Workout() {
         </button>
       </div>
 
-      <Barbell plates={active.log.exercises.map((e) => ({ progress: e.sets.length ? e.sets.filter((s) => s.done).length / e.sets.length : 0 }))} />
+      {/* har mashq — bitta bo'lak: bajarilgan setlar ulushi */}
+      <div className="seg-progress" aria-hidden="true">
+        {active.log.exercises.map((e, i) => (
+          <i key={i} style={i === idx ? { background: 'rgba(212, 250, 80, 0.22)' } : undefined}>
+            <b style={{ width: `${e.sets.length ? (e.sets.filter((s) => s.done).length / e.sets.length) * 100 : 0}%` }} />
+          </i>
+        ))}
+      </div>
 
       {/* Mashqlar ro‘yxati */}
       <div className="hscroll mt-12" role="tablist" aria-label="Mashqlar">
@@ -234,9 +241,9 @@ export default function Workout() {
               aria-selected={i === idx}
               className={`chip ${i === idx ? 'on' : ''}`}
               onClick={() => st.setActiveIndex(i)}
-              style={{ height: 38, borderColor: done && i !== idx ? 'var(--green)' : undefined }}
+              style={{ height: 38, borderColor: done && i !== idx ? 'var(--accent-line)' : undefined }}
             >
-              <span className="pill-num" style={{ minWidth: 20, height: 20, fontSize: 11, background: done ? 'var(--green)' : undefined, color: done ? '#062414' : undefined }}>
+              <span className="pill-num" style={{ minWidth: 20, height: 20, fontSize: 11, background: done ? 'var(--accent)' : undefined, color: done ? 'var(--accent-ink)' : undefined }}>
                 {done ? <Icon name="check" size={12} stroke={3} /> : i + 1}
               </span>
               <span className="ellipsis" style={{ maxWidth: 130 }}>
@@ -252,33 +259,33 @@ export default function Workout() {
 
       {ex && (
         <motion.div key={idx} initial={{ opacity: 0, x: 16 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.22 }} className="mt-16 stack gap-12">
-          <div className="row gap-12">
-            <div className="stage" style={{ width: 112, height: 112, flex: 'none' }}>
-              <Figure spec={ex.anim} primary={ex.primary} secondary={ex.secondary} title={ex.name} hero={1} />
-            </div>
-            <div className="grow stack gap-4" style={{ minWidth: 0 }}>
-              <span className="eyebrow">
+          <div className="wo-head">
+            <div className="grow stack gap-6" style={{ minWidth: 0 }}>
+              <span className="eyebrow accent">
                 {idx + 1}/{active.log.exercises.length} · {ex.primary.map((m) => MUSCLES[m].name).join(', ')}
               </span>
-              <h2 style={{ fontSize: 21, fontWeight: 800, lineHeight: 1.15 }}>{ex.name}</h2>
-              <div className="row wrap gap-6 mt-4">
-                <button className="chip sm" onClick={() => setTechOpen(true)}>
-                  <Icon name="info" size={14} /> Texnika
-                </button>
-                <button className="chip sm" onClick={() => setSwapOpen(true)}>
-                  <Icon name="swap" size={14} /> Almashtirish
-                </button>
-                <button className="chip sm" onClick={() => setHistoryOpen(true)}>
-                  <Icon name="chart" size={14} /> Tarix
-                </button>
-                <button className="chip sm" onClick={() => setNoteEdit((v) => !v)} aria-expanded={noteEdit}>
-                  <Icon name="edit" size={14} /> Eslatma
-                </button>
-                <button className="chip sm" onClick={() => setPainOpen(true)} style={active.log.painEx?.includes(ex.id) ? { borderColor: 'var(--red)', background: 'var(--red-soft)' } : undefined}>
-                  <Icon name="alert" size={14} /> Og‘riq
-                </button>
-              </div>
+              <h2 className="display wo-title">{ex.name}</h2>
             </div>
+            <div className="stage wo-fig">
+              <Figure spec={ex.anim} primary={ex.primary} secondary={ex.secondary} title={ex.name} hero={1} />
+            </div>
+          </div>
+          <div className="hscroll wo-actions">
+            <button className="chip sm" onClick={() => setTechOpen(true)}>
+              <Icon name="info" size={14} /> Texnika
+            </button>
+            <button className="chip sm" onClick={() => setSwapOpen(true)}>
+              <Icon name="swap" size={14} /> Almashtirish
+            </button>
+            <button className="chip sm" onClick={() => setHistoryOpen(true)}>
+              <Icon name="chart" size={14} /> Tarix
+            </button>
+            <button className="chip sm" onClick={() => setNoteEdit((v) => !v)} aria-expanded={noteEdit}>
+              <Icon name="edit" size={14} /> Eslatma
+            </button>
+            <button className="chip sm" onClick={() => setPainOpen(true)} style={active.log.painEx?.includes(ex.id) ? { borderColor: 'var(--red)', background: 'var(--red-soft)' } : undefined}>
+              <Icon name="alert" size={14} /> Og‘riq
+            </button>
           </div>
 
           {painLast && (
@@ -608,9 +615,9 @@ function TargetCard({ ex, sug, repMax, barKg }: { ex: Exercise; sug: Suggestion;
   const color = sug.kind === 'up' ? 'var(--green)' : sug.kind === 'down' || sug.kind === 'easy' || sug.kind === 'deload' ? 'var(--yellow)' : 'var(--blue-2)';
   const pp = sug.kg && ex.loadType === 'barbell' ? platesPerSide(sug.kg, ex.id.includes('curl') || ex.id.includes('skull') ? 10 : barKg) : null;
   return (
-    <div className="card stack gap-8" style={{ background: 'var(--bg-2)' }}>
+    <div className="card glow stack gap-10 target-card">
       <div className="row between">
-        <span className="eyebrow">Bugungi maqsad</span>
+        <span className="eyebrow accent">Bugungi maqsad</span>
         <span className="tag num">
           RIR {sug.rir} · {sug.sets} set
         </span>

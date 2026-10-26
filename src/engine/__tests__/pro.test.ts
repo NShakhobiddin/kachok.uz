@@ -287,12 +287,15 @@ describe('3D mushaklar va EMG faolligi', () => {
     }
   });
   it('3D modelda har bir mushak kaliti uchun mesh bor', () => {
-    const glb = readFileSync(new URL('../../../public/models/muscles.glb', import.meta.url));
+    const glb = readFileSync(new URL('../../../public/models/muscles-v2.glb', import.meta.url));
     const len = glb.readUInt32LE(12);
     const json = JSON.parse(glb.subarray(20, 20 + len).toString('utf8')) as { nodes: { name: string }[] };
     const names = new Set(json.nodes.map((n) => n.name));
     for (const k of M3_KEYS) expect(names.has(k), k).toBe(true);
     for (const k of ['bones', 'other', 'tendon']) expect(names.has(k), k).toBe(true);
+    // har bir mesh tola yo'nalishi va atrof soyasi atributiga ega (shader uchun)
+    const meshes = (JSON.parse(glb.subarray(20, 20 + len).toString('utf8')) as { meshes: { primitives: { attributes: Record<string, number> }[] }[] }).meshes;
+    for (const m of meshes) expect(Object.keys(m.primitives[0].attributes)).toContain('_FIBAO');
   });
   it('takror fazasi: konsentrik > ekssentrik > pauza; izometrikda to‘liq', () => {
     expect(phaseFactor('up', false)).toBeGreaterThan(phaseFactor('down', false));

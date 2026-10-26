@@ -2,13 +2,13 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { apiEnabled } from '../api/client';
-import { Figure } from '../components/figure/Figure';
+import { BodyHero } from '../components/BodyHero';
 import { Icon } from '../components/ui/Icon';
 import { Choice, Stepper } from '../components/ui/controls';
 import { EquipmentGrid } from '../components/EquipmentGrid';
-import { backSquat } from '../data/anims';
 import { EQUIPMENT_PRESETS, GROUPS, GROUP_ORDER, INJURIES } from '../data/catalog';
 import { ACTIVITY, nutritionPlan } from '../engine/nutrition';
+import { planLoad } from '../engine/bodyLoad';
 import { DEFAULT_DAYS } from '../engine/program';
 import { DAYS_SHORT } from '../lib/date';
 import { useStore } from '../store/useStore';
@@ -38,7 +38,12 @@ const PARQ = [
   "Shifokor faqat tibbiy nazorat ostida shug‘ullanishingizni aytganmi?",
 ];
 
-const WELCOME_SPEC = backSquat();
+/** kirish ekranidagi 3D tanada yonadigan mushaklar (yirik guruhlar) */
+const WELCOME_LOAD = planLoad([
+  { exerciseId: 'back-squat', sets: 3 },
+  { exerciseId: 'bench-press', sets: 3 },
+  { exerciseId: 'pull-up', sets: 3 },
+]);
 
 const STEPS = ['welcome', 'about', 'goal', 'body', 'level', 'schedule', 'equipment', 'limits', 'activity', 'health', 'done'] as const;
 type Step = (typeof STEPS)[number];
@@ -89,28 +94,19 @@ export default function Onboarding() {
   if (step === 'welcome') {
     return (
       <div className="page no-tab" style={{ minHeight: '100dvh', display: 'flex', flexDirection: 'column' }}>
-        <div className="row between">
-          <span className="eyebrow">kachok.uz</span>
-          <span className="row gap-4" aria-hidden>
-            {['--plate-red', '--plate-blue', '--plate-yellow', '--plate-green', '--plate-white'].map((c) => (
-              <i key={c} style={{ width: 10, height: 10, borderRadius: 3, background: `var(${c})`, display: 'inline-block' }} />
-            ))}
-          </span>
-        </div>
-        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="stage mt-16" style={{ aspectRatio: '1 / 0.92' }}>
-          <Figure spec={WELCOME_SPEC} primary={['quads', 'glutes']} secondary={['hamstrings', 'lowerBack']} title="O‘tirib-turish animatsiyasi" hero={1 / 0.92} />
-          <div style={{ position: 'absolute', left: 14, top: 12 }} className="eyebrow">
-            Son oldi · dumba
-          </div>
+        <span className="eyebrow">kachok.uz</span>
+        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="card glow welcome-hero mt-12">
+          <BodyHero load={WELCOME_LOAD} label="3D anatomik model: mashqda ishlaydigan mushaklar lime rangda yonadi" />
+          <span className="eyebrow accent welcome-tag">Har bir mushak — 3D da</span>
         </motion.div>
-        <motion.h1 initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15, duration: 0.6 }} className="display mt-24" style={{ fontSize: 64 }}>
+        <motion.h1 initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15, duration: 0.6 }} className="poster mt-24" style={{ fontSize: 68 }}>
           Kachok
         </motion.h1>
-        <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }} className="mt-8" style={{ fontSize: 18, lineHeight: 1.45, color: 'var(--text-2)' }}>
-          Zalda yoningizdagi murabbiy: <span style={{ color: 'var(--text)' }}>sizga moslangan dastur</span>, har bir mashqning animatsiyali texnikasi va ilmiy asoslangan ovqatlanish.
+        <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }} className="mt-12" style={{ fontSize: 17, lineHeight: 1.45, color: 'var(--text-2)' }}>
+          Zalda yoningizdagi murabbiy: <span style={{ color: 'var(--text)' }}>sizga moslangan dastur</span>, har bir mashqda qaysi mushak qancha ishlashi va ilmiy asoslangan ovqatlanish.
         </motion.p>
         <div style={{ flex: 1, minHeight: 24 }} />
-        <button className="btn btn-primary btn-block" onClick={() => go(1)}>
+        <button className="btn btn-primary btn-xl btn-block" onClick={() => go(1)}>
           Dasturimni tuzish <Icon name="right" size={20} />
         </button>
         {apiEnabled ? (
@@ -455,7 +451,7 @@ function Row({ k, v }: { k: string; v: string }) {
 
 function GoalIcon({ name, on }: { name: string; on: boolean }) {
   return (
-    <span style={{ width: 42, height: 42, borderRadius: 12, display: 'grid', placeItems: 'center', background: on ? 'var(--blue)' : 'var(--surface-2)', color: on ? '#fff' : 'var(--text-2)', flex: 'none', transition: 'all .15s' }}>
+    <span style={{ width: 42, height: 42, borderRadius: 12, display: 'grid', placeItems: 'center', background: on ? 'var(--accent)' : 'var(--surface-2)', color: on ? 'var(--accent-ink)' : 'var(--text-2)', flex: 'none', transition: 'all .15s' }}>
       <Icon name={name} />
     </span>
   );

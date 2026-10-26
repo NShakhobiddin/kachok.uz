@@ -216,11 +216,11 @@ function Lessons() {
                     width: 48,
                     height: 48,
                     borderRadius: 14,
-                    background: `var(--plate-${l.plate})`,
+                    background: 'var(--surface-2)',
                     display: 'grid',
                     placeItems: 'center',
                     flex: 'none',
-                    color: l.plate === 'white' || l.plate === 'yellow' ? '#111' : '#fff',
+                    color: 'var(--accent)',
                   }}
                 >
                   <Icon name={l.icon} />

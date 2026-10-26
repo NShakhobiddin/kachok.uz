@@ -1,8 +1,7 @@
 import { motion } from 'framer-motion';
 import { useMemo, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Barbell } from '../components/Barbell';
-import { BodyMap } from '../components/BodyMap';
+import { BodyHero } from '../components/BodyHero';
 import { CoachBanner } from '../components/CoachBanner';
 import { ExerciseThumb } from '../components/ExerciseThumb';
 import { Icon } from '../components/ui/Icon';
@@ -10,14 +9,15 @@ import { Sheet } from '../components/ui/Sheet';
 import { MUSCLES } from '../data/catalog';
 import { EXERCISE_MAP } from '../data/exercises';
 import { LESSONS } from '../data/lessons';
-import { FACTS, QUOTES, dailyPick } from '../data/motivation';
+import { FACTS, dailyPick } from '../data/motivation';
 import { sourceById } from '../data/sources';
+import { fatigueLoad, loadGroups, planLoad } from '../engine/bodyLoad';
 import { muscleRecovery, weekStreak } from '../engine/stats';
-import { DAYS, DAYS_SHORT, MONTHS, daysBetween, fmtDuration, greeting, isoDate } from '../lib/date';
+import { DAYS, DAYS_SHORT, MONTHS, daysBetween, isoDate } from '../lib/date';
 import { useNutrition } from '../lib/useNutrition';
 import { useDayPlan, useToday } from '../lib/useToday';
 import { useStore } from '../store/useStore';
-import type { MuscleId, WorkoutDay } from '../types';
+import type { WorkoutDay } from '../types';
 
 export default function Home() {
   const nav = useNavigate();
@@ -34,10 +34,10 @@ export default function Home() {
   const streak = useMemo(() => weekStreak(logs, profile.daysPerWeek), [logs, profile.daysPerWeek]);
   const recovery = useMemo(() => muscleRecovery(logs), [logs]);
   const { np, eatenToday } = useNutrition();
-  const lastLog = [...logs].filter((l) => l.finishedAt).sort((a, b) => b.startedAt.localeCompare(a.startedAt))[0];
+  const finished = logs.filter((l) => l.finishedAt);
+  const lastLog = [...finished].sort((a, b) => b.startedAt.localeCompare(a.startedAt))[0];
   const daysSince = lastLog ? daysBetween(new Date(lastLog.startedAt), now) : null;
   const weekMinutes = t.weekLogs.reduce((a, l) => a + l.durationMin, 0);
-  const quote = dailyPick(QUOTES);
   const fact = dailyPick(FACTS, 3);
   const lessonsDone = useStore((s) => s.lessonsDone);
   const lesson = LESSONS.find((l) => !lessonsDone.includes(l.id)) ?? dailyPick(LESSONS);
@@ -48,112 +48,170 @@ export default function Home() {
     nav('/workout');
   };
 
-  const fresh = (Object.entries(recovery) as [MuscleId, number][]).filter(([, v]) => v < 0.8).map(([m]) => m);
   const totalSets = plan.reduce((a, x) => a + x.sug.sets, 0);
-  const firstEx = plan[0] ? EXERCISE_MAP[plan[0].pe.exerciseId] : undefined;
   const estMin = day?.estMin ?? 0;
+  const mode: 'active' | 'plan' | 'rest' = active ? 'active' : day && !(t.doneToday && !chosen) ? 'plan' : 'rest';
+  const load = useMemo(() => {
+    if (active) return planLoad(active.plan.map((p) => ({ exerciseId: p.exerciseId, sets: p.sets })));
+    if (mode === 'plan') return planLoad(plan.map(({ pe, sug }) => ({ exerciseId: pe.exerciseId, sets: sug.sets })));
+    return fatigueLoad(recovery);
+  }, [active, mode, plan, recovery]);
+  const groups = loadGroups(load, MUSCLES);
+  const activeDone = active ? active.log.exercises.reduce((a, e) => a + e.sets.filter((s) => s.done).length, 0) : 0;
+  const activeTotal = active ? active.log.exercises.reduce((a, e) => a + e.sets.length, 0) : 0;
+  const untilNext = t.nextDay ? (t.nextDay.weekday - t.today + 7) % 7 || 7 : null;
 
   return (
-    <div className="page">
-      <header className="row between" style={{ marginBottom: 18 }}>
-        <div className="stack gap-4">
+    <div className="page home">
+      <header className="row between" style={{ marginBottom: 16 }}>
+        <div className="stack gap-6">
           <span className="eyebrow">
             {DAYS[t.today]} · {now.getDate()} {MONTHS[now.getMonth()]}
           </span>
-          <h1 style={{ fontSize: 24, fontWeight: 800, letterSpacing: '-0.01em' }}>
-            {greeting(now)}
-            {profile.name ? `, ${profile.name}` : ''}
-          </h1>
+          <h1 className="display display-l">{profile.name ? `Salom, ${profile.name}` : 'Bugun'}</h1>
         </div>
-        <Link to="/profile" className="icon-btn filled" aria-label="Profil va sozlamalar">
-          {profile.name ? <span style={{ fontWeight: 800, fontSize: 17 }}>{profile.name[0].toUpperCase()}</span> : <Icon name="user" />}
+        <Link to="/profile" className="avatar" aria-label="Profil va sozlamalar">
+          {profile.name ? profile.name[0].toUpperCase() : <Icon name="user" />}
         </Link>
       </header>
 
       <CoachBanner />
 
-      {active ? (
-        <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="card raised stack gap-12" style={{ borderColor: 'var(--blue)' }}>
-          <span className="eyebrow" style={{ color: 'var(--blue-2)' }}>
-            Faol mashg‘ulot
+      {/* Asosiy kartochka: 3D tana — bugun ishlaydigan (yoki hali tiklanayotgan) mushaklar */}
+      <motion.section initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35 }} className="hero card glow">
+        <div className="hero-body">
+          <BodyHero
+            load={load}
+            label={mode === 'rest' ? `Hali tiklanayotgan mushaklar: ${groups.join(', ') || 'yo‘q'}` : `Bugun ishlaydigan mushaklar: ${groups.join(', ')}`}
+          />
+        </div>
+        <div className="hero-copy">
+          <span className="eyebrow accent">
+            {mode === 'active'
+              ? 'Faol mashg‘ulot'
+              : mode === 'plan'
+                ? `${t.todayDay?.id === day?.id ? 'Bugungi mashq' : chosen ? 'Tanlangan mashq' : `O‘tkazib yuborilgan · ${DAYS[day!.weekday]}`} · ${t.week}-hafta`
+                : t.doneToday
+                  ? 'Bugungi mashq bajarildi'
+                  : 'Dam olish kuni'}
           </span>
-          <h2 className="display display-l">{active.log.title}</h2>
-          <Barbell plates={active.log.exercises.map((e) => ({ progress: e.sets.length ? e.sets.filter((s) => s.done).length / e.sets.length : 0 }))} />
-          <button className="btn btn-primary btn-block" onClick={() => nav('/workout')}>
-            Davom ettirish <Icon name="play" size={18} />
-          </button>
-        </motion.div>
-      ) : day && !(t.doneToday && !chosen) ? (
-        <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="card raised stack gap-12">
-          <div className="row between">
-            <span className="eyebrow">
-              {t.todayDay?.id === day.id ? 'Bugungi mashq' : chosen ? 'Tanlangan mashq' : `O‘tkazib yuborilgan · ${DAYS[day.weekday]}`} · {t.week}-hafta
-            </span>
-            {t.deload && <span className="tag" style={{ color: 'var(--yellow)' }}>Yengil hafta</span>}
-          </div>
-          <div className="row gap-12" style={{ alignItems: 'flex-start' }}>
-            <div className="grow" style={{ minWidth: 0 }}>
-              <h2 className="display display-l">{day.title}</h2>
-              <p className="muted small mt-4">{day.focus}</p>
-              {firstEx && <p className="tiny faint mt-8">Birinchi mashq: {firstEx.name}</p>}
-            </div>
-            {firstEx && <ExerciseThumb ex={firstEx} size={96} playing />}
-          </div>
-          <Barbell plates={plan.map(() => ({ progress: 0 }))} label={`${plan.length} ta mashq rejada`} />
-          <div className="row gap-16 small">
-            <span className="row gap-6 muted">
-              <Icon name="dumbbell" size={16} /> {plan.length} mashq
-            </span>
-            <span className="row gap-6 muted">
-              <Icon name="list" size={16} /> {totalSets} set
-            </span>
-            <span className="row gap-6 muted">
-              <Icon name="clock" size={16} /> ~{estMin} daq
-            </span>
-          </div>
-          <Readiness />
-          <button className="btn btn-primary btn-block" onClick={begin}>
-            <Icon name="play" size={18} /> Mashqni boshlash
-          </button>
-          <div className="row between">
-            <Link to="/program" className="small strong" style={{ color: 'var(--text-2)' }}>
-              Mashqlarni ko‘rish
-            </Link>
-            <button className="small strong" style={{ color: 'var(--text-2)' }} onClick={() => setPickDay(true)}>
-              Boshqa kunni tanlash
-            </button>
-          </div>
-        </motion.div>
-      ) : (
-        <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="card raised stack gap-12">
-          <span className="eyebrow">{t.doneToday ? 'Bugungi mashq bajarildi' : 'Dam olish kuni'}</span>
-          <h2 className="display display-l">{t.doneToday ? 'Barakalla!' : 'Tiklanish ham mashq'}</h2>
-          <p className="muted">
-            {t.doneToday
-              ? 'Mushak hozir, dam olayotganda o‘sadi: oqsil, suv va 7–9 soat uyqu.'
-              : "Mushaklar dam olishda o‘sadi. Bugun 7–10 ming qadam yurish va 5 daqiqa cho‘zilish yetarli."}
-          </p>
-          {t.nextDay && (
-            <div className="notice">
-              <Icon name="calendar" />
-              <span>
-                Keyingi mashg‘ulot: <b>{DAYS[t.nextDay.weekday]}</b> — {t.nextDay.title}
-              </span>
+          <h2 className="display display-m hero-title">
+            {mode === 'active' ? active!.log.title : mode === 'plan' ? day!.title : t.doneToday ? 'Barakalla!' : 'Tiklanish ham mashq'}
+          </h2>
+          {groups.length > 0 && (
+            <div className="stack gap-4 mt-8">
+              {groups.map((g) => (
+                <span key={g} className="hero-muscle">
+                  <i /> {g}
+                </span>
+              ))}
+              {mode === 'rest' && <span className="tiny muted">hali tiklanmoqda</span>}
             </div>
           )}
+          {t.deload && mode === 'plan' && (
+            <span className="tag mt-8" style={{ color: 'var(--yellow)', alignSelf: 'flex-start' }}>
+              Yengil hafta
+            </span>
+          )}
+        </div>
+        <div className="hero-stat">
+          {mode === 'active' ? (
+            <>
+              <span className="poster hero-num">
+                {activeDone}
+                <small>/{activeTotal}</small>
+              </span>
+              <span className="hero-unit">set bajarildi</span>
+            </>
+          ) : mode === 'plan' ? (
+            <>
+              <span className="poster hero-num">{estMin}</span>
+              <span className="hero-unit">daqiqa</span>
+              <span className="small muted mt-8">
+                {plan.length} mashq · {totalSets} set
+              </span>
+            </>
+          ) : t.nextDay && untilNext ? (
+            <>
+              <span className="poster hero-num">{untilNext}</span>
+              <span className="hero-unit">kundan keyin</span>
+              <span className="small muted mt-8">{t.nextDay.title}</span>
+            </>
+          ) : null}
+        </div>
+        {mode === 'active' && (
+          <div className="seg-progress hero-seg" aria-hidden="true">
+            {active!.log.exercises.map((e, i) => (
+              <i key={i}>
+                <b style={{ width: `${e.sets.length ? (e.sets.filter((s) => s.done).length / e.sets.length) * 100 : 0}%` }} />
+              </i>
+            ))}
+          </div>
+        )}
+      </motion.section>
+
+      {mode === 'active' ? (
+        <button className="btn btn-primary btn-xl btn-block mt-12" onClick={() => nav('/workout')}>
+          Davom ettirish <Icon name="play" size={18} />
+        </button>
+      ) : mode === 'plan' ? (
+        <>
+          <button className="btn btn-primary btn-xl btn-block mt-12" onClick={begin}>
+            Boshlash <Icon name="play" size={18} />
+          </button>
+          <Readiness />
+        </>
+      ) : (
+        <div className="stack gap-8 mt-12">
+          <p className="small muted" style={{ padding: '0 4px' }}>
+            {t.doneToday
+              ? 'Mushak hozir — dam olayotganda o‘sadi: oqsil, suv va 7–9 soat uyqu.'
+              : 'Mushaklar dam olishda o‘sadi. Bugun 7–10 ming qadam va 5 daqiqa cho‘zilish yetarli.'}
+          </p>
           <button className="btn btn-secondary btn-block" onClick={() => setPickDay(true)}>
             Baribir mashq qilaman
           </button>
-        </motion.div>
+        </div>
       )}
 
       {daysSince !== null && daysSince >= 5 && !active && (
         <div className="notice gold mt-12">
           <Icon name="bolt" />
-          <span>
-            {daysSince} kundan beri zalda emassiz. Qaytish uchun mukammal kun kerak emas — 30 daqiqalik qisqa mashq ham hisobga kiradi.
-          </span>
+          <span>{daysSince} kundan beri zalda emassiz. Qaytish uchun mukammal kun shart emas — 30 daqiqalik qisqa mashq ham hisobga kiradi.</span>
         </div>
+      )}
+
+      {/* Bugungi mashqlar ro'yxati */}
+      {mode === 'plan' && plan.length > 0 && (
+        <section className="section">
+          <div className="section-head">
+            <h2>Mashqlar</h2>
+            <button className="small strong accent-text" onClick={() => setPickDay(true)}>
+              Boshqa kun
+            </button>
+          </div>
+          <ol className="ex-list">
+            {plan.map(({ pe, sug }, i) => {
+              const ex = EXERCISE_MAP[pe.exerciseId];
+              if (!ex) return null;
+              return (
+                <li key={pe.exerciseId + i}>
+                  <Link to={`/exercise/${ex.id}`} className="ex-row">
+                    <span className="ex-n">{i + 1}</span>
+                    <ExerciseThumb ex={ex} size={52} />
+                    <span className="grow" style={{ minWidth: 0 }}>
+                      <span className="ex-name">{ex.name}</span>
+                      <span className="tiny muted">{ex.primary.map((m) => MUSCLES[m].name).join(', ')}</span>
+                    </span>
+                    <span className="ex-meta num">
+                      {sug.sets}×{pe.repMin}–{pe.repMax}
+                    </span>
+                  </Link>
+                </li>
+              );
+            })}
+          </ol>
+        </section>
       )}
 
       {/* Hafta */}
@@ -161,106 +219,62 @@ export default function Home() {
         <div className="section-head">
           <h2>Bu hafta</h2>
           <span className="small muted num">
-            {t.weekLogs.length}/{profile.daysPerWeek} mashq · {fmtDuration(weekMinutes)}
+            {t.weekLogs.length}/{profile.daysPerWeek} mashg‘ulot
           </span>
         </div>
-        <div className="row" style={{ gap: 6 }}>
+        <div className="week-strip">
           {DAYS_SHORT.map((d, i) => {
             const planned = t.days.some((x) => x.weekday === i);
             const done = t.doneDays.has(i);
-            const isToday = i === t.today;
             return (
-              <div
-                key={d}
-                className="stack"
-                style={{
-                  flex: 1,
-                  alignItems: 'center',
-                  gap: 6,
-                  padding: '10px 0',
-                  borderRadius: 14,
-                  background: isToday ? 'var(--surface-2)' : 'transparent',
-                  border: `1px solid ${isToday ? 'var(--line-2)' : 'transparent'}`,
-                }}
-              >
-                <span className="tiny strong" style={{ color: isToday ? 'var(--text)' : 'var(--text-3)' }}>
-                  {d}
-                </span>
-                <span
-                  aria-label={done ? 'bajarildi' : planned ? 'rejada' : 'dam'}
-                  style={{
-                    width: 22,
-                    height: 22,
-                    borderRadius: '50%',
-                    display: 'grid',
-                    placeItems: 'center',
-                    background: done ? 'var(--green)' : 'transparent',
-                    border: done ? 'none' : planned ? '2px solid var(--blue)' : '2px dashed var(--line-2)',
-                    color: '#062414',
-                  }}
-                >
-                  {done && <Icon name="check" size={13} stroke={3.2} />}
-                </span>
+              <div key={d} className={`wk ${i === t.today ? 'today' : ''} ${done ? 'done' : planned ? 'planned' : ''}`}>
+                <span>{d}</span>
+                <i aria-label={done ? 'bajarildi' : planned ? 'rejada' : 'dam'}>{done && <Icon name="check" size={12} stroke={3.2} />}</i>
               </div>
             );
           })}
         </div>
-        <div className="grid-2 mt-12">
-          <div className="card tight stack gap-4">
-            <span className="row gap-6 small muted">
-              <Icon name="flame" size={16} style={{ color: 'var(--red)' }} /> Haftalik seriya
-            </span>
-            <span style={{ fontSize: 26, fontWeight: 800 }}>
-              {streak} <span className="small muted">hafta</span>
-            </span>
+        <div className="stat3 mt-12">
+          <div>
+            <b className="poster">{streak}</b>
+            <span>hafta ketma-ket</span>
           </div>
-          <Link to="/nutrition" className="card tight stack gap-4" style={{ color: 'inherit' }}>
-            <span className="row gap-6 small muted">
-              <Icon name="food" size={16} style={{ color: 'var(--green)' }} /> {eatenToday > 0 ? 'Bugun yeyildi' : 'Kunlik maqsad'}
-            </span>
-            <span style={{ fontSize: 26, fontWeight: 800 }}>
-              {eatenToday > 0 ? Math.round(eatenToday) : np.kcal} <span className="small muted">{eatenToday > 0 ? `/ ${np.kcal}` : 'kkal'}</span>
-            </span>
-            <span className="tiny faint">{eatenToday > 0 ? `Qoldi ${Math.max(0, np.kcal - Math.round(eatenToday))} kkal` : `Oqsil ${np.protein} g`}</span>
-          </Link>
+          <div>
+            <b className="poster">{weekMinutes}</b>
+            <span>daqiqa bu hafta</span>
+          </div>
+          <div>
+            <b className="poster">{finished.length}</b>
+            <span>mashg‘ulot jami</span>
+          </div>
         </div>
       </section>
 
-      <WaterCard goalL={np.waterL + (t.todayDay ? np.waterTrainingL : 0)} />
-
-      {/* Tiklanish xaritasi */}
+      {/* Ovqat va suv */}
       <section className="section">
-        <div className="section-head">
-          <h2>Mushaklar tiklanishi</h2>
-          <span className="small muted">so‘nggi 6 kun</span>
-        </div>
-        <div className="card">
-          <BodyMap recovery={recovery} height={210} />
-          <div className="row gap-12 center tiny muted mt-12">
-            <span className="row gap-6">
-              <i className="dot" style={{ background: 'var(--green)' }} /> Tayyor
+        <div className="grid-2">
+          <Link to="/nutrition" className="card tight stack gap-4" style={{ color: 'inherit' }}>
+            <span className="eyebrow">{eatenToday > 0 ? 'Qoldi' : 'Kunlik maqsad'}</span>
+            <span className="row gap-6" style={{ alignItems: 'baseline' }}>
+              <b className="poster" style={{ fontSize: 32 }}>
+                {eatenToday > 0 ? Math.max(0, np.kcal - Math.round(eatenToday)) : np.kcal}
+              </b>
+              <span className="small muted">kkal</span>
             </span>
-            <span className="row gap-6">
-              <i className="dot" style={{ background: 'var(--yellow)' }} /> Tiklanmoqda
-            </span>
-            <span className="row gap-6">
-              <i className="dot" style={{ background: 'var(--red)' }} /> Charchagan
-            </span>
-          </div>
-          {fresh.length > 0 && <p className="small muted mt-12">Hali tiklanmoqda: {Array.from(new Set(fresh.map((m) => MUSCLES[m].name))).slice(0, 4).join(', ')}.</p>}
+            <span className="tiny muted">Oqsil {np.protein} g</span>
+          </Link>
+          <Water goalL={np.waterL + (t.todayDay ? np.waterTrainingL : 0)} />
         </div>
       </section>
 
-      {/* Dars */}
+      {/* Dars va fakt */}
       <section className="section">
         <div className="section-head">
           <h2>Bugungi dars</h2>
-          <Link to="/library?tab=lessons" className="small strong">
-            Barchasi
-          </Link>
+          <Link to="/library?tab=lessons">Barchasi</Link>
         </div>
         <Link to={`/lesson/${lesson.id}`} className="card row gap-12" style={{ color: 'inherit' }}>
-          <span style={{ width: 52, height: 52, borderRadius: 14, background: `var(--plate-${lesson.plate})`, display: 'grid', placeItems: 'center', flex: 'none', color: lesson.plate === 'white' || lesson.plate === 'yellow' ? '#111' : '#fff' }}>
+          <span className="lesson-ico">
             <Icon name={lesson.icon} />
           </span>
           <div className="grow">
@@ -271,23 +285,11 @@ export default function Home() {
           </div>
           <Icon name="right" style={{ color: 'var(--text-3)' }} />
         </Link>
-      </section>
-
-      {/* Fakt va iqtibos */}
-      <section className="section">
-        <div className="card stack gap-8" style={{ background: 'var(--blue-soft)', borderColor: 'rgba(58,116,255,.3)' }}>
-          <span className="eyebrow" style={{ color: 'var(--blue-2)' }}>
-            Bilasizmi?
-          </span>
-          <p style={{ fontSize: 16, lineHeight: 1.5 }}>{fact.text}</p>
+        <div className="card mt-12 stack gap-8">
+          <span className="eyebrow accent">Bilasizmi?</span>
+          <p style={{ fontSize: 15, lineHeight: 1.5 }}>{fact.text}</p>
           <span className="tiny faint">{sourceById(fact.source)?.short}</span>
         </div>
-        <blockquote className="mt-16" style={{ margin: '16px 0 0', padding: '0 4px' }}>
-          <p className="display" style={{ fontSize: 26, lineHeight: 1.05 }}>
-            «{quote.text}»
-          </p>
-          {quote.by && <p className="small faint mt-8">— {quote.by}</p>}
-        </blockquote>
       </section>
 
       <Sheet open={pickDay} onClose={() => setPickDay(false)} label="Kun tanlash">
@@ -319,101 +321,76 @@ export default function Home() {
   );
 }
 
+/** Bir bosishda tayyorlik: avtoregulyatsiya uchun (charchagan — yengilroq, zo'r — to'liq) */
 function Readiness() {
   const setReadiness = useStore((s) => s.setReadiness);
   const value = useStore((s) => s.readiness[isoDate()]);
-  const [ans, setAns] = useState<Record<string, number>>({});
-  const [open, setOpen] = useState(false);
-  const Q = [
-    { k: 'sleep', q: 'Uyqu', o: ['Yomon', "O‘rtacha", 'Yaxshi'] },
-    { k: 'sore', q: "Mushak og‘rig‘i", o: ['Kuchli', 'Biroz', "Yo‘q"] },
-    { k: 'energy', q: 'Energiya', o: ['Past', "O‘rtacha", 'Yuqori'] },
+  const [edit, setEdit] = useState(false);
+  const OPTS = [
+    { v: 1.8, label: 'Charchagan', icon: 'moon' },
+    { v: 3.2, label: 'Odatdagidek', icon: 'balance' },
+    { v: 4.6, label: 'Zo‘r', icon: 'bolt' },
   ];
-  if (value !== undefined && !open) {
-    const tone = value >= 3.7 ? 'good' : value >= 2.6 ? 'gold' : 'warn';
-    const msg = value >= 3.7 ? "Tayyorsiz — bugun to‘liq kuch bilan." : value >= 2.6 ? 'Rejadagidek, har setda 2 takror zaxira qoldiring.' : "Yengillashtirilgan rejim: setlar va vazn biroz kamaytirildi.";
+  if (value !== undefined && !edit) {
+    const msg = value >= 3.7 ? 'Tayyorsiz — bugun to‘liq kuch bilan.' : value >= 2.6 ? 'Rejadagidek: har setda 2 takror zaxira qoldiring.' : 'Yengil rejim: setlar va vazn biroz kamaytirildi.';
     return (
-      <button className={`notice ${tone}`} onClick={() => setOpen(true)} style={{ textAlign: 'left' }}>
-        <Icon name={value >= 3.7 ? 'bolt' : value >= 2.6 ? 'info' : 'moon'} />
-        <span className="grow">
-          <b>Tayyorlik: {Math.round((value / 5) * 100)}%</b> · {msg}
+      <button className="ready-done" onClick={() => setEdit(true)}>
+        <Icon name={value >= 3.7 ? 'bolt' : value >= 2.6 ? 'balance' : 'moon'} size={18} />
+        <span className="grow small">
+          <b>Tayyorlik {Math.round((value / 5) * 100)}%</b> · {msg}
         </span>
+        <span className="tiny muted">o‘zgartirish</span>
       </button>
     );
   }
   return (
-    <div className="stack gap-10" style={{ padding: 12, borderRadius: 14, background: 'var(--bg-2)', border: '1px solid var(--line)' }}>
+    <div className="ready mt-12">
       <span className="small strong">Bugun o‘zingizni qanday his qilyapsiz?</span>
-      {Q.map((q) => (
-        <div key={q.k} className="row gap-8">
-          <span className="small muted" style={{ width: 104, flex: 'none' }}>
-            {q.q}
-          </span>
-          <div className="row gap-6 grow">
-            {q.o.map((o, i) => (
-              <button key={o} className={`chip sm ${ans[q.k] === i ? 'on' : ''}`} style={{ flex: 1, justifyContent: 'center' }} onClick={() => setAns((a) => ({ ...a, [q.k]: i }))}>
-                {o}
-              </button>
-            ))}
-          </div>
-        </div>
-      ))}
-      <button
-        className="btn btn-secondary btn-sm"
-        disabled={Object.keys(ans).length < 3}
-        onClick={() => {
-          const avg = Object.values(ans).reduce((a, b) => a + [1, 3, 5][b], 0) / 3;
-          setReadiness(Math.round(avg * 10) / 10);
-          setOpen(false);
-        }}
-      >
-        Saqlash
-      </button>
+      <div className="row gap-6 mt-8" role="radiogroup" aria-label="Tayyorlik">
+        {OPTS.map((o) => (
+          <button
+            key={o.v}
+            role="radio"
+            aria-checked={value === o.v}
+            className="ready-opt"
+            onClick={() => {
+              setReadiness(o.v);
+              setEdit(false);
+            }}
+          >
+            <Icon name={o.icon} size={18} />
+            {o.label}
+          </button>
+        ))}
+      </div>
     </div>
   );
 }
 
-function WaterCard({ goalL }: { goalL: number }) {
+function Water({ goalL }: { goalL: number }) {
   const ml = useStore((s) => s.water[isoDate()] ?? 0);
   const addWater = useStore((s) => s.addWater);
   const goal = Math.round(goalL * 1000);
-  const cups = Math.ceil(goal / 250);
-  const filled = Math.floor(ml / 250);
   return (
-    <section className="section">
-      <div className="card stack gap-12">
-        <div className="row between">
-          <span className="row gap-8 strong">
-            <Icon name="drop" size={18} style={{ color: 'var(--blue-2)' }} /> Suv
-          </span>
-          <span className="small muted num">
-            {(ml / 1000).toFixed(2)} / {(goal / 1000).toFixed(1)} L
-          </span>
-        </div>
-        <div className="row gap-6 wrap" aria-hidden>
-          {Array.from({ length: cups }, (_, i) => (
-            <span key={i} style={{ width: 20, height: 26, borderRadius: '3px 3px 7px 7px', border: '1.5px solid var(--line-2)', position: 'relative', overflow: 'hidden' }}>
-              <motion.i
-                initial={false}
-                animate={{ height: i < filled ? '100%' : '0%' }}
-                style={{ position: 'absolute', left: 0, right: 0, bottom: 0, background: 'var(--blue)', display: 'block' }}
-              />
-            </span>
-          ))}
-        </div>
-        <div className="row gap-8">
-          <button className="btn btn-secondary btn-sm grow" onClick={() => addWater(250)}>
-            +250 ml
-          </button>
-          <button className="btn btn-secondary btn-sm grow" onClick={() => addWater(500)}>
-            +500 ml
-          </button>
-          <button className="btn btn-ghost btn-sm" onClick={() => addWater(-250)} aria-label="250 ml ayirish">
-            <Icon name="minus" size={18} />
-          </button>
-        </div>
-        <span className="tiny faint">EFSA tavsiyasi asosida + mashq kunlari qo‘shimcha suv.</span>
+    <div className="card tight stack gap-4">
+      <span className="eyebrow">Suv</span>
+      <span className="row gap-6" style={{ alignItems: 'baseline' }}>
+        <b className="poster" style={{ fontSize: 32 }}>
+          {(ml / 1000).toFixed(1)}
+        </b>
+        <span className="small muted">/ {(goal / 1000).toFixed(1)} L</span>
+      </span>
+      <div className="progress" style={{ height: 5 }}>
+        <i style={{ width: `${Math.min(100, (ml / goal) * 100)}%` }} />
       </div>
-    </section>
+      <div className="row gap-6 mt-4">
+        <button className="btn btn-secondary btn-xs grow" onClick={() => addWater(250)}>
+          +250 ml
+        </button>
+        <button className="btn btn-ghost btn-xs" onClick={() => addWater(-250)} aria-label="250 ml ayirish">
+          <Icon name="minus" size={16} />
+        </button>
+      </div>
+    </div>
   );
 }

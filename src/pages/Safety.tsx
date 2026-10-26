@@ -255,11 +255,11 @@ export default function Safety() {
               width: 48,
               height: 48,
               borderRadius: 14,
-              background: 'var(--plate-red)',
+              background: 'var(--accent)',
               display: 'grid',
               placeItems: 'center',
               flex: 'none',
-              color: '#fff',
+              color: 'var(--accent-ink)',
             }}
           >
             <Icon name="play" />

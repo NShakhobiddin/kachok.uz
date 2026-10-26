@@ -1,38 +1,41 @@
 /*
-  Kachok dizayn tizimi.
-  Ranglar musobaqa disklari (IWF) kodidan olingan va har biri ma'no tashiydi:
-    ko'k  (20 kg)  — asosiy harakat, Samarqand koshinlari ko'ki
-    qizil (25 kg)  — ishlayotgan mushak, ogohlantirish, intensivlik
-    sariq (15 kg)  — rekord (PR), yutuq, yordamchi mushak
-    yashil (10 kg) — bajarildi, tiklanish, sog'liq
-    oq    (5 kg)   — matn
+  Kachok dizayn tizimi — "qora zal, lime chiroq".
+  Fon — ko'mir qora, matn — bo'r oq; yagona urg'u — volt-lime: asosiy harakat, ishlayotgan mushak, bajarildi.
+  Qizil — faqat xavf va og'riq; amber — ehtiyotkorlik va rekord. Disk ranglari (--plate-*) faqat illyustratsiyalarda.
+  Shrift: Archivo (kenglik o'qi bilan) — poster raqamlar 125% kenglikda, sarlavhalar 112%; matn — Manrope.
 */
 :root {
   color-scheme: dark;
 
-  --bg: #0b0e12;
-  --bg-2: #10141a;
-  --surface: #151a21;
-  --surface-2: #1b222b;
-  --surface-3: #232c37;
-  --line: #2a333e;
-  --line-2: #364150;
+  --bg: #0b0b0c;
+  --bg-2: #111113;
+  --surface: #151517;
+  --surface-2: #1d1d20;
+  --surface-3: #27272b;
+  --line: #26262a;
+  --line-2: #35353b;
 
-  --text: #eef1f4;
-  --text-2: #a7b0bb;
-  --text-3: #8994a1;
+  --text: #f3f2ec;
+  --text-2: #aeada5;
+  --text-3: #8a8981;
 
-  --blue: #3168f0;
-  --blue-2: #6b97ff;
-  --blue-ink: #0a1a3d;
-  --blue-soft: rgba(58, 116, 255, 0.14);
-  --red: #f0473b;
-  --red-soft: rgba(240, 71, 59, 0.14);
-  --yellow: #ffc83d;
-  --yellow-soft: rgba(255, 200, 61, 0.14);
-  --green: #2fc47c;
-  --green-soft: rgba(47, 196, 124, 0.14);
-  --danger: #ff5a4e;
+  /* urg'u: volt-lime (eski nomlar saqlangan — komponentlar shu orqali oladi) */
+  --accent: #d4fa50;
+  --accent-2: #e4ff86;
+  --accent-ink: #11150a;
+  --accent-soft: rgba(212, 250, 80, 0.12);
+  --accent-line: rgba(212, 250, 80, 0.34);
+  --blue: var(--accent);
+  --blue-2: var(--accent);
+  --blue-ink: #3a4419;
+  --blue-soft: var(--accent-soft);
+  --red: #ff5a4c;
+  --red-soft: rgba(255, 90, 76, 0.14);
+  --yellow: #ffb547;
+  --yellow-soft: rgba(255, 181, 71, 0.14);
+  --green: var(--accent);
+  --green-soft: var(--accent-soft);
+  --danger: #ff5a4c;
 
   --plate-red: #e5392e;
   --plate-red-dark: #9e1e17;
@@ -43,7 +46,7 @@
   --plate-white: #e9ecef;
 
   /* figura */
-  --stage: #12171d;
+  --stage: #121214;
   --fig-near: #d3dae3;
   --fig-far: #6c7786;
   --fig-cut: var(--stage);
@@ -51,13 +54,13 @@
   --fig-prop-edge: #3a4655;
   --fig-floor: #2c3541;
   --iron: #9aa5b3;
-  --muscle-primary: #e8372a;
-  --muscle-primary-hi: #ff7257;
-  --muscle-primary-lo: #b8261c;
-  --muscle-secondary: #e9961c;
-  --muscle-secondary-hi: #ffc75a;
-  --muscle-fiber: #ffd9cf;
-  --muscle-fiber-2: #ffe7b8;
+  --muscle-primary: #c6ec3e;
+  --muscle-primary-hi: #ecff9c;
+  --muscle-primary-lo: #7f9a1c;
+  --muscle-secondary: #7c8a3a;
+  --muscle-secondary-hi: #b5c46a;
+  --muscle-fiber: #f6ffd0;
+  --muscle-fiber-2: #e3edb5;
 
   /* sportchi: bo'r rangidagi haykal, chap-yuqoridan yorug'lik, orqadan sovuq kontur nuri */
   --skin-hi: #f6f3ee;
@@ -68,27 +71,27 @@
   --skin-groove: #8f887e;
   --skin-ear: #c3bcb2;
   --hair: #37322d;
-  --shorts: #1d2a52;
-  --shorts-hi: #34488a;
-  --shorts-far: #151d38;
+  --shorts: #2a2a2f;
+  --shorts-hi: #45454c;
+  --shorts-far: #1d1d21;
   --shoe: #2a2d33;
   --shoe-far: #1d2024;
   --sole: #e6e2db;
   --sole-far: #8a867f;
 
   /* anatomik xarita */
-  --map-body: #1e252e;
-  --map-edge: #10141a;
-  --map-groove: #2d3642;
-  --map-muscle: #2b3440;
+  --map-body: #1f1f22;
+  --map-edge: #0f0f11;
+  --map-groove: #303035;
+  --map-muscle: #2c2c31;
 
   /* sahna: zal platformasi */
-  --stage-spot: rgba(190, 210, 255, 0.1);
-  --floor-top: #1b1f25;
-  --floor-bottom: #111316;
-  --floor-edge: #333b45;
+  --stage-spot: rgba(212, 250, 80, 0.07);
+  --floor-top: #1c1c1f;
+  --floor-bottom: #111113;
+  --floor-edge: #34343a;
   --fig-shadow: rgba(0, 0, 0, 0.55);
-  --guide: #6b97ff;
+  --guide: #d4fa50;
 
   /* jihozlar */
   --eq-frame: #3a4451;
@@ -105,17 +108,17 @@
   --eq-mat-hi: #2c5288;
 
   /* tipografiya */
-  --font-display: 'Big Shoulders Display Variable', 'Arial Narrow', sans-serif;
+  --font-display: 'Archivo Variable', 'Arial', sans-serif;
   --font-body: 'Manrope Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
-  --font-mono: 'JetBrains Mono Variable', ui-monospace, 'SFMono-Regular', monospace;
+  --font-mono: 'Archivo Variable', 'Arial', sans-serif;
 
-  --r-sm: 10px;
-  --r-md: 14px;
-  --r-lg: 20px;
-  --r-xl: 28px;
+  --r-sm: 12px;
+  --r-md: 16px;
+  --r-lg: 24px;
+  --r-xl: 32px;
 
   --pad: 16px;
-  --tabbar-h: 68px;
+  --tabbar-h: 76px;
   --safe-b: env(safe-area-inset-bottom, 0px);
   --safe-t: env(safe-area-inset-top, 0px);
 

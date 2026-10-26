@@ -68,14 +68,14 @@ export function phaseFactor(phase: Phase, isometric: boolean): number {
   return phase === 'up' || phase === 'squeeze' ? 1 : phase === 'down' ? 0.65 : 0.5;
 }
 
-/** Faollik rangi: sariq (kam) → to'q sariq → qizil (yuqori) */
+/** Faollik rangi (3D modeldagi lime nur bilan bir xil): xira zaytun (kam) → lime → oqish lime (yuqori) */
 export function heatColor(mvic: number): string {
   const t = Math.max(0, Math.min(1, mvic / 100));
   const stops: [number, [number, number, number]][] = [
-    [0, [242, 201, 76]],
-    [0.4, [245, 140, 40]],
-    [0.7, [240, 70, 45]],
-    [1, [214, 25, 55]],
+    [0, [122, 138, 58]],
+    [0.4, [170, 200, 64]],
+    [0.75, [212, 250, 80]],
+    [1, [236, 255, 160]],
   ];
   let i = 0;
   while (i < stops.length - 2 && t > stops[i + 1][0]) i++;
