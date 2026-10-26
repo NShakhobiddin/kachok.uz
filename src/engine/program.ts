@@ -253,6 +253,11 @@ export function prescription(goal: Goal, level: Level, role: Role, ex: Exercise)
   return { sets, repMin, repMax, rir, restSec, note };
 }
 
+/** Qo'lda tanlangan mashq uchun set/takror: profil maqsadiga ko'ra, asosiy harakat — ikkinchi darajali, yakkalovchi — yordamchi rolida */
+export function manualPlanned(ex: Exercise, p?: Pick<Profile, 'goal' | 'level'> | null): PlannedExercise {
+  return { exerciseId: ex.id, ...prescription(p?.goal ?? 'muscle', p?.level ?? 'beginner', ex.mechanics === 'compound' ? 'secondary' : 'accessory', ex) };
+}
+
 /** Bitta mashq uchun taxminiy vaqt (daqiqa) */
 export function exerciseMinutes(pe: PlannedExercise, ex?: Exercise): number {
   const reps = (pe.repMin + pe.repMax) / 2;

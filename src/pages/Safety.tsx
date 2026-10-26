@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ExerciseThumb } from '../components/ExerciseThumb';
 import { injuryName, RiskMeter, RiskTag } from '../components/Safety';
+import { Fold, Note } from '../components/ui/Fold';
 import { Icon } from '../components/ui/Icon';
 import { EXERCISES } from '../data/exercises';
 import { GOLDEN_RULES, PAIN_ZONES, RED_FLAGS, RISK_INFO, SAFETY_SOURCES, safetyFor, type Risk } from '../data/safety';
@@ -31,10 +32,8 @@ export default function Safety() {
         <span className="eyebrow">Xavfsizlik markazi</span>
       </div>
       <h1 className="display display-l">Jarohatsiz mashq</h1>
-      <p className="muted mt-8">
-        Kuch mashqi — eng xavfsiz sport turlaridan biri: jarohat 1000 soat mashg‘ulotga bir necha ta. Deyarli har bir jarohat sababi ma’lum — shoshilib vazn qo‘shish, charchoqda texnika buzilishi va
-        xavfsizlik sozlamalarini e’tiborsiz qoldirish.
-      </p>
+      <p className="muted mt-8">Kuch mashqi — eng xavfsiz sport turlaridan biri: jarohat 1000 soat mashg‘ulotga bir necha ta.</p>
+      <Note label="Jarohat nimadan bo‘ladi">Deyarli har bir jarohat sababi ma’lum — shoshilib vazn qo‘shish, charchoqda texnika buzilishi va xavfsizlik sozlamalarini e’tiborsiz qoldirish.</Note>
 
       <div className="safety-facts mt-16">
         <Fact big="3×" text="kam sport jarohati — kuch mashqi qilganlarda" src="lauersen2014" />
@@ -125,17 +124,21 @@ export default function Safety() {
             <Icon name="phone" size={18} /> 103 — tez yordam
           </a>
         </div>
-        <div className="card stack gap-12 mt-12">
-          <span className="small strong" style={{ color: 'var(--yellow)' }}>
-            To‘xtang va tez orada shifokorga boring:
-          </span>
-          {RED_FLAGS.filter((f) => f.level === 'doctor').map((f) => (
-            <div key={f.text} className="flag-row">
-              <Icon name="info" size={16} style={{ color: 'var(--yellow)' }} />
-              <span>{f.text}</span>
-            </div>
-          ))}
-        </div>
+        <Fold
+          className="mt-12"
+          icon={<Icon name="info" size={18} style={{ color: 'var(--yellow)' }} />}
+          title="To‘xtang va shifokorga boring"
+          hint={`${RED_FLAGS.filter((f) => f.level === 'doctor').length} ta belgi`}
+        >
+          <div className="stack gap-12">
+            {RED_FLAGS.filter((f) => f.level === 'doctor').map((f) => (
+              <div key={f.text} className="flag-row">
+                <Icon name="info" size={16} style={{ color: 'var(--yellow)' }} />
+                <span>{f.text}</span>
+              </div>
+            ))}
+          </div>
+        </Fold>
       </section>
 
       {/* Og'riq shkalasi */}
@@ -160,17 +163,19 @@ export default function Safety() {
             </div>
           ))}
         </div>
-        <div className="stack gap-8 mt-12">
-          {PAIN_ZONES.map((z) => (
-            <p key={z.name} className="small">
-              <b style={{ color: z.color }}>{z.name}:</b> {z.text}
+        <Fold className="mt-12" icon={<Icon name="pulse" size={18} />} title="Har bir zona nimani bildiradi" hint="Qachon davom etish, qachon to‘xtash">
+          <div className="stack gap-8">
+            {PAIN_ZONES.map((z) => (
+              <p key={z.name} className="small">
+                <b style={{ color: z.color }}>{z.name}:</b> {z.text}
+              </p>
+            ))}
+            <p className="tiny muted">
+              Mushakdagi «yonish» va ertasi kungi mushak og‘rig‘i bu shkalaga kirmaydi — ular normal. Mashg‘ulot paytida har bir mashqda <b>«Og‘riq»</b> tugmasi bor: sezgini tanlasangiz, nima qilishni
+              aytadi va keyingi safar eslatadi.
             </p>
-          ))}
-          <p className="tiny muted">
-            Mushakdagi «yonish» va ertasi kungi mushak og‘rig‘i bu shkalaga kirmaydi — ular normal. Mashg‘ulot paytida har bir mashqda <b>«Og‘riq»</b> tugmasi bor: sezgini tanlasangiz, nima qilishni
-            aytadi va keyingi safar eslatadi.
-          </p>
-        </div>
+          </div>
+        </Fold>
       </section>
 
       {/* Oltin qoidalar */}
@@ -178,16 +183,13 @@ export default function Safety() {
         <div className="section-head">
           <h2>10 ta oltin qoida</h2>
         </div>
-        <ol className="card stack gap-12 rules-list">
+        <div className="fold-list">
           {GOLDEN_RULES.map((r, i) => (
-            <li key={r.title} className="row gap-12" style={{ alignItems: 'flex-start' }}>
-              <span className="pill-num">{i + 1}</span>
-              <span className="small">
-                <b>{r.title}.</b> {r.text}
-              </span>
-            </li>
+            <Fold key={r.title} icon={<span className="num strong">{i + 1}</span>} title={r.title}>
+              <p className="small">{r.text}</p>
+            </Fold>
           ))}
-        </ol>
+        </div>
       </section>
 
       {/* Xavfli mashqlar */}
@@ -196,14 +198,14 @@ export default function Safety() {
           <h2>Yuqori xavfli mashqlar</h2>
           <span className="small muted">{high.length} ta</span>
         </div>
-        <p className="small muted" style={{ marginBottom: 12 }}>
-          Bu mashqlar yomon emas — aksincha, eng samaralilari. Lekin xato qilinsa oqibati jiddiy, shuning uchun har birida sozlash va «chiqish yo‘li»ni oldindan biling.
-        </p>
+        <Note label="Nega ular dasturda bor">
+          Bu mashqlar yomon emas — aksincha, eng samaralilari. Lekin xato qilinsa oqibati jiddiy, shuning uchun har birida sozlash va «chiqish yo‘li»ni oldindan biling. Mashqqa bosing — xavfsizlik
+          bo‘limi ochiladi.
+        </Note>
         <div className="stack gap-8">
           {high.map((e) => {
-            const s = safetyFor(e.id)!;
             return (
-              <Link key={e.id} to={`/exercise/${e.id}#safety`} className="card tight stack gap-10" style={{ color: 'inherit' }}>
+              <Link key={e.id} to={`/exercise/${e.id}#safety`} className="card tight" style={{ color: 'inherit' }}>
                 <div className="row gap-12">
                   <ExerciseThumb ex={e} size={64} />
                   <div className="grow" style={{ minWidth: 0 }}>
@@ -216,12 +218,6 @@ export default function Safety() {
                   </div>
                   <Icon name="right" size={18} style={{ color: 'var(--text-3)' }} />
                 </div>
-                <p className="small muted">{s.why}</p>
-                {s.bail && (
-                  <p className="small">
-                    <b>Ko‘tara olmasangiz:</b> {s.bail.split('. ')[0]}.
-                  </p>
-                )}
               </Link>
             );
           })}
@@ -234,18 +230,18 @@ export default function Safety() {
             {mid.map((e) => (
               <Link key={e.id} to={`/exercise/${e.id}#safety`} className="card tight row gap-12" style={{ color: 'inherit' }}>
                 <ExerciseThumb ex={e} size={48} />
-                <span className="grow small" style={{ minWidth: 0 }}>
-                  <b style={{ display: 'block' }}>{e.name}</b>
-                  <span className="tiny muted">{safetyFor(e.id)!.why}</span>
+                <span className="grow small strong" style={{ minWidth: 0 }}>
+                  {e.name}
                 </span>
+                <Icon name="right" size={16} style={{ color: 'var(--text-3)' }} />
               </Link>
             ))}
           </div>
         )}
-        <p className="tiny faint mt-12">
+        <Note className="mt-8" label="Xavf darajalari">
           Xavf darajasi: <b style={{ color: RISK_INFO[1].color }}>past</b> — {RISK_INFO[1].text.toLowerCase()} <b style={{ color: RISK_INFO[2].color }}>O‘rta</b> — {RISK_INFO[2].text.toLowerCase()}{' '}
           <b style={{ color: RISK_INFO[3].color }}>Yuqori</b> — {RISK_INFO[3].text.toLowerCase()}
-        </p>
+        </Note>
       </section>
 
       <section className="section">
@@ -273,24 +269,23 @@ export default function Safety() {
       </section>
 
       <section className="section">
-        <div className="eyebrow" style={{ marginBottom: 8 }}>
-          Manbalar
-        </div>
-        <div className="stack gap-8">
-          {SAFETY_SOURCES.map((id) => {
-            const s = sourceById(id);
-            if (!s) return null;
-            return (
-              <div key={id} className="tiny muted" style={{ lineHeight: 1.45 }}>
-                <b>{s.short}.</b> {s.finding}
-              </div>
-            );
-          })}
-          <Link to="/sources" className="tiny strong" style={{ color: 'var(--blue-2)' }}>
-            Barcha manbalar →
-          </Link>
-          <p className="tiny faint">Bu ilova tibbiy tashxis qo‘ymaydi va shifokor maslahatining o‘rnini bosmaydi.</p>
-        </div>
+        <Fold icon={<Icon name="book" size={18} />} title="Manbalar" hint={`${SAFETY_SOURCES.length} ta tadqiqot va tavsiya`}>
+          <div className="stack gap-8">
+            {SAFETY_SOURCES.map((id) => {
+              const s = sourceById(id);
+              if (!s) return null;
+              return (
+                <div key={id} className="tiny muted" style={{ lineHeight: 1.45 }}>
+                  <b>{s.short}.</b> {s.finding}
+                </div>
+              );
+            })}
+            <Link to="/sources" className="tiny strong" style={{ color: 'var(--blue-2)' }}>
+              Barcha manbalar →
+            </Link>
+          </div>
+        </Fold>
+        <p className="tiny faint mt-12">Bu ilova tibbiy tashxis qo‘ymaydi va shifokor maslahatining o‘rnini bosmaydi.</p>
       </section>
     </div>
   );

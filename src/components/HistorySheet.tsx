@@ -7,6 +7,7 @@ import { fmtDate } from '../lib/date';
 import { useStore } from '../store/useStore';
 import type { Exercise } from '../types';
 import { LineChart } from './charts';
+import { Note } from './ui/Fold';
 
 export function HistorySheet({ ex }: { ex: Exercise }) {
   const logs = useStore((s) => s.logs);
@@ -79,7 +80,7 @@ export function HistorySheet({ ex }: { ex: Exercise }) {
               </div>
             ))}
           </div>
-          <p className="tiny faint">Qalin — aynan shu takror soni bilan ko‘targan eng og‘ir vazningiz; ≈ — taxminiy 1RM dan RPE jadvali bo‘yicha (chegaragacha) hisoblangan.</p>
+          <Note>Qalin — aynan shu takror soni bilan ko‘targan eng og‘ir vazningiz; ≈ — taxminiy 1RM dan RPE jadvali bo‘yicha (chegaragacha) hisoblangan.</Note>
         </div>
       )}
     </div>

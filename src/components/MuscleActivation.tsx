@@ -8,6 +8,7 @@ import type { Exercise, Phase } from '../types';
 import { exById } from '../data/exercises';
 import type { View3D } from './Muscle3D';
 import { Icon } from './ui/Icon';
+import { Note } from './ui/Fold';
 
 const Muscle3D = lazy(() => import('./Muscle3D'));
 
@@ -132,26 +133,24 @@ export function MuscleActivation({ ex }: { ex: Exercise }) {
           <i />
           <span>100%+</span>
         </div>
-        {act.rom && (
-          <p className="small">
-            <b>Harakat bo‘ylab:</b> {act.rom}
-          </p>
-        )}
-        {!act.fallback && (
-          <p className="tiny muted">
-            {measured ? `${measured} ta qiymat tadqiqotda to‘g‘ridan-to‘g‘ri o‘lchangan, ` : ''}≈ belgili qiymatlar — tadqiqotlardagi oraliq, nisbiy farq yoki o‘xshash mashq asosidagi baho.
-          </p>
-        )}
+        {act.rom && <Note label="Harakat davomida qayerda og‘irroq">{act.rom}</Note>}
         {act.fallback ? (
           <p className="small muted">Bu mashq bo‘yicha EMG ma’lumoti hali kiritilmagan — foizlar mashq tavsifidagi asosiy va yordamchi mushaklardan taxmin qilindi.</p>
         ) : similarName ? (
           <p className="small muted">Bu mashqning o‘zi bo‘yicha EMG tadqiqot topilmadi — «{similarName}» natijalari asosida taxmin.</p>
         ) : null}
-        {act.notes && <p className="tiny muted">{act.notes}</p>}
-        <p className="tiny faint">
-          % MVIC — mushakning shu mashqdagi elektr faolligi uning maksimal ixtiyoriy izometrik qisqarishiga nisbatan (sirt EMG). Og‘ir dinamik harakatlarda 100% dan oshishi mumkin. Bu mushak qanchalik
-          "yollanganini" ko‘rsatadi; mushak o‘sishi esa umumiy hajm, cho‘zilish va charchoqqa ham bog‘liq.{act.load ? ` Yuklama: ${act.load}.` : ''}
-        </p>
+        <Note label="Foizlar nimani bildiradi">
+          <p>
+            % MVIC — mushakning shu mashqdagi elektr faolligi uning maksimal ixtiyoriy izometrik qisqarishiga nisbatan (sirt EMG). Og‘ir dinamik harakatlarda 100% dan oshishi mumkin. Bu mushak qanchalik
+            "yollanganini" ko‘rsatadi; mushak o‘sishi esa umumiy hajm, cho‘zilish va charchoqqa ham bog‘liq.{act.load ? ` Yuklama: ${act.load}.` : ''}
+          </p>
+          {!act.fallback && (
+            <p className="mt-6">
+              {measured ? `${measured} ta qiymat tadqiqotda to‘g‘ridan-to‘g‘ri o‘lchangan, ` : ''}≈ belgili qiymatlar — tadqiqotlardagi oraliq, nisbiy farq yoki o‘xshash mashq asosidagi baho.
+            </p>
+          )}
+          {act.notes && <p className="mt-6">{act.notes}</p>}
+        </Note>
         {srcKeys.length > 0 && (
           <div>
             <button className="row gap-6 small strong" style={{ color: 'var(--blue-2)', minHeight: 36 }} onClick={() => setShowSrc((s) => !s)} aria-expanded={showSrc}>

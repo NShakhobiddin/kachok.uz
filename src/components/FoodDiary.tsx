@@ -9,6 +9,7 @@ import { useStore } from '../store/useStore';
 import type { FoodEntry } from '../types';
 import { MACRO_COLORS } from './charts';
 import { Icon } from './ui/Icon';
+import { Note } from './ui/Fold';
 import { Sheet } from './ui/Sheet';
 import { Stepper, Toggle } from './ui/controls';
 
@@ -378,12 +379,12 @@ export function TdeeCard({ est, on, setOn }: { est: TdeeEstimate; on: boolean; s
         <Stat k="O‘rtacha iste’mol" v={est.avgIntake ? `${est.avgIntake} kkal` : '—'} />
         <Stat k="Vazn trendi" v={est.trendPerWeek !== null ? `${est.trendPerWeek > 0 ? '+' : ''}${est.trendPerWeek} kg/hafta` : '—'} />
       </div>
-      <p className="tiny faint">
+      <Note label="Qanday hisoblanadi">
         Energiya balansi: sarf = iste’mol − 7700 × vazn o‘zgarishi (Hall 2008). Baho har hafta silliq yangilanadi (±150 kkal dan oshmaydi), kun bo‘yi chala yozilgan kunlar hisobga olinmaydi.{' '}
         <Link to="/lesson/tdee-body" className="strong" style={{ color: 'var(--blue-2)' }}>
           Batafsil
         </Link>
-      </p>
+      </Note>
     </div>
   );
 }

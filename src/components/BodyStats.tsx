@@ -6,6 +6,7 @@ import { fmtDate, isoDate } from '../lib/date';
 import { useStore } from '../store/useStore';
 import { LineChart } from './charts';
 import { Icon } from './ui/Icon';
+import { Note } from './ui/Fold';
 import { Sheet } from './ui/Sheet';
 import { Stepper } from './ui/controls';
 
@@ -41,9 +42,12 @@ export function BodyStats() {
       </div>
 
       {!rows.length ? (
-        <p className="small muted">
-          Haftada bir marta, ertalab, bir xil sharoitda lenta bilan o‘lchang. Bel o‘lchami vazndan ko‘ra ko‘proq aytadi: <b>bel bo‘yingizning yarmidan kam bo‘lsa</b> — yurak-qon tomir xavfi past (Ashwell 2012). Bel + bo‘yin (ayollarda + son) bo‘yicha yog‘ foizi ham hisoblanadi.
-        </p>
+        <div>
+          <p className="small muted">Haftada bir marta, ertalab, lenta bilan o‘lchang.</p>
+          <Note label="Nega bel o‘lchami muhim">
+            Bel o‘lchami vazndan ko‘ra ko‘proq aytadi: <b>bel bo‘yingizning yarmidan kam bo‘lsa</b> — yurak-qon tomir xavfi past (Ashwell 2012). Bel + bo‘yin (ayollarda + son) bo‘yicha yog‘ foizi ham hisoblanadi.
+          </Note>
+        </div>
       ) : (
         <>
           <div className="grid-2">

@@ -7,6 +7,7 @@ import { BodyStats } from '../components/BodyStats';
 import { StrengthLevels } from '../components/StrengthLevels';
 import { TrainingHeatmap } from '../components/TrainingHeatmap';
 import { Icon } from '../components/ui/Icon';
+import { Note } from '../components/ui/Fold';
 import { Sheet } from '../components/ui/Sheet';
 import { GROUPS, GROUP_ORDER, VOLUME_LANDMARKS, mrvAt } from '../data/catalog';
 import { EXERCISE_MAP } from '../data/exercises';
@@ -332,7 +333,7 @@ function WeekBody() {
               </span>
             </button>
           ))}
-          {top.length > 0 && <span className="tiny faint">Raqam — samarali setlar: bajarilgan set × mushakning shu mashqdagi faollik ulushi. Mushakka bosing.</span>}
+          {top.length > 0 && <Note label="Raqam nima">Samarali setlar: bajarilgan set × mushakning shu mashqdagi faollik ulushi. Mushakka bosing — qo‘llanma ochiladi.</Note>}
         </div>
       )}
     </section>

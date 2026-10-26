@@ -1,8 +1,9 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { TargetBars } from '../components/charts';
 import { DayEditor } from '../components/DayEditor';
 import { Icon } from '../components/ui/Icon';
+import { Note } from '../components/ui/Fold';
 import { Sheet } from '../components/ui/Sheet';
 import { GROUPS, GROUP_ORDER, VOLUME_LANDMARKS, mrvAt } from '../data/catalog';
 import { EXERCISE_MAP } from '../data/exercises';
@@ -28,6 +29,11 @@ export default function ProgramPage() {
   const removePlanned = useStore((s) => s.removePlanned);
   const addPlanned = useStore((s) => s.addPlanned);
   const moveDay = useStore((s) => s.moveDay);
+  const addDay = useStore((s) => s.addDay);
+  const removeDay = useStore((s) => s.removeDay);
+  const [newDay, setNewDay] = useState(false);
+  const [delDay, setDelDay] = useState(false);
+  const tabsRef = useRef<HTMLDivElement>(null);
   const days = useMemo(() => [...(program?.days ?? [])].sort((a, b) => a.weekday - b.weekday), [program]);
   const todayIdx = days.findIndex((d) => d.weekday === weekdayIdx());
   const [sel, setSel] = useState(Math.max(0, todayIdx));
@@ -40,6 +46,15 @@ export default function ProgramPage() {
   const freq = useMemo(() => groupFrequency(program ?? { days: [] }), [program]);
   const meso = useMeso();
   const nut = useNutrition();
+  // tanlangan kun (masalan, yangi qo'shilgan) ko'rinmay qolsa — kunlar qatorini faqat gorizontal suramiz
+  useEffect(() => {
+    const sc = tabsRef.current;
+    const el = sc?.querySelector<HTMLElement>('[aria-selected="true"]');
+    if (!sc || !el) return;
+    const r = el.getBoundingClientRect();
+    const sr = sc.getBoundingClientRect();
+    if (r.left < sr.left || r.right > sr.right) sc.scrollBy({ left: r.left - sr.left - 16 });
+  }, [sel, program?.days.length]);
   if (!program) return null;
   const day = days[Math.min(sel, days.length - 1)];
 
@@ -74,12 +89,24 @@ export default function ProgramPage() {
 
       {meso && <MethodCard program={program} profile={profile} meso={meso} onChange={() => setMethodOpen(true)} />}
 
-      <div className="hscroll mt-16" role="tablist" aria-label="Kunlar">
+      <div className="hscroll mt-16" role="tablist" aria-label="Kunlar" ref={tabsRef}>
         {days.map((d, i) => (
-          <button key={d.id} role="tab" aria-selected={i === sel} className={`chip ${i === sel ? 'on' : ''}`} style={{ height: 44 }} onClick={() => setSel(i)}>
+          <button
+            key={d.id}
+            role="tab"
+            aria-selected={i === sel}
+            className={`chip ${i === sel ? 'on' : ''}`}
+            style={{ height: 44 }}
+            onClick={() => setSel(i)}
+          >
             <b>{DAYS_SHORT[d.weekday]}</b> {d.title}
           </button>
         ))}
+        {days.length < 7 && (
+          <button className="chip" style={{ height: 44 }} onClick={() => setNewDay(true)} aria-label="Yangi kun qo‘shish">
+            <Icon name="plus" size={16} /> Kun
+          </button>
+        )}
       </div>
 
       {day && (
@@ -91,19 +118,26 @@ export default function ProgramPage() {
                 {DAYS[day.weekday]} · {day.focus} · ~{estimateMinutes(day.exercises)} daq
               </p>
             </div>
-            <select
-              className="chip"
-              aria-label="Hafta kunini o‘zgartirish"
-              value={day.weekday}
-              onChange={(e) => moveDay(day.id, Number(e.target.value))}
-              style={{ appearance: 'none', cursor: 'pointer' }}
-            >
-              {DAYS.map((d, i) => (
-                <option key={d} value={i}>
-                  {d}
-                </option>
-              ))}
-            </select>
+            <div className="row gap-6">
+              {days.length > 1 && (
+                <button className="icon-btn" onClick={() => setDelDay(true)} aria-label="Kunni o‘chirish">
+                  <Icon name="trash" size={18} />
+                </button>
+              )}
+              <select
+                className="chip"
+                aria-label="Hafta kunini o‘zgartirish"
+                value={day.weekday}
+                onChange={(e) => moveDay(day.id, Number(e.target.value))}
+                style={{ appearance: 'none', cursor: 'pointer' }}
+              >
+                {DAYS.map((d, i) => (
+                  <option key={d} value={i}>
+                    {d}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
           <DayEditor
             day={day}
@@ -125,13 +159,53 @@ export default function ProgramPage() {
             </Link>
           </div>
           <div className="card">
-            <TargetBars label="Mushak guruhlari bo‘yicha haftalik setlar" rows={GROUP_ORDER.map((g) => ({ label: GROUPS[g].name, value: vol[g], mev: VOLUME_LANDMARKS[g].mev, mav: VOLUME_LANDMARKS[g].mav, mrv: mrvAt(g, freq[g]) }))} />
-            <p className="tiny faint mt-12">Asosiy mushak uchun set = 1, yordamchi mushak uchun = 0.5 (Pelland va boshq., 2026).</p>
+            <TargetBars
+              label="Mushak guruhlari bo‘yicha haftalik setlar"
+              rows={GROUP_ORDER.map((g) => ({ label: GROUPS[g].name, value: vol[g], mev: VOLUME_LANDMARKS[g].mev, mav: VOLUME_LANDMARKS[g].mav, mrv: mrvAt(g, freq[g]) }))}
+            />
+            <Note className="mt-8">Asosiy mushak uchun set = 1, yordamchi mushak uchun = 0.5 (Pelland va boshq., 2026).</Note>
           </div>
         </section>
       )}
 
       <MethodSheet open={methodOpen} onClose={() => setMethodOpen(false)} profile={profile} current={program.method ?? resolveMethod(profile)} />
+
+      <NewDaySheet
+        open={newDay}
+        onClose={() => setNewDay(false)}
+        taken={days.map((d) => d.weekday)}
+        onCreate={(weekday, title) => {
+          const id = addDay(weekday, title);
+          const next = [...(useStore.getState().program?.days ?? [])].sort((a, b) => a.weekday - b.weekday);
+          setSel(
+            Math.max(
+              0,
+              next.findIndex((d) => d.id === id),
+            ),
+          );
+          setNewDay(false);
+        }}
+      />
+
+      <Sheet open={delDay} onClose={() => setDelDay(false)} label="Kunni o‘chirish">
+        <h3 className="title">«{day?.title}» kunini o‘chirasizmi?</h3>
+        <p className="muted mt-8">Kun dasturdan olib tashlanadi. Mashg‘ulot tarixi saqlanadi.</p>
+        <div className="row gap-8 mt-16">
+          <button className="btn btn-secondary grow" onClick={() => setDelDay(false)}>
+            Bekor qilish
+          </button>
+          <button
+            className="btn btn-danger grow"
+            onClick={() => {
+              if (day) removeDay(day.id);
+              setSel(0);
+              setDelDay(false);
+            }}
+          >
+            O‘chirish
+          </button>
+        </div>
+      </Sheet>
 
       <Sheet open={confirmRegen} onClose={() => setConfirmRegen(false)} label="Qayta tuzish">
         <h3 className="title">Dasturni qayta tuzasizmi?</h3>
@@ -226,16 +300,18 @@ function MethodCard({ program, profile, meso, onChange }: { program: Program; pr
           </>
         ) : (
           <>
-            <b>Bu hafta: har setda {cur.rir} ta zaxira takror.</b> Har hafta zaxira kamayadi va mushak fikringizga qarab setlar qo‘shiladi; oxirgi hafta — yengillashtirish.
+            <b>Bu hafta: har setda {cur.rir} ta zaxira takror.</b>
           </>
         )}
       </p>
 
       {(method === 'strength' || method === 'linear') && <KeyLifts program={program} profile={profile} meso={meso} />}
 
-      <p className="tiny faint">
-        {method === 'linear' ? '' : method === 'strength' ? 'Raqam — asosiy mashqlar uchun %1RM.' : 'Raqam — maqsadli RIR (zaxiradagi takror).'} Hafta kalendar bo‘yicha emas, bajarilgan mashg‘ulotlar bo‘yicha o‘tadi. {program.splitWhy.replace(`${info.name}. `, '')}
-      </p>
+      <Note label="Bu jadval qanday ishlaydi">
+        {method !== 'linear' && !cur.deload && !bw ? 'Har hafta zaxira kamayadi va mushak fikringizga qarab setlar qo‘shiladi; oxirgi hafta — yengillashtirish. ' : ''}
+        {method === 'linear' ? '' : method === 'strength' ? 'Raqam — asosiy mashqlar uchun %1RM.' : 'Raqam — maqsadli RIR (zaxiradagi takror).'} Hafta kalendar bo‘yicha emas, bajarilgan mashg‘ulotlar
+        bo‘yicha o‘tadi. {program.splitWhy.replace(`${info.name}. `, '')}
+      </Note>
     </div>
   );
 }
@@ -267,7 +343,11 @@ function KeyLifts({ program, profile, meso }: { program: Program; profile: Profi
           <span className="strong">{r.name}</span>
           <span className="num" style={{ textAlign: 'right' }}>
             <b>{r.text}</b>
-            {r.e1rm ? <span className="tiny muted" style={{ display: 'block' }}>1RM ≈ {Math.round(r.e1rm)} kg</span> : null}
+            {r.e1rm ? (
+              <span className="tiny muted" style={{ display: 'block' }}>
+                1RM ≈ {Math.round(r.e1rm)} kg
+              </span>
+            ) : null}
           </span>
         </Link>
       ))}
@@ -313,7 +393,11 @@ function MethodSheet({ open, onClose, profile, current }: { open: boolean; onClo
             <button key={m} role="radio" aria-checked={pick === m} disabled={locked} className={`method-opt ${pick === m ? 'on' : ''}`} onClick={() => setPick(m)}>
               <span className="row between gap-8">
                 <b>{info.name}</b>
-                {m === current && <span className="tiny strong" style={{ color: 'var(--blue-2)' }}>joriy</span>}
+                {m === current && (
+                  <span className="tiny strong" style={{ color: 'var(--blue-2)' }}>
+                    joriy
+                  </span>
+                )}
               </span>
               <span className="small">{info.short}</span>
               {pick === m && (
@@ -323,13 +407,55 @@ function MethodSheet({ open, onClose, profile, current }: { open: boolean; onClo
                   <span className="tiny faint">Manba: {info.source}</span>
                 </span>
               )}
-              {locked && <span className="tiny" style={{ color: 'var(--yellow)' }}>Haftasiga kamida 4 kun kerak</span>}
+              {locked && (
+                <span className="tiny" style={{ color: 'var(--yellow)' }}>
+                  Haftasiga kamida 4 kun kerak
+                </span>
+              )}
             </button>
           );
         })}
       </div>
       <button className="btn btn-primary btn-block mt-16" disabled={!changed} onClick={apply}>
         {changed ? 'Tanlash va dasturni qayta tuzish' : 'Joriy uslub'}
+      </button>
+    </Sheet>
+  );
+}
+
+/** Qo'lda yangi kun: hafta kuni va nomi; mashqlar keyin tanlanadi */
+function NewDaySheet({ open, onClose, taken, onCreate }: { open: boolean; onClose: () => void; taken: number[]; onCreate: (weekday: number, title: string) => void }) {
+  const free = DAYS.map((_, i) => i).filter((i) => !taken.includes(i));
+  const [weekday, setWeekday] = useState<number | null>(null);
+  const [title, setTitle] = useState('');
+  const w = weekday !== null && free.includes(weekday) ? weekday : (free[0] ?? 0);
+  return (
+    <Sheet open={open} onClose={onClose} label="Yangi kun">
+      <h3 className="title">Yangi mashg‘ulot kuni</h3>
+      <p className="small muted mt-4">Bo‘sh kun qo‘shiladi — mashqlarni o‘zingiz tanlaysiz.</p>
+      <div className="field mt-16">
+        <label>Hafta kuni</label>
+        <div className="row wrap gap-6">
+          {free.map((i) => (
+            <button key={i} className={`chip ${w === i ? 'on' : ''}`} aria-pressed={w === i} onClick={() => setWeekday(i)}>
+              {DAYS_SHORT[i]}
+            </button>
+          ))}
+        </div>
+      </div>
+      <div className="field mt-12">
+        <label htmlFor="new-day-title">Nomi</label>
+        <input id="new-day-title" className="input" placeholder="Masalan: Qo‘l va yelka" value={title} maxLength={40} onChange={(e) => setTitle(e.target.value)} />
+      </div>
+      <button
+        className="btn btn-primary btn-block mt-16"
+        onClick={() => {
+          onCreate(w, title.trim() || 'Mening kunim');
+          setTitle('');
+          setWeekday(null);
+        }}
+      >
+        Kun qo‘shish
       </button>
     </Sheet>
   );

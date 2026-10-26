@@ -3,6 +3,7 @@ import { lazy, Suspense, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { ExerciseThumb } from '../components/ExerciseThumb';
 import type { View3D } from '../components/Muscle3D';
+import { Fold, Note } from '../components/ui/Fold';
 import { Icon } from '../components/ui/Icon';
 import { EXERCISE_MAP } from '../data/exercises';
 import { ATLAS_ORDER, bestExercises, MUSCLE_GUIDE, REGIONS } from '../data/muscleGuide';
@@ -76,49 +77,6 @@ export default function MuscleDetail() {
       <p className="lead mt-16">{g.short}</p>
 
       <section className="section">
-        <div className="card stack gap-14">
-          <div>
-            <div className="eyebrow">Qayerda</div>
-            <p className="mt-6">{g.where}</p>
-          </div>
-          <div className="attach">
-            <div className="attach-row">
-              <span className="attach-dot" aria-hidden="true" />
-              <span>
-                <span className="eyebrow">Boshlanishi</span>
-                <span className="attach-text">{g.origin}</span>
-              </span>
-            </div>
-            <div className="attach-row">
-              <span className="attach-dot end" aria-hidden="true" />
-              <span>
-                <span className="eyebrow">Birikishi</span>
-                <span className="attach-text">{g.insertion}</span>
-              </span>
-            </div>
-          </div>
-          <p className="tiny faint">Mushak qisqarganda birikish nuqtasi boshlanish nuqtasiga yaqinlashadi — harakat shu.</p>
-        </div>
-      </section>
-
-      <section className="section">
-        <div className="section-head">
-          <h2>Vazifasi</h2>
-        </div>
-        <ul className="safe-list card">
-          {g.actions.map((a) => (
-            <li key={a}>
-              <Icon name="check" size={16} stroke={3} />
-              <span>{a}</span>
-            </li>
-          ))}
-        </ul>
-        <p className="small muted mt-12">
-          <b style={{ color: 'var(--text)' }}>Hayotda:</b> {g.daily}
-        </p>
-      </section>
-
-      <section className="section">
         <div className="section-head">
           <h2>Eng ko‘p ishlatadigan mashqlar</h2>
           <span className="small muted">EMG, % MVIC</span>
@@ -144,33 +102,76 @@ export default function MuscleDetail() {
             );
           })}
         </div>
-        <p className="tiny faint mt-8">Mushakning shu mashqdagi elektr faolligi, maksimal ixtiyoriy qisqarishga nisbatan. ≈ — o‘xshash mashq yoki tadqiqotlar oralig‘i asosidagi baho.</p>
+        <Note className="mt-4">Mushakning shu mashqdagi elektr faolligi, maksimal ixtiyoriy qisqarishga nisbatan. ≈ — o‘xshash mashq yoki tadqiqotlar oralig‘i asosidagi baho.</Note>
       </section>
 
       <section className="section">
-        <div className="card stack gap-14">
-          <div>
-            <div className="eyebrow accent">Mashqda his qilish</div>
-            <p className="mt-6">{g.feel}</p>
-          </div>
-          <div className="divider" style={{ margin: 0 }} />
-          <div>
-            <div className="eyebrow">Cho‘zish</div>
-            <p className="mt-6">{g.stretch}</p>
-          </div>
+        <div className="section-head">
+          <h2>Batafsil</h2>
+          <span className="small muted">bosing — ochiladi</span>
         </div>
-        <div className="notice gold mt-12">
-          <Icon name="alert" />
-          <span>
-            <b>E’tibor bering:</b> {g.watch}
-          </span>
+        <div className="fold-list">
+          <Fold icon={<Icon name="target" size={18} />} title="Qayerda joylashgan" hint="Boshlanishi va birikish nuqtasi">
+            <div className="stack gap-14">
+              <p>{g.where}</p>
+              <div className="attach">
+                <div className="attach-row">
+                  <span className="attach-dot" aria-hidden="true" />
+                  <span>
+                    <span className="eyebrow">Boshlanishi</span>
+                    <span className="attach-text">{g.origin}</span>
+                  </span>
+                </div>
+                <div className="attach-row">
+                  <span className="attach-dot end" aria-hidden="true" />
+                  <span>
+                    <span className="eyebrow">Birikishi</span>
+                    <span className="attach-text">{g.insertion}</span>
+                  </span>
+                </div>
+              </div>
+              <p className="tiny faint">Mushak qisqarganda birikish nuqtasi boshlanish nuqtasiga yaqinlashadi — harakat shu.</p>
+            </div>
+          </Fold>
+
+          <Fold icon={<Icon name="bolt" size={18} />} title="Vazifasi" hint={`${g.actions.length} ta harakat · hayotda`}>
+            <ul className="safe-list">
+              {g.actions.map((a) => (
+                <li key={a}>
+                  <Icon name="check" size={16} stroke={3} />
+                  <span>{a}</span>
+                </li>
+              ))}
+            </ul>
+            <p className="small muted mt-12">
+              <b style={{ color: 'var(--text)' }}>Hayotda:</b> {g.daily}
+            </p>
+          </Fold>
+
+          <Fold icon={<Icon name="hand" size={18} />} title="His qilish va cho‘zish" hint="Mashqda qanday sezish kerak">
+            <div className="stack gap-14">
+              <div>
+                <div className="eyebrow accent">Mashqda his qilish</div>
+                <p className="mt-6">{g.feel}</p>
+              </div>
+              <div className="divider" style={{ margin: 0 }} />
+              <div>
+                <div className="eyebrow">Cho‘zish</div>
+                <p className="mt-6">{g.stretch}</p>
+              </div>
+            </div>
+          </Fold>
+
+          <Fold icon={<Icon name="alert" size={18} style={{ color: 'var(--yellow)' }} />} title="E’tibor bering" hint="Ko‘p uchraydigan xato va xavf">
+            <p>{g.watch}</p>
+          </Fold>
+
+          {g.fact && (
+            <Fold icon={<Icon name="spark" size={18} />} title="Bilasizmi?" hint="Qiziqarli fakt">
+              <p>{g.fact}</p>
+            </Fold>
+          )}
         </div>
-        {g.fact && (
-          <div className="card mt-12 stack gap-6">
-            <span className="eyebrow accent">Bilasizmi?</span>
-            <p>{g.fact}</p>
-          </div>
-        )}
       </section>
 
       <nav className="grid-2 section" aria-label="Boshqa mushaklar">
@@ -184,8 +185,7 @@ export default function MuscleDetail() {
         </Link>
       </nav>
       <p className="tiny faint mt-16">
-        Anatomiya: OpenStax «Anatomy and Physiology 2e» (2022). Mashqlar reytingi — ilovadagi EMG tadqiqotlar jadvali.{' '}
-        <Link to="/sources">Manbalar</Link>
+        Anatomiya: OpenStax «Anatomy and Physiology 2e» (2022). Mashqlar reytingi — ilovadagi EMG tadqiqotlar jadvali. <Link to="/sources">Manbalar</Link>
       </p>
     </div>
   );

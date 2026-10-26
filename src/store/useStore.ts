@@ -2,7 +2,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { exById } from '../data/exercises';
-import { generateProgram, weeklyVolume } from '../engine/program';
+import { estimateMinutes, generateProgram, manualPlanned, weeklyVolume } from '../engine/program';
 import { mesoState, setChange, type MuscleFeedback } from '../engine/meso';
 import { detectPRs } from '../engine/stats';
 import { isoDate } from '../lib/date';
@@ -103,6 +103,9 @@ interface State {
   removePlanned: (dayId: string, index: number) => void;
   addPlanned: (dayId: string, exId: string) => void;
   moveDay: (dayId: string, weekday: number) => void;
+  /** qo'lda yangi kun: bo'sh, mashqlari keyin tanlanadi; id qaytaradi */
+  addDay: (weekday: number, title: string) => string | null;
+  removeDay: (dayId: string) => void;
 
   startWorkout: (day: WorkoutDay | null, plan: PlannedExercise[], readiness?: number, initial?: ExerciseLog[]) => void;
   setActiveIndex: (i: number) => void;
@@ -169,7 +172,14 @@ const uid = () => Math.random().toString(36).slice(2, 10);
 
 function mapDay(program: Program | null, dayId: string, fn: (d: WorkoutDay) => WorkoutDay): Program | null {
   if (!program) return program;
-  return { ...program, days: program.days.map((d) => (d.id === dayId ? fn(d) : d)) };
+  return {
+    ...program,
+    days: program.days.map((d) => {
+      if (d.id !== dayId) return d;
+      const nd = fn(d);
+      return { ...nd, estMin: estimateMinutes(nd.exercises) };
+    }),
+  };
 }
 
 export const useStore = create<State>()(
@@ -200,10 +210,21 @@ export const useStore = create<State>()(
       addPlanned: (dayId, exId) => {
         const ex = exById(exId);
         if (!ex) return;
-        const pe: PlannedExercise = { exerciseId: exId, sets: 3, repMin: ex.mechanics === 'compound' ? 8 : 10, repMax: ex.mechanics === 'compound' ? 12 : 15, rir: 2, restSec: ex.mechanics === 'compound' ? 120 : 75 };
+        const pe = manualPlanned(ex, get().profile);
         set({ program: mapDay(get().program, dayId, (d) => ({ ...d, exercises: [...d.exercises, pe] })) });
       },
       moveDay: (dayId, weekday) => set({ program: mapDay(get().program, dayId, (d) => ({ ...d, weekday })) }),
+      addDay: (weekday, title) => {
+        const program = get().program;
+        if (!program) return null;
+        const day: WorkoutDay = { id: uid(), title, focus: 'O‘zim tanlagan mashqlar', weekday, exercises: [], estMin: estimateMinutes([]) };
+        set({ program: { ...program, days: [...program.days, day] } });
+        return day.id;
+      },
+      removeDay: (dayId) => {
+        const program = get().program;
+        if (program && program.days.length > 1) set({ program: { ...program, days: program.days.filter((d) => d.id !== dayId) } });
+      },
 
       startWorkout: (day, plan, readiness, initialEx) => {
         const exercises: ExerciseLog[] =
@@ -259,15 +280,15 @@ export const useStore = create<State>()(
       },
       addActiveExercise: (exId) => {
         const a = get().active;
-        if (!a) return;
         const ex = exById(exId);
-        const pe: PlannedExercise = { exerciseId: exId, sets: 3, repMin: 8, repMax: 12, rir: 2, restSec: ex?.mechanics === 'compound' ? 120 : 75 };
+        if (!a || !ex) return;
+        const pe = manualPlanned(ex, get().profile);
         set({
           active: {
             ...a,
             plan: [...a.plan, pe],
             index: a.log.exercises.length,
-            log: { ...a.log, exercises: [...a.log.exercises, { exerciseId: exId, sets: Array.from({ length: 3 }, () => ({ kg: 0, reps: 0, done: false })) }] },
+            log: { ...a.log, exercises: [...a.log.exercises, { exerciseId: exId, sets: Array.from({ length: pe.sets }, () => ({ kg: 0, reps: 0, done: false })) }] },
           },
         });
       },

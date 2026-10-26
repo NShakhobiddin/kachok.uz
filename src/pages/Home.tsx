@@ -7,11 +7,13 @@ import { ExerciseThumb } from '../components/ExerciseThumb';
 import { Icon } from '../components/ui/Icon';
 import { Sheet } from '../components/ui/Sheet';
 import { MUSCLES } from '../data/catalog';
-import { EXERCISE_MAP } from '../data/exercises';
+import { EXERCISE_MAP, EXERCISES } from '../data/exercises';
 import { LESSONS } from '../data/lessons';
 import { FACTS, dailyPick } from '../data/motivation';
 import { sourceById } from '../data/sources';
 import { fatigueLoad, loadGroups, planLoad } from '../engine/bodyLoad';
+import { ExercisePicker } from '../components/DayEditor';
+import { manualPlanned } from '../engine/program';
 import { muscleRecovery, weekStreak } from '../engine/stats';
 import { DAYS, DAYS_SHORT, MONTHS, daysBetween, isoDate } from '../lib/date';
 import { useNutrition } from '../lib/useNutrition';
@@ -28,6 +30,7 @@ export default function Home() {
   const t = useToday();
   const [pickDay, setPickDay] = useState(false);
   const [chosen, setChosen] = useState<WorkoutDay | null>(null);
+  const [freeOpen, setFreeOpen] = useState(false);
   const day = chosen ?? t.todayDay ?? (t.missed && !t.doneToday ? t.missed : null);
   const plan = useDayPlan(day);
   const now = new Date();
@@ -45,6 +48,11 @@ export default function Home() {
   const begin = () => {
     if (!day) return;
     startWorkout(day, plan.map(({ pe, sug }) => ({ ...pe, sets: sug.sets, rir: sug.rir })), t.readinessToday);
+    nav('/workout');
+  };
+  // erkin mashg'ulot: mashqlarni foydalanuvchi o'zi tanlaydi
+  const startFree = (ids: string[]) => {
+    startWorkout(null, ids.flatMap((id) => (EXERCISE_MAP[id] ? [manualPlanned(EXERCISE_MAP[id], profile)] : [])), t.readinessToday);
     nav('/workout');
   };
 
@@ -156,8 +164,17 @@ export default function Home() {
         </button>
       ) : mode === 'plan' ? (
         <>
-          <button className="btn btn-primary btn-xl btn-block mt-12" onClick={begin}>
-            Boshlash <Icon name="play" size={18} />
+          {plan.length > 0 ? (
+            <button className="btn btn-primary btn-xl btn-block mt-12" onClick={begin}>
+              Boshlash <Icon name="play" size={18} />
+            </button>
+          ) : (
+            <Link to="/program" className="btn btn-primary btn-xl btn-block mt-12">
+              Kunga mashq tanlang <Icon name="plus" size={18} />
+            </Link>
+          )}
+          <button className="btn btn-ghost btn-block mt-8" onClick={() => setFreeOpen(true)}>
+            <Icon name="list" size={18} /> Mashqlarni o‘zim tanlayman
           </button>
           <Readiness />
         </>
@@ -297,6 +314,21 @@ export default function Home() {
           Qaysi mashg‘ulotni bajarasiz?
         </h3>
         <div className="stack gap-8">
+          <button
+            className="choice"
+            onClick={() => {
+              setPickDay(false);
+              setFreeOpen(true);
+            }}
+          >
+            <span className="pill-num">
+              <Icon name="list" size={15} />
+            </span>
+            <div className="grow">
+              <div className="ch-title">Erkin mashg‘ulot</div>
+              <div className="ch-desc">Mashqlarni o‘zim tanlayman</div>
+            </div>
+          </button>
           {t.days.map((d) => (
             <button
               key={d.id}
@@ -316,6 +348,22 @@ export default function Home() {
             </button>
           ))}
         </div>
+      </Sheet>
+
+      <Sheet open={freeOpen} onClose={() => setFreeOpen(false)} label="Erkin mashg‘ulot">
+        {freeOpen && (
+          <ExercisePicker
+            title="Bugun qaysi mashqlar?"
+            search
+            equipment={profile.equipment}
+            list={[...EXERCISES].sort((a, b) => b.score - a.score)}
+            cta="Boshlash"
+            onPickMany={(ids) => {
+              setFreeOpen(false);
+              startFree(ids);
+            }}
+          />
+        )}
       </Sheet>
     </div>
   );

@@ -3,9 +3,9 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { EXERCISES, EXERCISE_MAP } from '../data/exercises';
-import { MUSCLES } from '../data/catalog';
+import { GROUPS, GROUP_ORDER, MUSCLES } from '../data/catalog';
 import { alternatives, hasEquipment } from '../engine/program';
-import type { Exercise, PlannedExercise, Profile, WorkoutDay } from '../types';
+import type { Exercise, MuscleGroup, PlannedExercise, Profile, WorkoutDay } from '../types';
 import { ExerciseThumb } from './ExerciseThumb';
 import { Icon } from './ui/Icon';
 import { Sheet } from './ui/Sheet';
@@ -27,7 +27,8 @@ export function DayEditor({ day, profile, onSwap, onUpdate, onRemove, onAdd }: D
   const [adding, setAdding] = useState(false);
   return (
     <>
-      <div className="card flush">
+      {day.exercises.length === 0 && <p className="card small muted" style={{ textAlign: 'center' }}>Bu kun hali bo‘sh — mashqlarni o‘zingiz tanlang.</p>}
+      <div className="card flush" style={day.exercises.length ? undefined : { display: 'none' }}>
         {day.exercises.map((pe, i) => {
           const ex = EXERCISE_MAP[pe.exerciseId];
           if (!ex) return null;
@@ -63,8 +64,8 @@ export function DayEditor({ day, profile, onSwap, onUpdate, onRemove, onAdd }: D
           );
         })}
       </div>
-      <button className="btn btn-ghost btn-block mt-8" onClick={() => setAdding(true)}>
-        <Icon name="plus" size={18} /> Mashq qo‘shish
+      <button className={`btn ${day.exercises.length ? 'btn-ghost' : 'btn-primary'} btn-block mt-8`} onClick={() => setAdding(true)}>
+        <Icon name="plus" size={18} /> {day.exercises.length ? 'Mashq qo‘shish' : 'Mashqlarni tanlash'}
       </button>
 
       <Sheet open={!!edit} onClose={() => setEdit(null)} label="Mashqni tahrirlash">
@@ -100,12 +101,12 @@ export function DayEditor({ day, profile, onSwap, onUpdate, onRemove, onAdd }: D
       <Sheet open={adding} onClose={() => setAdding(false)} label="Mashq qo‘shish">
         {adding && (
           <ExercisePicker
-            title="Mashq qo‘shish"
+            title="Mashqlarni tanlang"
             equipment={profile.equipment}
             list={[...EXERCISES].sort((a, b) => Number(hasEquipment(b, profile.equipment)) - Number(hasEquipment(a, profile.equipment)) || b.score - a.score)}
             search
-            onPick={(id) => {
-              onAdd(id);
+            onPickMany={(ids) => {
+              ids.forEach(onAdd);
               setAdding(false);
             }}
           />
@@ -155,18 +156,66 @@ function EditPlanned({ pe, onSave, onRemove }: { pe: PlannedExercise; onSave: (p
   );
 }
 
-export function ExercisePicker({ title, list, onPick, search, equipment }: { title: string; list: Exercise[]; onPick: (id: string) => void; search?: boolean; equipment?: Profile['equipment'] }) {
+/** Mashq tanlash: qidiruv, mushak guruhi va jihoz bo'yicha filtr; onPickMany berilsa — bir nechtasini belgilab, bir bosishda qo'shish */
+export function ExercisePicker({
+  title,
+  list,
+  onPick,
+  onPickMany,
+  search,
+  equipment,
+  cta = 'Qo‘shish',
+}: {
+  title: string;
+  list: Exercise[];
+  onPick?: (id: string) => void;
+  onPickMany?: (ids: string[]) => void;
+  search?: boolean;
+  equipment?: Profile['equipment'];
+  cta?: string;
+}) {
   const [q, setQ] = useState('');
-  const items = list.filter((e) => !q || (e.name + ' ' + e.en).toLowerCase().includes(q.toLowerCase()));
+  const [group, setGroup] = useState<MuscleGroup | null>(null);
+  const [onlyMine, setOnlyMine] = useState(true);
+  const [picked, setPicked] = useState<string[]>([]);
+  const multi = !!onPickMany;
+  const items = list.filter(
+    (e) =>
+      (!q || (e.name + ' ' + e.en).toLowerCase().includes(q.toLowerCase())) &&
+      (!group || MUSCLES[e.primary[0]].group === group) &&
+      (!search || !equipment || !onlyMine || hasEquipment(e, equipment)),
+  );
+  const toggle = (id: string) => setPicked((p) => (p.includes(id) ? p.filter((x) => x !== id) : [...p, id]));
   return (
     <div className="stack gap-12">
       <h3 className="title">{title}</h3>
-      {search && <input className="input" placeholder="Qidirish..." value={q} onChange={(e) => setQ(e.target.value)} aria-label="Mashq qidirish" />}
+      {search && (
+        <>
+          <input className="input" placeholder="Qidirish..." value={q} onChange={(e) => setQ(e.target.value)} aria-label="Mashq qidirish" />
+          <div className="hscroll" role="group" aria-label="Mushak guruhi">
+            <button className={`chip ${!group ? 'on' : ''}`} aria-pressed={!group} onClick={() => setGroup(null)}>
+              Hammasi
+            </button>
+            {GROUP_ORDER.map((g) => (
+              <button key={g} className={`chip ${group === g ? 'on' : ''}`} aria-pressed={group === g} onClick={() => setGroup(group === g ? null : g)}>
+                {GROUPS[g].name}
+              </button>
+            ))}
+          </div>
+          {equipment && (
+            <label className="row gap-8 small muted" style={{ cursor: 'pointer' }}>
+              <input type="checkbox" checked={onlyMine} onChange={(e) => setOnlyMine(e.target.checked)} />
+              Faqat zalimdagi jihozlar bilan
+            </label>
+          )}
+        </>
+      )}
       <div className="stack">
-        {items.slice(0, 40).map((e) => {
+        {items.map((e) => {
           const ok = equipment ? hasEquipment(e, equipment) : true;
+          const n = picked.indexOf(e.id);
           return (
-            <button key={e.id} className="list-row" onClick={() => onPick(e.id)} style={{ opacity: ok ? 1 : 0.55 }}>
+            <button key={e.id} className={`list-row ${n >= 0 ? 'picked' : ''}`} aria-pressed={multi ? n >= 0 : undefined} onClick={() => (multi ? toggle(e.id) : onPick?.(e.id))} style={{ opacity: ok ? 1 : 0.55 }}>
               <ExerciseThumb ex={e} size={48} />
               <div className="grow" style={{ minWidth: 0 }}>
                 <div className="strong small">{e.name}</div>
@@ -175,12 +224,25 @@ export function ExercisePicker({ title, list, onPick, search, equipment }: { tit
                   {!ok && ' · jihoz yo‘q'}
                 </div>
               </div>
-              <Icon name="plus" size={18} style={{ color: 'var(--text-3)' }} />
+              {multi ? (
+                <span className={`pick-mark ${n >= 0 ? 'on' : ''}`} aria-hidden="true">
+                  {n >= 0 ? n + 1 : <Icon name="plus" size={16} />}
+                </span>
+              ) : (
+                <Icon name="plus" size={18} style={{ color: 'var(--text-3)' }} />
+              )}
             </button>
           );
         })}
         {items.length === 0 && <p className="empty">Hech narsa topilmadi.</p>}
       </div>
+      {multi && (
+        <div className="picker-foot">
+          <button className="btn btn-primary btn-block" disabled={!picked.length} onClick={() => onPickMany!(picked)}>
+            {picked.length ? `${cta} · ${picked.length} ta mashq` : 'Mashqlarni belgilang'}
+          </button>
+        </div>
+      )}
     </div>
   );
 }

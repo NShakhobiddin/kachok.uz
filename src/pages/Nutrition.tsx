@@ -4,6 +4,7 @@ import { LineChart, MacroBar } from '../components/charts';
 import { FoodDiary, TdeeCard } from '../components/FoodDiary';
 import { ProGate } from '../components/ProGate';
 import { Icon } from '../components/ui/Icon';
+import { Note } from '../components/ui/Fold';
 import { Sheet } from '../components/ui/Sheet';
 import { Stepper } from '../components/ui/controls';
 import { sourceById } from '../data/sources';
@@ -81,7 +82,7 @@ export default function Nutrition() {
             </div>
           </>
         ) : (
-          <p className="muted small">Har kuni ertalab (hojatxonadan keyin, nonushtadan oldin) tortilib, vaznni kiriting. Kunlik tebranishlar yashiriladi — haqiqiy trend ko‘rinadi.</p>
+          <Note label="Qanday tortilish kerak">Har kuni ertalab (hojatxonadan keyin, nonushtadan oldin) tortilib, vaznni kiriting. Kunlik tebranishlar yashiriladi — haqiqiy trend ko‘rinadi.</Note>
         )}
         {useAdaptive ? (
           <p className="tiny faint">Kaloriya moslashuvchan sarf bo‘yicha avtomatik yangilanadi — qo‘lda tuzatish shart emas.</p>
@@ -220,7 +221,7 @@ export default function Nutrition() {
                 ))}
               </div>
             </ProGate>
-            <p className="tiny faint mt-8">Miqdorlar maqsadingizga moslab hisoblandi (USDA ma’lumotlari asosida, taxminiy). Mahsulotlarni teng qiymatlilariga almashtirish mumkin: tovuq ↔ baliq ↔ mol go‘shti, guruch ↔ grechka ↔ kartoshka.</p>
+            <Note className="mt-4">Miqdorlar maqsadingizga moslab hisoblandi (USDA ma’lumotlari asosida, taxminiy). Mahsulotlarni teng qiymatlilariga almashtirish mumkin: tovuq ↔ baliq ↔ mol go‘shti, guruch ↔ grechka ↔ kartoshka.</Note>
           </section>
 
           {/* Milliy taomlar */}
@@ -282,7 +283,7 @@ export default function Nutrition() {
                 </div>
               ))}
             </div>
-            <p className="tiny faint mt-8">A — kuchli dalil, B — o‘rtacha, C — faqat ma’lum holatlarda, X — samarasiz yoki xavfli.</p>
+            <Note className="mt-4" label="A, B, C, X nima">A — kuchli dalil, B — o‘rtacha, C — faqat ma’lum holatlarda, X — samarasiz yoki xavfli.</Note>
           </section>
         </>
       )}

@@ -5,6 +5,7 @@ import { fmtKg } from '../engine/progression';
 import { LEVELS, liftLevel, strengthProfile, thresholds, type LiftId } from '../engine/standards';
 import { useStore } from '../store/useStore';
 import { PlateBadge } from './Barbell';
+import { Note } from './ui/Fold';
 
 /** 5 bo'lakli daraja chizig'i: har bo'lak — bir daraja, marker — siz */
 export function LevelBar({ score }: { score: number }) {
@@ -70,7 +71,7 @@ export function StrengthLevels() {
           </Link>
         );
       })}
-      <p className="tiny faint">Me’yorlar: Strength Level foydalanuvchilari natijalari (5/20/50/80/95-persentil), vazningiz va jinsingizga moslangan. Taxminiy 1RM — so‘nggi 4 oydagi eng yaxshi set (RIR bo‘lsa RPE jadvali bo‘yicha).</p>
+      <Note label="Me’yorlar qayerdan">Strength Level foydalanuvchilari natijalari (5/20/50/80/95-persentil), vazningiz va jinsingizga moslangan. Taxminiy 1RM — so‘nggi 4 oydagi eng yaxshi set (RIR bo‘lsa RPE jadvali bo‘yicha).</Note>
     </div>
   );
 }

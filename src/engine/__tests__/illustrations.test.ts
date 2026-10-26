@@ -1,6 +1,8 @@
 import { existsSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { EQUIPMENT } from '../../data/catalog';
+import { EQUIPMENT_WITH_IMG } from '../../data/equipmentImages';
 import { EXERCISE_MAP } from '../../data/exercises';
 import { ILLUSTRATIONS } from '../../data/illustrations';
 import { activationFor } from '../activation';
@@ -46,5 +48,16 @@ describe('Mashq illyustratsiyalari', () => {
     for (const [id, ill] of entries) {
       for (const t of [ill.phase, ill.alt, ...ill.checks.map((c) => c.text), ...ill.labels.map((l) => l.name ?? '')]) expect(t, `${id}: ${t}`).not.toMatch(/[og]['`’]/i);
     }
+  });
+});
+
+describe('Jihoz rasmlari', () => {
+  it('ro‘yxatdagi har bir rasm mavjud jihozga tegishli va fayli bor', () => {
+    const ids = new Set(EQUIPMENT.map((e) => e.id));
+    for (const id of EQUIPMENT_WITH_IMG) {
+      expect(ids.has(id), id).toBe(true);
+      expect(existsSync(resolve(__dirname, '../../../public/illustrations/equipment', `${id}.webp`)), id).toBe(true);
+    }
+    expect(new Set(EQUIPMENT_WITH_IMG).size).toBe(EQUIPMENT_WITH_IMG.length);
   });
 });

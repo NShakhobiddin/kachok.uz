@@ -5,6 +5,7 @@ import { INJURIES } from '../data/catalog';
 import { RISK_INFO, safetyFor, type ExerciseSafety, type Risk } from '../data/safety';
 import { personalSafety } from '../engine/safety';
 import type { Exercise, Injury } from '../types';
+import { Fold } from './ui/Fold';
 import { Icon } from './ui/Icon';
 
 export const injuryName = (i: Injury) => INJURIES.find((x) => x.id === i)?.name ?? i;
@@ -86,112 +87,118 @@ export function PersonalSafetyNotice({ ex, injuries }: { ex: Exercise; injuries:
   );
 }
 
-/** Mashq sahifasidagi "Xavfsizlik" bo'limi */
+/** Mashq sahifasidagi "Xavfsizlik" bo'limi (yig'iq; #safety havolasi uni ochadi) */
 export function SafetySection({ ex, injuries }: { ex: Exercise; injuries: Injury[] }) {
   const s = safetyFor(ex.id);
   if (!s) return null;
   const info = RISK_INFO[s.risk];
   const joints = [...s.joints].sort((a, b) => Number(injuries.includes(b.at)) - Number(injuries.includes(a.at)));
   return (
-    <section className="section" id="safety" style={{ scrollMarginTop: 16 }}>
-      <div className="section-head">
-        <h2>Xavfsizlik</h2>
-        <span className="small muted">travmaning oldini olish</span>
-      </div>
-      <div className="card stack gap-16">
-        <div className="row gap-12" style={{ alignItems: 'flex-start' }}>
-          <RiskMeter risk={s.risk} />
-          <div className="grow" style={{ minWidth: 0 }}>
-            <div className="strong" style={{ color: info.color }}>
-              {info.name} xavf
+    <div id="safety" style={{ scrollMarginTop: 16 }}>
+      <Fold
+        icon={<Icon name="shield" size={18} style={{ color: info.color }} />}
+        title="Xavfsizlik"
+        hint={
+          <span className="row gap-6">
+            <RiskMeter risk={s.risk} size="s" /> {info.name} xavf · setdan oldin {s.check.length} ta tekshiruv
+          </span>
+        }
+      >
+        <div className="stack gap-16">
+          <div className="row gap-12" style={{ alignItems: 'flex-start' }}>
+            <RiskMeter risk={s.risk} />
+            <div className="grow" style={{ minWidth: 0 }}>
+              <div className="strong" style={{ color: info.color }}>
+                {info.name} xavf
+              </div>
+              <p className="small mt-4">{s.why}</p>
             </div>
-            <p className="small mt-4">{s.why}</p>
           </div>
+          {s.failure && (
+            <div className={`notice ${s.failure === 'form' ? 'warn' : 'gold'} small`}>
+              <Icon name="alert" size={18} />
+              <span>{FAILURE_TEXT[s.failure]}</span>
+            </div>
+          )}
+          <div>
+            <div className="eyebrow">Setdan oldin tekshiring</div>
+            <ul className="safe-list mt-8">
+              {s.check.map((c) => (
+                <li key={c}>
+                  <Icon name="shield" size={16} />
+                  <span>{c}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+          {s.bail && (
+            <div className="notice info small">
+              <Icon name="down" size={18} />
+              <span>
+                <b>Ko‘tara olmasangiz:</b> {s.bail}
+              </span>
+            </div>
+          )}
         </div>
-        {s.failure && (
-          <div className={`notice ${s.failure === 'form' ? 'warn' : 'gold'} small`}>
-            <Icon name="alert" size={18} />
-            <span>{FAILURE_TEXT[s.failure]}</span>
+
+        {joints.length > 0 && (
+          <div className="stack gap-8 mt-12">
+            <div className="eyebrow">Xavf ostidagi bo‘g‘imlar</div>
+            {joints.map((j) => {
+              const mine = injuries.includes(j.at);
+              return (
+                <div key={j.at} className="card tight stack gap-8" style={mine ? { borderColor: 'rgba(255, 200, 61, 0.45)' } : undefined}>
+                  <div className="row gap-8">
+                    <Icon
+                      name="joint"
+                      size={18}
+                      style={{
+                        color: mine ? 'var(--yellow)' : 'var(--text-3)',
+                        flex: 'none',
+                      }}
+                    />
+                    <span className="strong">{injuryName(j.at)}</span>
+                    {mine && (
+                      <span
+                        className="tag"
+                        style={{
+                          color: 'var(--yellow)',
+                          background: 'var(--yellow-soft)',
+                          borderColor: 'transparent',
+                        }}
+                      >
+                        sizda cheklov
+                      </span>
+                    )}
+                  </div>
+                  <p className="small muted">{j.how}</p>
+                  <p className="small">
+                    <b>Muammo bo‘lsa:</b> {j.mod}
+                  </p>
+                </div>
+              );
+            })}
           </div>
         )}
-        <div>
-          <div className="eyebrow">Setdan oldin tekshiring</div>
-          <ul className="safe-list mt-8">
-            {s.check.map((c) => (
-              <li key={c}>
-                <Icon name="shield" size={16} />
-                <span>{c}</span>
+
+        <div className="card mt-12 stack gap-8" style={{ borderColor: 'rgba(240, 71, 59, 0.35)' }}>
+          <div className="row gap-8">
+            <Icon name="alert" size={18} style={{ color: 'var(--red)' }} />
+            <span className="strong">Darhol to‘xtang, agar:</span>
+          </div>
+          <ul className="stop-list">
+            {s.stop.map((x) => (
+              <li key={x} className="small">
+                {x}
               </li>
             ))}
           </ul>
+          <Link to="/safety" className="small strong row gap-6" style={{ color: 'var(--blue-2)', minHeight: 36 }}>
+            Og‘riq shkalasi va barcha xavf belgilari <Icon name="right" size={14} />
+          </Link>
         </div>
-        {s.bail && (
-          <div className="notice info small">
-            <Icon name="down" size={18} />
-            <span>
-              <b>Ko‘tara olmasangiz:</b> {s.bail}
-            </span>
-          </div>
-        )}
-      </div>
-
-      {joints.length > 0 && (
-        <div className="stack gap-8 mt-12">
-          <div className="eyebrow">Xavf ostidagi bo‘g‘imlar</div>
-          {joints.map((j) => {
-            const mine = injuries.includes(j.at);
-            return (
-              <div key={j.at} className="card tight stack gap-8" style={mine ? { borderColor: 'rgba(255, 200, 61, 0.45)' } : undefined}>
-                <div className="row gap-8">
-                  <Icon
-                    name="joint"
-                    size={18}
-                    style={{
-                      color: mine ? 'var(--yellow)' : 'var(--text-3)',
-                      flex: 'none',
-                    }}
-                  />
-                  <span className="strong">{injuryName(j.at)}</span>
-                  {mine && (
-                    <span
-                      className="tag"
-                      style={{
-                        color: 'var(--yellow)',
-                        background: 'var(--yellow-soft)',
-                        borderColor: 'transparent',
-                      }}
-                    >
-                      sizda cheklov
-                    </span>
-                  )}
-                </div>
-                <p className="small muted">{j.how}</p>
-                <p className="small">
-                  <b>Muammo bo‘lsa:</b> {j.mod}
-                </p>
-              </div>
-            );
-          })}
-        </div>
-      )}
-
-      <div className="card mt-12 stack gap-8" style={{ borderColor: 'rgba(240, 71, 59, 0.35)' }}>
-        <div className="row gap-8">
-          <Icon name="alert" size={18} style={{ color: 'var(--red)' }} />
-          <span className="strong">Darhol to‘xtang, agar:</span>
-        </div>
-        <ul className="stop-list">
-          {s.stop.map((x) => (
-            <li key={x} className="small">
-              {x}
-            </li>
-          ))}
-        </ul>
-        <Link to="/safety" className="small strong row gap-6" style={{ color: 'var(--blue-2)', minHeight: 36 }}>
-          Og‘riq shkalasi va barcha xavf belgilari <Icon name="right" size={14} />
-        </Link>
-      </div>
-    </section>
+      </Fold>
+    </div>
   );
 }
 

@@ -5,6 +5,7 @@ import { PlateStack } from '../components/Barbell';
 import { Figure } from '../components/figure/Figure';
 import { PlateRing } from '../components/PlateRing';
 import { Icon } from '../components/ui/Icon';
+import { Note } from '../components/ui/Fold';
 import { Sheet } from '../components/ui/Sheet';
 import { GROUPS, MUSCLES } from '../data/catalog';
 import { FB_TEXT, type MuscleFeedback } from '../engine/meso';
@@ -572,9 +573,11 @@ export default function Workout() {
             title="Mashq qo‘shish"
             search
             equipment={profile.equipment}
-            list={EXERCISES.filter((e) => hasEquipment(e, profile.equipment))}
-            onPick={(id) => {
-              st.addActiveExercise(id);
+            list={EXERCISES}
+            onPickMany={(ids) => {
+              const first = st.active?.log.exercises.length ?? 0;
+              ids.forEach(st.addActiveExercise);
+              st.setActiveIndex(first);
               setAddOpen(false);
             }}
           />
@@ -745,7 +748,7 @@ function FinishSheet({
     <div className="stack gap-12">
       <h3 className="title">Mashg‘ulotni yakunlash</h3>
       {doneSets < totalSets && <p className="small muted">{totalSets - doneSets} ta set bajarilmagan — ular saqlanmaydi.</p>}
-      <p className="small muted">Har bir mushak uchun 3 ta qisqa javob — keyingi haftada shu mushakka setlar soni alohida moslashadi (RP metodikasi). Javob bermasangiz ham bo‘ladi.</p>
+      <Note label="Bu savollar nima uchun">Har bir mushak uchun 3 ta qisqa javob — keyingi haftada shu mushakka setlar soni alohida moslashadi (RP metodikasi). Javob bermasangiz ham bo‘ladi.</Note>
       {groups.map((g) => (
         <div key={g} className="card tight stack gap-8">
           <span className="strong">{GROUPS[g].name}</span>

@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
+import { AddToProgram } from '../components/AddToProgram';
 import { BenefitMap } from '../components/BenefitMap';
 import { BodyMap } from '../components/BodyMap';
 import { LineChart } from '../components/charts';
@@ -13,6 +14,7 @@ import { Figure } from '../components/figure/Figure';
 import { StandardsTable } from '../components/StrengthLevels';
 import { TempoBar, useTempo } from '../components/TempoBar';
 import { liftByExercise } from '../engine/standards';
+import { Fold, Note } from '../components/ui/Fold';
 import { Icon } from '../components/ui/Icon';
 import { EQUIPMENT, MUSCLES } from '../data/catalog';
 import { exById } from '../data/exercises';
@@ -31,6 +33,13 @@ const PHASE: Record<Phase, { label: string; hint: string; color: string }> = {
 };
 
 const GUIDE_HELD = ['barbell', 'ezbar', 'dumbbell', 'kettlebell'];
+
+/** Yig'iq "Xavfsizlik" blokini ochib, unga o'tish */
+function openSafety() {
+  const el = document.getElementById('safety');
+  el?.querySelector('details')?.setAttribute('open', '');
+  el?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
 
 /** Asosiy sahna: animatsiya, faza, tezlik, shtanga yo'li va tempo */
 function ExerciseStage({ ex }: { ex: Exercise }) {
@@ -109,11 +118,11 @@ function IllustratedStage({ ex }: { ex: Exercise }) {
       ) : (
         <div className="mt-12">
           <ExerciseIllustration ex={ex} ill={ill} layer={mode} />
-          <p className="tiny faint mt-8">
+          <Note className="mt-4">
             {mode === 'muscles'
               ? 'Foiz — EMG, maksimal ixtiyoriy qisqarishga nisbatan; ≈ — baho. Yorliqqa bosing — mushak haqida qo‘llanma.'
               : 'Rasm AI yordamida yaratilgan; texnikasi tekshirilgan. Harakatni ko‘rish uchun — «Animatsiya».'}
-          </p>
+          </Note>
         </div>
       )}
     </div>
@@ -131,14 +140,17 @@ export default function ExerciseDetail() {
   // /exercise/:id#safety — sahifa ochilib, tepaga qaytgandan keyin xavfsizlik bo'limiga o'tish
   useEffect(() => {
     if (hash !== '#safety') return;
-    const t = setTimeout(() => document.getElementById('safety')?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 350);
+    const t = setTimeout(openSafety, 350);
     return () => clearTimeout(t);
   }, [hash, ex?.id]);
   if (!ex) return <div className="page empty">Mashq topilmadi.</div>;
 
   const injuries = profile?.injuries ?? [];
   const safety = safetyFor(ex.id);
-  const eqNames = [...ex.equipment.map((e) => EQUIPMENT.find((x) => x.id === e)?.name), ex.equipmentAny ? ex.equipmentAny.map((e) => EQUIPMENT.find((x) => x.id === e)?.name).join(' yoki ') : null].filter(Boolean);
+  const eqNames = [
+    ...ex.equipment.map((e) => EQUIPMENT.find((x) => x.id === e)?.name),
+    ex.equipmentAny ? ex.equipmentAny.map((e) => EQUIPMENT.find((x) => x.id === e)?.name).join(' yoki ') : null,
+  ].filter(Boolean);
   const alts = profile ? alternatives(ex.id, profile).slice(0, 6) : [];
   const lift = liftByExercise(ex.id);
   const best = series.length ? series.reduce((a, b) => (b.e1rm > a.e1rm ? b : a)) : null;
@@ -167,11 +179,13 @@ export default function ExerciseDetail() {
           </span>
         ))}
         {safety && (
-          <button onClick={() => document.getElementById('safety')?.scrollIntoView({ behavior: 'smooth', block: 'start' })} aria-label="Xavfsizlik bo‘limiga o‘tish">
+          <button onClick={openSafety} aria-label="Xavfsizlik bo‘limiga o‘tish">
             <RiskTag risk={safety.risk} />
           </button>
         )}
       </div>
+
+      <AddToProgram ex={ex} />
 
       <PersonalSafetyNotice ex={ex} injuries={injuries} />
 
@@ -189,91 +203,85 @@ export default function ExerciseDetail() {
           <div className="stack gap-8 small">
             <div>
               <div className="eyebrow">Jihoz</div>
-              <div className="strong mt-4">{eqNames.length ? eqNames.join(', ') : "O‘z vazni"}</div>
+              <div className="strong mt-4">{eqNames.length ? eqNames.join(', ') : 'O‘z vazni'}</div>
             </div>
             <div>
               <div className="eyebrow">Daraja</div>
-              <div className="strong mt-4">{['', 'Oson', "O‘rta", 'Murakkab'][ex.level]}</div>
+              <div className="strong mt-4">{['', 'Oson', 'O‘rta', 'Murakkab'][ex.level]}</div>
             </div>
             <div>
               <div className="eyebrow">Turi</div>
-              <div className="strong mt-4">{ex.mechanics === 'compound' ? "Ko‘p bo‘g‘imli" : 'Izolyatsiya'}</div>
+              <div className="strong mt-4">{ex.mechanics === 'compound' ? 'Ko‘p bo‘g‘imli' : 'Izolyatsiya'}</div>
             </div>
           </div>
         </div>
       </section>
 
-      {lift && (
-        <section className="section">
-          <StandardsTable lift={lift.id} exName={lift.name} />
-        </section>
-      )}
-
       <section className="section">
         <div className="section-head">
-          <h2>Qanday bajariladi</h2>
+          <h2>Batafsil</h2>
+          <span className="small muted">bosing — ochiladi</span>
         </div>
-        <div className="card stack gap-12">
-          <div className="eyebrow">Tayyorgarlik</div>
-          <ol className="steps">
-            {ex.setup.map((s, i) => (
-              <li key={i}>{s}</li>
-            ))}
-          </ol>
-          <div className="divider" style={{ margin: '2px 0' }} />
-          <div className="eyebrow">Bajarish</div>
-          <ol className="steps">
-            {ex.steps.map((s, i) => (
-              <li key={i}>{s}</li>
-            ))}
-          </ol>
-          <div className="notice info mt-4">
-            <Icon name="drop" />
-            <span>
-              <b>Nafas:</b> {ex.breathing}
-            </span>
-          </div>
-        </div>
-        <div className="stack gap-8 mt-12">
-          {ex.cues.map((c, i) => (
-            <div key={i} className="row gap-10 small">
-              <Icon name="bolt" size={16} style={{ color: 'var(--yellow)', flex: 'none' }} />
-              <span>{c}</span>
+        <div className="fold-list">
+          <Fold icon={<Icon name="list" size={18} />} title="Qanday bajariladi" hint={`Tayyorgarlik · ${ex.steps.length} qadam · nafas · ${ex.cues.length} maslahat`}>
+            <div className="stack gap-12">
+              <div className="eyebrow">Tayyorgarlik</div>
+              <ol className="steps">
+                {ex.setup.map((s, i) => (
+                  <li key={i}>{s}</li>
+                ))}
+              </ol>
+              <div className="divider" style={{ margin: '2px 0' }} />
+              <div className="eyebrow">Bajarish</div>
+              <ol className="steps">
+                {ex.steps.map((s, i) => (
+                  <li key={i}>{s}</li>
+                ))}
+              </ol>
+              <div className="notice info mt-4">
+                <Icon name="drop" />
+                <span>
+                  <b>Nafas:</b> {ex.breathing}
+                </span>
+              </div>
+              <div className="stack gap-8">
+                {ex.cues.map((c, i) => (
+                  <div key={i} className="row gap-10 small">
+                    <Icon name="bolt" size={16} style={{ color: 'var(--yellow)', flex: 'none' }} />
+                    <span>{c}</span>
+                  </div>
+                ))}
+              </div>
             </div>
-          ))}
-        </div>
-      </section>
+          </Fold>
 
-      <SafetySection ex={ex} injuries={injuries} />
+          <SafetySection ex={ex} injuries={injuries} />
 
-      <section className="section">
-        <div className="section-head">
-          <h2>Ko‘p uchraydigan xatolar</h2>
-          <span className="small muted">{ex.mistakes.length} ta</span>
-        </div>
-        <div className="stack gap-12">
-          {ex.mistakes.map((m, i) => (
-            <MistakeCard key={i} ex={ex} m={m} />
-          ))}
-        </div>
-      </section>
+          <Fold icon={<Icon name="alert" size={18} style={{ color: 'var(--red)' }} />} title="Ko‘p uchraydigan xatolar" hint={`${ex.mistakes.length} ta · ${ex.mistakes[0]?.title ?? ''}`}>
+            <div className="stack gap-12">
+              {ex.mistakes.map((m, i) => (
+                <MistakeCard key={i} ex={ex} m={m} />
+              ))}
+            </div>
+          </Fold>
 
-      <section className="section">
-        <div className="section-head">
-          <h2>Sog‘liq uchun foydasi</h2>
+          <Fold icon={<Icon name="heart" size={18} />} title="Sog‘liq uchun foydasi" hint={`${ex.benefits.length} ta foyda`}>
+            <BenefitMap items={ex.benefits} />
+          </Fold>
+
+          {lift && (
+            <Fold icon={<Icon name="trophy" size={18} />} title="Kuch me’yorlari" hint="Sizning darajangiz qayerda">
+              <StandardsTable lift={lift.id} exName={lift.name} />
+            </Fold>
+          )}
         </div>
-        <BenefitMap items={ex.benefits} />
       </section>
 
       {series.length > 0 && (
         <section className="section">
           <div className="section-head">
             <h2>Sizning natijangiz</h2>
-            {best && (
-              <span className="small muted">
-                Rekord: {Math.round(best.e1rm)} kg (1RM)
-              </span>
-            )}
+            {best && <span className="small muted">Rekord: {Math.round(best.e1rm)} kg (1RM)</span>}
           </div>
           <div className="card">
             <LineChart label="Taxminiy 1 takrorli maksimum" series={series.map((s) => ({ t: new Date(s.date).getTime(), v: s.e1rm }))} unit="kg" fmtX={(t) => fmtDate(new Date(t))} />
