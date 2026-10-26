@@ -1,14 +1,14 @@
-// Tana xaritasi (old va orqa): mushakni tanlash, ishlayotgan mushaklarni yoki tiklanishni ko‘rsatish.
-// Anatomik atlas uslubida: barcha mushaklar chegaralari ko'rinadi, faollari rang bilan ajraladi.
-import { useMemo } from 'react';
+// Tana xaritasi (old va orqa): ishlayotgan mushaklar, tiklanish yoki mushak tanlash.
+// Tasvir 3D mushak modelidan render qilingan (scripts/bodymap): faol mushak chegarasi bo'yicha "lime" render kesib qo'yiladi,
+// shuning uchun mushak shakli, tolalari va soyasi 3D ko'rinish bilan bir xil.
+import { useId, useMemo } from 'react';
+import { BODYMAP } from '../data/bodymap';
 import { MUSCLES } from '../data/catalog';
 import { frontBody } from './figure/body';
-import { solveFront, type FrontSkeleton } from '../lib/figure';
+import type { FrontSkeleton } from '../lib/figure';
 import type { MuscleId } from '../types';
 
-const POSE = { ua: 168, fa: 172, th: 182, sh: 178 };
-const FRONT_IDS: MuscleId[] = ['traps', 'lats', 'chest', 'sideDelts', 'frontDelts', 'biceps', 'forearms', 'abs', 'obliques', 'adductors', 'quads', 'calves'];
-const BACK_IDS: MuscleId[] = ['traps', 'upperBack', 'lats', 'sideDelts', 'rearDelts', 'triceps', 'forearms', 'lowerBack', 'glutes', 'adductors', 'hamstrings', 'calves'];
+const img = (view: 'front' | 'back', kind: 'base' | 'glow') => `${import.meta.env.BASE_URL}bodymap/${view}-${kind}.webp`;
 
 export interface BodyMapProps {
   primary?: MuscleId[];
@@ -54,69 +54,94 @@ export function BodySilhouette({ sk, back, fill = 'var(--map-body)' }: { sk: Fro
 }
 
 export function BodyMap({ primary = [], secondary = [], recovery, selected = [], onSelect, views = ['front', 'back'], height = 260, showLabels = true }: BodyMapProps) {
-  const sk = useMemo(() => solveFront(POSE, 50, 214), []);
-  const shapes = useMemo(() => {
-    const out: Record<'front' | 'back', Partial<Record<MuscleId, { d: string }[]>>> = { front: {}, back: {} };
-    for (const v of ['front', 'back'] as const) {
-      const fb = frontBody(sk, v === 'back');
-      for (const id of v === 'back' ? BACK_IDS : FRONT_IDS) out[v][id] = [...(fb.muscles[id] ?? []), ...(fb.armMuscles[id] ?? []), ...(fb.late[id] ?? [])];
-    }
-    return out;
-  }, [sk]);
-  const rankOf = (id: MuscleId) => (primary.includes(id) || selected.includes(id) ? 2 : secondary.includes(id) ? 1 : 0);
-  const body = (v: 'front' | 'back') => (
-    <g>
-      <BodySilhouette sk={sk} back={v === 'back'} />
-      {[...(v === 'back' ? BACK_IDS : FRONT_IDS)]
-        .sort((a, b) => rankOf(a) - rankOf(b))
-        .map((id) => {
-          const isP = primary.includes(id);
-          const isS = secondary.includes(id);
-          const isSel = selected.includes(id);
-          let fill = 'var(--map-muscle)';
-          let glow = false;
-          if (recovery && recovery[id] !== undefined) fill = recoveryColor(recovery[id]!);
-          if (isS) fill = 'var(--muscle-secondary)';
-          if (isP || isSel) {
-            fill = 'var(--muscle-primary)';
-            glow = true;
-          }
-          const list = shapes[v][id] ?? [];
-          return (
-            <g
-              key={id}
-              onClick={onSelect ? () => onSelect(id) : undefined}
-              style={{ cursor: onSelect ? 'pointer' : undefined }}
-              role={onSelect ? 'button' : undefined}
-              aria-label={onSelect ? MUSCLES[id].name : undefined}
-              aria-pressed={onSelect ? isSel : undefined}
-              tabIndex={onSelect ? 0 : undefined}
-              onKeyDown={onSelect ? (e) => (e.key === 'Enter' || e.key === ' ') && onSelect(id) : undefined}
-            >
-              {glow && list.map((s, i) => <path key={`g${i}`} d={s.d} fill="var(--muscle-primary)" opacity={0.35} filter="url(#bm-glow)" />)}
-              {list.map((s, i) => (
-                <path key={i} d={s.d} fill={fill} stroke="var(--map-body)" strokeWidth={0.7} opacity={fill === 'var(--map-muscle)' ? 1 : 0.95} />
-              ))}
-            </g>
-          );
-        })}
-    </g>
-  );
+  const uid = useId().replace(/[^a-zA-Z0-9]/g, '');
   return (
     <div className="row center" style={{ gap: 8 }}>
       {views.map((v) => (
-        <div key={v} className="stack" style={{ alignItems: 'center', gap: 4 }}>
-          <svg viewBox="2 20 96 202" height={height} style={{ width: 'auto', maxWidth: '100%', overflow: 'visible' }}>
-            <defs>
-              <filter id="bm-glow" x="-50%" y="-50%" width="200%" height="200%">
-                <feGaussianBlur stdDeviation="2.4" />
-              </filter>
-            </defs>
-            {body(v)}
-          </svg>
-          {showLabels && <span className="eyebrow">{v === 'front' ? 'Old' : 'Orqa'}</span>}
-        </div>
+        <MapView key={v} uid={uid} view={v} primary={primary} secondary={secondary} recovery={recovery} selected={selected} onSelect={onSelect} height={height} label={showLabels} />
       ))}
+    </div>
+  );
+}
+
+function MapView({
+  uid,
+  view,
+  primary,
+  secondary,
+  recovery,
+  selected,
+  onSelect,
+  height,
+  label,
+}: Required<Pick<BodyMapProps, 'primary' | 'secondary' | 'selected' | 'height'>> & Pick<BodyMapProps, 'recovery' | 'onSelect'> & { uid: string; view: 'front' | 'back'; label: boolean }) {
+  const m = BODYMAP[view];
+  const ids = useMemo(() => Object.keys(m.paths) as MuscleId[], [m]);
+  const lit = ids.filter((id) => primary.includes(id) || selected.includes(id));
+  const half = ids.filter((id) => !lit.includes(id) && secondary.includes(id));
+  const id = (k: string) => `bm${uid}${view}${k}`;
+  const names = [...lit, ...half].map((x) => MUSCLES[x].name.toLowerCase());
+  return (
+    <div className="stack" style={{ alignItems: 'center', gap: 4 }}>
+      <svg
+        viewBox={`0 0 ${m.w} ${m.h}`}
+        height={height}
+        className="bodymap"
+        style={{ width: 'auto', maxWidth: '100%', overflow: 'visible' }}
+        role={onSelect ? 'group' : 'img'}
+        aria-label={`${view === 'front' ? 'Old' : 'Orqa'} tomondan${names.length ? `: ${names.join(', ')}` : ''}`}
+      >
+        <defs>
+          <clipPath id={id('p')}>
+            {lit.map((k) => (
+              <path key={k} d={m.paths[k]} />
+            ))}
+          </clipPath>
+          <clipPath id={id('s')}>
+            {half.map((k) => (
+              <path key={k} d={m.paths[k]} />
+            ))}
+          </clipPath>
+          <filter id={id('f')} x="-30%" y="-10%" width="160%" height="120%">
+            <feGaussianBlur stdDeviation="7" />
+          </filter>
+        </defs>
+        <image href={img(view, 'base')} width={m.w} height={m.h} />
+        {recovery &&
+          ids.map((k) =>
+            recovery[k] !== undefined && !lit.includes(k) && !half.includes(k) ? <path key={k} d={m.paths[k]} fill={recoveryColor(recovery[k]!)} opacity={0.42} style={{ mixBlendMode: 'color' }} /> : null,
+          )}
+        {/* yordamchi mushaklar: o'sha lime render, lekin xiraroq (zaytun-lime) — qizil bilan aralashib qo'ng'ir bo'lmasin */}
+        {half.length > 0 && (
+          <g clipPath={`url(#${id('s')})`}>
+            <image href={img(view, 'glow')} width={m.w} height={m.h} />
+            <rect width={m.w} height={m.h} fill="#0b0b0c" opacity={0.42} />
+          </g>
+        )}
+        {lit.length > 0 && (
+          <>
+            <g filter={`url(#${id('f')})`} opacity={0.6}>
+              <image href={img(view, 'glow')} width={m.w} height={m.h} clipPath={`url(#${id('p')})`} />
+            </g>
+            <image href={img(view, 'glow')} width={m.w} height={m.h} clipPath={`url(#${id('p')})`} />
+          </>
+        )}
+        {onSelect &&
+          ids.map((k) => (
+            <path
+              key={k}
+              d={m.paths[k]}
+              className="bm-hit"
+              role="button"
+              tabIndex={0}
+              aria-label={MUSCLES[k].name}
+              aria-pressed={selected.includes(k)}
+              onClick={() => onSelect(k)}
+              onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && (e.preventDefault(), onSelect(k))}
+            />
+          ))}
+      </svg>
+      {label && <span className="eyebrow">{view === 'front' ? 'Old' : 'Orqa'}</span>}
     </div>
   );
 }

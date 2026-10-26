@@ -1,7 +1,8 @@
 import { existsSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { EQUIPMENT } from '../../data/catalog';
+import { BODYMAP } from '../../data/bodymap';
+import { EQUIPMENT, MUSCLES } from '../../data/catalog';
 import { EQUIPMENT_WITH_IMG } from '../../data/equipmentImages';
 import { EXERCISE_MAP } from '../../data/exercises';
 import { ILLUSTRATIONS } from '../../data/illustrations';
@@ -59,5 +60,24 @@ describe('Jihoz rasmlari', () => {
       expect(existsSync(resolve(__dirname, '../../../public/illustrations/equipment', `${id}.webp`)), id).toBe(true);
     }
     expect(new Set(EQUIPMENT_WITH_IMG).size).toBe(EQUIPMENT_WITH_IMG.length);
+  });
+});
+
+describe('Tana xaritasi (3D modeldan render)', () => {
+  it('tasvirlar bor, har bir mushak guruhi kamida bitta ko‘rinishda chizilgan', () => {
+    const seen = new Set<string>();
+    for (const view of ['front', 'back'] as const) {
+      const m = BODYMAP[view];
+      for (const kind of ['base', 'glow']) expect(existsSync(resolve(__dirname, '../../../public/bodymap', `${view}-${kind}.webp`)), `${view}-${kind}`).toBe(true);
+      for (const [id, d] of Object.entries(m.paths)) {
+        expect(MUSCLES[id as keyof typeof MUSCLES], id).toBeDefined();
+        expect(d, `${view}.${id}`).toMatch(/^M [\d.]+ [\d.]+ /);
+        // koordinatalar tasvir ichida
+        const nums = d!.match(/-?\d+(\.\d+)?/g)!.map(Number);
+        nums.forEach((v, i) => expect(v).toBeLessThanOrEqual((i % 2 ? m.h : m.w) + 1));
+        seen.add(id);
+      }
+    }
+    expect([...seen].sort()).toEqual(Object.keys(MUSCLES).sort());
   });
 });

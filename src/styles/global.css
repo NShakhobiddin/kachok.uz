@@ -2557,3 +2557,18 @@ ol.steps li::before {
     animation: none;
   }
 }
+
+/* Tana xaritasi: mushakni tanlash uchun ko'rinmas bosiladigan joylar */
+.bm-hit {
+  fill: transparent;
+  cursor: pointer;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.bm-hit:hover {
+  fill: rgba(212, 250, 80, 0.12);
+}
+.bm-hit:focus-visible {
+  stroke: var(--accent);
+  stroke-width: 2.5;
+}

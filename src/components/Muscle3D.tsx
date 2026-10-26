@@ -16,7 +16,7 @@ import type { AnimSpec, Phase } from '../types';
 
 const MODEL_URL = `${import.meta.env.BASE_URL}models/muscles-v2.glb`;
 let modelPromise: Promise<THREE.Group> | null = null;
-function loadModel(): Promise<THREE.Group> {
+export function loadModel(): Promise<THREE.Group> {
   modelPromise ??= new GLTFLoader()
     .setMeshoptDecoder(MeshoptDecoder)
     .loadAsync(MODEL_URL)
@@ -41,14 +41,14 @@ const VIEW_POS: Record<View3D, THREE.Vector3> = {
 const VIEW_ANGLE: Record<View3D, number> = { front: 0, side: -Math.PI / 2, back: Math.PI };
 
 const LIME = new THREE.Color('#d4fa50');
-const PAL = {
+export const PAL = {
   muscle: new THREE.Color('#a3322c'),
   other: new THREE.Color('#93302b'),
   tendon: new THREE.Color('#d9cfbf'),
   bones: new THREE.Color('#cbbfa9'),
 };
 
-type Kind = 'muscle' | 'tendon' | 'bones';
+export type Kind = 'muscle' | 'tendon' | 'bones';
 interface Uniforms {
   uGlow: { value: number };
   uDim: { value: number };
@@ -58,7 +58,7 @@ interface Uniforms {
 }
 
 /** Fizik material + tola chiziqlari, atrof soyasi va chekka nur (shader qo'shimchalari) */
-function bodyMaterial(kind: Kind, local: THREE.Matrix4) {
+export function bodyMaterial(kind: Kind, local: THREE.Matrix4) {
   const m = new THREE.MeshPhysicalMaterial({
     color: kind === 'muscle' ? PAL.muscle.clone() : PAL[kind].clone(),
     roughness: kind === 'muscle' ? 0.44 : kind === 'tendon' ? 0.3 : 0.6,
