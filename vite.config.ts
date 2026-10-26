@@ -49,12 +49,18 @@ export default defineConfig({
       workbox: {
         globPatterns: ['**/*.{js,css,html,svg,png,woff2}'],
         navigateFallback: `${base}index.html`,
-        // 3D model (~1.7 MB) oldindan yuklanmaydi: birinchi ochilganda keshga tushadi va keyin internetsiz ishlaydi
+        // 3D model (~3.6 MB) oldindan yuklanmaydi: birinchi ochilganda keshga tushadi va keyin internetsiz ishlaydi
         runtimeCaching: [
           {
             urlPattern: /\/models\/.*\.glb$/,
             handler: 'CacheFirst',
             options: { cacheName: 'kachok-models', expiration: { maxEntries: 4 } },
+          },
+          // mashq illyustratsiyalari: ochilganda yuklanadi va keyin internetsiz ham ko'rinadi
+          {
+            urlPattern: /\/illustrations\/.*\.webp$/,
+            handler: 'CacheFirst',
+            options: { cacheName: 'kachok-illustrations', expiration: { maxEntries: 200 } },
           },
         ],
       },

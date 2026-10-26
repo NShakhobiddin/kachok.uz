@@ -2250,3 +2250,88 @@ ol.steps li::before {
 .safe-list.card li > svg {
   color: var(--accent);
 }
+
+/* ---------- Mashq illyustratsiyasi ---------- */
+.illu {
+  position: relative;
+  margin: 0;
+  aspect-ratio: 1;
+  border-radius: 26px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  background: #0e0e10;
+}
+.illu img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.illu.ready img {
+  opacity: 1;
+}
+.illu svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+.illu-lab,
+.illu-chk {
+  position: absolute;
+  transform: translateY(-50%);
+  width: 25%;
+  padding: 4px 7px;
+  border-radius: 10px;
+  background: rgba(11, 11, 12, 0.8);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  border: 1px solid var(--line-2);
+  font-size: 10px;
+  line-height: 1.2;
+  font-weight: 700;
+  color: var(--text);
+}
+.illu-lab {
+  display: flex;
+  flex-direction: column;
+}
+.illu-lab.l,
+.illu-chk.l {
+  left: 2%;
+}
+.illu-lab.r,
+.illu-chk.r {
+  right: 2%;
+  align-items: flex-end;
+  text-align: right;
+}
+.illu-lab b {
+  font-family: var(--font-display);
+  font-stretch: 118%;
+  font-weight: 800;
+  font-size: 14px;
+  letter-spacing: -0.03em;
+}
+.illu-chk {
+  border-color: var(--accent-line);
+}
+.illu-chk i {
+  font-style: normal;
+  color: var(--accent);
+  margin-right: 3px;
+}
+.illu-phase {
+  position: absolute;
+  left: 12px;
+  bottom: 10px;
+  font-family: var(--font-display);
+  font-stretch: 110%;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+}

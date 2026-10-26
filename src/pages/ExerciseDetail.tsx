@@ -7,6 +7,8 @@ import { MuscleActivation } from '../components/MuscleActivation';
 import { PersonalSafetyNotice, RiskTag, SafetySection } from '../components/Safety';
 import { safetyFor } from '../data/safety';
 import { ExerciseThumb } from '../components/ExerciseThumb';
+import { ExerciseIllustration, type IlluLayer } from '../components/ExerciseIllustration';
+import { ILLUSTRATIONS } from '../data/illustrations';
 import { Figure } from '../components/figure/Figure';
 import { StandardsTable } from '../components/StrengthLevels';
 import { TempoBar, useTempo } from '../components/TempoBar';
@@ -83,6 +85,41 @@ function ExerciseStage({ ex }: { ex: Exercise }) {
   );
 }
 
+/** Illyustratsiyasi bor mashq: rasm (mushaklar yoki texnika belgilari) va animatsiya orasida tanlash */
+function IllustratedStage({ ex }: { ex: Exercise }) {
+  const [mode, setMode] = useState<IlluLayer | 'anim'>('muscles');
+  const ill = ILLUSTRATIONS[ex.id]!;
+  return (
+    <div className="mt-16">
+      <div className="segmented" role="radiogroup" aria-label="Ko‘rinish">
+        {(
+          [
+            ['muscles', 'Mushaklar'],
+            ['form', 'Texnika'],
+            ['anim', 'Animatsiya'],
+          ] as const
+        ).map(([v, t]) => (
+          <button key={v} role="radio" aria-checked={mode === v} className={mode === v ? 'on' : ''} onClick={() => setMode(v)}>
+            {t}
+          </button>
+        ))}
+      </div>
+      {mode === 'anim' ? (
+        <ExerciseStage ex={ex} />
+      ) : (
+        <div className="mt-12">
+          <ExerciseIllustration ex={ex} ill={ill} layer={mode} />
+          <p className="tiny faint mt-8">
+            {mode === 'muscles'
+              ? 'Foiz — EMG, maksimal ixtiyoriy qisqarishga nisbatan; ≈ — baho. Yorliqqa bosing — mushak haqida qo‘llanma.'
+              : 'Rasm AI yordamida yaratilgan; texnikasi tekshirilgan. Harakatni ko‘rish uchun — «Animatsiya».'}
+          </p>
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function ExerciseDetail() {
   const { id } = useParams();
   const nav = useNavigate();
@@ -116,7 +153,7 @@ export default function ExerciseDetail() {
       </div>
       <h1 className="display display-l">{ex.name}</h1>
 
-      <ExerciseStage ex={ex} />
+      {ILLUSTRATIONS[ex.id] ? <IllustratedStage ex={ex} /> : <ExerciseStage ex={ex} />}
 
       <div className="row wrap gap-6 mt-12">
         {ex.primary.map((m) => (
