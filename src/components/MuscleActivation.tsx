@@ -1,5 +1,6 @@
 // Mashq sahifasidagi "Mushaklar 3D" bo'limi: anatomik model, EMG foizlari, rol, manbalar.
 import { lazy, Suspense, useMemo, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { EMG_SOURCES } from '../data/activation';
 import { M3_INFO, type M3 } from '../data/muscles3d';
 import { activationFor, heatColor, ROLE_TEXT } from '../engine/activation';
@@ -91,6 +92,9 @@ export function MuscleActivation({ ex }: { ex: Exercise }) {
                 {sel.range && <span className="muted"> · tadqiqotlarda {sel.range[0]}–{sel.range[1]}%</span>}
               </span>
             </div>
+            <Link to={`/muscle/${sel.key}`} className="small strong row gap-6 mt-4" style={{ minHeight: 32 }}>
+              Mushak haqida qo‘llanma <Icon name="right" size={14} />
+            </Link>
           </div>
         )}
         {selected && !sel && (

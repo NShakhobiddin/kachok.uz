@@ -314,6 +314,9 @@ function WeekBody() {
         <div className="week-body-card" role="status">
           <b className="small">{M3_INFO[sel!].name}</b>
           <span className="small muted">{cur ? `${cur.sets} samarali set bu hafta` : 'Bu hafta deyarli ishlamadi'}</span>
+          <Link to={`/muscle/${sel}`} className="small strong row gap-6 mt-4">
+            Mushak haqida qo‘llanma <Icon name="right" size={14} />
+          </Link>
         </div>
       ) : (
         <div className="stack gap-6 mt-8" style={{ position: 'relative', zIndex: 1 }}>

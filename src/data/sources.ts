@@ -397,6 +397,12 @@ export const SOURCES: Source[] = [
     doi: '10.1016/j.jse.2011.04.035',
     finding: "Ko‘krak katta mushagi uzilishlarining eng ko‘p uchraydigan sababi — og‘ir yotib jim, ayniqsa shtangani pastga tushirish fazasi; aksariyati yosh erkaklarda.",
   },
+  {
+    id: 'openstax2022',
+    short: 'OpenStax Anatomy & Physiology 2e, 2022',
+    cite: 'Betts JG, Young KA, Wise JA, Johnson E, Poe B, Kruse DH, Korol O, Johnson JE, Womble M, DeSaix P. Anatomy and Physiology 2e. Houston, TX: OpenStax, Rice University; 2022. https://openstax.org/details/books/anatomy-and-physiology-2e (CC BY 4.0).',
+    finding: "Skelet mushaklarining boshlanishi, birikishi va vazifalari — mushaklar atlasidagi anatomik ma’lumotlar asosi.",
+  },
 ];
 
 export const sourceById = (id: string) => SOURCES.find((s) => s.id === id);

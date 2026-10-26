@@ -228,9 +228,11 @@ interface Props {
   placeholder?: ReactNode;
   className?: string;
   label?: string;
+  /** tanlangan mushakka kamerani yaqinlashtirish (atlas sahifasi) */
+  focus?: boolean;
 }
 
-export default function Muscle3D({ acts, anim, selected = null, onSelect, view = 'front', mode = 'orbit', playing = true, onPhase, placeholder, className, label }: Props) {
+export default function Muscle3D({ acts, anim, selected = null, onSelect, view = 'front', mode = 'orbit', playing = true, onPhase, placeholder, className, label, focus = false }: Props) {
   const host = useRef<HTMLDivElement>(null);
   const [state, setState] = useState<'loading' | 'ready' | 'error'>('loading');
   // o'zgaruvchan qiymatlar render siklida o'qiladi (qayta montaj qilmasdan)
@@ -241,7 +243,7 @@ export default function Muscle3D({ acts, anim, selected = null, onSelect, view =
   live.current.onSelect = onSelect;
   live.current.onPhase = onPhase;
   live.current.timeline = phaseTimeline(anim);
-  const api = useRef<{ goTo: (v: View3D) => void } | null>(null);
+  const api = useRef<{ goTo: (v: View3D) => void; focus: (k: M3 | null, v: View3D) => void } | null>(null);
 
   useEffect(() => {
     const el = host.current;
@@ -297,7 +299,7 @@ export default function Muscle3D({ acts, anim, selected = null, onSelect, view =
       controls.enablePan = false;
       controls.enableDamping = true;
       controls.dampingFactor = 0.09;
-      controls.minDistance = 0.9;
+      controls.minDistance = 0.6;
       controls.maxDistance = 5.5;
       controls.minPolarAngle = 0.25;
       controls.maxPolarAngle = Math.PI - 0.25;
@@ -314,6 +316,14 @@ export default function Muscle3D({ acts, anim, selected = null, onSelect, view =
     // kamerani tana atrofida aylanib ko'chirish (orbit) yoki tanani burish (turntable), 0.7 s
     let fly: { r: number; a0: number; a1: number; p0: number; p1: number; start: number } | null = null;
     let turn: { a0: number; a1: number; start: number } | null = null;
+    // kamera va qarash nuqtasini birga ko'chirish (mushakka yaqinlashish)
+    let aimTo: { t0: THREE.Vector3; t1: THREE.Vector3; p0: THREE.Vector3; p1: THREE.Vector3; start: number } | null = null;
+    const boxes = new Map<string, THREE.Box3>();
+    const FOCUS_DIR: Record<View3D, THREE.Vector3> = {
+      front: new THREE.Vector3(0, 0.08, 1).normalize(),
+      back: new THREE.Vector3(0, 0.08, -1).normalize(),
+      side: new THREE.Vector3(1, 0.08, 0.12).normalize(),
+    };
     const sph = new THREE.Spherical();
     const shortest = (d: number) => ((((d + Math.PI) % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI)) - Math.PI;
     api.current = {
@@ -326,6 +336,20 @@ export default function Muscle3D({ acts, anim, selected = null, onSelect, view =
         const cur = new THREE.Spherical().setFromVector3(camera.position.clone().sub(controls.target));
         const goal = new THREE.Spherical().setFromVector3(VIEW_POS[v].clone().sub(TARGET));
         fly = { r: cur.radius, a0: cur.theta, a1: cur.theta + shortest(goal.theta - cur.theta), p0: cur.phi, p1: goal.phi, start: performance.now() };
+      },
+      focus(k, v) {
+        if (!controls) return;
+        const box = k ? boxes.get(k) : undefined;
+        let t1 = TARGET.clone();
+        let p1 = VIEW_POS[v].clone();
+        if (box) {
+          const size = box.getSize(new THREE.Vector3());
+          t1 = box.getCenter(new THREE.Vector3());
+          const r = THREE.MathUtils.clamp(Math.max(size.x, size.y) * 2.1 + 0.4, 0.9, 3.95);
+          p1 = t1.clone().addScaledVector(FOCUS_DIR[v], r);
+        }
+        fly = null;
+        aimTo = { t0: controls.target.clone(), t1, p0: camera.position.clone(), p1, start: performance.now() };
       },
     };
 
@@ -405,6 +429,8 @@ export default function Muscle3D({ acts, anim, selected = null, onSelect, view =
           meshes.push(m);
         });
         spin.add(root);
+        spin.updateMatrixWorld(true);
+        for (const m of meshes) boxes.set(m.name, new THREE.Box3().setFromObject(m));
         setState('ready');
       })
       .catch(() => !disposed && setState('error'));
@@ -450,6 +476,13 @@ export default function Muscle3D({ acts, anim, selected = null, onSelect, view =
       const goal = reduced ? 1 : phaseFactor(phase, L.timeline.isometric);
       level += (goal - level) * 0.08;
 
+      if (aimTo && controls) {
+        const k = reduced ? 1 : Math.min(1, (now - aimTo.start) / 800);
+        const e = 1 - Math.pow(1 - k, 3);
+        controls.target.lerpVectors(aimTo.t0, aimTo.t1, e);
+        camera.position.lerpVectors(aimTo.p0, aimTo.p1, e);
+        if (k >= 1) aimTo = null;
+      }
       if (fly && controls) {
         const k = reduced ? 1 : Math.min(1, (now - fly.start) / 700);
         const e = 1 - Math.pow(1 - k, 3);
@@ -519,10 +552,12 @@ export default function Muscle3D({ acts, anim, selected = null, onSelect, view =
     };
   }, [mode]);
 
-  // ko'rinish tugmalari
+  // ko'rinish tugmalari (atlasda — tanlangan mushakka yaqinlashish)
   useEffect(() => {
-    if (state === 'ready') api.current?.goTo(view);
-  }, [view, state]);
+    if (state !== 'ready') return;
+    if (focus) api.current?.focus(selected, view);
+    else api.current?.goTo(view);
+  }, [view, state, focus, selected]);
 
   const aria = label ?? `3D anatomik model: ${acts.slice(0, 3).map((a) => `${M3_INFO[a.key].name} ${Math.round(a.mvic)}%`).join(', ')}`;
   return (

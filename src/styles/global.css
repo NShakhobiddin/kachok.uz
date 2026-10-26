@@ -2151,3 +2151,102 @@ ol.steps li::before {
   left: 18px;
   top: 16px;
 }
+
+/* ---------- Mushaklar atlasi ---------- */
+.mt-6 {
+  margin-top: 6px;
+}
+.gap-14 {
+  gap: 14px;
+}
+.lead {
+  font-size: 17px;
+  line-height: 1.5;
+  color: var(--text);
+}
+.atlas-hero {
+  position: relative;
+  padding: 0;
+  border-radius: 30px;
+  overflow: hidden;
+}
+.m3d-host.atlas-3d {
+  aspect-ratio: 4 / 5;
+  max-height: 68vh;
+  border: 0;
+  border-radius: 0;
+  background: radial-gradient(90% 55% at 50% 100%, rgba(212, 250, 80, 0.1) 0%, transparent 60%);
+}
+.atlas-hero .m3d-top {
+  left: 14px;
+  top: 14px;
+}
+.atlas-card {
+  bottom: 12px;
+}
+.atlas-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 20px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  color: inherit;
+}
+.atlas-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex: none;
+  background: #a3322c;
+  box-shadow: 0 0 0 3px rgba(163, 50, 44, 0.25);
+}
+/* boshlanish → birikish */
+.attach {
+  display: flex;
+  flex-direction: column;
+}
+.attach-row {
+  position: relative;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+/* chiziq: birinchi nuqtadan ikkinchisigacha */
+.attach-row:first-child {
+  padding-bottom: 16px;
+}
+.attach-row:first-child::before {
+  content: '';
+  position: absolute;
+  left: 5px;
+  top: 15px;
+  bottom: -3px;
+  width: 2px;
+  background: linear-gradient(var(--accent), var(--accent-line));
+}
+.attach-row .eyebrow {
+  display: block;
+}
+.attach-text {
+  display: block;
+  margin-top: 3px;
+}
+.attach-dot {
+  width: 12px;
+  height: 12px;
+  margin-top: 3px;
+  border-radius: 50%;
+  flex: none;
+  border: 2px solid var(--accent);
+  background: var(--bg);
+  position: relative;
+  z-index: 1;
+}
+.attach-dot.end {
+  background: var(--accent);
+}
+.safe-list.card li > svg {
+  color: var(--accent);
+}

@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { BodyMap } from '../components/BodyMap';
 import { ExerciseThumb } from '../components/ExerciseThumb';
+import { MuscleAtlas } from '../components/MuscleAtlas';
 import { RiskTag } from '../components/Safety';
 import { Icon } from '../components/ui/Icon';
 import { Segmented, Toggle } from '../components/ui/controls';
@@ -26,22 +27,23 @@ const AREAS: { k: string; label: string; muscles: MuscleId[] }[] = [
 
 export default function Library() {
   const [params, setParams] = useSearchParams();
-  const tab = params.get('tab') === 'lessons' ? 'lessons' : 'exercises';
+  const tab = params.get('tab') === 'lessons' ? 'lessons' : params.get('tab') === 'muscles' ? 'muscles' : 'exercises';
   return (
     <div className="page">
       <div className="page-head">
-        <h1 className="display">{tab === 'lessons' ? 'Darslar' : 'Mashqlar'}</h1>
+        <h1 className="display">{tab === 'lessons' ? 'Darslar' : tab === 'muscles' ? 'Mushaklar' : 'Mashqlar'}</h1>
       </div>
       <Segmented
         label="Bo‘lim"
         value={tab}
-        onChange={(v) => setParams(v === 'lessons' ? { tab: 'lessons' } : {}, { replace: true })}
+        onChange={(v) => setParams(v === 'exercises' ? {} : { tab: v }, { replace: true })}
         options={[
           { value: 'exercises', label: 'Mashqlar' },
+          { value: 'muscles', label: 'Mushaklar' },
           { value: 'lessons', label: 'Darsliklar' },
         ]}
       />
-      <div className="mt-16">{tab === 'lessons' ? <Lessons /> : <Exercises />}</div>
+      <div className="mt-16">{tab === 'lessons' ? <Lessons /> : tab === 'muscles' ? <MuscleAtlas /> : <Exercises />}</div>
     </div>
   );
 }
