@@ -12,6 +12,8 @@ export interface PromptJob {
   /** public/ ichidagi yo'l (webp) */
   file: string;
   title: string;
+  /** ilovadagi holat yozuvi (mashqlar uchun) */
+  phase?: string;
   prompt: string;
 }
 
@@ -63,7 +65,14 @@ const jobs: PromptJob[] = [];
 for (const ex of EXERCISES) {
   const p = exercisePrompt(ex.id);
   if (!p) throw new Error(`specs.ts: ${ex.id} uchun tavsif yo'q`);
-  jobs.push({ id: ex.id, kind: 'exercise', file: `illustrations/${ex.id}.webp`, title: `${ex.name} (${ex.en}) — ${EXERCISE_SPECS[ex.id].phaseUz.toLowerCase()}`, prompt: p });
+  jobs.push({
+    id: ex.id,
+    kind: 'exercise',
+    file: `illustrations/${ex.id}.webp`,
+    title: `${ex.name} (${ex.en}) — ${EXERCISE_SPECS[ex.id].phaseUz.toLowerCase()}`,
+    phase: EXERCISE_SPECS[ex.id].phaseUz,
+    prompt: p,
+  });
 }
 for (const e of EQUIPMENT_SPECS) {
   const info = EQUIPMENT.find((x) => x.id === e.id)!;

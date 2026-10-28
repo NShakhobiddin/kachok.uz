@@ -537,8 +537,8 @@ Photorealistic anatomical render of a muscular male athlete performing the bench
 Body: écorché style — skin removed, realistic deep-red striated muscle fibers, pearly white tendons, anatomically accurate muscle shapes. Plain opaque dark grey compression shorts fully covering the hips. Black flat-soled training shoes.
 
 Correct technique (must be exact):
-- Lying on a flat bench, eyes under the bar, shoulder blades pulled back and down, slight natural arch, glutes on the bench, feet flat on the floor.
-- The barbell touches the lower chest at nipple level.
+- Lying fully on his back on a flat bench (head, upper back and glutes on the bench), eyes under the bar, shoulder blades pulled back and down, slight natural arch, feet flat on the floor.
+- The bar is lowered ALL the way down: the barbell is pressing on the sternum at nipple level, touching the chest — no gap at all. The upper arms point down toward the floor, elbows lower than the bench top, about 45–60° away from the torso.
 - Grip slightly wider than shoulders, forearms vertical, elbows at about 45–60° from the torso (not flared to 90°), wrists straight.
 
 Muscle activation shown as a neon lime-green glow (#D4FA50) from within the muscles, brightness proportional to effort:
@@ -925,7 +925,7 @@ Absolutely no text, letters, numbers, labels, arrows, logos, watermarks or UI. N
 ### 38. Arqonni yuzga tortish (Face Pull) — qisqargan holat — `face-pull`
 
 ```
-Photorealistic anatomical render of a muscular male athlete performing the face pull, captured at the contracted position. Camera: rear three-quarter view — 30° behind the athlete's right side, at shoulder height, 50mm lens.
+Photorealistic anatomical render of a muscular male athlete performing the face pull, captured at the contracted position. Camera: side view from the athlete's right at shoulder height, 50mm lens — so it is clear the rope is in front of the face.
 
 Body: écorché style — skin removed, realistic deep-red striated muscle fibers, pearly white tendons, anatomically accurate muscle shapes. Plain opaque dark grey compression shorts fully covering the hips. Black flat-soled training shoes.
 
@@ -1148,13 +1148,13 @@ Absolutely no text, letters, numbers, labels, arrows, logos, watermarks or UI. N
 ### 47. Yuqori blokni ko‘krakka tortish (Lat Pulldown) — qisqargan holat — `lat-pulldown`
 
 ```
-Photorealistic anatomical render of a muscular male athlete performing the lat pulldown, captured at the contracted position. Camera: rear three-quarter view — 30° behind the athlete's right side, at shoulder height, 50mm lens.
+Photorealistic anatomical render of a muscular male athlete performing the lat pulldown, captured at the contracted position. Camera: front three-quarter view — 30° in front of the athlete's right side, at chest height, 50mm lens — facing the athlete, so the bar in front of the face at the top of the chest is clearly visible.
 
 Body: écorché style — skin removed, realistic deep-red striated muscle fibers, pearly white tendons, anatomically accurate muscle shapes. Plain opaque dark grey compression shorts fully covering the hips. Black flat-soled training shoes.
 
 Correct technique (must be exact):
 - Seated with thighs locked under the knee pads.
-- Wide overhand grip, the bar pulled down to the upper chest.
+- Wide overhand grip; the bar pulled down IN FRONT of the face to the top of the chest (collarbone level) — the head stays behind the bar, never a behind-the-neck pulldown.
 - Torso leaning back about 10–15°, chest up, elbows down and slightly back, shoulders down.
 
 Muscle activation shown as a neon lime-green glow (#D4FA50) from within the muscles, brightness proportional to effort:
@@ -1278,7 +1278,7 @@ Body: écorché style — skin removed, realistic deep-red striated muscle fiber
 
 Correct technique (must be exact):
 - Lying back on a bench inclined to about 45–60°, head and back on the pad.
-- Upper arms hanging straight down, slightly behind the torso, and staying still.
+- Upper arms hanging straight down toward the floor, slightly BEHIND the torso line — the elbows never move forward of the chest.
 - Dumbbells curled until the forearms are horizontal, palms facing up.
 
 Muscle activation shown as a neon lime-green glow (#D4FA50) from within the muscles, brightness proportional to effort:

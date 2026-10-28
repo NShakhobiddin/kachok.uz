@@ -259,8 +259,8 @@ export const EXERCISE_SPECS: Record<string, ExerciseSpec> = {
     phaseUz: 'Pastki nuqta',
     camera: BENCH,
     technique: [
-      'Lying on a flat bench, eyes under the bar, shoulder blades pulled back and down, slight natural arch, glutes on the bench, feet flat on the floor.',
-      'The barbell touches the lower chest at nipple level.',
+      'Lying fully on his back on a flat bench (head, upper back and glutes on the bench), eyes under the bar, shoulder blades pulled back and down, slight natural arch, feet flat on the floor.',
+      'The bar is lowered ALL the way down: the barbell is pressing on the sternum at nipple level, touching the chest — no gap at all. The upper arms point down toward the floor, elbows lower than the bench top, about 45–60° away from the torso.',
       'Grip slightly wider than shoulders, forearms vertical, elbows at about 45–60° from the torso (not flared to 90°), wrists straight.',
     ],
     equipment: 'Flat bench with bench-press uprights and an Olympic barbell with medium matte black plates.',
@@ -425,7 +425,7 @@ export const EXERCISE_SPECS: Record<string, ExerciseSpec> = {
   'face-pull': {
     phase: 'the contracted position',
     phaseUz: 'Qisqargan holat',
-    camera: REAR34,
+    camera: `${SIDE.replace('hip height', 'shoulder height')} — so it is clear the rope is in front of the face`,
     technique: [
       'Rope attachment on a cable set at face height; standing tall, slight lean back.',
       'Rope pulled toward the forehead, hands pulled apart beside the ears.',
@@ -520,10 +520,10 @@ export const EXERCISE_SPECS: Record<string, ExerciseSpec> = {
   'lat-pulldown': {
     phase: 'the contracted position',
     phaseUz: 'Qisqargan holat',
-    camera: REAR34,
+    camera: `${FRONT34} — facing the athlete, so the bar in front of the face at the top of the chest is clearly visible`,
     technique: [
       'Seated with thighs locked under the knee pads.',
-      'Wide overhand grip, the bar pulled down to the upper chest.',
+      'Wide overhand grip; the bar pulled down IN FRONT of the face to the top of the chest (collarbone level) — the head stays behind the bar, never a behind-the-neck pulldown.',
       'Torso leaning back about 10–15°, chest up, elbows down and slightly back, shoulders down.',
     ],
     equipment: 'Lat pulldown machine with a long wide bar; the cable clearly attached to the bar.',
@@ -566,7 +566,7 @@ export const EXERCISE_SPECS: Record<string, ExerciseSpec> = {
     camera: SIDE,
     technique: [
       'Lying back on a bench inclined to about 45–60°, head and back on the pad.',
-      'Upper arms hanging straight down, slightly behind the torso, and staying still.',
+      'Upper arms hanging straight down toward the floor, slightly BEHIND the torso line — the elbows never move forward of the chest.',
       'Dumbbells curled until the forearms are horizontal, palms facing up.',
     ],
     equipment: 'Adjustable incline bench and two hexagonal black dumbbells.',

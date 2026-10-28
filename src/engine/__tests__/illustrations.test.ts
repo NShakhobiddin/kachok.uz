@@ -25,14 +25,15 @@ describe('Mashq illyustratsiyalari', () => {
   it('yorliqdagi har bir mushak shu mashqning EMG jadvalida bor', () => {
     for (const [id, ill] of entries) {
       const keys = new Set(activationFor(EXERCISE_MAP[id]).list.map((a) => a.key));
-      for (const l of ill.labels) expect(keys.has(l.key), `${id}: ${l.key}`).toBe(true);
-      expect(new Set(ill.labels.map((l) => l.key)).size, id).toBe(ill.labels.length);
+      const labels = ill.labels ?? [];
+      for (const l of labels) expect(keys.has(l.key), `${id}: ${l.key}`).toBe(true);
+      expect(new Set(labels.map((l) => l.key)).size, id).toBe(labels.length);
     }
   });
 
   it('koordinatalar rasm ichida, bir ustundagi yorliqlar bir-birini yopmaydi', () => {
     for (const [id, ill] of entries) {
-      for (const layer of [ill.labels, ill.checks]) {
+      for (const layer of [ill.labels ?? [], ill.checks ?? []]) {
         for (const p of layer) for (const v of [p.x, p.y, p.ly]) expect(inPct(v), `${id}: ${v}`).toBe(true);
         for (const side of ['l', 'r'] as const) {
           const ys = layer
@@ -47,7 +48,7 @@ describe('Mashq illyustratsiyalari', () => {
 
   it('o‘zbek imlosi: o‘ va g‘ to‘g‘ri belgi bilan', () => {
     for (const [id, ill] of entries) {
-      for (const t of [ill.phase, ill.alt, ...ill.checks.map((c) => c.text), ...ill.labels.map((l) => l.name ?? '')]) expect(t, `${id}: ${t}`).not.toMatch(/[og]['`’]/i);
+      for (const t of [ill.phase, ill.alt, ...(ill.checks ?? []).map((c) => c.text), ...(ill.labels ?? []).map((l) => l.name ?? '')]) expect(t, `${id}: ${t}`).not.toMatch(/[og]['`’]/i);
     }
   });
 });
