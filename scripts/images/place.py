@@ -16,15 +16,19 @@ from PIL import Image
 
 
 def thumb(im, pid):
-    """Ro'yxatlar uchun 192 px kichik rasm: qora fon kesilib, figura markazda."""
-    a = np.asarray(im).astype(int).max(axis=2)
-    ys, xs = np.where(a > 38)
-    x0, x1, y0, y1 = np.percentile(xs, 0.5), np.percentile(xs, 99.5), np.percentile(ys, 0.5), np.percentile(ys, 99.5)
-    side = max(x1 - x0, y1 - y0, 300 / 1.08) * 1.08
+    """Ro'yxatlar uchun 192 px kichik rasm: odam tanasi (qizil mushak + lime nur) atrofida kesiladi,
+    shunda jihozning uzun ramasi yoki fon figurani maydalashtirib yubormaydi."""
+    a = np.asarray(im).astype(int)
+    r, g, b = a[..., 0], a[..., 1], a[..., 2]
+    body = ((r > 80) & (r > g * 1.35) & (r > b * 1.3)) | ((g > 140) & (r > 110) & (b < 130) & (g > b * 1.6))
+    ys, xs = np.where(body)
+    x0, x1, y0, y1 = np.percentile(xs, 1), np.percentile(xs, 99), np.percentile(ys, 0.3), np.percentile(ys, 99.7)
     W, H = im.size
+    side = min(W, max(max(x1 - x0, y1 - y0) * 1.32, W * 0.45))
     l = max(0, min(W - side, (x0 + x1 - side) / 2))
     t = max(0, min(H - side, (y0 + y1 - side) / 2))
-    im.crop((int(l), int(t), int(l + side), int(t + side))).resize((192, 192), Image.LANCZOS).save(f'public/illustrations/thumb/{pid}.webp', 'WEBP', quality=78, method=6)
+    im.crop((int(l), int(t), int(l + side), int(t + side))).resize((192, 192), Image.LANCZOS).save(f'public/illustrations/thumb/{pid}.webp', 'WEBP', quality=80, method=6)
+
 
 picks = json.load(open(sys.argv[1]))
 jobs = {j['id']: j for j in json.load(open('scripts/images/prompts.json'))}
