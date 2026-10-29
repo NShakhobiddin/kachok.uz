@@ -1,5 +1,5 @@
 /*
-  Kachok dizayn tizimi — "qora zal, lime chiroq".
+  GYMbos dizayn tizimi — "qora zal, lime chiroq".
   Fon — ko'mir qora, matn — bo'r oq; yagona urg'u — volt-lime: asosiy harakat, ishlayotgan mushak, bajarildi.
   Qizil — faqat xavf va og'riq; amber — ehtiyotkorlik va rekord. Disk ranglari (--plate-*) faqat illyustratsiyalarda.
   Shrift: Archivo (kenglik o'qi bilan) — poster raqamlar 125% kenglikda, sarlavhalar 112%; matn — Manrope.
@@ -25,6 +25,9 @@
   --accent-ink: #11150a;
   --accent-soft: rgba(212, 250, 80, 0.12);
   --accent-line: rgba(212, 250, 80, 0.34);
+  /* GYMbos logosi: tugmaning pastki qalinligi va yuqori yorug' qirrasi */
+  --accent-depth: #9db93b;
+  --accent-hi: #e7fc9f;
   --blue: var(--accent);
   --blue-2: var(--accent);
   --blue-ink: #3a4419;

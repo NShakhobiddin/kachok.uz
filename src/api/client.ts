@@ -1,4 +1,4 @@
-// Kachok API bilan ishlash: tokenlarni avtomatik yangilaydi, xatolarni tushunarli matnga aylantiradi.
+// GYMbos API bilan ishlash: tokenlarni avtomatik yangilaydi, xatolarni tushunarli matnga aylantiradi.
 import { useStore, type Account, type Entitlements } from '../store/useStore';
 
 const BASE = (import.meta.env.VITE_API_URL as string | undefined)?.replace(/\/$/, '');

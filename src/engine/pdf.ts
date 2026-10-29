@@ -33,8 +33,8 @@ const GOALS: Record<Profile['goal'], string> = {
 type RGB = [number, number, number];
 const INK: RGB = [11, 14, 18];
 const BLUE: RGB = [58, 116, 255];
-const RED: RGB = [229, 57, 46];
-const YELLOW: RGB = [245, 192, 51];
+const LIME: RGB = [212, 250, 80];
+const LIME_DEPTH: RGB = [157, 185, 59];
 const GREEN: RGB = [37, 165, 101];
 const MUTED: RGB = [110, 120, 135];
 
@@ -53,14 +53,38 @@ export async function exportProgramPdf(program: Program, profile: Profile, kcalA
   // Sarlavha
   doc.setFillColor(...INK);
   doc.rect(0, 0, W, 46, 'F');
-  [RED, BLUE, YELLOW, GREEN].forEach((c, i) => {
-    doc.setFillColor(...c);
-    doc.rect(M + i * 9, 10, 7, 7, 'F');
-  });
-  doc.setTextColor(255, 255, 255);
+  // GYMbos logosi: laym tugma ichida shtanga disklari va "GYM", yonida "bos"
   doc.setFont('helvetica', 'bold');
-  doc.setFontSize(24);
-  doc.text('KACHOK', M + 40, 17);
+  doc.setFontSize(20);
+  const gymW = doc.getTextWidth('GYM');
+  const pillH = 10.5;
+  const pillY = 8;
+  const pad = 3;
+  const barW = 0.6;
+  const barGap = 0.6;
+  const textGap = 1.3;
+  const pillW = pad * 2 + (barW * 2 + barGap + textGap) * 2 + gymW;
+  const cy = pillY + pillH / 2;
+  const baseline = cy + (20 * 0.3528 * 0.718) / 2; // 20 pt → mm, Helvetica bosh harf balandligi
+  doc.setFillColor(...LIME_DEPTH);
+  doc.roundedRect(M, pillY + 0.6, pillW, pillH, pillH / 2, pillH / 2, 'F');
+  doc.setFillColor(...LIME);
+  doc.roundedRect(M, pillY, pillW, pillH, pillH / 2, pillH / 2, 'F');
+  doc.setFillColor(...INK);
+  const bar = (x: number, h: number) => doc.roundedRect(x, cy - h / 2, barW, h, barW / 2, barW / 2, 'F');
+  let bx = M + pad;
+  bar(bx, 3.4);
+  bx += barW + barGap;
+  bar(bx, 5.8);
+  bx += barW + textGap;
+  doc.setTextColor(...INK);
+  doc.text('GYM', bx, baseline);
+  bx += gymW + textGap;
+  bar(bx, 5.8);
+  bx += barW + barGap;
+  bar(bx, 3.4);
+  doc.setTextColor(255, 255, 255);
+  doc.text('bos', M + pillW + 1.8, baseline);
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(11);
   doc.text(T('Haftalik mashq dasturi'), M, 28);
@@ -230,6 +254,6 @@ export async function exportProgramPdf(program: Program, profile: Profile, kcalA
     doc.text(T(`kachok.uz · ${i}/${pages} · Tavsiyalar ACSM 2026, ISSN, WHO 2020 manbalariga asoslangan. Tibbiy maslahat o‘rnini bosmaydi.`), M, H - 7);
   }
 
-  const name = `kachok-dastur-${new Date().toISOString().slice(0, 10)}.pdf`;
+  const name = `gymbos-dastur-${new Date().toISOString().slice(0, 10)}.pdf`;
   await saveFile(name, doc.output('blob'));
 }

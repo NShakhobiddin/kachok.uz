@@ -72,7 +72,7 @@ export default function Premium() {
         </button>
       </div>
       <span className="eyebrow" style={{ color: 'var(--yellow)' }}>
-        Kachok Pro
+        GYMbos Pro
       </span>
       <h1 className="display mt-4">Ko‘proq natija</h1>
 
