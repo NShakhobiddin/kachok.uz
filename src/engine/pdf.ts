@@ -33,8 +33,6 @@ const GOALS: Record<Profile['goal'], string> = {
 type RGB = [number, number, number];
 const INK: RGB = [11, 14, 18];
 const BLUE: RGB = [58, 116, 255];
-const RED: RGB = [229, 57, 46];
-const YELLOW: RGB = [245, 192, 51];
 const GREEN: RGB = [37, 165, 101];
 const MUTED: RGB = [110, 120, 135];
 
@@ -53,21 +51,32 @@ export async function exportProgramPdf(program: Program, profile: Profile, kcalA
   // Sarlavha
   doc.setFillColor(...INK);
   doc.rect(0, 0, W, 46, 'F');
-  [RED, BLUE, YELLOW, GREEN].forEach((c, i) => {
-    doc.setFillColor(...c);
-    doc.rect(M + i * 9, 10, 7, 7, 'F');
-  });
-  doc.setTextColor(255, 255, 255);
+  // GYMbos logotipi: lime tugma ichida GYM (shtanga disklari bilan) + bos
+  doc.setFillColor(157, 185, 59);
+  doc.roundedRect(M, 7.9, 34, 11, 5.5, 5.5, 'F');
+  doc.setFillColor(212, 250, 80);
+  doc.roundedRect(M, 7.2, 34, 11, 5.5, 5.5, 'F');
+  doc.setFillColor(11, 11, 12);
+  for (const [x, h] of [
+    [M + 3.6, 3.6],
+    [M + 5, 6],
+    [M + 28.4, 6],
+    [M + 29.8, 3.6],
+  ] as const)
+    doc.roundedRect(x, 12.7 - h / 2, 0.75, h, 0.35, 0.35, 'F');
+  doc.setTextColor(11, 11, 12);
   doc.setFont('helvetica', 'bold');
-  doc.setFontSize(24);
-  doc.text('KACHOK', M + 40, 17);
+  doc.setFontSize(19);
+  doc.text('GYM', M + 17, 15.6, { align: 'center' });
+  doc.setTextColor(242, 242, 238);
+  doc.text('bos', M + 36.2, 15.6);
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(11);
   doc.text(T('Haftalik mashq dasturi'), M, 28);
   doc.setFontSize(9);
   doc.setTextColor(190, 198, 208);
   doc.text(T(`${profile.name || 'Sportchi'} · ${GOALS[profile.goal]} · ${METHOD_INFO[program.method ?? 'hypertrophy'].name} · ${week}-hafta (blok: ${meso}/${program.mesoWeeks})`), M, 35);
-  doc.text(T(`Tuzilgan: ${fmtDate(new Date(), true)} · kachok.uz`), M, 40.5);
+  doc.text(T(`Tuzilgan: ${fmtDate(new Date(), true)} · GYMbos`), M, 40.5);
 
   let y = 54;
   doc.setTextColor(...INK);
@@ -228,7 +237,7 @@ export async function exportProgramPdf(program: Program, profile: Profile, kcalA
     doc.setPage(i);
     doc.setFontSize(7.5);
     doc.setTextColor(...MUTED);
-    doc.text(T(`kachok.uz · ${i}/${pages} · Tavsiyalar ACSM 2026, ISSN, WHO 2020 manbalariga asoslangan. Tibbiy maslahat o‘rnini bosmaydi.`), M, H - 7);
+    doc.text(T(`GYMbos · ${i}/${pages} · Tavsiyalar ACSM 2026, ISSN, WHO 2020 manbalariga asoslangan. Tibbiy maslahat o‘rnini bosmaydi.`), M, H - 7);
   }
 
   const name = `kachok-dastur-${new Date().toISOString().slice(0, 10)}.pdf`;

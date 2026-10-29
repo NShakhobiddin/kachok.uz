@@ -329,18 +329,18 @@ function Signed({ account }: { account: Acc }) {
               }, 'Murabbiyga ulandingiz');
             }}
           >
-            <p className="small muted">Murabbiyingiz bergan 6 belgili kodni kiriting. U mashg‘ulotlaringizni ko‘radi va dastur yubora oladi.</p>
+            <p className="small muted">Murabbiyingiz bergan 8 belgili kodni kiriting. U mashg‘ulotlaringizni ko‘radi va dastur yubora oladi.</p>
             <div className="row gap-8">
               <input
                 className="input grow mono"
                 style={{ textTransform: 'uppercase', letterSpacing: '0.2em' }}
-                maxLength={6}
+                maxLength={8}
                 value={code}
                 onChange={(e) => setCode(e.target.value.replace(/[^a-z0-9]/gi, ''))}
                 placeholder="KOD"
                 aria-label="Murabbiy kodi"
               />
-              <button className="btn btn-primary" disabled={code.length !== 6 || busy}>
+              <button className="btn btn-primary" disabled={code.length < 6 || busy}>
                 Ulanish
               </button>
             </div>

@@ -53,7 +53,7 @@ export default function Coach() {
   };
   const copy = async () => {
     if (!invite) return;
-    const text = `Kachok ilovasida meni murabbiy sifatida qo‘shing: Profil → Akkaunt → Murabbiy kodi: ${invite.code}`;
+    const text = `GYMbos ilovasida meni murabbiy sifatida qo‘shing: Profil → Akkaunt → Murabbiy kodi: ${invite.code}`;
     try {
       if (navigator.share) await navigator.share({ text });
       else {

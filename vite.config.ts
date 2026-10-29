@@ -28,18 +28,18 @@ export default defineConfig({
     !artifact &&
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['icon.svg', 'apple-touch-icon.png'],
+      includeAssets: ['icon.svg', 'apple-touch-icon.png', 'fonts/big-shoulders.woff2'],
       manifest: {
-        name: 'Kachok — zal murabbiyi',
-        short_name: 'Kachok',
-        description: 'Sizga moslangan mashq dasturi, animatsion texnika, ovqatlanish va natijalar statistikasi.',
+        name: 'GYMbos — zal murabbiyi',
+        short_name: 'GYMbos',
+        description: 'Gapirma — bos. Sizga moslangan mashq dasturi, har bir mashq texnikasi, ovqatlanish va natijalar.',
         lang: 'uz',
         start_url: base,
         scope: base,
         display: 'standalone',
         orientation: 'portrait',
-        background_color: '#0D1014',
-        theme_color: '#0D1014',
+        background_color: '#0B0B0C',
+        theme_color: '#0B0B0C',
         icons: [
           { src: 'icon-192.png', sizes: '192x192', type: 'image/png' },
           { src: 'icon-512.png', sizes: '512x512', type: 'image/png' },

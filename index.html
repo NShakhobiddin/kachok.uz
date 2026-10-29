@@ -3,17 +3,103 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <meta name="theme-color" content="#0D1014" />
+    <meta name="theme-color" content="#0B0B0C" />
     <meta name="color-scheme" content="dark" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <meta name="description" content="Kachok — zalda yoningizdagi aqlli murabbiy: sizga moslangan mashq dasturi, animatsion texnika, ilmiy asoslangan ovqatlanish va natijalar statistikasi." />
+    <meta name="description" content="GYMbos — zalda yoningizdagi aqlli murabbiy: sizga moslangan mashq dasturi, har bir mashq texnikasi va qaysi mushak qancha ishlashi, ilmiy asoslangan ovqatlanish va natijalar." />
     <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+    <link rel="preload" href="/fonts/big-shoulders.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-    <title>Kachok — zal murabbiyi</title>
+    <title>GYMbos — zal murabbiyi</title>
+    <style>
+      /* ilova yuklanguncha: logo intro'si (React #root ichini o'zi almashtiradi — kutish qo'shilmaydi) */
+      @font-face {
+        font-family: 'Big Shoulders';
+        font-weight: 700 900;
+        font-display: swap;
+        src: url('/fonts/big-shoulders.woff2') format('woff2');
+      }
+      html,
+      body {
+        background: #0b0b0c;
+        margin: 0;
+      }
+      .boot {
+        position: fixed;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 22px;
+        font-family: 'Big Shoulders', 'Arial Narrow', sans-serif;
+      }
+      .boot-logo {
+        display: flex;
+        align-items: center;
+        gap: 0.0833em;
+        font-size: 56px;
+        line-height: 1;
+        letter-spacing: 0.01em;
+      }
+      .boot-pill {
+        display: flex;
+        align-items: center;
+        gap: 0.107em;
+        height: 1.1667em;
+        padding: 0 0.238em;
+        border-radius: 999px;
+        background: #d4fa50;
+        color: #0b0b0c;
+        font-weight: 900;
+        box-shadow: 0 0.0476em 0 #9db93b, 0 0.2em 0.42em -0.107em rgba(212, 250, 80, 0.55);
+        animation: boot-press 2.4s cubic-bezier(0.3, 0.7, 0.3, 1) infinite;
+      }
+      .boot-pill i {
+        display: block;
+        width: 0.0595em;
+        height: 0.643em;
+        border-radius: 0.03em;
+        background: #0b0b0c;
+      }
+      .boot-pill i.s {
+        height: 0.381em;
+      }
+      .boot-bos {
+        color: #f2f2ee;
+        font-weight: 700;
+        animation: boot-bos 2.4s ease infinite;
+      }
+      .boot-tag {
+        font: 600 11px/1 system-ui, sans-serif;
+        letter-spacing: 0.32em;
+        color: #8a8f87;
+      }
+      @keyframes boot-press {
+        0%, 18%, 36%, 100% { transform: translateY(0); }
+        24% { transform: translateY(0.0476em); box-shadow: 0 0 0 #9db93b, 0 0.12em 0.65em -0.024em rgba(212, 250, 80, 0.9); }
+      }
+      @keyframes boot-bos {
+        0%, 26% { opacity: 0; transform: translateX(-0.17em); }
+        38%, 86% { opacity: 1; transform: translateX(0); }
+        96%, 100% { opacity: 0; }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .boot-pill, .boot-bos { animation: none; }
+      }
+    </style>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <div class="boot" role="img" aria-label="GYMbos — yuklanmoqda">
+        <div class="boot-logo" aria-hidden="true">
+          <span class="boot-pill"><span style="display: flex; gap: 0.0476em; align-items: center"><i class="s"></i><i></i></span>GYM<span style="display: flex; gap: 0.0476em; align-items: center"><i></i><i class="s"></i></span></span>
+          <span class="boot-bos">bos</span>
+        </div>
+        <span class="boot-tag" aria-hidden="true">GAPIRMA — BOS.</span>
+      </div>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

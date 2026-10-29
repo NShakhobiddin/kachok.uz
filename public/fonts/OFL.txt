@@ -1,0 +1,6 @@
+Big Shoulders — logo shrifti (GYMbos)
+Copyright 2019 The Big Shoulders Project Authors (https://github.com/xotypeco/big_shoulders)
+
+This Font Software is licensed under the SIL Open Font License, Version 1.1.
+Full license text: https://openfontlicense.org (also included in the original GYMbos_logo.html).
+Font file downloaded unchanged from Google Fonts (latin subset).
