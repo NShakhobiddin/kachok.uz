@@ -9,14 +9,17 @@ import { EXERCISE_MAP } from '../data/exercises';
 import { ATLAS_ORDER, bestExercises, MUSCLE_GUIDE, REGIONS } from '../data/muscleGuide';
 import { isM3, M3_INFO } from '../data/muscles3d';
 import { heatColor } from '../engine/activation';
+import { useBack } from '../lib/useBack';
+import { NotFound } from '../components/NotFound';
 
 const Muscle3D = lazy(() => import('../components/Muscle3D'));
 
 export default function MuscleDetail() {
   const { key = '' } = useParams();
   const nav = useNavigate();
+  const back = useBack('/library?tab=muscles');
   const [viewOverride, setViewOverride] = useState<{ key: string; view: View3D } | null>(null);
-  if (!isM3(key)) return <div className="page empty">Mushak topilmadi.</div>;
+  if (!isM3(key)) return <NotFound text="Mushak topilmadi" />;
   const info = M3_INFO[key];
   const g = MUSCLE_GUIDE[key];
   const view = viewOverride?.key === key ? viewOverride.view : info.view;
@@ -30,7 +33,7 @@ export default function MuscleDetail() {
   return (
     <div className="page">
       <div className="back-bar">
-        <button className="icon-btn" onClick={() => nav(-1)} aria-label="Orqaga">
+        <button className="icon-btn" onClick={back} aria-label="Orqaga">
           <Icon name="left" />
         </button>
         <span className="eyebrow">Mushaklar atlasi · {region}</span>

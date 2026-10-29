@@ -4,7 +4,8 @@ import { createRequire } from 'node:module';
 import { readFileSync } from 'node:fs';
 const require = createRequire(import.meta.url);
 const { chromium } = require('playwright');
-const [, , outDir, onlyArg] = process.argv;
+const [, , outDir, onlyArg, mode] = process.argv;
+// mode 'alt' — harakatning ikkinchi cheti (rasmdagi holatning teskarisi): ikki kadrli harakat uchun
 const only = onlyArg ? onlyArg.split(',') : null;
 const BASE = process.env.BASE ?? 'http://localhost:5173';
 const jobs = JSON.parse(readFileSync('scripts/images/prompts.json', 'utf8')).filter((j) => j.kind === 'exercise' && (!only || only.includes(j.id)));
@@ -34,7 +35,12 @@ for (const j of jobs) {
   const frames = await page.evaluate((id) => window.__frames(id), j.id);
   // qisqarish 'pastda' bo'ladigan mashqlar (pastga bosish) — kerakli kadr 'squeeze'
   const OVERRIDE = { pushdown: 'squeeze' };
-  const t = OVERRIDE[j.id] ? frames.find((f) => f.phase === OVERRIDE[j.id]).t : pickTime(frames, phaseOf(j.prompt));
+  let t = OVERRIDE[j.id] ? frames.find((f) => f.phase === OVERRIDE[j.id]).t : pickTime(frames, phaseOf(j.prompt));
+  if (mode === 'alt') {
+    // asosiy kadr boshlanish bo'lsa — harakatning eng uzoq nuqtasi, aks holda — boshlanish
+    const top = frames.find((f) => f.phase === 'squeeze')?.t ?? frames.find((f, k) => k > 0 && frames[k - 1].phase === 'up')?.t ?? frames.find((f, k) => k > 0 && frames[k - 1].phase === 'down')?.t;
+    t = t === 0 ? (top ?? 0) : 0;
+  }
   await page.goto(`${BASE}/scripts/images/pose.html?id=${j.id}&t=${Math.round(t)}`);
   await page.waitForSelector('#pose svg');
   await page.waitForTimeout(150);

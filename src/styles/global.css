@@ -2627,3 +2627,63 @@ ol.steps li::before {
   object-fit: cover;
   display: block;
 }
+
+/* Mashq harakati: ikki kadr silliq almashadi */
+.motion-stage img.motion-top {
+  position: absolute;
+  inset: 0;
+  transition-property: opacity;
+  transition-timing-function: ease-in-out;
+}
+.motion-stage img:not(.motion-top) {
+  opacity: 1;
+}
+.motion-cue {
+  position: absolute;
+  left: 12px;
+  top: 12px;
+  padding: 5px 10px;
+  border-radius: 999px;
+  font-size: 11.5px;
+  font-weight: 700;
+  background: rgba(11, 11, 12, 0.78);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  border: 1px solid var(--line-2);
+}
+.motion-cue::before {
+  content: '';
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  margin-right: 6px;
+  vertical-align: 1px;
+}
+.motion-cue.up::before {
+  background: var(--red);
+}
+.motion-cue.down::before {
+  background: var(--blue-2);
+}
+.motion-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+}
+.motion-seg {
+  flex: 1;
+  min-width: 0;
+}
+.motion-seg button {
+  font-size: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+@media (prefers-reduced-motion: reduce) {
+  .motion-stage img.motion-top {
+    transition: none;
+  }
+}

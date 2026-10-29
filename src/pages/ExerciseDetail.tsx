@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
+import { Link, useLocation, useParams } from 'react-router-dom';
 import { AddToProgram } from '../components/AddToProgram';
 import { BenefitMap } from '../components/BenefitMap';
 import { BodyMap } from '../components/BodyMap';
@@ -9,6 +9,7 @@ import { PersonalSafetyNotice, RiskTag, SafetySection } from '../components/Safe
 import { safetyFor } from '../data/safety';
 import { ExerciseThumb } from '../components/ExerciseThumb';
 import { ExerciseIllustration, type IlluLayer } from '../components/ExerciseIllustration';
+import { ExerciseMotion } from '../components/ExerciseMotion';
 import { ILLUSTRATIONS } from '../data/illustrations';
 import { Figure } from '../components/figure/Figure';
 import { StandardsTable } from '../components/StrengthLevels';
@@ -22,6 +23,8 @@ import { alternatives } from '../engine/program';
 import { exerciseSeries } from '../engine/stats';
 import { applyMistake, emphasizeMistake } from '../lib/figure';
 import { fmtDate } from '../lib/date';
+import { useBack } from '../lib/useBack';
+import { NotFound } from '../components/NotFound';
 import { useStore } from '../store/useStore';
 import type { Exercise, Phase } from '../types';
 
@@ -96,18 +99,26 @@ function ExerciseStage({ ex }: { ex: Exercise }) {
 
 /** Illyustratsiyasi bor mashq: rasm (mushaklar yoki texnika belgilari) va animatsiya orasida tanlash */
 function IllustratedStage({ ex }: { ex: Exercise }) {
-  const [mode, setMode] = useState<IlluLayer | 'anim'>('muscles');
   const ill = ILLUSTRATIONS[ex.id]!;
+  // ikki kadrli harakat bo'lsa — u birinchi; bo'lmasa (bir nechta mashq) — eski animatsiya zaxira sifatida
+  const tabs = (
+    ill.pair
+      ? [
+          ['motion', 'Harakat'],
+          ['muscles', 'Mushaklar'],
+          ['form', 'Texnika'],
+        ]
+      : [
+          ['muscles', 'Mushaklar'],
+          ['form', 'Texnika'],
+          ['anim', 'Animatsiya'],
+        ]
+  ) as [IlluLayer | 'motion' | 'anim', string][];
+  const [mode, setMode] = useState(tabs[0][0]);
   return (
     <div className="mt-16">
       <div className="segmented" role="radiogroup" aria-label="Ko‘rinish">
-        {(
-          [
-            ['muscles', 'Mushaklar'],
-            ['form', 'Texnika'],
-            ['anim', 'Animatsiya'],
-          ] as const
-        ).map(([v, t]) => (
+        {tabs.map(([v, t]) => (
           <button key={v} role="radio" aria-checked={mode === v} className={mode === v ? 'on' : ''} onClick={() => setMode(v)}>
             {t}
           </button>
@@ -115,13 +126,15 @@ function IllustratedStage({ ex }: { ex: Exercise }) {
       </div>
       {mode === 'anim' ? (
         <ExerciseStage ex={ex} />
+      ) : mode === 'motion' ? (
+        <div className="mt-12">
+          <ExerciseMotion ex={ex} ill={ill} />
+        </div>
       ) : (
         <div className="mt-12">
           <ExerciseIllustration ex={ex} ill={ill} layer={mode} />
           <Note className="mt-4">
-            {mode === 'muscles'
-              ? 'Foiz — EMG, maksimal ixtiyoriy qisqarishga nisbatan; ≈ — baho. Yorliqqa bosing — mushak haqida qo‘llanma.'
-              : 'Rasm AI yordamida yaratilgan; texnikasi tekshirilgan. Harakatni ko‘rish uchun — «Animatsiya».'}
+            {mode === 'muscles' ? 'Foiz — EMG, maksimal ixtiyoriy qisqarishga nisbatan; ≈ — baho. Yorliqqa bosing — mushak haqida qo‘llanma.' : 'Rasm AI yordamida yaratilgan; texnikasi tekshirilgan.'}
           </Note>
         </div>
       )}
@@ -131,7 +144,7 @@ function IllustratedStage({ ex }: { ex: Exercise }) {
 
 export default function ExerciseDetail() {
   const { id } = useParams();
-  const nav = useNavigate();
+  const back = useBack('/library');
   const ex = exById(id ?? '');
   const profile = useStore((s) => s.profile);
   const logs = useStore((s) => s.logs);
@@ -143,7 +156,7 @@ export default function ExerciseDetail() {
     const t = setTimeout(openSafety, 350);
     return () => clearTimeout(t);
   }, [hash, ex?.id]);
-  if (!ex) return <div className="page empty">Mashq topilmadi.</div>;
+  if (!ex) return <NotFound text="Mashq topilmadi" />;
 
   const injuries = profile?.injuries ?? [];
   const safety = safetyFor(ex.id);
@@ -158,7 +171,7 @@ export default function ExerciseDetail() {
   return (
     <div className="page">
       <div className="back-bar">
-        <button className="icon-btn" onClick={() => nav(-1)} aria-label="Orqaga">
+        <button className="icon-btn" onClick={back} aria-label="Orqaga">
           <Icon name="left" />
         </button>
         <span className="eyebrow">{ex.en}</span>

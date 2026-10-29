@@ -7,15 +7,18 @@ import { Icon } from '../components/ui/Icon';
 import { LESSONS, lessonById } from '../data/lessons';
 import { sourceById } from '../data/sources';
 import { useStore } from '../store/useStore';
+import { useBack } from '../lib/useBack';
+import { NotFound } from '../components/NotFound';
 
 export default function LessonView() {
   const { id } = useParams();
   const nav = useNavigate();
+  const back = useBack('/library?tab=lessons');
   const lesson = lessonById(id ?? '');
   const completeLesson = useStore((s) => s.completeLesson);
   const [i, setI] = useState(0);
   const [answers, setAnswers] = useState<Record<number, number>>({});
-  if (!lesson) return <div className="page empty">Dars topilmadi.</div>;
+  if (!lesson) return <NotFound text="Dars topilmadi" />;
   const total = lesson.slides.length + 1;
   const onQuiz = i >= lesson.slides.length;
   const slide = lesson.slides[i];
@@ -39,7 +42,7 @@ export default function LessonView() {
             {lesson.category} · {lesson.title}
           </span>
         </div>
-        <button className="icon-btn" onClick={() => nav(-1)} aria-label="Yopish">
+        <button className="icon-btn" onClick={back} aria-label="Yopish">
           <Icon name="x" />
         </button>
       </div>

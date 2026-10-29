@@ -1,6 +1,6 @@
 // Xavfsizlik markazi: xavfli mashqlar va ularni to'g'ri bajarish, og'riq shkalasi, darhol to'xtash belgilari, shaxsiy cheklovlar.
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { ExerciseThumb } from '../components/ExerciseThumb';
 import { injuryName, RiskMeter, RiskTag } from '../components/Safety';
 import { Fold, Note } from '../components/ui/Fold';
@@ -10,11 +10,12 @@ import { GOLDEN_RULES, PAIN_ZONES, RED_FLAGS, RISK_INFO, SAFETY_SOURCES, safetyF
 import { sourceById } from '../data/sources';
 import { personalSafety } from '../engine/safety';
 import { useStore } from '../store/useStore';
+import { useBack } from '../lib/useBack';
 
 const byRisk = (r: Risk) => EXERCISES.filter((e) => safetyFor(e.id)?.risk === r).sort((a, b) => b.score - a.score);
 
 export default function Safety() {
-  const nav = useNavigate();
+  const back = useBack();
   const profile = useStore((s) => s.profile);
   const injuries = profile?.injuries ?? [];
   const [showMid, setShowMid] = useState(false);
@@ -26,7 +27,7 @@ export default function Safety() {
   return (
     <div className="page">
       <div className="back-bar">
-        <button className="icon-btn" onClick={() => nav(-1)} aria-label="Orqaga">
+        <button className="icon-btn" onClick={back} aria-label="Orqaga">
           <Icon name="left" />
         </button>
         <span className="eyebrow">Xavfsizlik markazi</span>

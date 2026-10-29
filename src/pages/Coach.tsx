@@ -1,6 +1,6 @@
 // Murabbiy kabineti: mijozlar ro'yxati, ularning haftalik faolligi va taklif kodi.
 import { useCallback, useEffect, useState } from 'react';
-import { Link, Navigate, useNavigate } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 import { Icon } from '../components/ui/Icon';
 import { api, ApiError } from '../api/client';
 import { GOALS } from './Onboarding';
@@ -8,6 +8,7 @@ import { BILLING } from '../lib/features';
 import { fmtDate } from '../lib/date';
 import { useStore } from '../store/useStore';
 import type { Goal } from '../types';
+import { useBack } from '../lib/useBack';
 
 export interface ClientRow {
   id: string;
@@ -21,7 +22,7 @@ export interface ClientRow {
 }
 
 export default function Coach() {
-  const nav = useNavigate();
+  const back = useBack();
   const account = useStore((s) => s.account);
   const [clients, setClients] = useState<ClientRow[] | null>(null);
   const [limit, setLimit] = useState(0);
@@ -70,7 +71,7 @@ export default function Coach() {
   return (
     <div className="page">
       <div className="back-bar">
-        <button className="icon-btn" onClick={() => nav(-1)} aria-label="Orqaga">
+        <button className="icon-btn" onClick={back} aria-label="Orqaga">
           <Icon name="left" />
         </button>
       </div>
