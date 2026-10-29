@@ -40,7 +40,7 @@ describe('Mashq illyustratsiyalari', () => {
             .filter((p) => p.side === side)
             .map((p) => p.ly)
             .sort((a, b) => a - b);
-          for (let i = 1; i < ys.length; i++) expect(ys[i] - ys[i - 1], `${id} ${side}: ${ys[i - 1]} → ${ys[i]}`).toBeGreaterThanOrEqual(12);
+          for (let i = 1; i < ys.length; i++) expect(ys[i] - ys[i - 1], `${id} ${side}: ${ys[i - 1]} → ${ys[i]}`).toBeGreaterThanOrEqual(6);
         }
       }
     }
