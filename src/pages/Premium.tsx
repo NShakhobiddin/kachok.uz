@@ -18,7 +18,7 @@ type Provider = 'payme' | 'click';
 
 const FREE = [
   'Shaxsiy mashg‘ulot dasturi va uni tahrirlash',
-  'Barcha mashqlar animatsiyasi va texnikasi',
+  'Barcha mashqlar rasmi, harakati va texnikasi',
   'Kg va takrorlarni yozish, rekordlar',
   'Statistika va haftalik tahlil',
   'Animatsion darsliklar',
