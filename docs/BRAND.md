@@ -21,6 +21,7 @@ Barcha fayllar `public/brand/` papkasida. SVG'larda harflar konturga aylantirilg
 | `gymbos-icon.svg`, `gymbos-icon-1024.png` | Katta ikonka (do'kon sahifasi, taqdimot) |
 | `gymbos-telegram-avatar.png` | Telegram kanal / bot avatari (640×640; Telegram o'zi aylana qiladi) |
 | `gymbos-cover-1200x630.png` | Havola ulashilganda chiqadigan muqova, kanal banneri |
+| `telegram/` | Telegram bot uchun: profil rasmi (laym va qora), tavsif rasmi 640×360, `/start` rasmi 1280×720 — [TELEGRAM-BOT.md](TELEGRAM-BOT.md) |
 
 Ilova ikonkalari `public/` ildizida: `icon.svg` (brauzer favicon'i, belgi kattaroq), `icon-192.png`, `icon-512.png`,
 `icon-maskable-512.png` (Android), `apple-touch-icon.png` (iPhone). Kichik o'lchamlar uchun belgi soddalashtirilgan:
