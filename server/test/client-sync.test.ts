@@ -5,7 +5,7 @@ import { createDb, migrate } from '../src/db/index.js';
 import { loadEnv } from '../src/env.js';
 import { ConsoleSms } from '../src/sms/index.js';
 
-const env = loadEnv({ JWT_SECRET: 'test-secret-test-secret-test-secret-123' });
+const env = loadEnv({ JWT_SECRET: 'Qm9yZXRo-7uKx2LpV9aN3cW8dT5fH1jS6gZ4bY0eR', DEV_MODE: '1' });
 let app: ReturnType<typeof createApp>;
 let client: typeof import('../../src/api/sync.js');
 let store: typeof import('../../src/store/useStore.js')['useStore'];
@@ -27,7 +27,7 @@ const serverProgram = async (token: string) => {
 beforeAll(async () => {
   const db = await createDb({});
   await migrate(db);
-  app = createApp({ db, env, sms: new ConsoleSms() });
+  app = createApp({ db, env, sms: new ConsoleSms(false) });
   vi.stubEnv('VITE_API_URL', 'http://api.test');
   vi.stubGlobal('fetch', (url: string, init?: RequestInit) => app.request(url.replace('http://api.test', ''), init));
   vi.spyOn(console, 'warn').mockImplementation(() => {}); // qurilma xotirasi (localStorage) yo'q

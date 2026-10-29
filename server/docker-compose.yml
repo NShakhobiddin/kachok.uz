@@ -1,11 +1,13 @@
 # Mahalliy server uchun: docker compose up -d
+# .env faylida POSTGRES_PASSWORD, JWT_SECRET va boshqalar bo'lishi shart (namuna: .env.example).
+# API faqat 127.0.0.1 da tinglaydi — tashqariga nginx/Caddy orqali (HTTPS) chiqaring va .env da TRUST_PROXY=1 qiling.
 services:
   db:
     image: postgres:16-alpine
     restart: unless-stopped
     environment:
       POSTGRES_USER: kachok
-      POSTGRES_PASSWORD: kachok
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD .env faylida bo‘lishi kerak}
       POSTGRES_DB: kachok
     volumes:
       - pgdata:/var/lib/postgresql/data
@@ -14,10 +16,10 @@ services:
     restart: unless-stopped
     env_file: .env
     environment:
-      DATABASE_URL: postgres://kachok:kachok@db:5432/kachok
+      DATABASE_URL: postgres://kachok:${POSTGRES_PASSWORD:?POSTGRES_PASSWORD .env faylida bo‘lishi kerak}@db:5432/kachok
     depends_on:
       - db
     ports:
-      - "8787:8787"
+      - "127.0.0.1:8787:8787"
 volumes:
   pgdata:

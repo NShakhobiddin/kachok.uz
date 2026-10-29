@@ -7,9 +7,11 @@ import { loadEnv } from '../src/env.js';
 import { ConsoleSms } from '../src/sms/index.js';
 
 const env = loadEnv({
-  JWT_SECRET: 'test-secret-test-secret-test-secret-123',
+  JWT_SECRET: 'Qm9yZXRo-7uKx2LpV9aN3cW8dT5fH1jS6gZ4bY0eR',
+  DEV_MODE: '1',
   PAYME_MERCHANT_ID: 'merchant123',
   PAYME_KEY: 'payme-key',
+  PAYME_TEST: '1',
   CLICK_SERVICE_ID: '111',
   CLICK_MERCHANT_ID: '222',
   CLICK_SECRET_KEY: 'click-secret',
@@ -22,7 +24,7 @@ let sms: ConsoleSms;
 beforeEach(async () => {
   db = await createDb({});
   await migrate(db);
-  sms = new ConsoleSms();
+  sms = new ConsoleSms(false);
   app = createApp({ db, env, sms });
 });
 
@@ -102,7 +104,7 @@ describe('murabbiy rejimi', () => {
     const me = await (await app.request('/me', json('PATCH', { role: 'coach', name: 'Murabbiy Bek' }, coach.access))).json();
     const coachToken = me.access;
     const { code } = await (await app.request('/coach/invites', json('POST', {}, coachToken))).json();
-    expect(code).toMatch(/^[A-Z2-9]{6}$/);
+    expect(code).toMatch(/^[A-Z2-9]{8}$/);
     const join = await (await app.request('/coach/join', json('POST', { code: code.toLowerCase() }, client.access))).json();
     expect(join.coach.name).toBe('Murabbiy Bek');
     await app.request('/sync', json('POST', { changes: [{ kind: 'log', id: 'w1', updatedAt: 1, data: { startedAt: new Date().toISOString(), durationMin: 45 } }] }, client.access));
@@ -112,9 +114,20 @@ describe('murabbiy rejimi', () => {
     expect(list.clients[0].phone).toContain('•');
     const detail = await (await app.request(`/coach/clients/${client.user.id}`, json('GET', undefined, coachToken))).json();
     expect(detail.logs).toHaveLength(1);
-    expect((await app.request(`/coach/clients/${client.user.id}`, json('GET', undefined, stranger.access))).status).toBe(404);
+    // murabbiy bo'lmagan begona — 403, boshqa murabbiy — 404
+    expect((await app.request(`/coach/clients/${client.user.id}`, json('GET', undefined, stranger.access))).status).toBe(403);
+    const strangerCoach = (await (await app.request('/me', json('PATCH', { role: 'coach' }, stranger.access))).json()).access;
+    expect((await app.request(`/coach/clients/${client.user.id}`, json('GET', undefined, strangerCoach))).status).toBe(404);
     // dastur yuborish -> mijoz sinxronlashda oladi
-    expect((await app.request(`/coach/clients/${client.user.id}/program`, json('PUT', { program: { id: 'p1', days: [] } }, coachToken))).status).toBe(200);
+    const program = {
+      id: 'p1',
+      name: 'Butun tana',
+      split: 'Butun tana',
+      startDate: '2026-10-01',
+      mesoWeeks: 5,
+      days: [{ id: 'd1', title: 'A kun', weekday: 0, exercises: [{ exerciseId: 'squat', sets: 3, repMin: 6, repMax: 10, rir: 2, restSec: 150 }] }],
+    };
+    expect((await app.request(`/coach/clients/${client.user.id}/program`, json('PUT', { program }, coachToken))).status).toBe(200);
     const pulled = await (await app.request('/sync', json('POST', { since: 0 }, client.access))).json();
     const prog = pulled.docs.find((d: { kind: string }) => d.kind === 'program');
     expect(prog.data.coach.name).toBe('Murabbiy Bek');

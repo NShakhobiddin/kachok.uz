@@ -815,7 +815,7 @@ const SAFETY: Record<string, ExerciseSafety> = {
       {
         at: 'neck',
         how: 'Yelkalarni aylantirish va boshni oldinga cho‘zish bo‘yin mushaklari va bo‘g‘imlarini zo‘riqtiradi.',
-        mod: 'Faqat tik yuqoriga-pastga harakat, bosh neytral holatda; og‘riq bo‘lsa amplitudani kamaytiring.',
+        mod: 'Tavsiya etilmaydi: bo‘yin og‘rig‘ida yelkani ko‘tarish bo‘yinni zo‘riqtiradi — o‘rniga yuzga tortish (face pull) yoki ko‘krak tayangan tortish. Og‘riq o‘tgach — faqat tik yuqoriga-pastga, bosh neytral.',
       },
     ],
     check: ['Ushlash yetmasa — lyamka.'],
@@ -895,7 +895,7 @@ const SAFETY: Record<string, ExerciseSafety> = {
       {
         at: 'shoulder',
         how: 'Qo‘l bosh ustida — yelka harakatchanligi yetmasa, bel egiladi va yelka qisiladi.',
-        mod: 'Blokda, oldinga qarab turib bajaring yoki blokda triseps — qo‘l bosh ustiga ko‘tarilmaydi.',
+        mod: 'Tavsiya etilmaydi: qo‘l bosh ustida yelka qisiladi — o‘rniga blokda triseps (pushdown) — qo‘l bosh ustiga ko‘tarilmaydi.',
       },
       {
         at: 'elbow',

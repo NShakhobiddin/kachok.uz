@@ -9,6 +9,7 @@ import { isoDate } from '../lib/date';
 import type { BodyEntry, ExerciseLog, FoodEntry, MuscleGroup, PlannedExercise, Profile, Program, SetLog, WorkoutDay, WorkoutLog } from '../types';
 import { MUSCLES, mrvAt } from '../data/catalog';
 import type { PR } from '../engine/stats';
+import { DEFAULT_SETTINGS, sanitizeData } from './sanitize';
 
 export interface FinishFeedback {
   muscles: Partial<Record<MuscleGroup, MuscleFeedback>>;
@@ -23,6 +24,56 @@ export interface ActiveWorkout {
   restTotal: number;
   readiness?: number;
   plan: PlannedExercise[];
+  /** boshlanishdagi mashqlar (dasturga faqat shu mashg'ulotda qilingan o'zgarishlar yoziladi) */
+  startIds?: string[];
+  /** qaysi dastur bo'yicha boshlangan (qayta tuzilgan dasturga eski reja yozilmasin) */
+  programId?: string;
+  /** mashg'ulot paytidagi almashtirishlar va qo'shimchalar */
+  swaps?: { from: string; to: string }[];
+  added?: string[];
+  /** oxirgi bajarilgan set vaqti (unutilgan mashg'ulot davomiyligi uchun) */
+  lastSetAt?: number;
+}
+
+/** Mashg'ulotda qilingan, dasturga yozish mumkin bo'lgan o'zgarishlar */
+export interface WorkoutEdits {
+  swaps: { from: string; to: string }[];
+  added: PlannedExercise[];
+}
+
+/** Faqat almashtirish va qo'shimchalar; dastur kunidagi boshqa tahrirlar (o'chirish, tartib) tegilmaydi */
+export function workoutEdits(a: ActiveWorkout, program: Program | null): WorkoutEdits | null {
+  if (!a.startIds || !a.log.dayId || !program || (a.programId && program.id !== a.programId)) return null;
+  const day = program.days.find((d) => d.id === a.log.dayId);
+  if (!day) return null;
+  // a→b, b→c zanjiri: a→c; qo'shilgan mashq almashtirilsa — yangisi qo'shilgan hisoblanadi
+  const addedIds = new Set(a.added ?? []);
+  const map = new Map<string, string>();
+  for (const { from, to } of a.swaps ?? []) {
+    if (addedIds.has(from)) {
+      addedIds.delete(from);
+      addedIds.add(to);
+      continue;
+    }
+    const origin = [...map].find(([, v]) => v === from)?.[0] ?? from;
+    map.set(origin, to);
+  }
+  const has = (id: string) => day.exercises.some((p) => p.exerciseId === id);
+  const swaps = [...map].filter(([from, to]) => from !== to && has(from) && !has(to)).map(([from, to]) => ({ from, to }));
+  const added = a.plan.filter((p) => addedIds.has(p.exerciseId) && !has(p.exerciseId) && !swaps.some((s) => s.to === p.exerciseId));
+  const uniqAdded = [...new Map(added.map((p) => [p.exerciseId, p])).values()];
+  return swaps.length || uniqAdded.length ? { swaps, added: uniqAdded } : null;
+}
+
+/** Unutilgan mashg'ulot: oxirgi setdan keyin shuncha vaqt o'tsa, davomiylik shu yerda kesiladi */
+const FORGOT_AFTER_MS = 10 * 60 * 1000;
+const MAX_WORKOUT_MS = 4 * 3600 * 1000;
+
+export function workoutEnd(a: Pick<ActiveWorkout, 'log' | 'lastSetAt'>, now = Date.now()): number {
+  const start = new Date(a.log.startedAt).getTime();
+  let end = now;
+  if (a.lastSetAt && now - a.lastSetAt > FORGOT_AFTER_MS) end = a.lastSetAt + FORGOT_AFTER_MS;
+  return Math.max(start, Math.min(end, start + MAX_WORKOUT_MS));
 }
 
 export interface AccountUser {
@@ -46,6 +97,8 @@ export interface Account {
 }
 
 export interface SyncState {
+  /** qaysi akkauntniki (boshqa akkauntga kirilsa — boshidan) */
+  uid?: string;
   /** serverdagi oxirgi o'qilgan o'zgarish raqami */
   cursor: number;
   /** har bir hujjatning oxirgi sinxronlangan xeshi */
@@ -54,6 +107,10 @@ export interface SyncState {
   stamps: Record<string, number>;
   /** qurilmada oxirgi marta qachon o'zgartirilgan (oflayn tahrir ham to'g'ri vaqt bilan yuborilsin) */
   edited?: Record<string, number>;
+  /** serverdagi oxirgi ko'rilgan nusxa (ovqat: yozuv id lari, meta: qiymatlar) — uch tomonlama birlashtirish uchun */
+  base?: Record<string, unknown>;
+  /** zaxiradan tiklangandan keyin: birinchi o'qishda qurilmadagi nusxa ustun */
+  forceLocal?: boolean;
   lastSyncAt?: number;
   status: 'idle' | 'syncing' | 'error';
   error?: string;
@@ -141,7 +198,7 @@ interface State {
   ackProgram: (at: string) => void;
   setExNote: (exId: string, text: string) => void;
   /** mashg'ulotdagi almashtirish/qo'shimchalarni dastur kuniga yozish */
-  applyWorkoutToDay: (dayId: string, plan: PlannedExercise[]) => void;
+  applyWorkoutToDay: (dayId: string, edits: WorkoutEdits) => void;
 }
 
 const initial = {
@@ -156,9 +213,10 @@ const initial = {
   lessonsDone: [] as string[],
   kcalAdjust: 0,
   setDelta: {},
+  setDeltaMeso: undefined as number | undefined,
   seenAchievements: [] as string[],
   lastPRs: [] as PR[],
-  settings: { sound: true, vibrate: true, showRir: true, barKg: 20 },
+  settings: { ...DEFAULT_SETTINGS } as Settings,
   account: null as Account | null,
   sync: { cursor: 0, hashes: {}, stamps: {}, status: 'idle' } as SyncState,
   seenNotes: [] as string[],
@@ -213,7 +271,13 @@ export const useStore = create<State>()(
         const pe = manualPlanned(ex, get().profile);
         set({ program: mapDay(get().program, dayId, (d) => ({ ...d, exercises: [...d.exercises, pe] })) });
       },
-      moveDay: (dayId, weekday) => set({ program: mapDay(get().program, dayId, (d) => ({ ...d, weekday })) }),
+      // shu hafta kunida boshqa kun bo'lsa — o'rin almashadi (ikki kun bitta kunga tushmasin)
+      moveDay: (dayId, weekday) => {
+        const program = get().program;
+        const moving = program?.days.find((d) => d.id === dayId);
+        if (!program || !moving || moving.weekday === weekday) return;
+        set({ program: { ...program, days: program.days.map((d) => (d.id === dayId ? { ...d, weekday } : d.weekday === weekday ? { ...d, weekday: moving.weekday } : d)) } });
+      },
       addDay: (weekday, title) => {
         const program = get().program;
         if (!program) return null;
@@ -237,6 +301,8 @@ export const useStore = create<State>()(
             restTotal: 0,
             readiness,
             plan,
+            startIds: plan.map((p) => p.exerciseId),
+            programId: day ? get().program?.id : undefined,
           },
         });
       },
@@ -248,7 +314,7 @@ export const useStore = create<State>()(
         const a = get().active;
         if (!a) return;
         const exercises = a.log.exercises.map((e, i) => (i !== exIdx ? e : { ...e, sets: e.sets.map((s, j) => (j === setIdx ? { ...s, ...patch } : s)) }));
-        set({ active: { ...a, log: { ...a.log, exercises } } });
+        set({ active: { ...a, log: { ...a.log, exercises }, ...(patch.done ? { lastSetAt: Date.now() } : {}) } });
       },
       addSet: (exIdx, s) => {
         const a = get().active;
@@ -266,12 +332,27 @@ export const useStore = create<State>()(
         const exercises = a.log.exercises.map((e, i) => (i !== exIdx ? e : { ...e, sets: e.sets.filter((_, j) => j !== setIdx) }));
         set({ active: { ...a, log: { ...a.log, exercises } } });
       },
+      // bajarilgan setlar o'chmaydi: eski mashq shu setlar bilan qoladi, yangisi qolgan setlar bilan undan keyin qo'yiladi
       swapActive: (exIdx, newId) => {
         const a = get().active;
-        if (!a) return;
-        const exercises = a.log.exercises.map((e, i) => (i !== exIdx ? e : { exerciseId: newId, sets: e.sets.map(() => ({ kg: 0, reps: 0, done: false })) }));
-        const plan = a.plan.map((p, i) => (i === exIdx ? { ...p, exerciseId: newId } : p));
-        set({ active: { ...a, plan, log: { ...a.log, exercises } } });
+        const cur = a?.log.exercises[exIdx];
+        if (!a || !cur || cur.exerciseId === newId) return;
+        const done = cur.sets.filter((s) => s.done);
+        const fresh = (n: number) => Array.from({ length: Math.max(1, n) }, () => ({ kg: 0, reps: 0, done: false }));
+        const pe = a.plan[exIdx] ?? manualPlanned(exById(newId)!, get().profile);
+        const swaps = [...(a.swaps ?? []), { from: cur.exerciseId, to: newId }];
+        if (!done.length) {
+          const exercises = a.log.exercises.map((e, i) => (i !== exIdx ? e : { exerciseId: newId, sets: fresh(e.sets.length) }));
+          const plan = a.plan.map((p, i) => (i === exIdx ? { ...p, exerciseId: newId } : p));
+          set({ active: { ...a, plan, swaps, log: { ...a.log, exercises } } });
+          return;
+        }
+        const left = cur.sets.length - done.length;
+        const exercises = [...a.log.exercises];
+        exercises.splice(exIdx, 1, { ...cur, sets: done }, { exerciseId: newId, sets: fresh(left) });
+        const plan = [...a.plan];
+        plan.splice(exIdx + 1, 0, { ...pe, exerciseId: newId, sets: Math.max(1, left) });
+        set({ active: { ...a, plan, swaps, index: exIdx + 1, log: { ...a.log, exercises } } });
       },
       markPain: (exerciseId) => {
         const a = get().active;
@@ -287,6 +368,7 @@ export const useStore = create<State>()(
           active: {
             ...a,
             plan: [...a.plan, pe],
+            added: [...(a.added ?? []), exId],
             index: a.log.exercises.length,
             log: { ...a.log, exercises: [...a.log.exercises, { exerciseId: exId, sets: Array.from({ length: pe.sets }, () => ({ kg: 0, reps: 0, done: false })) }] },
           },
@@ -314,8 +396,10 @@ export const useStore = create<State>()(
           set({ active: null });
           return null;
         }
-        const finishedAt = new Date().toISOString();
-        const durationMin = Math.max(1, Math.round((Date.now() - new Date(a.log.startedAt).getTime()) / 60000));
+        // unutilgan mashg'ulot: oxirgi setdan ko'p o'tgan bo'lsa davomiylik shu yerda kesiladi (ko'pi bilan 4 soat)
+        const end = workoutEnd(a);
+        const finishedAt = new Date(end).toISOString();
+        const durationMin = Math.max(1, Math.round((end - new Date(a.log.startedAt).getTime()) / 60000));
         const log: WorkoutLog = { ...a.log, exercises, finishedAt, durationMin, muscleFb: fb?.muscles, painEx: fb ? (fb.pain.length ? fb.pain : undefined) : a.log.painEx };
         const prs = detectPRs(log, get().logs);
         const logs = [...get().logs, log];
@@ -362,19 +446,45 @@ export const useStore = create<State>()(
       setKcalAdjust: (n) => set({ kcalAdjust: n }),
       markAchievements: (ids) => set({ seenAchievements: Array.from(new Set([...get().seenAchievements, ...ids])) }),
       setSettings: (patch) => set({ settings: { ...get().settings, ...patch } }),
+      // akkaunt va sinxron holati saqlanadi: tiklangan ma'lumot "hozir tahrirlangan" deb belgilanadi va bulutga yuboriladi,
+      // bulutdagi (zaxirada yo'q) mashg'ulotlar o'chirilmaydi — qayta o'qilib qo'shiladi
       importData: (json) => {
+        let d: unknown;
         try {
-          const d = JSON.parse(json);
-          if (!d || typeof d !== 'object' || !('profile' in d)) return false;
-          set({ ...initial, ...d, active: null });
-          return true;
+          d = JSON.parse(json);
         } catch {
           return false;
         }
+        const res = sanitizeData(d, true);
+        if (!res) return false;
+        const data = res.data;
+        const now = Date.now();
+        const keys = [
+          'profile:me',
+          'program:current',
+          'meta:state',
+          ...data.logs.filter((l) => l.finishedAt).map((l) => `log:${l.id}`),
+          ...data.body.map((b) => `body:${b.date}`),
+          ...new Set(data.food.map((f) => `food:${f.date}`)),
+        ];
+        const sync = get().sync;
+        set({
+          ...data,
+          active: null,
+          lastPRs: [],
+          sync: { ...sync, cursor: 0, hashes: {}, stamps: {}, base: {}, forceLocal: true, edited: { ...sync.edited, ...Object.fromEntries(keys.map((k) => [k, now])) } },
+        });
+        return true;
       },
       // qurilmadagi ma'lumotlar o'chiriladi; akkauntdan ham chiqiladi — bulutdagi nusxa saqlanib qoladi
       reset: () => set({ ...initial }),
-      setAccount: (a) => set(a ? { account: a } : { account: null, sync: { ...INITIAL_SYNC } }),
+      // chiqishda sinxron holati saqlanadi: qayta kirilganda oflayn yozilganlar yo'qolmaydi. Boshqa akkaunt — boshidan.
+      setAccount: (a) => {
+        const { sync, account } = get();
+        if (!a) return set({ account: null, sync: { ...sync, uid: sync.uid ?? account?.user.id, status: 'idle', error: undefined } });
+        const same = !sync.uid || sync.uid === a.user.id;
+        set({ account: a, sync: same ? { ...sync, uid: a.user.id } : { ...INITIAL_SYNC, uid: a.user.id } });
+      },
       patchAccount: (patch) => {
         const a = get().account;
         if (a) set({ account: { ...a, ...patch } });
@@ -388,20 +498,20 @@ export const useStore = create<State>()(
         else delete next[exId];
         set({ exNotes: next });
       },
-      // faqat mashq tanlovi saqlanadi: kunlik moslashuvlar (yengillashtirish, mushak fikri, haftalik RIR) dasturga yozilmaydi
-      applyWorkoutToDay: (dayId, plan) =>
+      // faqat mashq tanlovi saqlanadi (almashtirish va qo'shimcha): kunlik moslashuvlar (yengillashtirish, mushak fikri,
+      // haftalik RIR) dasturga yozilmaydi, mashg'ulot paytida dasturda qilingan boshqa tahrirlar bosib ketilmaydi
+      applyWorkoutToDay: (dayId, edits) =>
         set({
-          program: mapDay(get().program, dayId, (d) => ({
-            ...d,
-            exercises: plan.map((p, i) => {
-              const same = d.exercises.find((x) => x.exerciseId === p.exerciseId);
-              if (same) return { ...same };
-              const slot = d.exercises[i];
-              if (!slot) return { ...p };
-              const keepScheme = slot.scheme && exById(slot.exerciseId)?.pattern === exById(p.exerciseId)?.pattern;
-              return { ...slot, exerciseId: p.exerciseId, scheme: keepScheme ? slot.scheme : undefined };
-            }),
-          })),
+          program: mapDay(get().program, dayId, (d) => {
+            let exercises = d.exercises.map((slot) => {
+              const sw = edits.swaps.find((x) => x.from === slot.exerciseId);
+              if (!sw) return slot;
+              const keepScheme = slot.scheme && exById(slot.exerciseId)?.pattern === exById(sw.to)?.pattern;
+              return { ...slot, exerciseId: sw.to, scheme: keepScheme ? slot.scheme : undefined };
+            });
+            for (const p of edits.added) if (!exercises.some((x) => x.exerciseId === p.exerciseId)) exercises = [...exercises, { ...p }];
+            return { ...d, exercises };
+          }),
         }),
     }),
     {
@@ -432,6 +542,7 @@ export function exportData(): string {
     lessonsDone: s.lessonsDone,
     kcalAdjust: s.kcalAdjust,
     setDelta: s.setDelta,
+    setDeltaMeso: s.setDeltaMeso,
     seenAchievements: s.seenAchievements,
     settings: s.settings,
     exNotes: s.exNotes,

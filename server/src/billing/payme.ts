@@ -19,6 +19,8 @@ const E = {
   auth: () => err(-32504, 'Ruxsat yo‘q', 'Недостаточно привилегий', 'Insufficient privileges'),
   method: () => err(-32601, 'Metod topilmadi', 'Метод не найден', 'Method not found'),
   parse: () => err(-32700, 'So‘rov noto‘g‘ri', 'Ошибка разбора', 'Parse error'),
+  invalid: () => err(-32600, 'So‘rovda majburiy maydonlar yo‘q yoki turi noto‘g‘ri', 'Неверный RPC-запрос', 'Invalid request'),
+  system: () => err(-32400, 'Tizim xatosi', 'Системная ошибка', 'System error'),
   amount: () => err(-31001, 'Summa noto‘g‘ri', 'Неверная сумма', 'Incorrect amount'),
   notFound: () => err(-31003, 'Tranzaksiya topilmadi', 'Транзакция не найдена', 'Transaction not found'),
   cantPerform: () => err(-31008, 'Amalni bajarib bo‘lmaydi', 'Невозможно выполнить операцию', 'Unable to perform operation'),
@@ -27,9 +29,13 @@ const E = {
   orderBusy: () => err(-31051, 'Buyurtma to‘lanmoqda yoki to‘langan', 'Заказ уже оплачивается или оплачен', 'Order is being paid or already paid', 'order_id'),
 };
 
+/** Marshrut (routes/billing.ts) uchun: handlePayme'dan tashqaridagi xatolar ham JSON-RPC ko'rinishida */
+export const paymeError = (kind: 'auth' | 'parse' | 'invalid' | 'system'): RpcError => E[kind]();
+
 interface OrderRow {
   id: string;
-  user_id: string;
+  /** akkaunt o'chirilgan bo'lsa — null (to'lov yozuvi qoladi) */
+  user_id: string | null;
   plan: string;
   amount_tiyin: number;
   provider: string;
@@ -58,7 +64,8 @@ async function orderByTxn(q: Queryable, txn: unknown): Promise<OrderRow | null> 
 
 /** Buyurtma va summani tekshirish (CheckPerformTransaction va CreateTransaction uchun umumiy) */
 function checkOrder(order: OrderRow | null, amount: unknown): RpcError | null {
-  if (!order) return E.order();
+  // akkaunt o'chirilgan — to'lanadigan hisob yo'q
+  if (!order || !order.user_id) return E.order();
   if (order.status === 'paid' || order.status === 'cancelled') return E.orderBusy();
   if (typeof amount !== 'number' || amount !== Number(order.amount_tiyin)) return E.amount();
   return null;
@@ -74,7 +81,7 @@ export function paymeAuthorized(header: string | undefined, key: string | undefi
 export async function handlePayme(db: Db, body: unknown, now = Date.now()): Promise<{ result?: unknown; error?: RpcError; id: unknown }> {
   const req = body as { method?: string; params?: Record<string, unknown>; id?: unknown };
   const id = req?.id ?? null;
-  if (!req || typeof req.method !== 'string' || typeof req.params !== 'object' || !req.params) return { error: E.parse(), id };
+  if (!req || typeof req !== 'object' || typeof req.method !== 'string' || typeof req.params !== 'object' || !req.params) return { error: E.invalid(), id };
   const p = req.params;
   const isRpc = (e: unknown): e is RpcError => typeof (e as RpcError)?.code === 'number' && !!(e as RpcError).message?.uz;
   // RpcError tranzaksiya ichida qaytariladi (otilmaydi), aks holda muddat o'tgani uchun bekor qilish yozuvi ham qaytarib yuboriladi
@@ -98,6 +105,7 @@ export async function handlePayme(db: Db, body: unknown, now = Date.now()): Prom
           return { allow: true };
         }
         case 'CreateTransaction': {
+          if (typeof p.id !== 'string' || !p.id || p.id.length > 64) throw E.invalid();
           const existing = await orderByTxn(q, p.id);
           if (existing) {
             if (existing.provider_state !== 1) throw E.cantPerform();
@@ -119,13 +127,13 @@ export async function handlePayme(db: Db, body: unknown, now = Date.now()): Prom
           const o = await orderByTxn(q, p.id);
           if (!o) throw E.notFound();
           if (o.provider_state === 2) return { transaction: o.id, perform_time: Number(o.perform_time), state: 2 };
-          if (o.provider_state !== 1) throw E.cantPerform();
+          if (o.provider_state !== 1 || !o.user_id) throw E.cantPerform();
           if (now - Number(o.provider_create_time) > PAYME_TIMEOUT_MS) {
             await q.query(`UPDATE orders SET provider_state = -1, cancel_time = $2, cancel_reason = 4, status = 'cancelled' WHERE id = $1`, [o.id, now]);
             throw E.cantPerform();
           }
           await q.query(`UPDATE orders SET provider_state = 2, perform_time = $2, status = 'paid' WHERE id = $1`, [o.id, now]);
-          await activatePlan(q, o.user_id, o.plan);
+          await activatePlan(q, o.user_id!, o.plan);
           return { transaction: o.id, perform_time: now, state: 2 };
         }
         case 'CancelTransaction': {
@@ -140,7 +148,7 @@ export async function handlePayme(db: Db, body: unknown, now = Date.now()): Prom
           if (o.provider_state === 2) {
             // to'lov qaytarildi — obuna kunlari olib tashlanadi
             await q.query(`UPDATE orders SET provider_state = -2, cancel_time = $2, cancel_reason = $3, status = 'cancelled' WHERE id = $1`, [o.id, now, reason]);
-            await revokePlan(q, o.user_id, o.plan);
+            if (o.user_id) await revokePlan(q, o.user_id, o.plan);
             return { transaction: o.id, cancel_time: now, state: -2 };
           }
           throw E.cantCancel();
@@ -158,6 +166,7 @@ export async function handlePayme(db: Db, body: unknown, now = Date.now()): Prom
           };
         }
         case 'GetStatement': {
+          if (typeof p.from !== 'number' || typeof p.to !== 'number' || !Number.isFinite(p.from) || !Number.isFinite(p.to)) throw E.invalid();
           const { rows } = await q.query<OrderRow>(
             `SELECT * FROM orders WHERE provider = 'payme' AND provider_create_time BETWEEN $1 AND $2 ORDER BY provider_create_time`,
             [Number(p.from), Number(p.to)],

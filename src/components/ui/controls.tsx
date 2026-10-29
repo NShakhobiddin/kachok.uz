@@ -1,7 +1,25 @@
+import { useState } from 'react';
 import { Icon } from './Icon';
+
+/** "92", "22,5", "17.5" → son; bo'sh yoki noto'g'ri matn → NaN */
+export function parseNum(raw: string): number {
+  const t = raw.trim().replace(',', '.');
+  return /^-?\d*\.?\d*$/.test(t) && /\d/.test(t) ? parseFloat(t) : NaN;
+}
 
 export function Stepper({ value, onChange, step = 1, min = 0, max = 999, unit, label }: { value: number; onChange: (v: number) => void; step?: number; min?: number; max?: number; unit?: string; label?: string }) {
   const clamp = (v: number) => Math.min(max, Math.max(min, Math.round(v * 100) / 100));
+  // yozilayotgan matn: har bosishda cheklanmaydi ("9" → 30 bo'lib ketmasin), maydondan chiqqanda tekshiriladi
+  const [draft, setDraft] = useState<string | null>(null);
+  const commit = () => {
+    if (draft === null) return;
+    const v = parseNum(draft);
+    setDraft(null);
+    if (Number.isFinite(v)) {
+      const c = clamp(v);
+      if (c !== value) onChange(c);
+    }
+  };
   return (
     <div className="stepper" role="group" aria-label={label}>
       <button type="button" onClick={() => onChange(clamp(value - step))} aria-label="Kamaytirish">
@@ -9,11 +27,25 @@ export function Stepper({ value, onChange, step = 1, min = 0, max = 999, unit, l
       </button>
       <input
         inputMode="decimal"
-        value={Number.isFinite(value) ? value : ''}
+        value={draft ?? (Number.isFinite(value) ? String(value) : '')}
         aria-label={label}
+        onFocus={(e) => {
+          setDraft(e.target.value);
+          e.target.select();
+        }}
         onChange={(e) => {
-          const v = parseFloat(e.target.value.replace(',', '.'));
-          onChange(Number.isFinite(v) ? clamp(v) : min);
+          setDraft(e.target.value);
+          // chegaradagi qiymat darhol qo'llanadi (masalan, kaloriya hisobi yangilanadi)
+          const v = parseNum(e.target.value);
+          if (Number.isFinite(v) && v >= min && v <= max) onChange(Math.round(v * 100) / 100);
+        }}
+        onBlur={commit}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter') e.currentTarget.blur();
+          if (e.key === 'Escape') {
+            setDraft(null);
+            e.currentTarget.blur();
+          }
         }}
       />
       {unit && <span className="unit">{unit}</span>}

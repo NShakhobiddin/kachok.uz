@@ -34,7 +34,25 @@ export interface NutritionPlan {
   meals: number;
   proteinPerMeal: number;
   refWeight: number;
+  /** xavfsiz minimal kaloriya (BMR × 1.05, kamida 1500 / 1200 kkal) — qo'lda tuzatish ham bundan pastga tushirmaydi */
+  floor: number;
+  /** amalda qo'llangan qo'lda tuzatish (±300 kkal bilan cheklangan; moslashuvchan sarfda — 0) */
+  kcalAdjust: number;
   notes: string[];
+}
+
+/** Haftalik tekshiruv bo'yicha qo'lda tuzatishning chegarasi (kkal/kun) */
+export const KCAL_ADJUST_MAX = 300;
+
+/** Qo'lda tuzatishni ±300 kkal oralig'ida, 10 ga yaxlitlab saqlaydi */
+export function clampKcalAdjust(n: number): number {
+  if (!Number.isFinite(n)) return 0;
+  return Math.max(-KCAL_ADJUST_MAX, Math.min(KCAL_ADJUST_MAX, Math.round(n / 10) * 10)) || 0;
+}
+
+/** Xavfsiz minimal kaloriya: BMR × 1.05, kamida 1500 (erkak) / 1200 (ayol) kkal */
+export function kcalFloor(sex: Sex, bmrKcal: number): number {
+  return Math.ceil(Math.max(bmrKcal * 1.05, sex === 'male' ? 1500 : 1200) / 10) * 10;
 }
 
 /** Semizlikda oqsilni "ideal" vaznga (BMI 25) nisbatan hisoblash — ortiqcha raqamlardan saqlaydi */
@@ -64,28 +82,36 @@ export function formulaTdee(p: Profile): number {
   return bmr(p.sex, p.weightKg, p.heightCm, p.age) * ACTIVITY[p.activity].k + trainingKcalPerDay(p.weightKg, p.sessionMin, p.daysPerWeek);
 }
 
-/** tdeeOverride — moslashuvchan (kundalik va vazn asosidagi) sarf berilsa, formula o'rniga ishlatiladi */
+/**
+ * tdeeOverride — moslashuvchan (kundalik va vazn asosidagi) sarf berilsa, formula o'rniga ishlatiladi.
+ * Bunda qo'lda tuzatish (kcalAdjust) e'tiborga olinmaydi: moslashuvchan sarf haqiqiy natijani allaqachon hisobga oladi.
+ * Yakuniy kaloriya — tuzatishdan keyin ham — xavfsiz minimumdan past bo'lmaydi.
+ */
 export function nutritionPlan(p: Profile, kcalAdjust = 0, tdeeOverride?: number): NutritionPlan {
   const b = bmr(p.sex, p.weightKg, p.heightCm, p.age);
   const tdee = tdeeOverride ?? formulaTdee(p);
+  const floor = kcalFloor(p.sex, b);
+  const adjust = tdeeOverride !== undefined ? 0 : clampKcalAdjust(kcalAdjust);
   const notes: string[] = [];
   let kcal: number;
   let ratePct: number;
   if (p.goal === 'fatLoss') {
-    ratePct = -0.6; // haftasiga tana vaznining 0.5–0.7% (Garthe 2011, Helms 2014)
+    // haftasiga tana vaznining 0.5–0.7% (Garthe 2011, Helms 2014)
     const deficit = Math.min((0.006 * p.weightKg * 7700) / 7, tdee * 0.25);
-    kcal = tdee - deficit;
-    const floor = Math.max(b * 1.05, p.sex === 'male' ? 1500 : 1200);
-    if (kcal < floor) {
-      kcal = floor;
-      notes.push("Kaloriya xavfsiz minimumdan pastga tushirilmadi — sekinroq, lekin mushakni saqlab ozasiz.");
-    }
+    kcal = Math.max(floor, tdee - deficit);
+    // minimum yoki 25% chegarasi tufayli kamomad kichraygan bo'lsa — kutilayotgan sur'at ham sekinroq
+    ratePct = Math.round(Math.max(-0.6, (((kcal - tdee) * 7) / 7700 / p.weightKg) * 100) * 100) / 100;
   } else {
     const sp = surplusPct(p.goal, p.level);
     kcal = tdee * (1 + sp);
     ratePct = p.goal === 'muscle' ? (p.level === 'beginner' ? 0.4 : 0.25) : p.goal === 'strength' ? 0.15 : p.goal === 'recomp' ? -0.15 : 0;
   }
-  kcal = Math.round((kcal + kcalAdjust) / 10) * 10;
+  kcal += adjust;
+  if (kcal < floor) {
+    kcal = floor;
+    notes.push(p.goal === 'fatLoss' ? 'Kaloriya xavfsiz minimumdan pastga tushirilmadi — sekinroq, lekin mushakni saqlab ozasiz.' : 'Kaloriya xavfsiz minimumdan pastga tushirilmadi.');
+  }
+  kcal = Math.max(floor, Math.round(kcal / 10) * 10);
 
   const refW = referenceWeight(p.weightKg, p.heightCm);
   let protPerKg: number;
@@ -108,6 +134,11 @@ export function nutritionPlan(p: Profile, kcalAdjust = 0, tdeeOverride?: number)
     notes.push("Uglevodlar juda kamaymasligi uchun yog‘ biroz kamaytirildi.");
     fat = Math.max(Math.round((kcal * 0.2) / 9), Math.round((kcal - protein * 4 - carbs * 4) / 9));
   }
+  // makrolar yig'indisi kaloriyadan oshmasin: avval uglevod, keyin yog' (≥15%), oxirida oqsil kamayadi
+  const over = () => protein * 4 + fat * 9 + carbs * 4 - kcal;
+  if (over() > 0) carbs = Math.max(0, Math.floor((kcal - protein * 4 - fat * 9) / 4));
+  if (over() > 0) fat = Math.max(Math.floor((kcal * 0.15) / 9), Math.floor((kcal - protein * 4 - carbs * 4) / 9));
+  if (over() > 0) protein = Math.max(0, Math.floor((kcal - fat * 9 - carbs * 4) / 4));
   const fiber = Math.max(25, Math.round((14 * kcal) / 1000));
   const waterL = p.sex === 'male' ? 2.0 : 1.6;
   const waterTrainingL = Math.round((p.sessionMin / 60) * 0.6 * 10) / 10;
@@ -133,6 +164,8 @@ export function nutritionPlan(p: Profile, kcalAdjust = 0, tdeeOverride?: number)
     meals,
     proteinPerMeal: Math.round(protein / meals),
     refWeight: Math.round(refW),
+    floor,
+    kcalAdjust: adjust,
     notes,
   };
 }
@@ -147,26 +180,89 @@ export function weightTrend(entries: BodyEntry[], alpha = 0.25): { date: string;
   });
 }
 
+export interface WeeklyCheckOpts {
+  /** hozir qo'llangan qo'lda tuzatish (kkal) */
+  kcalAdjust?: number;
+  /** tuzatish oxirgi marta qachon o'zgartirilgan (YYYY-MM-DD) — bundan oldingi vazn natijani ko'rsatmaydi */
+  adjustedAt?: string;
+}
+
+export interface WeeklyCheck {
+  /** taklif etilayotgan o'zgarish: joriy tuzatishga qo'shiladi (0 — taklif yo'q) */
+  delta: number;
+  message: string;
+}
+
+const DAY_MS = 86400000;
+const STEP = 120;
+
 /**
  * Haftalik tekshiruv (MacroFactor uslubida): trend bo‘yicha haqiqiy o‘zgarish maqsaddan farq qilsa,
- * kaloriyani 100–150 kkal ga moslashni taklif qiladi.
+ * kaloriyani ~120 kkal ga moslashni taklif qiladi. Taklif joriy tuzatishni hisobga oladi:
+ * umumiy tuzatish ±300 kkal dan, yakuniy kaloriya xavfsiz minimumdan oshmaydi; tuzatish qo'llangach
+ * natija kamida 7 kun kuzatiladi (sana ma'lum bo'lmasa — shu yo'nalishda qayta taklif qilinmaydi).
  */
-export function weeklyCheck(entries: BodyEntry[], plan: NutritionPlan, weightKg: number): { delta: number; message: string } | null {
+export function weeklyCheck(entries: BodyEntry[], plan: NutritionPlan, weightKg: number, opts: WeeklyCheckOpts = {}): WeeklyCheck | null {
   const tr = weightTrend(entries);
   if (tr.length < 6) return null;
   const lastDate = new Date(tr[tr.length - 1].date);
-  const weekAgo = new Date(lastDate.getTime() - 14 * 86400000);
-  const base = tr.find((x) => new Date(x.date) >= weekAgo);
-  if (!base) return null;
-  const days = (lastDate.getTime() - new Date(base.date).getTime()) / 86400000;
-  if (days < 7) return null;
+  const cur = clampKcalAdjust(opts.kcalAdjust ?? plan.kcalAdjust ?? 0);
+  const since = opts.adjustedAt ? new Date(opts.adjustedAt.slice(0, 10)) : null;
+  const from = new Date(Math.max(lastDate.getTime() - 14 * DAY_MS, since && !isNaN(since.getTime()) ? since.getTime() : 0));
+  const base = tr.find((x) => new Date(x.date) >= from);
+  const days = base ? (lastDate.getTime() - new Date(base.date).getTime()) / DAY_MS : 0;
+  if (!base || days < 7) {
+    if (!since || since.getTime() < lastDate.getTime() - 14 * DAY_MS) return null;
+    const left = Math.max(1, Math.ceil(7 - days));
+    return { delta: 0, message: `Kaloriya yaqinda o‘zgartirildi — natijani baholash uchun yana ~${left} kun tortilib turing.` };
+  }
   const perWeek = ((tr[tr.length - 1].trend - base.trend) / days) * 7;
   const actualPct = (perWeek / weightKg) * 100;
   const target = plan.ratePct;
   const diff = actualPct - target;
+  const per = `${fmtSigned(perWeek)} kg/hafta`;
   if (Math.abs(diff) < 0.2) return { delta: 0, message: `Haftalik o‘zgarish ${fmtSigned(perWeek)} kg — reja bo‘yicha. Shunday davom eting!` };
-  if (diff > 0) return { delta: -120, message: `Vazn rejadan tezroq oshmoqda (${fmtSigned(perWeek)} kg/hafta). Kuniga ~120 kkal kamaytirishni tavsiya qilamiz.` };
-  return { delta: 120, message: `Vazn rejadan tezroq kamaymoqda (${fmtSigned(perWeek)} kg/hafta). Mushakni saqlash uchun kuniga ~120 kkal qo‘shing.` };
+
+  const reduce = diff > 0;
+  // maqsadga qarab to'g'ri ifoda: ozishda "sekin kamaymoqda", massada "sekin oshmoqda" va h.k.
+  let what: string;
+  let why: string;
+  if (reduce) {
+    what =
+      target < 0
+        ? perWeek < 0
+          ? `Vazn rejadagidan sekinroq kamaymoqda (${per})`
+          : `Vazn kamaymayapti (${per})`
+        : target > 0
+          ? `Vazn rejadan tezroq oshmoqda (${per}) — ortiqchasi yog‘ bo‘lib to‘planadi`
+          : `Vazn oshmoqda (${per})`;
+    why = 'kamaytirishni tavsiya qilamiz';
+  } else {
+    what =
+      target > 0
+        ? perWeek > 0
+          ? `Vazn rejadagidan sekinroq oshmoqda (${per})`
+          : `Vazn oshmayapti (${per})`
+        : target < 0
+          ? `Vazn rejadan tezroq kamaymoqda (${per})`
+          : `Vazn kamaymoqda (${per})`;
+    why = target > 0 ? 'qo‘shing — mushak o‘sishi uchun energiya kerak' : target < 0 ? 'qo‘shing — mushakni saqlash uchun' : 'qo‘shing — vaznni saqlash uchun';
+  }
+  const step = reduce ? -STEP : STEP;
+  // sana ma'lum bo'lmasa: shu yo'nalishdagi tuzatish allaqachon qo'llangan — qayta taklif qilmaymiz (natijani kutamiz)
+  if (!since && cur !== 0 && Math.sign(cur) === Math.sign(step))
+    return { delta: 0, message: `${what}. ${cur > 0 ? '+' : ''}${cur} kkal tuzatish allaqachon qo‘llangan — natijani 1–2 hafta kuzating.` };
+  let delta = clampKcalAdjust(cur + step) - cur;
+  // xavfsiz minimumdan pastga tushirmaymiz
+  if (delta < 0) delta = Math.max(delta, -Math.max(0, Math.floor((plan.kcal - plan.floor) / 10) * 10));
+  if (delta === 0)
+    return {
+      delta: 0,
+      message: reduce
+        ? `${what}. Kaloriya ${cur <= -KCAL_ADJUST_MAX ? 'tuzatish chegarasida (−300 kkal)' : 'xavfsiz minimumda'} — kamaytirish o‘rniga kunlik qadamlarni oshiring.`
+        : `${what}. Qo‘lda tuzatish chegarasiga (+300 kkal) yetildi — moslashuvchan sarfni yoqing.`,
+    };
+  return { delta, message: `${what}. Kuniga ~${Math.abs(delta)} kkal ${why}.` };
 }
 
 function fmtSigned(n: number) {
@@ -261,7 +357,8 @@ const MEAL_TEMPLATES: { name: string; time: string; items: MealItem[] }[] = [
 ];
 
 const SWAPS_VEG: Record<string, string> = { chicken: 'chickpea', beef: 'mung', fish: 'chickpea' };
-const SWAPS_LACTOSE: Record<string, string> = { milk: 'banana', tvorog: 'egg', qatiq: 'egg' };
+/** laktozasiz: tvorog/qatiq → tuxum; sut olib tashlanadi (suli suvda pishiriladi) — o'rniga qat'iy miqdordagi mahsulot qo'yilmaydi */
+const SWAPS_LACTOSE: Record<string, string | null> = { milk: null, tvorog: 'egg', qatiq: 'egg' };
 
 export interface MealPlanItem {
   food: Food;
@@ -303,11 +400,15 @@ function solve3(m: number[][], v: number[]): number[] | null {
 export function mealPlan(plan: NutritionPlan, prefs: Profile['dietPrefs']): MealPlanMeal[] {
   const templates = MEAL_TEMPLATES.map((m) => ({
     ...m,
-    items: m.items.map((i) => {
+    items: m.items.flatMap((i): MealItem[] => {
       let food = i.food;
       if (prefs.vegetarian && SWAPS_VEG[food]) food = SWAPS_VEG[food];
-      if (prefs.lactoseFree && SWAPS_LACTOSE[food]) food = SWAPS_LACTOSE[food];
-      return { ...i, food };
+      if (prefs.lactoseFree && food in SWAPS_LACTOSE) {
+        const sw = SWAPS_LACTOSE[food];
+        if (!sw) return [];
+        food = sw;
+      }
+      return [{ ...i, food }];
     }),
   }));
   const all = templates.flatMap((t) => t.items);
@@ -326,8 +427,7 @@ export function mealPlan(plan: NutritionPlan, prefs: Profile['dietPrefs']): Meal
   const scale = sol.map((x) => Math.min(2.6, Math.max(0.4, x)));
   const k: Record<Role, number> = { P: scale[0], C: scale[1], F: scale[2], V: 1 };
   // Cheklovlar tufayli kaloriya chetga chiqsa — avval uglevod, keyin oqsil manbalari bilan tuzatamiz
-  const kcalOf = (kk: Record<Role, number>) =>
-    all.reduce((a, i) => a + (FOODS[i.food].kcal * i.g * kk[i.role]) / 100, 0);
+  const kcalOf = (kk: Record<Role, number>) => all.reduce((a, i) => a + (FOODS[i.food].kcal * i.g * kk[i.role]) / 100, 0);
   for (let guard = 0; guard < 60; guard++) {
     const kc = kcalOf(k);
     if (Math.abs(kc - plan.kcal) / plan.kcal < 0.04) break;
@@ -339,14 +439,36 @@ export function mealPlan(plan: NutritionPlan, prefs: Profile['dietPrefs']): Meal
     else break;
   }
 
-  return templates.map((t) => {
-    const items = t.items.map((i) => {
-      const food = FOODS[i.food];
-      let g = i.g * k[i.role];
-      g = food.unit ? Math.max(1, Math.round(g / food.unit.g)) * food.unit.g : i.role === 'F' ? Math.max(5, Math.round(g / 5) * 5) : Math.max(10, Math.round(g / 10) * 10);
-      const label = food.unit ? `${Math.round(g / food.unit.g)} ${food.unit.name}` : `${g} g`;
-      return { food, g, label };
-    });
+  const roundG = (food: Food, role: Role, g: number) =>
+    food.unit ? Math.max(1, Math.round(g / food.unit.g)) * food.unit.g : role === 'F' ? Math.max(5, Math.round(g / 5) * 5) : Math.max(10, Math.round(g / 10) * 10);
+  const rows = templates.map((t) => t.items.map((i) => ({ food: FOODS[i.food], role: i.role, base: i.g, g: roundG(FOODS[i.food], i.role, i.g * k[i.role]) })));
+  const flat = rows.flat();
+  const total = () => flat.reduce((a, x) => a + (x.food.kcal * x.g) / 100, 0);
+  // Dona/gramm yaxlitlashdan keyin qayta tuzatish: kaloriya maqsaddan ±3% ichida bo'lsin.
+  // Avval uglevod, keyin yog' va oqsil manbalari (grammda), oxirida donali mahsulotlar (1 donadan).
+  for (let guard = 0; guard < 120; guard++) {
+    const diff = plan.kcal - total();
+    if (Math.abs(diff) <= plan.kcal * 0.03) break;
+    const up = diff > 0;
+    const stepOf = (x: (typeof flat)[number]) => (x.food.unit ? x.food.unit.g : x.role === 'F' ? 5 : 10);
+    const minOf = (x: (typeof flat)[number]) => (x.food.unit ? x.food.unit.g : x.role === 'F' ? 5 : 20);
+    const can = (x: (typeof flat)[number]) => x.role !== 'V' && (up ? x.g + stepOf(x) <= x.base * 3 : x.g - stepOf(x) >= minOf(x));
+    // bir qadam maqsaddan uzoqlashtirmasin
+    const helps = (x: (typeof flat)[number]) => (x.food.kcal * stepOf(x)) / 100 <= Math.abs(diff) * 2;
+    let pickItem: (typeof flat)[number] | undefined;
+    for (const pass of [(x: (typeof flat)[number]) => !x.food.unit && x.role === 'C', (x: (typeof flat)[number]) => !x.food.unit && x.role === 'F', (x: (typeof flat)[number]) => !x.food.unit, () => true]) {
+      const cands = flat.filter((x) => pass(x) && can(x) && helps(x));
+      if (!cands.length) continue;
+      // kamaytirishda — eng ko'p kaloriya berayotgani, oshirishda — nisbatan eng kam oshirilgani
+      pickItem = cands.sort((a, b) => (up ? a.g / a.base - b.g / b.base : (b.food.kcal * b.g) / b.base - (a.food.kcal * a.g) / a.base))[0];
+      break;
+    }
+    if (!pickItem) break;
+    pickItem.g += up ? stepOf(pickItem) : -stepOf(pickItem);
+  }
+
+  return templates.map((t, ti) => {
+    const items = rows[ti].map(({ food, g }) => ({ food, g, label: food.unit ? `${Math.round(g / food.unit.g)} ${food.unit.name}` : `${g} g` }));
     const tot = items.reduce(
       (a, i) => ({ kcal: a.kcal + (i.food.kcal * i.g) / 100, p: a.p + (i.food.p * i.g) / 100, f: a.f + (i.food.f * i.g) / 100, c: a.c + (i.food.c * i.g) / 100 }),
       { kcal: 0, p: 0, f: 0, c: 0 },

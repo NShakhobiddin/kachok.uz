@@ -5,11 +5,13 @@ export interface SmsSender {
   send(phone: string, text: string): Promise<void>;
 }
 
+/** Faqat ishlab chiqish (DEV_MODE=1): kod va raqam konsolga yoziladi. Production'da loadEnv bunga yo'l qo'ymaydi */
 export class ConsoleSms implements SmsSender {
   sent: { phone: string; text: string }[] = [];
+  constructor(private log = true) {}
   async send(phone: string, text: string) {
     this.sent.push({ phone, text });
-    console.log(`[SMS → +${phone}] ${text}`);
+    if (this.log) console.log(`[SMS → +${phone}] ${text}`);
   }
 }
 
@@ -57,5 +59,6 @@ export function createSms(env: Env): SmsSender {
     if (!env.ESKIZ_EMAIL || !env.ESKIZ_PASSWORD) throw new Error('ESKIZ_EMAIL va ESKIZ_PASSWORD kerak');
     return new EskizSms(env.ESKIZ_EMAIL, env.ESKIZ_PASSWORD, env.ESKIZ_FROM);
   }
+  if (env.DEV_MODE !== '1') throw new Error('SMS_PROVIDER=console faqat DEV_MODE=1 bilan');
   return new ConsoleSms();
 }

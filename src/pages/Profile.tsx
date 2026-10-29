@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { EquipmentGrid } from '../components/EquipmentGrid';
 import { Icon } from '../components/ui/Icon';
 import { Sheet } from '../components/ui/Sheet';
@@ -21,6 +21,7 @@ type Panel = 'body' | 'goal' | 'schedule' | 'equipment' | 'limits' | 'activity' 
 
 export default function Profile() {
   const nav = useNavigate();
+  const loc = useLocation();
   const profile = useStore((s) => s.profile)!;
   const setProfile = useStore((s) => s.setProfile);
   const settings = useStore((s) => s.settings);
@@ -51,7 +52,8 @@ export default function Profile() {
   return (
     <div className="page">
       <div className="back-bar">
-        <button className="icon-btn" onClick={() => nav(-1)} aria-label="Orqaga">
+        {/* to'g'ridan-to'g'ri havola bilan ochilganda orqaga — ilovadan chiqib ketmasin */}
+        <button className="icon-btn" onClick={() => (loc.key === 'default' ? nav('/') : nav(-1))} aria-label="Orqaga">
           <Icon name="left" />
         </button>
       </div>
@@ -139,9 +141,12 @@ export default function Profile() {
           accept="application/json"
           hidden
           onChange={async (e) => {
-            const f = e.target.files?.[0];
+            const input = e.target;
+            const f = input.files?.[0];
             if (!f) return;
-            setImportMsg(importData(await f.text()) ? 'Ma’lumotlar tiklandi.' : 'Fayl o‘qilmadi. Kachok’dan olingan .json zaxira faylini tanlang.');
+            const ok = importData(await f.text());
+            input.value = ''; // shu faylni yana tanlash mumkin bo'lsin
+            setImportMsg(ok ? 'Ma’lumotlar tiklandi.' : 'Fayl o‘qilmadi yoki buzilgan — ma’lumotlaringiz o‘zgarmadi. Kachok’dan olingan .json zaxira faylini tanlang.');
           }}
         />
         {importMsg && (

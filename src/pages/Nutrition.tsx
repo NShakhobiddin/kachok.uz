@@ -8,7 +8,7 @@ import { Note } from '../components/ui/Fold';
 import { Sheet } from '../components/ui/Sheet';
 import { Stepper } from '../components/ui/controls';
 import { sourceById } from '../data/sources';
-import { ACTIVITY, NATIONAL_DISHES, SUPPLEMENTS, mealPlan, weeklyCheck, weightTrend } from '../engine/nutrition';
+import { ACTIVITY, NATIONAL_DISHES, SUPPLEMENTS, clampKcalAdjust, mealPlan, weeklyCheck, weightTrend } from '../engine/nutrition';
 import { fmtDate, isoDate } from '../lib/date';
 import { useNutrition } from '../lib/useNutrition';
 import { useStore } from '../store/useStore';
@@ -92,7 +92,7 @@ export default function Nutrition() {
             <div className="stack gap-8">
               <span>{check.message}</span>
               {check.delta !== 0 && (
-                <button className="btn btn-secondary btn-xs" style={{ alignSelf: 'flex-start' }} onClick={() => setKcalAdjust(kcalAdjust + check.delta)}>
+                <button className="btn btn-secondary btn-xs" style={{ alignSelf: 'flex-start' }} onClick={() => setKcalAdjust(clampKcalAdjust(kcalAdjust + check.delta))}>
                   Qo‘llash ({check.delta > 0 ? '+' : ''}{check.delta} kkal)
                 </button>
               )}

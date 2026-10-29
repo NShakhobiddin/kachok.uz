@@ -377,6 +377,8 @@ export interface WorkoutLog {
   muscleFb?: Partial<Record<MuscleGroup, { pump: 1 | 2 | 3; work: 1 | 2 | 3; recovery: 1 | 2 | 3 | 4 }>>;
   /** bo'g'imda og'riq bergan mashqlar */
   painEx?: string[];
+  /** yengillashtirish (deload) haftasida bajarilgan — keyingi blok uchun progressiya tayanchi bo'lmaydi */
+  deload?: boolean;
 }
 
 export interface BodyEntry {

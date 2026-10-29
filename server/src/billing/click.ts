@@ -34,7 +34,8 @@ const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 interface Order {
   id: string;
-  user_id: string;
+  /** akkaunt o'chirilgan bo'lsa — null */
+  user_id: string | null;
   plan: string;
   amount_tiyin: number;
   status: string;
@@ -59,10 +60,11 @@ export async function handleClick(db: Db, p: ClickParams, cfg: { secret: string;
   return db.tx(async (q) => {
     const { rows } = await q.query<Order>(`SELECT * FROM orders WHERE id = $1 AND provider = 'click' FOR UPDATE`, [p.merchant_trans_id]);
     const order = rows[0];
-    if (!order) return reply(-5);
+    if (!order || !order.user_id) return reply(-5);
     if (order.status === 'paid') return reply(-4);
     if (order.status === 'cancelled') return reply(-9);
-    if (Math.abs(Math.round(Number(p.amount) * 100) - Number(order.amount_tiyin)) > 1) return reply(-2);
+    const amount = Number(p.amount);
+    if (!Number.isFinite(amount) || Math.abs(Math.round(amount * 100) - Number(order.amount_tiyin)) > 1) return reply(-2);
 
     if (stage === 'prepare') {
       const prepareId = order.click_prepare_id ?? Number((await q.query<{ v: number }>(`SELECT nextval('click_prepare_seq') AS v`)).rows[0].v);
@@ -77,7 +79,7 @@ export async function handleClick(db: Db, p: ClickParams, cfg: { secret: string;
       return reply(-9);
     }
     await q.query(`UPDATE orders SET status = 'paid', perform_time = $2 WHERE id = $1`, [order.id, Date.now()]);
-    await activatePlan(q, order.user_id, order.plan);
+    await activatePlan(q, order.user_id!, order.plan);
     return reply(0, { merchant_confirm_id: order.click_prepare_id });
   });
 }

@@ -16,10 +16,10 @@ import { e1rm, exerciseHistory, fmtKg, platesPerSide, roundLoad, suggest, type S
 import { e1rmFromSet, loadFor, RIR_LABEL, rirText } from '../engine/rpe';
 import { fmtClock } from '../lib/date';
 import { useNow } from '../lib/hooks';
-import { useStore, type FinishFeedback } from '../store/useStore';
+import { useStore, workoutEdits, type FinishFeedback } from '../store/useStore';
 import type { Exercise, MuscleGroup } from '../types';
 import { ExercisePicker } from '../components/DayEditor';
-import { Choice, Toggle } from '../components/ui/controls';
+import { Choice, parseNum, Toggle } from '../components/ui/controls';
 import { HistorySheet } from '../components/HistorySheet';
 import { FAILURE_TEXT, PreSetCheck } from '../components/Safety';
 import { PainCheck } from '../components/PainCheck';
@@ -46,6 +46,9 @@ function beep() {
     /* ovoz mavjud emas */
   }
 }
+
+/** shundan ko'p vaqt oldin tugagan dam (ilova qayta ochilganda) — signalsiz yopiladi */
+const STALE_REST_MS = 60 * 1000;
 
 const vibrate = (p: number | number[]) => {
   try {
@@ -80,15 +83,33 @@ export default function Workout() {
   /** setdan oldingi xavfsizlik ro'yxati yopilgan mashqlar (shu mashg'ulotda) */
   const [safetySeen, setSafetySeen] = useState<string[]>([]);
   const [pr, setPr] = useState<string | null>(null);
-  const restAlerted = useRef(false);
+  /** qaysi dam olish (restEndsAt) uchun signal berilgan */
+  const restAlerted = useRef<number | null>(null);
   const leaving = useRef(false);
+  /** set bajarilgach ko'rsatiladigan keyingi qator (dam paneli ostida qolmasin) */
+  const [scrollTarget, setScrollTarget] = useState<{ key: string } | null>(null);
 
-  // Ekran o‘chmasligi uchun
+  // Ekran o‘chmasligi uchun. Brauzer fon rejimida qulfni bo'shatadi — ilovaga qaytilganda qayta olinadi.
   useEffect(() => {
-    let lock: { release: () => Promise<void> } | null = null;
-    const nav2 = navigator as unknown as { wakeLock?: { request: (t: 'screen') => Promise<{ release: () => Promise<void> }> } };
-    nav2.wakeLock?.request('screen').then((l) => (lock = l)).catch(() => {});
+    type Lock = { release: () => Promise<void>; released?: boolean };
+    const wl = (navigator as unknown as { wakeLock?: { request: (t: 'screen') => Promise<Lock> } }).wakeLock;
+    if (!wl) return;
+    let lock: Lock | null = null;
+    let alive = true;
+    const acquire = () => {
+      if (document.visibilityState !== 'visible' || lock?.released === false) return;
+      wl.request('screen')
+        .then((l) => {
+          if (alive) lock = l;
+          else l.release().catch(() => {});
+        })
+        .catch(() => {});
+    };
+    acquire();
+    document.addEventListener('visibilitychange', acquire);
     return () => {
+      alive = false;
+      document.removeEventListener('visibilitychange', acquire);
       lock?.release().catch(() => {});
     };
   }, []);
@@ -121,19 +142,35 @@ export default function Workout() {
       document.documentElement.style.scrollPaddingBottom = '';
     };
   }, [restH]);
+  // Dam tugadi: har bir dam olish uchun bir marta signal, 4 soniyadan keyin panel o'zi yopiladi.
+  // Ilova ancha keyin ochilsa (eski, saqlangan taymer) — signalsiz yopiladi.
+  const restEndsAt = active?.restEndsAt ?? null;
+  const restExpired = remaining !== null && remaining <= 0;
   useEffect(() => {
-    if (remaining === null) {
-      restAlerted.current = false;
+    if (!restExpired || restEndsAt === null) return;
+    if (Date.now() - restEndsAt > STALE_REST_MS) {
+      useStore.getState().stopRest();
       return;
     }
-    if (remaining <= 0 && !restAlerted.current) {
-      restAlerted.current = true;
-      if (settings.vibrate) vibrate([200, 100, 200]);
-      if (settings.sound) beep();
-      const t = setTimeout(() => st.stopRest(), 4000);
-      return () => clearTimeout(t);
+    if (restAlerted.current !== restEndsAt) {
+      restAlerted.current = restEndsAt;
+      const { vibrate: vib, sound } = useStore.getState().settings;
+      if (vib) vibrate([200, 100, 200]);
+      if (sound) beep();
     }
-  }, [remaining, settings.vibrate, settings.sound]); // eslint-disable-line react-hooks/exhaustive-deps
+    const t = setTimeout(() => useStore.getState().stopRest(), 4000);
+    return () => clearTimeout(t);
+  }, [restEndsAt, restExpired]);
+  // set bajarilgach keyingi qator ko'rinsin (dam paneli balandligi o'zgarsa ham)
+  useEffect(() => {
+    if (!scrollTarget) return;
+    const raf = requestAnimationFrame(() => document.querySelector(`[data-scroll="${scrollTarget.key}"]`)?.scrollIntoView({ block: 'nearest', behavior: 'smooth' }));
+    const clear = setTimeout(() => setScrollTarget((t) => (t === scrollTarget ? null : t)), 1500);
+    return () => {
+      cancelAnimationFrame(raf);
+      clearTimeout(clear);
+    };
+  }, [scrollTarget, restH]);
 
   if (!active || !profile) return leaving.current ? null : <Navigate to="/" replace />;
   const idx = Math.min(active.index, active.log.exercises.length - 1);
@@ -151,8 +188,9 @@ export default function Workout() {
   const doneExercises = active.log.exercises.filter((e) => e.sets.some((s) => s.done && !s.warmup));
   const finishGroups = [...new Set(doneExercises.flatMap((e) => EXERCISE_MAP[e.exerciseId]?.primary.map((m) => MUSCLES[m].group) ?? []))];
   const finishExercises = [...new Map(doneExercises.map((e) => [e.exerciseId, { id: e.exerciseId, name: EXERCISE_MAP[e.exerciseId]?.name ?? e.exerciseId }])).values()];
-  const programDay = program?.days.find((d) => d.id === active.log.dayId);
-  const canSaveDay = !!programDay && programDay.exercises.map((p) => p.exerciseId).join() !== active.plan.map((p) => p.exerciseId).join();
+  // dasturga faqat shu mashg'ulotdagi almashtirish/qo'shimchalar yoziladi
+  const dayEdits = workoutEdits(active, program);
+  const canSaveDay = !!dayEdits;
   const isLast = idx === active.log.exercises.length - 1;
   const safety = ex ? safetyFor(ex.id) : undefined;
   const workingDone = !!exLog?.sets.some((s) => s.done && !s.warmup);
@@ -199,6 +237,9 @@ export default function Workout() {
     }
     const lastSetOfWorkout = isLast && exLog.sets.every((x, k) => x.done || k === j);
     if (!lastSetOfWorkout) st.startRest(pe?.restSec ?? 90);
+    const next = exLog.sets.findIndex((x, k) => k > j && !x.done);
+    const nextAny = next >= 0 ? next : exLog.sets.findIndex((x, k) => k !== j && !x.done);
+    setScrollTarget({ key: nextAny >= 0 ? `${idx}-${nextAny}` : 'next-ex' });
   };
 
   return (
@@ -272,19 +313,19 @@ export default function Workout() {
             </div>
           </div>
           <div className="hscroll wo-actions">
-            <button className="chip sm" onClick={() => setTechOpen(true)}>
+            <button className="chip sm" style={{ height: 40 }} onClick={() => setTechOpen(true)}>
               <Icon name="info" size={14} /> Texnika
             </button>
-            <button className="chip sm" onClick={() => setSwapOpen(true)}>
+            <button className="chip sm" style={{ height: 40 }} onClick={() => setSwapOpen(true)}>
               <Icon name="swap" size={14} /> Almashtirish
             </button>
-            <button className="chip sm" onClick={() => setHistoryOpen(true)}>
+            <button className="chip sm" style={{ height: 40 }} onClick={() => setHistoryOpen(true)}>
               <Icon name="chart" size={14} /> Tarix
             </button>
-            <button className="chip sm" onClick={() => setNoteEdit((v) => !v)} aria-expanded={noteEdit}>
+            <button className="chip sm" style={{ height: 40 }} onClick={() => setNoteEdit((v) => !v)} aria-expanded={noteEdit}>
               <Icon name="edit" size={14} /> Eslatma
             </button>
-            <button className="chip sm" onClick={() => setPainOpen(true)} style={active.log.painEx?.includes(ex.id) ? { borderColor: 'var(--red)', background: 'var(--red-soft)' } : undefined}>
+            <button className="chip sm" onClick={() => setPainOpen(true)} style={{ height: 40, ...(active.log.painEx?.includes(ex.id) ? { borderColor: 'var(--red)', background: 'var(--red-soft)' } : {}) }}>
               <Icon name="alert" size={14} /> Og‘riq
             </button>
           </div>
@@ -345,8 +386,8 @@ export default function Workout() {
             {exLog.sets.map((s, j) => {
               const prev = sug?.last?.sets[j] ?? sug?.last?.sets[sug.last.sets.length - 1];
               return (
-                <div key={j} className={`set-grid set-row ${s.done ? 'done' : ''} ${s.warmup ? 'warm' : ''}`}>
-                  <button className={`pill-num set-type ${s.warmup ? 'w' : s.kind === 'drop' ? 'd' : s.kind === 'failure' ? 'f' : ''}`} onClick={() => setTypeFor(j)} aria-label={`${j + 1}-set turi: ${s.warmup ? 'isinish' : s.kind === 'drop' ? 'drop-set' : s.kind === 'failure' ? 'chegaragacha' : 'ishchi set'}`}>
+                <div key={j} data-scroll={`${idx}-${j}`} className={`set-grid set-row ${s.done ? 'done' : ''} ${s.warmup ? 'warm' : ''}`}>
+                  <button style={{ minWidth: 34, height: 40 }} className={`pill-num set-type ${s.warmup ? 'w' : s.kind === 'drop' ? 'd' : s.kind === 'failure' ? 'f' : ''}`} onClick={() => setTypeFor(j)} aria-label={`${j + 1}-set turi: ${s.warmup ? 'isinish' : s.kind === 'drop' ? 'drop-set' : s.kind === 'failure' ? 'chegaragacha' : 'ishchi set'}`}>
                     {s.warmup ? 'I' : s.kind === 'drop' ? 'D' : s.kind === 'failure' ? 'Ch' : j + 1 - exLog.sets.slice(0, j).filter((x) => x.warmup).length}
                   </button>
                   <button
@@ -364,28 +405,8 @@ export default function Workout() {
                       s.done && s.rir !== undefined && <span className="rir-badge">RIR {s.rir >= 4 ? '4+' : s.rir}</span>
                     )}
                   </button>
-                  <input
-                    className="set-input"
-                    inputMode="decimal"
-                    aria-label={`${j + 1}-set vazn`}
-                    placeholder={sug?.kg ? fmtKg(sug.kg) : '0'}
-                    value={s.kg ? String(s.kg) : ''}
-                    onChange={(e) => {
-                      const v = parseFloat(e.target.value.replace(',', '.'));
-                      st.updateSet(idx, j, { kg: Number.isFinite(v) ? v : 0 });
-                    }}
-                  />
-                  <input
-                    className="set-input"
-                    inputMode="numeric"
-                    aria-label={`${j + 1}-set takror`}
-                    placeholder={String(sug?.reps ?? pe?.repMin ?? '')}
-                    value={s.reps ? String(s.reps) : ''}
-                    onChange={(e) => {
-                      const v = parseInt(e.target.value, 10);
-                      st.updateSet(idx, j, { reps: Number.isFinite(v) ? v : 0 });
-                    }}
-                  />
+                  <NumCell decimal label={`${j + 1}-set vazn`} placeholder={sug?.kg ? fmtKg(sug.kg) : '0'} value={s.kg} onValue={(kg) => st.updateSet(idx, j, { kg })} />
+                  <NumCell label={`${j + 1}-set takror`} placeholder={String(sug?.reps ?? pe?.repMin ?? '')} value={s.reps} onValue={(reps) => st.updateSet(idx, j, { reps })} />
                   <button className={`set-check ${s.done ? 'on' : ''}`} onClick={() => completeSet(j)} aria-label={s.done ? 'Bekor qilish' : 'Set bajarildi'} aria-pressed={s.done}>
                     <Icon name="check" size={18} stroke={3} />
                   </button>
@@ -420,12 +441,12 @@ export default function Workout() {
           )}
 
           {allDoneHere && !isLast && (
-            <button className="btn btn-primary btn-block" onClick={() => st.setActiveIndex(idx + 1)}>
+            <button data-scroll="next-ex" className="btn btn-primary btn-block" onClick={() => st.setActiveIndex(idx + 1)}>
               Keyingi: {EXERCISE_MAP[active.log.exercises[idx + 1].exerciseId]?.name} <Icon name="right" size={18} />
             </button>
           )}
           {allDoneHere && isLast && (
-            <button className="btn btn-success btn-block" onClick={() => setFinishOpen(true)}>
+            <button data-scroll="next-ex" className="btn btn-success btn-block" onClick={() => setFinishOpen(true)}>
               <Icon name="trophy" size={18} /> Mashg‘ulotni yakunlash
             </button>
           )}
@@ -600,7 +621,7 @@ export default function Workout() {
             }}
             onFinish={(fb, saveDay) => {
               leaving.current = true;
-              if (saveDay && active.log.dayId) st.applyWorkoutToDay(active.log.dayId, active.plan);
+              if (saveDay && dayEdits && active.log.dayId) st.applyWorkoutToDay(active.log.dayId, dayEdits);
               const log = st.finishWorkout(fb);
               setFinishOpen(false);
               nav(log ? `/summary/${log.id}` : '/', { replace: true });
@@ -609,6 +630,40 @@ export default function Workout() {
         )}
       </Sheet>
     </div>
+  );
+}
+
+/**
+ * Set katagi: yozilgan matn (masalan "22." yoki "17,5") maydonda saqlanadi, to'g'ri son bo'lsa darhol yoziladi.
+ * Tashqaridan qiymat o'zgarsa (o'tgan natijani ko'chirish, "Qo'llash") — o'sha ko'rsatiladi.
+ */
+function NumCell({ value, onValue, decimal, label, placeholder }: { value: number; onValue: (v: number) => void; decimal?: boolean; label: string; placeholder: string }) {
+  const [draft, setDraft] = useState<string | null>(null);
+  const parse = (raw: string) => {
+    if (!raw.trim()) return 0;
+    if (!decimal && !/^\s*\d+\s*$/.test(raw)) return NaN;
+    const v = parseNum(raw);
+    if (!Number.isFinite(v) || v < 0) return NaN;
+    return decimal ? Math.round(v * 100) / 100 : Math.round(v);
+  };
+  const shown = draft !== null && parse(draft) === value ? draft : value ? String(value) : '';
+  return (
+    <input
+      className="set-input"
+      inputMode={decimal ? 'decimal' : 'numeric'}
+      aria-label={label}
+      placeholder={placeholder}
+      value={shown}
+      onChange={(e) => {
+        const raw = e.target.value;
+        const v = parse(raw);
+        if (!Number.isFinite(v)) return; // harf va h.k. — e'tiborsiz
+        setDraft(raw);
+        if (v !== value) onValue(v);
+      }}
+      onBlur={() => setDraft(null)}
+      onKeyDown={(e) => e.key === 'Enter' && e.currentTarget.blur()}
+    />
   );
 }
 
