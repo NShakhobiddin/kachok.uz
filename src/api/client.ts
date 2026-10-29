@@ -58,7 +58,7 @@ export async function api<T>(path: string, opts: { method?: string; body?: unkno
     res = await send();
     if (res.status === 401 && auth && (await refreshTokens())) res = await send();
   } catch {
-    throw new ApiError(0, 'offline', "Internet yo'q. Ulanish tiklangach qayta urinib ko'ring.");
+    throw new ApiError(0, 'offline', "Internet yo‘q. Ulanish tiklangach qayta urinib ko‘ring.");
   }
   const data = (await res.json().catch(() => ({}))) as { error?: string; message?: string };
   if (!res.ok) throw new ApiError(res.status, data.error ?? 'error', data.message ?? 'Xatolik yuz berdi');

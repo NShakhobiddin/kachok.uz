@@ -89,7 +89,7 @@ describe('ilova sinxronlashi', () => {
     expect(after.coach.name).toBe('Sardor');
   });
 
-  it("o'chirilgan mashg'ulot boshqa qurilmadan ham o'chadi", async () => {
+  it("o‘chirilgan mashg‘ulot boshqa qurilmadan ham o‘chadi", async () => {
     const s = store.getState();
     s.startWorkout(s.program!.days[0], s.program!.days[0].exercises);
     s.updateSet(0, 0, { kg: 50, reps: 10, done: true });

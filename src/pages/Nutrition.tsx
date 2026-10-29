@@ -296,7 +296,7 @@ export default function Nutrition() {
           <Line k={`3. Maqsad: ${GOAL_TEXT[profile.goal]}`} v={`${np.kcal} kkal`} />
           <div className="divider" />
           <Line k={`Oqsil: ${(np.protein / np.refWeight).toFixed(1)} g/kg${np.refWeight < profile.weightKg ? ` (sog‘lom vazn ${np.refWeight} kg)` : ''}`} v={`${np.protein} g`} />
-          <Line k="Yog': ~0.8 g/kg (kaloriyaning 20–35%)" v={`${np.fat} g`} />
+          <Line k="Yog‘: ~0.8 g/kg (kaloriyaning 20–35%)" v={`${np.fat} g`} />
           <Line k="Uglevod: qolgan kaloriya" v={`${np.carbs} g`} />
           <div className="divider" />
           {np.notes.map((n) => (

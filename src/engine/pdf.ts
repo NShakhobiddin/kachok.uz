@@ -180,7 +180,7 @@ export async function exportProgramPdf(program: Program, profile: Profile, kcalA
   y += 6;
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(10);
-  doc.text(T(`${np.kcal} kkal · oqsil ${np.protein} g · yog' ${np.fat} g · uglevod ${np.carbs} g · tola ${np.fiber}+ g · suv ${np.waterL} L (+${np.waterTrainingL} L mashq kuni)`), M, y);
+  doc.text(T(`${np.kcal} kkal · oqsil ${np.protein} g · yog‘ ${np.fat} g · uglevod ${np.carbs} g · tola ${np.fiber}+ g · suv ${np.waterL} L (+${np.waterTrainingL} L mashq kuni)`), M, y);
   y += 4;
   const meals = mealPlan(np, profile.dietPrefs);
   autoTable(doc, {

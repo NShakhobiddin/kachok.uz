@@ -253,7 +253,7 @@ export const SOURCES: Source[] = [
     short: 'Ramírez-Campillo va boshq., 2013',
     cite: 'Ramírez-Campillo R, et al. Regional fat changes induced by localized muscle endurance resistance training. J Strength Cond Res 27(8):2219-2224, 2013.',
     doi: '10.1519/JSC.0b013e31827e8681',
-    finding: "12 hafta bitta oyoqni mashq qilish o‘sha oyoqdan yog' ketkazmadi — yog' butun tanadan kamaydi.",
+    finding: "12 hafta bitta oyoqni mashq qilish o‘sha oyoqdan yog‘ ketkazmadi — yog‘ butun tanadan kamaydi.",
   },
   {
     id: 'behm2016',

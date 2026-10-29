@@ -144,14 +144,14 @@ export function coachRoutes({ db, env }: Deps) {
     const uid = c.get('uid');
     const { code } = z.object({ code: z.string().trim().toUpperCase().length(6) }).parse(await c.req.json());
     const inv = (await db.query<{ coach_id: string; expires_at: Date }>('SELECT * FROM coach_invites WHERE code = $1', [code])).rows[0];
-    if (!inv || new Date(inv.expires_at).getTime() < Date.now()) return c.json({ error: 'bad_code', message: "Kod noto'g'ri yoki muddati o'tgan" }, 400);
-    if (inv.coach_id === uid) return c.json({ error: 'self', message: "O'zingizga ulana olmaysiz" }, 400);
+    if (!inv || new Date(inv.expires_at).getTime() < Date.now()) return c.json({ error: 'bad_code', message: "Kod noto‘g‘ri yoki muddati o‘tgan" }, 400);
+    if (inv.coach_id === uid) return c.json({ error: 'self', message: "O‘zingizga ulana olmaysiz" }, 400);
     const ent = await entitlements(db, inv.coach_id);
     const limit = ent.coach.active ? COACH_PAID_CLIENTS : COACH_FREE_CLIENTS;
     const count = Number(
       (await db.query<{ n: number }>(`SELECT count(*) AS n FROM coach_links WHERE coach_id = $1 AND status = 'active' AND client_id <> $2`, [inv.coach_id, uid])).rows[0].n,
     );
-    if (count >= limit) return c.json({ error: 'coach_full', message: "Murabbiyning bepul mijozlar soni to'lgan. Murabbiy tarifini yoqishi kerak." }, 409);
+    if (count >= limit) return c.json({ error: 'coach_full', message: "Murabbiyning bepul mijozlar soni to‘lgan. Murabbiy tarifini yoqishi kerak." }, 409);
     await db.tx(async (q) => {
       // bir vaqtda faqat bitta murabbiy
       await q.query(`UPDATE coach_links SET status = 'ended' WHERE client_id = $1 AND coach_id <> $2`, [uid, inv.coach_id]);

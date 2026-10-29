@@ -87,13 +87,13 @@ export function authRoutes(deps: Deps, meOnly = false) {
   r.post('/otp', rateLimit(20, 60 * 60 * 1000), async (c) => {
     const { phone: raw } = z.object({ phone: z.string().max(32) }).parse(await c.req.json());
     const phone = normalizePhone(raw);
-    if (!phone) return c.json({ error: 'bad_phone', message: "Raqam noto'g'ri. Masalan: +998 90 123 45 67" }, 400);
+    if (!phone) return c.json({ error: 'bad_phone', message: "Raqam noto‘g‘ri. Masalan: +998 90 123 45 67" }, 400);
     const now = Date.now();
     const prev = (await db.query<{ last_sent_at: Date; window_start: Date; sent_count: number }>('SELECT * FROM otp_codes WHERE phone = $1', [phone])).rows[0];
     if (prev && now - new Date(prev.last_sent_at).getTime() < RESEND_MS)
       return c.json({ error: 'too_soon', message: 'Kod yaqinda yuborildi. 1 daqiqadan so‘ng qayta so‘rang.' }, 429);
     const inWindow = prev && now - new Date(prev.window_start).getTime() < 60 * 60 * 1000;
-    if (inWindow && prev.sent_count >= MAX_PER_HOUR) return c.json({ error: 'too_many', message: "Bir soatda 5 martadan ko'p kod so'raldi. Keyinroq urinib ko'ring." }, 429);
+    if (inWindow && prev.sent_count >= MAX_PER_HOUR) return c.json({ error: 'too_many', message: "Bir soatda 5 martadan ko‘p kod so‘raldi. Keyinroq urinib ko‘ring." }, 429);
 
     const code = otpCode();
     await db.query(
@@ -112,13 +112,13 @@ export function authRoutes(deps: Deps, meOnly = false) {
     const body = z.object({ phone: z.string().max(32), code: z.string().regex(/^\d{6}$/) }).safeParse(await c.req.json());
     if (!body.success) return c.json({ error: 'bad_code', message: 'Kod 6 ta raqamdan iborat' }, 400);
     const phone = normalizePhone(body.data.phone);
-    if (!phone) return c.json({ error: 'bad_phone', message: "Raqam noto'g'ri" }, 400);
+    if (!phone) return c.json({ error: 'bad_phone', message: "Raqam noto‘g‘ri" }, 400);
     const row = (await db.query<{ code_hash: string; expires_at: Date; attempts: number }>('SELECT * FROM otp_codes WHERE phone = $1', [phone])).rows[0];
     if (!row || new Date(row.expires_at).getTime() < Date.now()) return c.json({ error: 'expired', message: 'Kod eskirgan. Yangi kod so‘rang.' }, 400);
-    if (row.attempts >= MAX_ATTEMPTS) return c.json({ error: 'locked', message: "Urinishlar tugadi. Yangi kod so'rang." }, 429);
+    if (row.attempts >= MAX_ATTEMPTS) return c.json({ error: 'locked', message: "Urinishlar tugadi. Yangi kod so‘rang." }, 429);
     if (!safeEqual(row.code_hash, hmac(env.JWT_SECRET, `${phone}:${body.data.code}`))) {
       await db.query('UPDATE otp_codes SET attempts = attempts + 1 WHERE phone = $1', [phone]);
-      return c.json({ error: 'wrong_code', message: "Kod noto'g'ri" }, 400);
+      return c.json({ error: 'wrong_code', message: "Kod noto‘g‘ri" }, 400);
     }
     await db.query('DELETE FROM otp_codes WHERE phone = $1', [phone]);
     let user = (await db.query<UserRow>('SELECT * FROM users WHERE phone = $1', [phone])).rows[0];

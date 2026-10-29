@@ -1523,16 +1523,10 @@ ol.steps li::before {
   -webkit-backdrop-filter: blur(10px);
 }
 .m3d-card {
-  position: absolute;
-  left: 12px;
-  right: 12px;
-  bottom: 68px;
   padding: 10px 12px;
   border-radius: var(--r-md);
-  background: rgba(13, 13, 15, 0.86);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid var(--line-2);
+  background: var(--surface);
+  border: 1px solid var(--accent-line);
 }
 .act-row {
   display: grid;
@@ -2180,9 +2174,6 @@ ol.steps li::before {
 .atlas-hero .m3d-top {
   left: 14px;
   top: 14px;
-}
-.atlas-card {
-  bottom: 12px;
 }
 .atlas-row {
   display: flex;

@@ -72,38 +72,44 @@ export function MuscleActivation({ ex }: { ex: Exercise }) {
             <Icon name={playing ? 'pause' : 'play'} size={18} />
           </button>
         </div>
-        {sel && (
-          <div className="m3d-card" role="status">
-            <div className="row between gap-8">
-              <b className="small">{M3_INFO[sel.key].name}</b>
-              <button className="icon-btn" style={{ width: 32, height: 32 }} onClick={() => setSelected(null)} aria-label="Yopish">
-                <Icon name="x" size={16} />
-              </button>
-            </div>
-            <div className="row gap-8 tiny muted" style={{ marginTop: -4 }}>
-              <i>{M3_INFO[sel.key].latin}</i>
-            </div>
-            <div className="row gap-12 mt-4" style={{ alignItems: 'baseline' }}>
-              <span className="num" style={{ fontSize: 28, fontWeight: 800, color: heatColor(sel.mvic) }}>
-                {sel.est ? '≈' : ''}
-                {Math.round(sel.mvic)}%
-              </span>
-              <span className="small">
-                {ROLE_TEXT[sel.role]}
-                {sel.range && <span className="muted"> · tadqiqotlarda {sel.range[0]}–{sel.range[1]}%</span>}
-              </span>
-            </div>
-            <Link to={`/muscle/${sel.key}`} className="small strong row gap-6 mt-4" style={{ minHeight: 32 }}>
-              Mushak haqida qo‘llanma <Icon name="right" size={14} />
-            </Link>
-          </div>
-        )}
-        {selected && !sel && (
-          <div className="m3d-card small" role="status">
-            <b>{M3_INFO[selected].name}</b> — bu mashqda sezilarli ishlamaydi (&lt;10% MVIC).
-          </div>
-        )}
       </div>
+      {/* tanlangan mushak: 3D oyna ostida — telefonda modelni yopib qo'ymasin */}
+      {sel && (
+        <div className="m3d-card" role="status">
+          <div className="row between gap-8">
+            <b className="small">{M3_INFO[sel.key].name}</b>
+            <button className="icon-btn" style={{ width: 32, height: 32 }} onClick={() => setSelected(null)} aria-label="Yopish">
+              <Icon name="x" size={16} />
+            </button>
+          </div>
+          <div className="row gap-8 tiny muted" style={{ marginTop: -4 }}>
+            <i>{M3_INFO[sel.key].latin}</i>
+          </div>
+          <div className="row gap-12 mt-4" style={{ alignItems: 'baseline' }}>
+            <span className="num" style={{ fontSize: 28, fontWeight: 800, color: heatColor(sel.mvic) }}>
+              {sel.est ? '≈' : ''}
+              {Math.round(sel.mvic)}%
+            </span>
+            <span className="small">
+              {ROLE_TEXT[sel.role]}
+              {sel.range && (
+                <span className="muted">
+                  {' '}
+                  · tadqiqotlarda {sel.range[0]}–{sel.range[1]}%
+                </span>
+              )}
+            </span>
+          </div>
+          <Link to={`/muscle/${sel.key}`} className="small strong row gap-6 mt-4" style={{ minHeight: 32 }}>
+            Mushak haqida qo‘llanma <Icon name="right" size={14} />
+          </Link>
+        </div>
+      )}
+      {selected && !sel && (
+        <div className="m3d-card small" role="status">
+          <b>{M3_INFO[selected].name}</b> — bu mashqda sezilarli ishlamaydi (&lt;10% MVIC).
+        </div>
+      )}
 
       <div className="card stack gap-12">
         <div className="row between">
@@ -141,8 +147,8 @@ export function MuscleActivation({ ex }: { ex: Exercise }) {
         ) : null}
         <Note label="Foizlar nimani bildiradi">
           <p>
-            % MVIC — mushakning shu mashqdagi elektr faolligi uning maksimal ixtiyoriy izometrik qisqarishiga nisbatan (sirt EMG). Og‘ir dinamik harakatlarda 100% dan oshishi mumkin. Bu mushak qanchalik
-            "yollanganini" ko‘rsatadi; mushak o‘sishi esa umumiy hajm, cho‘zilish va charchoqqa ham bog‘liq.{act.load ? ` Yuklama: ${act.load}.` : ''}
+            % MVIC — mushakning shu mashqdagi elektr faolligi uning maksimal ixtiyoriy izometrik qisqarishiga nisbatan (sirt EMG). Og‘ir dinamik harakatlarda 100% dan oshishi mumkin. Bu mushak
+            qanchalik "yollanganini" ko‘rsatadi; mushak o‘sishi esa umumiy hajm, cho‘zilish va charchoqqa ham bog‘liq.{act.load ? ` Yuklama: ${act.load}.` : ''}
           </p>
           {!act.fallback && (
             <p className="mt-6">

@@ -105,7 +105,7 @@ export function nutritionPlan(p: Profile, kcalAdjust = 0, tdeeOverride?: number)
   let carbs = Math.round((kcal - protein * 4 - fat * 9) / 4);
   if (carbs < 80) {
     carbs = 80;
-    notes.push("Uglevodlar juda kamaymasligi uchun yog' biroz kamaytirildi.");
+    notes.push("Uglevodlar juda kamaymasligi uchun yog‘ biroz kamaytirildi.");
     fat = Math.max(Math.round((kcal * 0.2) / 9), Math.round((kcal - protein * 4 - carbs * 4) / 9));
   }
   const fiber = Math.max(25, Math.round((14 * kcal) / 1000));
@@ -114,8 +114,8 @@ export function nutritionPlan(p: Profile, kcalAdjust = 0, tdeeOverride?: number)
   const meals = 4;
   const weeklyChangeKg = Math.round(((ratePct / 100) * p.weightKg) * 100) / 100;
 
-  if (p.goal === 'muscle') notes.push("Haftasiga vaznning ~0.25–0.5% qo‘shilishi — asosan mushak, kam yog'.");
-  if (p.goal === 'fatLoss') notes.push("Haftasiga vaznning ~0.5–0.7% kamayishi — mushakni saqlagan holda yog' yo‘qotish uchun optimal.");
+  if (p.goal === 'muscle') notes.push("Haftasiga vaznning ~0.25–0.5% qo‘shilishi — asosan mushak, kam yog‘.");
+  if (p.goal === 'fatLoss') notes.push("Haftasiga vaznning ~0.5–0.7% kamayishi — mushakni saqlagan holda yog‘ yo‘qotish uchun optimal.");
   if (refW < p.weightKg) notes.push("Oqsil miqdori sog‘lom vazn (BMI 25) bo‘yicha hisoblandi.");
 
   return {
@@ -375,7 +375,7 @@ export const SUPPLEMENTS: { name: string; grade: 'A' | 'B' | 'C' | 'X'; dose: st
   { name: 'Kofein', grade: 'A', dose: '3–6 mg/kg, mashqdan 60 daqiqa oldin', text: "Kuch va chidamlilikni oshiradi. Kechki mashqdan oldin uyquni buzadi.", source: 'guest2021' },
   { name: 'Oqsil kukuni (protein)', grade: 'B', dose: "Ovqatdan yetmagan qismi uchun", text: "Oddiy ovqatdan farqi yo‘q — faqat qulaylik. Kunlik oqsil miqdori muhim, kukun emas.", source: 'morton2018' },
   { name: 'D vitamini', grade: 'C', dose: 'Faqat tahlil asosida', text: "Yetishmovchilik bo‘lsa foydali (qishda keng tarqalgan). Shifokor bilan."},
-  { name: 'BCAA, "yog‘ yoqardilar", testosteron kuchaytirgichlar', grade: 'X', dose: '—', text: "Yetarli oqsil iste’mol qilganda BCAA foyda bermaydi. Yog' yoqish va gormon 'kuchaytiruvchi' vositalar ishonchli dalilga ega emas, ba’zilari xavfli." },
+  { name: 'BCAA, "yog‘ yoqardilar", testosteron kuchaytirgichlar', grade: 'X', dose: '—', text: "Yetarli oqsil iste’mol qilganda BCAA foyda bermaydi. Yog‘ yoqish va gormon 'kuchaytiruvchi' vositalar ishonchli dalilga ega emas, ba’zilari xavfli." },
 ];
 
 /* ---------------- Moslashuvchan sarf (adaptive TDEE) ---------------- */

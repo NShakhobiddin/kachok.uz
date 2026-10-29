@@ -237,7 +237,7 @@ export const BENEFITS: Record<BenefitId, { name: string; icon: string; x: number
     source: 'owen2020',
   },
   fatLoss: {
-    name: "Yog' yoqish",
+    name: "Yog‘ yoqish",
     icon: 'flame',
     x: 38,
     y: 88,

@@ -67,7 +67,7 @@ export const LESSONS: Lesson[] = [
     slides: [
       {
         title: 'Energiya balansi',
-        text: "Yog' faqat bitta holatda yo‘qoladi: tana kuniga sarflaganidan kamroq energiya olganda. Bu farq — kaloriya taqchilligi. Parhezning nomi muhim emas: kaloriya teng bo‘lsa, natija deyarli bir xil.",
+        text: "Yog‘ faqat bitta holatda yo‘qoladi: tana kuniga sarflaganidan kamroq energiya olganda. Bu farq — kaloriya taqchilligi. Parhezning nomi muhim emas: kaloriya teng bo‘lsa, natija deyarli bir xil.",
         scene: 'balance-deficit',
         source: 'aragon2017',
       },
@@ -85,7 +85,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         title: "Qorindan 'nuqtali' ozish yo‘q",
-        text: "6 hafta har kuni press mashqi qorin yog‘ini kamaytirmagan. Yog' butun tanadan bir vaqtda ketadi — qayerdan birinchi ketishini genetika belgilaydi, mashq emas.",
+        text: "6 hafta har kuni press mashqi qorin yog‘ini kamaytirmagan. Yog‘ butun tanadan bir vaqtda ketadi — qayerdan birinchi ketishini genetika belgilaydi, mashq emas.",
         scene: 'spot',
         source: 'vispute2011',
       },
@@ -102,9 +102,9 @@ export const LESSONS: Lesson[] = [
       },
     ],
     quiz: [
-      { q: 'Yog\' yo\'qotishning asosiy sharti nima?', options: ["Ko‘p ter to‘kish", 'Kaloriya taqchilligi', 'Kechqurun ovqat yemaslik'], correct: 1, explain: "Faqat energiya taqchilligi yog‘ni kamaytiradi; ter — bu suv." },
+      { q: 'Yog‘ yo‘qotishning asosiy sharti nima?', options: ["Ko‘p ter to‘kish", 'Kaloriya taqchilligi', 'Kechqurun ovqat yemaslik'], correct: 1, explain: "Faqat energiya taqchilligi yog‘ni kamaytiradi; ter — bu suv." },
       { q: '80 kg odam uchun optimal ozish tezligi?', options: ['Haftasiga 2 kg', 'Haftasiga ~0.5 kg', 'Oyiga 10 kg'], correct: 1, explain: "Haftasiga vaznning 0.5–0.7% i mushakni saqlaydi." },
-      { q: "Press mashqi qorin yog‘ini ketkazadimi?", options: ['Ha, aynan o‘sha joydan', "Yo‘q, yog' butun tanadan ketadi"], correct: 1, explain: "Nuqtali ozish tadqiqotlarda tasdiqlanmagan." },
+      { q: "Press mashqi qorin yog‘ini ketkazadimi?", options: ['Ha, aynan o‘sha joydan', "Yo‘q, yog‘ butun tanadan ketadi"], correct: 1, explain: "Nuqtali ozish tadqiqotlarda tasdiqlanmagan." },
     ],
   },
   {
@@ -142,7 +142,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         title: "Massa: ozgina ortiqcha, 'iflos massa' emas",
-        text: "Me’yordan 10–20% ko‘p kaloriya va haftasiga vaznning 0.25–0.5% ortishi — mushak uchun yetarli. Ko‘prog‘i asosan yog' bo‘ladi.",
+        text: "Me’yordan 10–20% ko‘p kaloriya va haftasiga vaznning 0.25–0.5% ortishi — mushak uchun yetarli. Ko‘prog‘i asosan yog‘ bo‘ladi.",
         scene: 'balance-surplus',
         source: 'iraki2019',
       },
@@ -156,7 +156,7 @@ export const LESSONS: Lesson[] = [
     quiz: [
       { q: "Mushak o‘sishining asosiy signali?", options: ['Og‘riq va zo‘riqish', 'Mexanik taranglik', "Ko‘p ter"], correct: 1, explain: "Charchoqqa yaqin setlardagi taranglik — asosiy stimul." },
       { q: 'Haftalik tavsiya etilgan hajm (har mushak)?', options: ['2–4 set', '10–20 set', '40+ set'], correct: 1, explain: "10–20 set eng ko‘p o‘rganilgan samarali oraliq." },
-      { q: 'Massa olishda kaloriya ortiqchasi?', options: ["Imkon qadar ko‘p", "Me’yordan 10–20% ko‘p", "Ortiqcha kerak emas"], correct: 1, explain: "Kichik ortiqcha — mushak, katta ortiqcha — yog'." },
+      { q: 'Massa olishda kaloriya ortiqchasi?', options: ["Imkon qadar ko‘p", "Me’yordan 10–20% ko‘p", "Ortiqcha kerak emas"], correct: 1, explain: "Kichik ortiqcha — mushak, katta ortiqcha — yog‘." },
     ],
   },
   {
@@ -349,7 +349,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         title: 'Makrolar',
-        text: "Oqsil — mushak uchun, yog' — gormonlar uchun (kaloriyaning 20–35%), uglevod — mashq uchun yoqilg‘i. Ozishda ham uglevodni butunlay olib tashlash shart emas.",
+        text: "Oqsil — mushak uchun, yog‘ — gormonlar uchun (kaloriyaning 20–35%), uglevod — mashq uchun yoqilg‘i. Ozishda ham uglevodni butunlay olib tashlash shart emas.",
         scene: 'plate',
         source: 'helms2014',
       },
@@ -541,8 +541,8 @@ export const LESSONS: Lesson[] = [
         scene: 'fig:hip-thrust',
       },
       {
-        title: "«Ko‘p ter — ko‘p yog' yoqildi»",
-        text: "Ter — tana sovishi uchun chiqqan suv. Yo‘qotilgan vazn ichilgan suv bilan qaytadi. Yog' faqat kaloriya taqchilligida ketadi.",
+        title: "«Ko‘p ter — ko‘p yog‘ yoqildi»",
+        text: "Ter — tana sovishi uchun chiqqan suv. Yo‘qotilgan vazn ichilgan suv bilan qaytadi. Yog‘ faqat kaloriya taqchilligida ketadi.",
         scene: 'water',
         source: 'sawka2007',
       },
@@ -554,7 +554,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         title: "«Press kubiklari press mashqidan chiqadi»",
-        text: "Press mushaklari hammada bor — ular yog' qatlami ostida. Kubiklarni ko‘rinadigan qiladigan narsa — tana yog‘ining kamayishi.",
+        text: "Press mushaklari hammada bor — ular yog‘ qatlami ostida. Kubiklarni ko‘rinadigan qiladigan narsa — tana yog‘ining kamayishi.",
         scene: 'spot',
         source: 'vispute2011',
       },
@@ -565,8 +565,8 @@ export const LESSONS: Lesson[] = [
       },
     ],
     quiz: [
-      { q: "Ter ko‘p chiqsa ko‘p yog' yoqilgan bo‘ladimi?", options: ['Ha', "Yo‘q, ter — suv"], correct: 1, explain: "Yo‘qotilgan suv qaytadi." },
-      { q: 'Press kubiklarini nima ko‘rinadigan qiladi?', options: ['Har kuni 500 marta press', "Tana yog‘ining kamayishi"], correct: 1, explain: "Kubiklar yog' qatlami ostida." },
+      { q: "Ter ko‘p chiqsa ko‘p yog‘ yoqilgan bo‘ladimi?", options: ['Ha', "Yo‘q, ter — suv"], correct: 1, explain: "Yo‘qotilgan suv qaytadi." },
+      { q: 'Press kubiklarini nima ko‘rinadigan qiladi?', options: ['Har kuni 500 marta press', "Tana yog‘ining kamayishi"], correct: 1, explain: "Kubiklar yog‘ qatlami ostida." },
     ],
   },
   {
@@ -627,11 +627,11 @@ export const LESSONS: Lesson[] = [
       },
       {
         title: 'Pul isrofi',
-        text: "Yetarli oqsil iste’mol qilganda BCAA foyda bermaydi. 'Yog' yoqardilar' va 'testosteron kuchaytirgichlar' ishonchli dalilga ega emas — ba’zilarida taqiqlangan moddalar topilgan.",
+        text: "Yetarli oqsil iste’mol qilganda BCAA foyda bermaydi. 'Yog‘ yoqardilar' va 'testosteron kuchaytirgichlar' ishonchli dalilga ega emas — ba’zilarida taqiqlangan moddalar topilgan.",
         scene: 'grades',
       },
     ],
-    quiz: [{ q: 'Eng isbotlangan sport qo‘shimchasi?', options: ['BCAA', 'Kreatin monogidrat', "Yog' yoqardi"], correct: 1, explain: 'Kreatin — A daraja.' }],
+    quiz: [{ q: 'Eng isbotlangan sport qo‘shimchasi?', options: ['BCAA', 'Kreatin monogidrat', "Yog‘ yoqardi"], correct: 1, explain: 'Kreatin — A daraja.' }],
   },
 ];
 

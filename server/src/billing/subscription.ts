@@ -9,7 +9,7 @@ export interface Entitlements {
 /** To'langan buyurtma bo'yicha obunani uzaytirish (amaldagi muddat ustiga qo'shiladi) */
 export async function activatePlan(q: Queryable, userId: string, planId: string) {
   const plan = planById(planId);
-  if (!plan) throw new Error(`Noma'lum tarif: ${planId}`);
+  if (!plan) throw new Error(`Noma’lum tarif: ${planId}`);
   await q.query(
     `INSERT INTO subscriptions (user_id, plan, kind, current_period_end)
      VALUES ($1, $2, $3, now() + make_interval(days => $4))

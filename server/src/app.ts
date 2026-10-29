@@ -40,7 +40,7 @@ export function rateLimit(max: number, windowMs: number): MiddlewareHandler {
     const now = Date.now();
     const h = hits.get(ip);
     if (!h || now - h.t > windowMs) hits.set(ip, { n: 1, t: now });
-    else if (++h.n > max) return c.json({ error: 'rate_limited', message: "Juda ko'p urinish. Birozdan so'ng qayta urinib ko'ring." }, 429);
+    else if (++h.n > max) return c.json({ error: 'rate_limited', message: "Juda ko‘p urinish. Birozdan so‘ng qayta urinib ko‘ring." }, 429);
     if (hits.size > 10_000) hits.clear();
     await next();
   };

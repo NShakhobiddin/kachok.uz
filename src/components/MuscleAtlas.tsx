@@ -42,34 +42,34 @@ export function MuscleAtlas() {
         <div className="m3d-top">
           <span className="tag stage-tag">{sel ? 'Boshqa mushakka bosing yoki bo‘sh joyga — qaytish' : 'Mushakka bosing · barmoq bilan aylantiring'}</span>
         </div>
-        {sel ? (
-          <div className="m3d-card atlas-card" role="status">
-            <div className="row between gap-8" style={{ alignItems: 'flex-start' }}>
-              <span className="stack" style={{ minWidth: 0 }}>
-                <b className="small">{M3_INFO[sel].name}</b>
-                <i className="tiny muted">{M3_INFO[sel].latin}</i>
-              </span>
-              <button className="icon-btn" style={{ width: 32, height: 32 }} onClick={() => pick(null)} aria-label="Yopish">
-                <Icon name="x" size={16} />
+        {/* ko'rinish tugmalari doim modelda; tanlangan mushak kartasi — model ostida (telefonda yopib qo'ymasin) */}
+        <div className="m3d-controls">
+          <div className="segmented m3d-seg" role="radiogroup" aria-label="Ko‘rinish">
+            {(['front', 'side', 'back'] as const).map((v) => (
+              <button key={v} role="radio" aria-checked={view === v} className={view === v ? 'on' : ''} onClick={() => setView(v)}>
+                {v === 'front' ? 'Old' : v === 'side' ? 'Yon' : 'Orqa'}
               </button>
-            </div>
-            <p className="small mt-4">{MUSCLE_GUIDE[sel].short}</p>
-            <Link to={`/muscle/${sel}`} className="btn btn-primary btn-sm btn-block mt-8">
-              Batafsil: qanday ishlaydi, mashqlar <Icon name="right" size={16} />
-            </Link>
+            ))}
           </div>
-        ) : (
-          <div className="m3d-controls">
-            <div className="segmented m3d-seg" role="radiogroup" aria-label="Ko‘rinish">
-              {(['front', 'side', 'back'] as const).map((v) => (
-                <button key={v} role="radio" aria-checked={view === v} className={view === v ? 'on' : ''} onClick={() => setView(v)}>
-                  {v === 'front' ? 'Old' : v === 'side' ? 'Yon' : 'Orqa'}
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
+        </div>
       </div>
+      {sel && (
+        <div className="m3d-card atlas-card" role="status">
+          <div className="row between gap-8" style={{ alignItems: 'flex-start' }}>
+            <span className="stack" style={{ minWidth: 0 }}>
+              <b className="small">{M3_INFO[sel].name}</b>
+              <i className="tiny muted">{M3_INFO[sel].latin}</i>
+            </span>
+            <button className="icon-btn" style={{ width: 32, height: 32 }} onClick={() => pick(null)} aria-label="Yopish">
+              <Icon name="x" size={16} />
+            </button>
+          </div>
+          <p className="small mt-4">{MUSCLE_GUIDE[sel].short}</p>
+          <Link to={`/muscle/${sel}`} className="btn btn-primary btn-sm btn-block mt-8">
+            Batafsil: qanday ishlaydi, mashqlar <Icon name="right" size={16} />
+          </Link>
+        </div>
+      )}
 
       <div className="hscroll" role="radiogroup" aria-label="Tana qismi">
         {[{ id: 'all' as const, name: 'Hammasi' }, ...REGIONS].map((r) => (

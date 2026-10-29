@@ -207,7 +207,7 @@ export default function Profile() {
               <Stepper value={draft.age} onChange={(v) => setDraft({ ...draft, age: v })} min={14} max={90} unit="yosh" label="Yosh" />
               <Stepper value={draft.heightCm} onChange={(v) => setDraft({ ...draft, heightCm: v })} min={130} max={225} unit="sm" label="Bo‘y" />
               <Stepper value={draft.weightKg} onChange={(v) => setDraft({ ...draft, weightKg: v })} step={0.5} min={35} max={250} unit="kg" label="Vazn" />
-              <Stepper value={draft.bodyFat ?? 0} onChange={(v) => setDraft({ ...draft, bodyFat: v || undefined })} min={0} max={60} unit="% yog'" label="Tana yog‘i foizi (ixtiyoriy)" />
+              <Stepper value={draft.bodyFat ?? 0} onChange={(v) => setDraft({ ...draft, bodyFat: v || undefined })} min={0} max={60} unit="% yog‘" label="Tana yog‘i foizi (ixtiyoriy)" />
             </>
           )}
           {panel === 'goal' && (

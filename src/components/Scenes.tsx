@@ -95,7 +95,7 @@ function Tdee() {
 function FatCells() {
   const cells = Array.from({ length: 15 }, (_, i) => ({ x: 50 + (i % 5) * 55, y: 50 + Math.floor(i / 5) * 55 }));
   return (
-    <Svg label="Yog' hujayralari kichrayadi">
+    <Svg label="Yog‘ hujayralari kichrayadi">
       {cells.map((c, i) => (
         <motion.circle key={i} cx={c.x} cy={c.y} fill="var(--yellow-soft)" stroke="var(--plate-yellow)" strokeWidth={1.5} animate={{ r: [24, 15] }} transition={loop(2.4, i * 0.05)} />
       ))}
@@ -110,7 +110,7 @@ const SCENE_BODY = solveFront({ ua: 170, fa: 174 }, 160, 198);
 
 function Spot() {
   return (
-    <Svg label="Yog' butun tanadan bir xil kamayadi">
+    <Svg label="Yog‘ butun tanadan bir xil kamayadi">
       <motion.g style={{ transformOrigin: '160px 120px' }} animate={{ scale: [1.09, 1.01], opacity: [0.9, 0.25] }} transition={loop(2.2)}>
         <BodySilhouette sk={SCENE_BODY} back={false} fill="var(--yellow-soft)" />
       </motion.g>
@@ -477,7 +477,7 @@ function Grades() {
     ['A', 'Kreatin', 'var(--green)'],
     ['A', 'Kofein', 'var(--green)'],
     ['B', 'Oqsil kukuni', 'var(--blue)'],
-    ['X', "BCAA, 'yog' yoqardi'", 'var(--red)'],
+    ['X', "BCAA, 'yog‘ yoqardi'", 'var(--red)'],
   ];
   return (
     <Svg label="Qo‘shimchalar dalil darajasi">

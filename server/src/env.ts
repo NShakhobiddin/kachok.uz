@@ -35,6 +35,6 @@ export type Env = z.infer<typeof schema>;
 export function loadEnv(src: Record<string, string | undefined> = process.env): Env {
   const env = schema.parse(src);
   if (env.SMS_PROVIDER === 'console' && process.env.NODE_ENV === 'production')
-    throw new Error("Production'da SMS_PROVIDER=console ishlatib bo'lmaydi");
+    throw new Error("Production’da SMS_PROVIDER=console ishlatib bo‘lmaydi");
   return env;
 }

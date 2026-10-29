@@ -19,7 +19,7 @@ export function billingRoutes(deps: Deps) {
     const plan = planById(body.plan);
     if (!plan) return c.json({ error: 'bad_plan', message: 'Tarif topilmadi' }, 400);
     if ((body.provider === 'payme' && !paymeReady) || (body.provider === 'click' && !clickReady))
-      return c.json({ error: 'not_configured', message: "Bu to'lov usuli hali ulanmagan" }, 503);
+      return c.json({ error: 'not_configured', message: "Bu to‘lov usuli hali ulanmagan" }, 503);
     const amountTiyin = plan.priceSom * 100;
     const { rows } = await db.query<{ id: string }>(`INSERT INTO orders (user_id, plan, amount_tiyin, provider) VALUES ($1, $2, $3, $4) RETURNING id`, [
       c.get('uid'),

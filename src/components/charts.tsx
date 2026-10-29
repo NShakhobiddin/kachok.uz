@@ -241,7 +241,7 @@ export function MacroBar({ p, f, c }: { p: number; f: number; c: number }) {
   const segs = [
     { k: 'p', label: 'Oqsil', g: p, pct: kp / tot, color: MACRO_COLORS.p },
     { k: 'c', label: 'Uglevod', g: c, pct: kc / tot, color: MACRO_COLORS.c },
-    { k: 'f', label: "Yog'", g: f, pct: kf / tot, color: MACRO_COLORS.f },
+    { k: 'f', label: "Yog‘", g: f, pct: kf / tot, color: MACRO_COLORS.f },
   ];
   return (
     <div className="stack gap-10">
