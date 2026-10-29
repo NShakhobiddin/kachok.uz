@@ -25,8 +25,7 @@ export type SceneId =
   | 'water'
   | 'pain'
   | 'cardio'
-  | `fig:${string}`
-  | `wrong:${string}`;
+  | `fig:${string}`;
 
 export interface LessonSlide {
   title: string;
@@ -454,8 +453,8 @@ export const LESSONS: Lesson[] = [
       },
       {
         title: 'Texnika — vazndan muhim',
-        text: "Dumaloq bel bilan og‘ir tortish — eng xavfli xato. Har bir mashq sahifasida 'Xatolar' bo‘limida noto‘g‘ri va to‘g‘ri bajarilish animatsiyada ko‘rsatilgan.",
-        scene: 'wrong:deadlift',
+        text: "Dumaloq bel bilan og‘ir tortish — eng xavfli xato. Har bir mashq sahifasidagi «Texnika» rasmida to‘g‘ri holat nuqtama-nuqta belgilangan, «Ko‘p uchraydigan xatolar» bo‘limida esa xatolar va ularni tuzatish yozilgan.",
+        scene: 'fig:deadlift',
       },
       {
         title: 'To‘sinlar, qisqich, sug‘urtachi',

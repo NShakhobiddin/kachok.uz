@@ -64,7 +64,7 @@ const LIST: [string, AnimSpec, MuscleId[]][] = [
   ['deadBug', A.deadBug(), ['abs']],
 ];
 
-const SCENES: SceneId[] = ['balance-deficit', 'balance-surplus', 'tdee', 'fat-cells', 'spot', 'fiber', 'mps', 'stairs', 'dose', 'rir', 'deload', 'plate', 'protein-day', 'trend', 'sleep', 'brace', 'warmup', 'health', 'bone', 'heart', 'brain', 'grades', 'water', 'pain', 'cardio', 'fig:back-squat', 'wrong:back-squat'];
+const SCENES: SceneId[] = ['balance-deficit', 'balance-surplus', 'tdee', 'fat-cells', 'spot', 'fiber', 'mps', 'stairs', 'dose', 'rir', 'deload', 'plate', 'protein-day', 'trend', 'sleep', 'brace', 'warmup', 'health', 'bone', 'heart', 'brain', 'grades', 'water', 'pain', 'cardio', 'fig:back-squat', 'fig:deadlift'];
 
 export default function Lab() {
   const q = new URLSearchParams(location.search);

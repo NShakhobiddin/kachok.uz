@@ -12,7 +12,7 @@ interface Frame {
 }
 
 /** boshlanish kadri birinchi: "Boshlang‘ich holat" bo'lsa — u; aks holda mashq qaysi fazadan boshlanishiga qarab (o'tirish — yuqoridan, tortish — pastdan) */
-function order(ex: Exercise, ill: Illustration): Frame[] {
+export function motionFrames(ex: Exercise, ill: Illustration): Frame[] {
   const main = { src: ill.src, phase: ill.phase };
   if (!ill.pair) return [main];
   const pair = ill.pair;
@@ -48,7 +48,7 @@ const CUE: Record<'up' | 'down', string> = {
 };
 
 export function ExerciseMotion({ ex, ill, compact = false }: { ex: Exercise; ill: Illustration; compact?: boolean }) {
-  const frames = useMemo(() => order(ex, ill), [ex, ill]);
+  const frames = useMemo(() => motionFrames(ex, ill), [ex, ill]);
   const t = useMemo(() => tempo(ex), [ex]);
   const reduced = usePrefersReducedMotion();
   const [playing, setPlaying] = useState(!reduced);

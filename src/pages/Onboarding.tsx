@@ -12,6 +12,7 @@ import { ACTIVITY, nutritionPlan } from '../engine/nutrition';
 import { planLoad } from '../engine/bodyLoad';
 import { DEFAULT_DAYS } from '../engine/program';
 import { DAYS_SHORT } from '../lib/date';
+import { telegramFirstName } from '../lib/telegram';
 import { useStore } from '../store/useStore';
 import type { ActivityLevel, EquipmentId, Goal, Injury, Level, MuscleGroup, Profile, Sex } from '../types';
 
@@ -70,7 +71,7 @@ export default function Onboarding() {
       /* saqlash imkoni yo'q */
     }
     return {
-      name: '',
+      name: telegramFirstName(),
       sex: 'male',
       age: 25,
       heightCm: 175,

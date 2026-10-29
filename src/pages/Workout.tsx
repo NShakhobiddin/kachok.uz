@@ -2,6 +2,8 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { PlateStack } from '../components/Barbell';
+import { ExerciseIllustration } from '../components/ExerciseIllustration';
+import { ExerciseMotion } from '../components/ExerciseMotion';
 import { Figure } from '../components/figure/Figure';
 import { PlateRing } from '../components/PlateRing';
 import { Icon } from '../components/ui/Icon';
@@ -23,8 +25,10 @@ import { Choice, parseNum, Toggle } from '../components/ui/controls';
 import { HistorySheet } from '../components/HistorySheet';
 import { FAILURE_TEXT, PreSetCheck } from '../components/Safety';
 import { PainCheck } from '../components/PainCheck';
+import { ILLUSTRATIONS } from '../data/illustrations';
 import { safetyFor } from '../data/safety';
 import { loadJump, needsPreSetCheck, reducedLoad } from '../engine/safety';
+import { haptic } from '../lib/telegram';
 
 function beep() {
   try {
@@ -49,14 +53,6 @@ function beep() {
 
 /** shundan ko'p vaqt oldin tugagan dam (ilova qayta ochilganda) — signalsiz yopiladi */
 const STALE_REST_MS = 60 * 1000;
-
-const vibrate = (p: number | number[]) => {
-  try {
-    navigator.vibrate?.(p);
-  } catch {
-    /* qo‘llab-quvvatlanmaydi */
-  }
-};
 
 export default function Workout() {
   const nav = useNavigate();
@@ -156,7 +152,7 @@ export default function Workout() {
     if (restAlerted.current !== restEndsAt) {
       restAlerted.current = restEndsAt;
       const { vibrate: vib, sound } = useStore.getState().settings;
-      if (vib) vibrate([200, 100, 200]);
+      if (vib) haptic('done');
       if (sound) beep();
     }
     const t = setTimeout(() => useStore.getState().stopRest(), 4000);
@@ -220,7 +216,7 @@ export default function Workout() {
     const reps = s.reps || sug?.reps || pe?.repMin || 0;
     st.updateSet(idx, j, { kg, reps, done: true });
     setLastDone({ ex: idx, set: j });
-    if (settings.vibrate) vibrate(25);
+    if (settings.vibrate) haptic('tick');
     // rekordni darhol aniqlash
     if (kg > 0 && ex.loadType !== 'bodyweight') {
       const hist = exerciseHistory(ex.id, logs);
@@ -233,7 +229,7 @@ export default function Workout() {
         if ((cur > best * 1.005 || kg > bestKg) && cur > sessionBest) {
           setPrSets((p) => [...p, `${idx}-${j}`]);
           setPr(`${fmtKg(kg)} kg × ${reps} — ${kg > bestKg ? 'eng og‘ir vazn' : 'eng kuchli set'}!`);
-          if (settings.vibrate) vibrate([40, 60, 40, 60, 120]);
+          if (settings.vibrate) haptic('record');
           setTimeout(() => setPr(null), 3200);
         }
       }
@@ -311,9 +307,13 @@ export default function Workout() {
               </span>
               <h2 className="display wo-title">{ex.name}</h2>
             </div>
-            <div className="stage wo-fig">
-              <Figure spec={ex.anim} primary={ex.primary} secondary={ex.secondary} title={ex.name} hero={1} />
-            </div>
+            <button className="stage wo-fig thumb-img" onClick={() => setTechOpen(true)} aria-label={`${ex.name}: texnika`}>
+              {ILLUSTRATIONS[ex.id] ? (
+                <img src={ILLUSTRATIONS[ex.id]!.src} alt="" decoding="async" />
+              ) : (
+                <Figure spec={ex.anim} primary={ex.primary} secondary={ex.secondary} title={ex.name} hero={1} />
+              )}
+            </button>
           </div>
           <div className="hscroll wo-actions">
             <button className="chip sm" style={{ height: 40 }} onClick={() => setTechOpen(true)}>
@@ -729,12 +729,19 @@ function TargetCard({ ex, sug, repMax, barKg }: { ex: Exercise; sug: Suggestion;
 }
 
 function TechniqueSheet({ ex }: { ex: Exercise }) {
+  const ill = ILLUSTRATIONS[ex.id];
   return (
     <div className="stack gap-12">
       <h3 className="title">{ex.name}</h3>
-      <div className="stage" style={{ aspectRatio: '1 / 0.8' }}>
-        <Figure spec={ex.anim} primary={ex.primary} secondary={ex.secondary} hero={1 / 0.8} />
-      </div>
+      {ill?.pair ? (
+        <ExerciseMotion ex={ex} ill={ill} compact />
+      ) : ill ? (
+        <ExerciseIllustration ex={ex} ill={ill} layer="form" />
+      ) : (
+        <div className="stage" style={{ aspectRatio: '1 / 0.8' }}>
+          <Figure spec={ex.anim} primary={ex.primary} secondary={ex.secondary} hero={1 / 0.8} />
+        </div>
+      )}
       <ol className="steps">
         {ex.steps.map((s, i) => (
           <li key={i}>{s}</li>

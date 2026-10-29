@@ -21,7 +21,6 @@ import { EQUIPMENT, MUSCLES } from '../data/catalog';
 import { exById } from '../data/exercises';
 import { alternatives } from '../engine/program';
 import { exerciseSeries } from '../engine/stats';
-import { applyMistake, emphasizeMistake } from '../lib/figure';
 import { fmtDate } from '../lib/date';
 import { useBack } from '../lib/useBack';
 import { NotFound } from '../components/NotFound';
@@ -100,7 +99,7 @@ function ExerciseStage({ ex }: { ex: Exercise }) {
 /** Illyustratsiyasi bor mashq: rasm (mushaklar yoki texnika belgilari) va animatsiya orasida tanlash */
 function IllustratedStage({ ex }: { ex: Exercise }) {
   const ill = ILLUSTRATIONS[ex.id]!;
-  // ikki kadrli harakat bo'lsa — u birinchi; bo'lmasa (bir nechta mashq) — eski animatsiya zaxira sifatida
+  // ikki kadrli harakat bo'lsa — u birinchi; bo'lmasa — mushaklar va texnika rasmlari
   const tabs = (
     ill.pair
       ? [
@@ -111,9 +110,8 @@ function IllustratedStage({ ex }: { ex: Exercise }) {
       : [
           ['muscles', 'Mushaklar'],
           ['form', 'Texnika'],
-          ['anim', 'Animatsiya'],
         ]
-  ) as [IlluLayer | 'motion' | 'anim', string][];
+  ) as [IlluLayer | 'motion', string][];
   const [mode, setMode] = useState(tabs[0][0]);
   return (
     <div className="mt-16">
@@ -124,9 +122,7 @@ function IllustratedStage({ ex }: { ex: Exercise }) {
           </button>
         ))}
       </div>
-      {mode === 'anim' ? (
-        <ExerciseStage ex={ex} />
-      ) : mode === 'motion' ? (
+      {mode === 'motion' ? (
         <div className="mt-12">
           <ExerciseMotion ex={ex} ill={ill} />
         </div>
@@ -273,7 +269,7 @@ export default function ExerciseDetail() {
           <Fold icon={<Icon name="alert" size={18} style={{ color: 'var(--red)' }} />} title="Ko‘p uchraydigan xatolar" hint={`${ex.mistakes.length} ta · ${ex.mistakes[0]?.title ?? ''}`}>
             <div className="stack gap-12">
               {ex.mistakes.map((m, i) => (
-                <MistakeCard key={i} ex={ex} m={m} />
+                <MistakeCard key={i} m={m} />
               ))}
             </div>
           </Fold>
@@ -324,30 +320,9 @@ export default function ExerciseDetail() {
   );
 }
 
-function MistakeCard({ ex, m }: { ex: Exercise; m: Exercise['mistakes'][number] }) {
-  const [wrongSpec, rightSpec] = useMemo(() => (m.demo ? [applyMistake(emphasizeMistake(ex.anim, m.demo), m.demo), emphasizeMistake(ex.anim, m.demo)] : [null, ex.anim]), [ex, m]);
+function MistakeCard({ m }: { m: Exercise['mistakes'][number] }) {
   return (
     <div className="card stack gap-12">
-      {wrongSpec && (
-        <div className="grid-2">
-          <div className="stack gap-4">
-            <div className="stage" style={{ aspectRatio: '1' }}>
-              <Figure spec={wrongSpec} primary={ex.primary} wrong hero={1} title={`Noto‘g‘ri: ${m.title}`} />
-            </div>
-            <span className="tiny strong" style={{ color: 'var(--danger)', textAlign: 'center' }}>
-              ✕ Noto‘g‘ri
-            </span>
-          </div>
-          <div className="stack gap-4">
-            <div className="stage" style={{ aspectRatio: '1' }}>
-              <Figure spec={rightSpec!} primary={ex.primary} hero={1} title="To‘g‘ri bajarilishi" />
-            </div>
-            <span className="tiny strong" style={{ color: 'var(--green)', textAlign: 'center' }}>
-              ✓ To‘g‘ri
-            </span>
-          </div>
-        </div>
-      )}
       <div className="row gap-10" style={{ alignItems: 'flex-start' }}>
         <span style={{ width: 28, height: 28, borderRadius: 9, background: 'var(--red-soft)', color: 'var(--danger)', display: 'grid', placeItems: 'center', flex: 'none' }}>
           <Icon name="alert" size={16} />

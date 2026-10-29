@@ -3,6 +3,7 @@ import { lazy, Suspense, useEffect } from 'react';
 import { BrowserRouter, MemoryRouter, Navigate, NavLink, Route, Routes, useLocation } from 'react-router-dom';
 import { startAutoSync } from './api/sync';
 import { Icon } from './components/ui/Icon';
+import { useTelegramBridge } from './lib/telegram';
 import { useStore } from './store/useStore';
 import Home from './pages/Home';
 import Onboarding from './pages/Onboarding';
@@ -62,6 +63,7 @@ const NO_PROFILE_OK = ['/onboarding', '/lab', '/exercise', '/library', '/lesson'
 function Shell() {
   const profile = useStore((s) => s.profile);
   const loc = useLocation();
+  useTelegramBridge();
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [loc.pathname]);

@@ -2,9 +2,10 @@
 import { motion } from 'framer-motion';
 import { exById } from '../data/exercises';
 import type { SceneId } from '../data/lessons';
-import { applyMistake, emphasizeMistake, solveFront } from '../lib/figure';
+import { ILLUSTRATIONS } from '../data/illustrations';
+import { solveFront } from '../lib/figure';
 import { BodySilhouette } from './BodyMap';
-import { Figure } from './figure/Figure';
+import { motionFrames } from './ExerciseMotion';
 
 const loop = (duration: number, delay = 0) => ({ duration, delay, repeat: Infinity, repeatType: 'reverse' as const, ease: 'easeInOut' as const });
 const T = { fill: 'var(--text)', fontFamily: 'var(--font-body)', fontWeight: 700 } as const;
@@ -696,38 +697,29 @@ function Cardio() {
   );
 }
 
-function FigScene({ id, wrong }: { id: string; wrong?: boolean }) {
+/** Mashq sahnasi: mashq rasmining ikki holati yonma-yon (boshlanish → ikkinchi chet) */
+function FigScene({ id }: { id: string }) {
   const ex = exById(id);
-  if (!ex) return null;
-  if (wrong) {
-    const m = ex.mistakes.find((x) => x.demo);
-    return (
-      <div className="row" style={{ height: '100%', gap: 6 }}>
-        <div className="stack grow" style={{ height: '100%' }}>
-          <div className="grow" style={{ minHeight: 0 }}>
-            <Figure spec={m?.demo ? applyMistake(emphasizeMistake(ex.anim, m.demo), m.demo) : ex.anim} primary={ex.primary} wrong className="fill" hero={0.72} />
-          </div>
-          <span className="tiny strong" style={{ color: 'var(--danger)', textAlign: 'center' }}>
-            ✕ Noto‘g‘ri
-          </span>
-        </div>
-        <div className="stack grow" style={{ height: '100%' }}>
-          <div className="grow" style={{ minHeight: 0 }}>
-            <Figure spec={m?.demo ? emphasizeMistake(ex.anim, m.demo) : ex.anim} primary={ex.primary} secondary={ex.secondary} className="fill" hero={0.72} />
-          </div>
-          <span className="tiny strong" style={{ color: 'var(--green)', textAlign: 'center' }}>
-            ✓ To‘g‘ri
-          </span>
-        </div>
-      </div>
-    );
-  }
-  return <Figure spec={ex.anim} primary={ex.primary} secondary={ex.secondary} className="fill" hero={320 / 230} />;
+  const ill = ILLUSTRATIONS[id];
+  if (!ex || !ill) return null;
+  const frames = motionFrames(ex, ill);
+  return (
+    <div className="fig-scene">
+      {frames.map((f, i) => (
+        <figure key={f.src}>
+          <img src={f.src} alt={i === 0 ? ill.alt : ''} decoding="async" />
+          <figcaption>
+            {frames.length > 1 ? `${i + 1}. ` : ''}
+            {f.phase}
+          </figcaption>
+        </figure>
+      ))}
+    </div>
+  );
 }
 
 export function Scene({ id }: { id: SceneId }) {
   if (id.startsWith('fig:')) return <FigScene id={id.slice(4)} />;
-  if (id.startsWith('wrong:')) return <FigScene id={id.slice(6)} wrong />;
   switch (id) {
     case 'balance-deficit':
       return <Balance />;

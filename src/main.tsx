@@ -6,6 +6,9 @@ import './styles/global.css';
 import App from './App';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { registerPwa } from './lib/pwa';
+import { initTelegram } from './lib/telegram';
+
+initTelegram();
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

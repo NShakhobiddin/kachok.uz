@@ -2320,6 +2320,40 @@ ol.steps li::before {
   color: var(--accent);
   margin-right: 3px;
 }
+/* darslikdagi mashq sahnasi: mashqning ikki holati yonma-yon */
+.fig-scene {
+  display: flex;
+  gap: 6px;
+  height: 100%;
+}
+.fig-scene figure {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #0e0e10;
+}
+.fig-scene img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+.fig-scene figcaption {
+  position: absolute;
+  left: 10px;
+  bottom: 8px;
+  font-family: var(--font-display);
+  font-stretch: 110%;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
 .illu-phase {
   position: absolute;
   left: 12px;
