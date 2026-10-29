@@ -7,9 +7,15 @@ import type { Level, Method, MuscleGroup, Profile } from '../types';
 
 export type ConcreteMethod = Exclude<Method, 'auto'>;
 
+/**
+ * Avtomatik tanlov. Boshlovchi kuch yoki massa maqsadida — chiziqli progressiya: asosiy mashqlarda har mashg'ulot
+ * aniq +kg (boshlovchi har 48–72 soatda moslashadi, "85×8 → 85×9" kabi sekin takror progressiyasi shart emas).
+ * Ozish, shakl va sog'liq maqsadida boshlovchi ham gipertrofiya (8–12 takror, 2–3 zaxira) uslubida qoladi.
+ */
 export function resolveMethod(p: Pick<Profile, 'method' | 'goal' | 'level' | 'daysPerWeek'>): ConcreteMethod {
   if (p.method && p.method !== 'auto') return p.method === 'powerbuilding' && p.daysPerWeek < 4 ? 'hypertrophy' : p.method;
-  if (p.goal === 'strength') return p.level === 'beginner' ? 'linear' : 'strength';
+  if (p.level === 'beginner' && (p.goal === 'strength' || p.goal === 'muscle')) return 'linear';
+  if (p.goal === 'strength') return 'strength';
   return 'hypertrophy';
 }
 

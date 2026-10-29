@@ -142,7 +142,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         title: "Massa: ozgina ortiqcha, 'iflos massa' emas",
-        text: "Me’yordan 10–20% ko‘p kaloriya va haftasiga vaznning 0.25–0.5% ortishi — mushak uchun yetarli. Ko‘prog‘i asosan yog‘ bo‘ladi.",
+        text: "Me’yordan 5–12% ko‘p kaloriya (boshlovchiga ko‘proq, tajribaliga kamroq) va haftasiga vaznning 0.25–0.5% ortishi — mushak uchun yetarli. Ko‘prog‘i asosan yog‘ bo‘ladi.",
         scene: 'balance-surplus',
         source: 'iraki2019',
       },
@@ -156,7 +156,7 @@ export const LESSONS: Lesson[] = [
     quiz: [
       { q: "Mushak o‘sishining asosiy signali?", options: ['Og‘riq va zo‘riqish', 'Mexanik taranglik', "Ko‘p ter"], correct: 1, explain: "Charchoqqa yaqin setlardagi taranglik — asosiy stimul." },
       { q: 'Haftalik tavsiya etilgan hajm (har mushak)?', options: ['2–4 set', '10–20 set', '40+ set'], correct: 1, explain: "10–20 set eng ko‘p o‘rganilgan samarali oraliq." },
-      { q: 'Massa olishda kaloriya ortiqchasi?', options: ["Imkon qadar ko‘p", "Me’yordan 10–20% ko‘p", "Ortiqcha kerak emas"], correct: 1, explain: "Kichik ortiqcha — mushak, katta ortiqcha — yog‘." },
+      { q: 'Massa olishda kaloriya ortiqchasi?', options: ["Imkon qadar ko‘p", "Me’yordan 5–12% ko‘p", "Ortiqcha kerak emas"], correct: 1, explain: "Kichik ortiqcha (5–12%) — mushak, katta ortiqcha — yog‘." },
     ],
   },
   {

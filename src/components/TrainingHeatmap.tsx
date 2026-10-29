@@ -1,5 +1,5 @@
 // Mashg'ulot kalendari: so'nggi 20 hafta, har kun — bajarilgan ishchi setlar soniga qarab rang.
-// Ostida: rejaga rioya (so'nggi 12 to'liq hafta), eng uzun haftalik seriya va faol kunlar.
+// Ostida: rejaga rioya (boshlangandan beri, ko'pi bilan so'nggi 12 to'liq hafta), eng uzun haftalik seriya va faol kunlar.
 import { useMemo, useState } from 'react';
 import { logSets } from '../engine/stats';
 import { DAYS_SHORT, fmtDate, fmtDuration, isoDate, startOfWeek } from '../lib/date';
@@ -8,7 +8,8 @@ import type { WorkoutLog } from '../types';
 const WEEKS = 20;
 const MON = ['yan', 'fev', 'mar', 'apr', 'may', 'iyn', 'iyl', 'avg', 'sen', 'okt', 'noy', 'dek'];
 
-export function TrainingHeatmap({ logs, perWeek }: { logs: WorkoutLog[]; perWeek: number }) {
+/** since — foydalanuvchi qachon boshlagan (profil yaratilgan yoki birinchi mashg'ulot): rioya shu vaqtdan hisoblanadi */
+export function TrainingHeatmap({ logs, perWeek, since }: { logs: WorkoutLog[]; perWeek: number; since?: string }) {
   const [sel, setSel] = useState<string | null>(null);
   const data = useMemo(() => {
     const byDay = new Map<string, WorkoutLog[]>();
@@ -35,8 +36,12 @@ export function TrainingHeatmap({ logs, perWeek }: { logs: WorkoutLog[]; perWeek
       cols.push(col);
       weekCounts.push(n);
     }
-    // rioya: joriy haftasiz oxirgi 12 hafta
-    const full = weekCounts.slice(-13, -1);
+    // rioya: boshlangandan beri o'tgan to'liq haftalar (joriy haftasiz, 1..12); hali to'liq hafta bo'lmasa — joriy hafta
+    const firstLog = logs.reduce<string | undefined>((a, l) => (l.finishedAt && (!a || l.startedAt < a) ? l.startedAt : a), undefined);
+    const startAt = [since, firstLog].filter((x): x is string => !!x && !Number.isNaN(Date.parse(x))).sort()[0];
+    const weeksSince = startAt ? Math.round((startOfWeek().getTime() - startOfWeek(new Date(startAt)).getTime()) / (7 * 86400000)) : 12;
+    const span = Math.min(12, Math.max(0, weeksSince));
+    const full = span > 0 ? weekCounts.slice(-1 - span, -1) : weekCounts.slice(-1);
     const done = full.reduce((a, n) => a + Math.min(n, perWeek), 0);
     let best = 0;
     let run = 0;
@@ -45,8 +50,8 @@ export function TrainingHeatmap({ logs, perWeek }: { logs: WorkoutLog[]; perWeek
       best = Math.max(best, run);
     }
     const active = weekCounts.reduce((a, n) => a + n, 0);
-    return { cols, byDay, adherence: full.length ? done / (full.length * perWeek) : 0, best, active };
-  }, [logs, perWeek]);
+    return { cols, byDay, adherence: full.length ? done / (full.length * perWeek) : 0, adherenceLabel: span === 0 ? 'shu hafta' : span === 1 ? 'o‘tgan hafta' : `so‘nggi ${span} hafta`, best, active };
+  }, [logs, perWeek, since]);
 
   const level = (sets: number) => (sets === 0 ? 0 : sets < 12 ? 1 : sets < 20 ? 2 : sets < 28 ? 3 : 4);
   const picked = sel ? data.byDay.get(sel) ?? [] : [];
@@ -106,7 +111,7 @@ export function TrainingHeatmap({ logs, perWeek }: { logs: WorkoutLog[]; perWeek
         </div>
       )}
       <div className="grid-3">
-        <HeatStat k="Rejaga rioya" v={`${Math.round(data.adherence * 100)}%`} sub="so‘nggi 12 hafta" />
+        <HeatStat k="Rejaga rioya" v={`${Math.round(data.adherence * 100)}%`} sub={data.adherenceLabel} />
         <HeatStat k="Eng uzun seriya" v={`${data.best} hafta`} sub="uzluksiz" />
         <HeatStat k="Mashg‘ulotlar" v={String(data.active)} sub={`${WEEKS} haftada`} />
       </div>

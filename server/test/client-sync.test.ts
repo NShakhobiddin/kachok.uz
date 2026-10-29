@@ -8,7 +8,7 @@ import { ConsoleSms } from '../src/sms/index.js';
 const env = loadEnv({ JWT_SECRET: 'Qm9yZXRo-7uKx2LpV9aN3cW8dT5fH1jS6gZ4bY0eR', DEV_MODE: '1' });
 let app: ReturnType<typeof createApp>;
 let client: typeof import('../../src/api/sync.js');
-let store: typeof import('../../src/store/useStore.js')['useStore'];
+let store: (typeof import('../../src/store/useStore.js'))['useStore'];
 
 const json = (method: string, body?: unknown, token?: string) => ({
   method,
@@ -17,7 +17,11 @@ const json = (method: string, body?: unknown, token?: string) => ({
 });
 async function login(phone: string) {
   const otp = await (await app.request('/auth/otp', json('POST', { phone }))).json();
-  return (await (await app.request('/auth/verify', json('POST', { phone, code: otp.devCode }))).json()) as { access: string; refresh: string; user: { id: string; phone: string; name: string; role: 'athlete' | 'coach' } };
+  return (await (await app.request('/auth/verify', json('POST', { phone, code: otp.devCode }))).json()) as {
+    access: string;
+    refresh: string;
+    user: { id: string; phone: string; name: string; role: 'athlete' | 'coach' };
+  };
 }
 const serverProgram = async (token: string) => {
   const r = await (await app.request('/sync', json('POST', { since: 0, changes: [] }, token))).json();
@@ -89,7 +93,7 @@ describe('ilova sinxronlashi', () => {
     expect(after.coach.name).toBe('Sardor');
   });
 
-  it("o‘chirilgan mashg‘ulot boshqa qurilmadan ham o‘chadi", async () => {
+  it('o‘chirilgan mashg‘ulot boshqa qurilmadan ham o‘chadi', async () => {
     const s = store.getState();
     s.startWorkout(s.program!.days[0], s.program!.days[0].exercises);
     s.updateSet(0, 0, { kg: 50, reps: 10, done: true });
@@ -106,7 +110,8 @@ describe('ilova sinxronlashi', () => {
   it('ovqat kundaligi kun bo‘yicha sinxronlanadi, kun bo‘shasa — o‘chadi', async () => {
     const token = store.getState().account!.access;
     const day = '2026-05-03';
-    const doc = async () => (await (await app.request('/sync', json('POST', { since: 0, changes: [] }, token))).json()).docs.find((d: { kind: string; id: string }) => d.kind === 'food' && d.id === day);
+    const doc = async () =>
+      (await (await app.request('/sync', json('POST', { since: 0, changes: [] }, token))).json()).docs.find((d: { kind: string; id: string }) => d.kind === 'food' && d.id === day);
     store.getState().addFood({ id: 'f1', date: day, meal: 1, foodId: 'osh', name: 'Osh', g: 350, kcal: 805, p: 24, f: 38, c: 91 });
     store.getState().addFood({ id: 'f2', date: day, meal: 0, name: 'Qo‘lda', kcal: 300, p: 10, f: 5, c: 50 });
     await client.syncNow();

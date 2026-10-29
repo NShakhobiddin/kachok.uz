@@ -8,7 +8,7 @@ import { EXERCISE_MAP } from '../data/exercises';
 import { ACHIEVEMENTS, finishMessage } from '../data/motivation';
 import { LESSONS } from '../data/lessons';
 import { fmtKg } from '../engine/progression';
-import { allPRs, logSets, logVolume, totals, volumeComparison, weekStreak } from '../engine/stats';
+import { allPRs, detectPRs, logSets, logVolume, totals, volumeComparison, weekStreak } from '../engine/stats';
 import { fmtDuration } from '../lib/date';
 import { useStore } from '../store/useStore';
 import type { MuscleId } from '../types';
@@ -19,29 +19,34 @@ export default function Summary() {
   const { id } = useParams();
   const logs = useStore((s) => s.logs);
   const profile = useStore((s) => s.profile)!;
-  const lastPRs = useStore((s) => s.lastPRs);
   const seen = useStore((s) => s.seenAchievements);
   const markAchievements = useStore((s) => s.markAchievements);
   const lessonsDone = useStore((s) => s.lessonsDone);
   const [copied, setCopied] = useState(false);
   const log = logs.find((l) => l.id === id);
-  const prs = log && lastPRs.length && lastPRs[0].date === log.startedAt ? lastPRs : [];
+  // rekordlar tarixdan hisoblanadi (sahifa qayta yuklansa ham yo'qolmaydi): shu mashg'ulotdan oldingilarga nisbatan
+  const prs = useMemo(() => (log ? detectPRs(log, logs.filter((l) => l.id !== log.id && l.startedAt < log.startedAt)) : []), [log, logs]);
   const finishedCount = logs.filter((l) => l.finishedAt).length;
   const streak = useMemo(() => weekStreak(logs, profile.daysPerWeek), [logs, profile.daysPerWeek]);
-  const newAch = useMemo(() => {
+  // yangi yutuqlar sahifa ochilganda bir marta aniqlanadi va "ko'rilgan" deb belgilanadi — ekranda qoladi
+  const [newAch] = useState(() => {
     const t = totals(logs);
     const ctx = { logs, totalWorkouts: t.workouts, totalVolume: t.volume, totalMinutes: t.minutes, prCount: allPRs(logs).length, streak, lessonsDone: lessonsDone.length, lessonsTotal: LESSONS.length };
     return ACHIEVEMENTS.filter((a) => !seen.includes(a.id) && a.test(ctx));
-  }, [logs, seen, streak, lessonsDone]);
+  });
   useEffect(() => {
-    if (newAch.length) {
-      const ids = newAch.map((a) => a.id);
-      const t = setTimeout(() => markAchievements(ids), 1500);
-      return () => clearTimeout(t);
-    }
+    if (newAch.length) markAchievements(newAch.map((a) => a.id));
   }, [newAch, markAchievements]);
 
-  if (!log) return <div className="page empty">Mashg‘ulot topilmadi.</div>;
+  if (!log)
+    return (
+      <div className="page no-tab empty stack gap-16" style={{ alignItems: 'center' }}>
+        <p>Mashg‘ulot topilmadi.</p>
+        <Link to="/" className="btn btn-primary">
+          Bosh sahifaga
+        </Link>
+      </div>
+    );
   const vol = logVolume(log);
   const sets = logSets(log);
   const msg = finishMessage(prs.length, finishedCount, streak);

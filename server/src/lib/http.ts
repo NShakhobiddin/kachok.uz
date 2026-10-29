@@ -47,10 +47,12 @@ function ipv6Net(ip: string): string {
   const h = head ? head.split(':') : [];
   const t = tail ? tail.split(':') : [];
   const groups = addr.includes('::') ? [...h, ...Array(Math.max(0, 8 - h.length - t.length)).fill('0'), ...t] : h;
-  return groups
-    .slice(0, 4)
-    .map((g) => (parseInt(g, 16) || 0).toString(16))
-    .join(':') + '::/64';
+  return (
+    groups
+      .slice(0, 4)
+      .map((g) => (parseInt(g, 16) || 0).toString(16))
+      .join(':') + '::/64'
+  );
 }
 
 function normIp(raw: string): string {

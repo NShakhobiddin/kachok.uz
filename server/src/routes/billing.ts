@@ -22,8 +22,7 @@ export function billingRoutes(deps: Deps) {
     const body = await readBody(c, z.object({ plan: z.string().max(64), provider: z.enum(['payme', 'click']) }));
     const plan = planById(body.plan);
     if (!plan) return c.json({ error: 'bad_plan', message: 'Tarif topilmadi' }, 400);
-    if ((body.provider === 'payme' && !paymeReady) || (body.provider === 'click' && !clickReady))
-      return c.json({ error: 'not_configured', message: 'Bu to‘lov usuli hali ulanmagan' }, 503);
+    if ((body.provider === 'payme' && !paymeReady) || (body.provider === 'click' && !clickReady)) return c.json({ error: 'not_configured', message: 'Bu to‘lov usuli hali ulanmagan' }, 503);
     const amountTiyin = plan.priceSom * 100;
     const { rows } = await db.query<{ id: string }>(`INSERT INTO orders (user_id, plan, amount_tiyin, provider) VALUES ($1, $2, $3, $4) RETURNING id`, [
       c.get('uid'),
@@ -53,11 +52,14 @@ export function billingRoutes(deps: Deps) {
     // Avval ruxsat (sarlavha bo'yicha), tana keyin. Ruxsatsiz so'rovda tana faqat `id` ni qaytarish uchun, kichik bo'lsa o'qiladi.
     if (!paymeAuthorized(c.req.header('authorization'), env.PAYME_KEY)) {
       let id: unknown = null;
-      const len = Number(c.req.header('content-length') ?? NaN);
-      if (Number.isFinite(len) && len <= PAYME_UNAUTH_PEEK) {
+      const len = Number(c.req.header('content-length') ?? 0);
+      if (len <= PAYME_UNAUTH_PEEK) {
         try {
-          id = (JSON.parse(await c.req.text()) as { id?: unknown })?.id ?? null;
-        } catch {
+          // Content-Length bo'lmasa ham o'qish umumiy chegara (64 KB) bilan cheklangan; tahlil — faqat kichik tanada
+          const text = await c.req.text();
+          if (text.length <= PAYME_UNAUTH_PEEK) id = (JSON.parse(text) as { id?: unknown })?.id ?? null;
+        } catch (e) {
+          if ((e as Error)?.name === 'BodyLimitError') throw e;
           id = null;
         }
       }

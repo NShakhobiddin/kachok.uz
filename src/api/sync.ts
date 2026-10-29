@@ -2,6 +2,7 @@
 // Har bir yozuv alohida hujjat: profil, dastur, har bir mashg'ulot, har kungi vazn, sozlamalar.
 // Server har hujjat uchun "oxirgi yozgan yutadi" (updatedAt) qoidasida ishlaydi. Shuning uchun avval o'qiymiz,
 // ovqat kundaligi va meta hujjatini (bir nechta qurilma bir vaqtda yozadigan) birlashtiramiz, keyin yuboramiz.
+import { clampKcalAdjust } from '../engine/nutrition';
 import { useStore } from '../store/useStore';
 import type { BodyEntry, FoodEntry, Profile, Program, WorkoutLog } from '../types';
 import { api, apiEnabled, refreshMe } from './client';
@@ -26,7 +27,7 @@ const key = (kind: string, id: string) => `${kind}:${id}`;
 const SINGLETONS: Kind[] = ['profile', 'program', 'meta'];
 
 /** meta:state hujjatidagi kalitlar */
-export const META_KEYS = ['water', 'readiness', 'lessonsDone', 'kcalAdjust', 'setDelta', 'setDeltaMeso', 'seenAchievements', 'settings', 'exNotes'] as const;
+export const META_KEYS = ['water', 'readiness', 'lessonsDone', 'kcalAdjust', 'kcalAdjustAt', 'setDelta', 'setDeltaMeso', 'seenAchievements', 'settings', 'exNotes'] as const;
 type MetaKey = (typeof META_KEYS)[number];
 
 /** Tez xesh (FNV-1a) — hujjat o'zgarganini aniqlash uchun */
@@ -179,6 +180,8 @@ function applyRemote(docs: RemoteDoc[], c: Ctx, preferServer: boolean) {
     else if (d.kind === 'log') logs = [...logs.filter((l) => l.id !== d.id), d.data as WorkoutLog];
     else if (d.kind === 'body') body = [...body.filter((b) => b.date !== d.id), d.data as BodyEntry].sort((a, b) => a.date.localeCompare(b.date));
   }
+  // eski mijozdan kelgan haddan tashqari kaloriya tuzatishi chegaraga keltiriladi
+  if (meta && typeof meta.kcalAdjust === 'number') meta.kcalAdjust = clampKcalAdjust(meta.kcalAdjust);
   useStore.setState({ profile, program, logs, body, food, ...(meta ?? {}) });
 }
 

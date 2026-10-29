@@ -20,6 +20,6 @@ services:
     depends_on:
       - db
     ports:
-      - "127.0.0.1:8787:8787"
+      - '127.0.0.1:8787:8787'
 volumes:
   pgdata:

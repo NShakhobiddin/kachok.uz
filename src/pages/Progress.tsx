@@ -123,7 +123,7 @@ export default function Progress() {
           <h2>Mashg‘ulot kalendari</h2>
           <span className="small muted">20 hafta</span>
         </div>
-        <TrainingHeatmap logs={logs} perWeek={profile.daysPerWeek} />
+        <TrainingHeatmap logs={logs} perWeek={profile.daysPerWeek} since={profile.createdAt} />
       </section>
 
       <section className="section">

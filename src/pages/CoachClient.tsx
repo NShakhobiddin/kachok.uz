@@ -239,9 +239,11 @@ function ProgramEditor({ data, onSaved }: { data: ClientData; onSaved: (p: Progr
   if (!profile || !draft) return <div className="card empty mt-16">Mijoz hali profilini to‘ldirmagan — dastur tuzish uchun uning jihozlari va maqsadi kerak.</div>;
 
   const day = days[Math.min(sel, days.length - 1)];
+  // funksional yangilash: bir nechta mashq ketma-ket qo'shilganda (ids.forEach) har biri oldingisi ustiga yoziladi
   const mapDay = (fn: (d: WorkoutDay) => WorkoutDay) => {
     setMsg(null);
-    setDraft({ ...draft, days: draft.days.map((d) => (d.id === day.id ? fn(d) : d)) });
+    const dayId = day.id;
+    setDraft((cur) => (cur ? { ...cur, days: cur.days.map((d) => (d.id === dayId ? fn(d) : d)) } : cur));
   };
   const patchEx = (fn: (list: PlannedExercise[]) => PlannedExercise[]) => mapDay((d) => ({ ...d, exercises: fn(d.exercises) }));
 

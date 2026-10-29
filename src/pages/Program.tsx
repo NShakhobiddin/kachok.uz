@@ -13,7 +13,7 @@ import { estimateMinutes, groupFrequency, weeklyVolume } from '../engine/program
 import { fmtKg, suggest } from '../engine/progression';
 import { mesoPlan, type MesoState } from '../engine/meso';
 import { useNutrition } from '../lib/useNutrition';
-import { mesoCtx, useMeso } from '../lib/useToday';
+import { mesoCtx, useMeso, weekDays } from '../lib/useToday';
 import { DAYS, DAYS_SHORT, weekdayIdx } from '../lib/date';
 import { useIsPro } from '../lib/features';
 import { useStore } from '../store/useStore';
@@ -35,8 +35,8 @@ export default function ProgramPage() {
   const [delDay, setDelDay] = useState(false);
   const tabsRef = useRef<HTMLDivElement>(null);
   const days = useMemo(() => [...(program?.days ?? [])].sort((a, b) => a.weekday - b.weekday), [program]);
-  const todayIdx = days.findIndex((d) => d.weekday === weekdayIdx());
-  const [sel, setSel] = useState(Math.max(0, todayIdx));
+  // tanlov kun id si bo'yicha: hafta kuni o'zgarib tartib almashsa ham shu kun ochiq qoladi
+  const [selId, setSelId] = useState<string | null>(() => days.find((d) => d.weekday === weekdayIdx())?.id ?? null);
   const [confirmRegen, setConfirmRegen] = useState(false);
   const [methodOpen, setMethodOpen] = useState(false);
   const [pdfBusy, setPdfBusy] = useState(false);
@@ -45,6 +45,8 @@ export default function ProgramPage() {
   const vol = useMemo(() => (program ? weeklyVolume(program) : null), [program]);
   const freq = useMemo(() => groupFrequency(program ?? { days: [] }), [program]);
   const meso = useMeso();
+  // chiziqli dasturda A/B navbati: shu hafta har kuni aslida qaysi mashg'ulot (id va hafta kuni o'zgarmaydi)
+  const thisWeek = useMemo(() => new Map(weekDays(program, meso).map((d) => [d.id, d])), [program, meso]);
   const nut = useNutrition();
   // tanlangan kun (masalan, yangi qo'shilgan) ko'rinmay qolsa — kunlar qatorini faqat gorizontal suramiz
   useEffect(() => {
@@ -54,9 +56,9 @@ export default function ProgramPage() {
     const r = el.getBoundingClientRect();
     const sr = sc.getBoundingClientRect();
     if (r.left < sr.left || r.right > sr.right) sc.scrollBy({ left: r.left - sr.left - 16 });
-  }, [sel, program?.days.length]);
+  }, [selId, program?.days.length]);
   if (!program) return null;
-  const day = days[Math.min(sel, days.length - 1)];
+  const day = days.find((d) => d.id === selId) ?? days[0];
 
   const onPdf = async () => {
     if (!isPro) return nav('/premium?f=pdf');
@@ -90,16 +92,16 @@ export default function ProgramPage() {
       {meso && <MethodCard program={program} profile={profile} meso={meso} onChange={() => setMethodOpen(true)} />}
 
       <div className="hscroll mt-16" role="tablist" aria-label="Kunlar" ref={tabsRef}>
-        {days.map((d, i) => (
+        {days.map((d) => (
           <button
             key={d.id}
             role="tab"
-            aria-selected={i === sel}
-            className={`chip ${i === sel ? 'on' : ''}`}
+            aria-selected={d.id === day?.id}
+            className={`chip ${d.id === day?.id ? 'on' : ''}`}
             style={{ height: 44 }}
-            onClick={() => setSel(i)}
+            onClick={() => setSelId(d.id)}
           >
-            <b>{DAYS_SHORT[d.weekday]}</b> {d.title}
+            <b>{DAYS_SHORT[d.weekday]}</b> {thisWeek.get(d.id)?.title ?? d.title}
           </button>
         ))}
         {days.length < 7 && (
@@ -131,14 +133,27 @@ export default function ProgramPage() {
                 onChange={(e) => moveDay(day.id, Number(e.target.value))}
                 style={{ appearance: 'none', cursor: 'pointer' }}
               >
-                {DAYS.map((d, i) => (
-                  <option key={d} value={i}>
-                    {d}
-                  </option>
-                ))}
+                {DAYS.map((d, i) => {
+                  // band kun tanlansa — ikki kun o'rin almashadi
+                  const other = days.find((x) => x.weekday === i && x.id !== day.id);
+                  return (
+                    <option key={d} value={i}>
+                      {other ? `${d} — «${other.title}» bilan almashadi` : d}
+                    </option>
+                  );
+                })}
               </select>
             </div>
           </div>
+          {thisWeek.get(day.id) && thisWeek.get(day.id) !== day && (
+            <p className="notice info small" style={{ marginBottom: 10 }}>
+              <Icon name="swap" size={16} />
+              <span>
+                Bu hafta {DAYS[day.weekday].toLowerCase()} kuni «{thisWeek.get(day.id)!.title}» bajariladi — A va B mashg‘ulotlari haftadan haftaga navbat bilan almashadi. Quyida «{day.title}»
+                kunining o‘zi tahrirlanadi.
+              </span>
+            </p>
+          )}
           <DayEditor
             day={day}
             profile={profile}
@@ -176,13 +191,7 @@ export default function ProgramPage() {
         taken={days.map((d) => d.weekday)}
         onCreate={(weekday, title) => {
           const id = addDay(weekday, title);
-          const next = [...(useStore.getState().program?.days ?? [])].sort((a, b) => a.weekday - b.weekday);
-          setSel(
-            Math.max(
-              0,
-              next.findIndex((d) => d.id === id),
-            ),
-          );
+          if (id) setSelId(id);
           setNewDay(false);
         }}
       />
@@ -198,7 +207,7 @@ export default function ProgramPage() {
             className="btn btn-danger grow"
             onClick={() => {
               if (day) removeDay(day.id);
-              setSel(0);
+              setSelId(null);
               setDelDay(false);
             }}
           >
@@ -319,6 +328,7 @@ function MethodCard({ program, profile, meso, onChange }: { program: Program; pr
 /** Kuch sxemasidagi asosiy mashqlar: keyingi mashg'ulotdagi vazn */
 function KeyLifts({ program, profile, meso }: { program: Program; profile: Profile; meso: MesoState }) {
   const logs = useStore((s) => s.logs);
+  const barKg = useStore((s) => s.settings.barKg);
   const rows = useMemo(() => {
     const seen = new Set<string>();
     const out: { id: string; name: string; text: string; e1rm?: number }[] = [];
@@ -327,11 +337,11 @@ function KeyLifts({ program, profile, meso }: { program: Program; profile: Profi
         const ex = EXERCISE_MAP[pe.exerciseId];
         if (!pe.scheme || !ex || seen.has(ex.id)) continue;
         seen.add(ex.id);
-        const sug = suggest(ex, pe, logs, { bodyKg: profile.weightKg, sex: profile.sex, level: profile.level, ...mesoCtx(meso, program) });
+        const sug = suggest(ex, pe, logs, { bodyKg: profile.weightKg, sex: profile.sex, level: profile.level, ...mesoCtx(meso, program), barKg, equipment: profile.equipment });
         out.push({ id: ex.id, name: ex.name, text: `${sug.sets}×${sug.reps}${sug.kg ? ` · ${fmtKg(sug.kg)} kg` : ''}`, e1rm: pe.scheme === 'block' ? sug.e1rm : undefined });
       }
     return out;
-  }, [program, profile, meso, logs]);
+  }, [program, profile, meso, logs, barKg]);
   if (!rows.length) return null;
   return (
     <div className="stack" style={{ gap: 0 }}>

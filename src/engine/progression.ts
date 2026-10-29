@@ -354,8 +354,8 @@ export function suggest(ex: Exercise, pe: PlannedExercise, logs: WorkoutLog[], c
     out.reason = bodyweight
       ? `Birinchi marta: ${pe.repMin}–${pe.repMax} ${unit}. Texnikaga e’tibor bering.`
       : est
-        ? "Taxminiy boshlang‘ich vazn. Birinchi setdan so‘ng moslang: yana 2–3 marta bemalol qila olsangiz — to‘g‘ri tanlov."
-        : "Birinchi marta: yengil vazn bilan texnikani sinang, 2–3 takror zaxira qoldiring.";
+        ? 'Taxminiy boshlang‘ich vazn. Birinchi setdan so‘ng moslang: yana 2–3 marta bemalol qila olsangiz — to‘g‘ri tanlov.'
+        : 'Birinchi marta: yengil vazn bilan texnikani sinang, 2–3 takror zaxira qoldiring.';
   } else {
     const w = workingWeight(last.sets, pe.repMin);
     // ishchi vazndan og'ir, lekin repMin ga yetmagan setlar (sinov) — "barcha setlar" sanog'iga kirmaydi
@@ -396,7 +396,7 @@ export function suggest(ex: Exercise, pe: PlannedExercise, logs: WorkoutLog[], c
       out.kg = roundLoad(ex, w * 0.9, bar);
       out.reps = pe.repMin;
       out.kind = 'down';
-      out.reason = "Ikki marta ketma-ket takrorlar yetmadi — vazn 10% kamaytirildi. Bu orqaga qadam emas, sakrash uchun tayyorgarlik.";
+      out.reason = 'Ikki marta ketma-ket takrorlar yetmadi — vazn 10% kamaytirildi. Bu orqaga qadam emas, sakrash uchun tayyorgarlik.';
     } else if (anyMiss) {
       out.kg = w;
       out.reps = pe.repMin;
@@ -440,13 +440,13 @@ export function suggest(ex: Exercise, pe: PlannedExercise, logs: WorkoutLog[], c
     rir = Math.max(4, rir + 2);
     if (out.kg) out.kg = roundLoad(ex, out.kg * 0.85, bar);
     out.kind = 'deload';
-    out.reason = "Yengillashtirish haftasi: kamroq set va yengilroq vazn. Charchoq ketadi, kuch keyingi bloklarda o‘sadi.";
+    out.reason = 'Yengillashtirish haftasi: kamroq set va yengilroq vazn. Charchoq ketadi, kuch keyingi bloklarda o‘sadi.';
   } else if (ctx.readiness !== undefined && ctx.readiness < 2.6) {
     sets = Math.max(1, sets - 1);
     rir = rir + 1;
     if (out.kg) out.kg = roundLoad(ex, out.kg * 0.95, bar);
     out.kind = 'easy';
-    out.reason = "Bugun tana charchagan: bitta set kamroq va biroz yengilroq. Mashqni o‘tkazib yubormaslikning o‘zi g‘alaba.";
+    out.reason = 'Bugun tana charchagan: bitta set kamroq va biroz yengilroq. Mashqni o‘tkazib yubormaslikning o‘zi g‘alaba.';
   }
   out.sets = sets;
   out.rir = rir;
@@ -465,7 +465,19 @@ export function warmupSets(ex: Exercise, kg: number | null, reps = 8, barKg = DE
     const bar = barFor(ex, barKg);
     if (kg <= bar) return [];
     if (kg < bar + 10) return [{ kg: bar, reps: 10 }];
-    const ladder = reps <= 5 ? [[0.4, 5], [0.6, 3], [0.75, 2], [0.85, 1]] : [[0.5, 5], [0.7, 3], [0.85, 2]];
+    const ladder =
+      reps <= 5
+        ? [
+            [0.4, 5],
+            [0.6, 3],
+            [0.75, 2],
+            [0.85, 1],
+          ]
+        : [
+            [0.5, 5],
+            [0.7, 3],
+            [0.85, 2],
+          ];
     const w = ladder.map(([p, r]) => ({ kg: roundLoad(ex, kg * p, barKg), reps: Math.min(r, reps) }));
     return dedupe([{ kg: bar, reps: 10 }, ...w]).filter((s) => (s.kg ?? 0) < kg);
   }

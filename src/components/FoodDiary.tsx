@@ -22,6 +22,13 @@ const uid = () => Math.random().toString(36).slice(2, 10);
 const addDays = (iso: string, n: number) => isoDate(new Date(new Date(iso + 'T12:00:00').getTime() + n * 86400000));
 const r1 = (n: number) => Math.round(n * 10) / 10;
 
+/** "1 kosa · O 12 · U 40 · Y 9" — bo'sh qismlarsiz (qo'lda kiritilganda faqat kaloriya bo'lishi mumkin) */
+function entryMeta(e: FoodEntry): string {
+  const parts = [e.label ?? (e.g ? `${e.g} g` : '')];
+  if (e.p || e.c || e.f) parts.push(`O ${r1(e.p)}`, `U ${r1(e.c)}`, `Y ${r1(e.f)}`);
+  return parts.filter(Boolean).join(' · ');
+}
+
 export function sumEntries(list: Pick<FoodEntry, 'kcal' | 'p' | 'f' | 'c'>[]) {
   return list.reduce((a, e) => ({ kcal: a.kcal + e.kcal, p: a.p + e.p, f: a.f + e.f, c: a.c + e.c }), { kcal: 0, p: 0, f: 0, c: 0 });
 }
@@ -93,9 +100,7 @@ export function FoodDiary({ np }: { np: NutritionPlan }) {
                   <span className="ellipsis" style={{ display: 'block' }}>
                     {e.name}
                   </span>
-                  <span className="tiny faint num">
-                    {e.label ?? (e.g ? `${e.g} g` : '')} · O {r1(e.p)} · U {r1(e.c)} · Y {r1(e.f)}
-                  </span>
+                  <span className="tiny faint num">{entryMeta(e)}</span>
                 </span>
                 <b className="num">{Math.round(e.kcal)}</b>
                 <button className="icon-btn" style={{ width: 34, height: 34 }} onClick={() => removeFood(e.id)} aria-label={`${e.name} — o‘chirish`}>
@@ -147,10 +152,11 @@ function AddFoodSheet({ open, meal, date, onClose }: { open: boolean; meal: Meal
   const [pick, setPick] = useState<FoodItem | null>(null);
   const [quick, setQuick] = useState(false);
   const [m, setM] = useState<Meal>(meal);
-  const [lastMeal, setLastMeal] = useState(meal);
-  if (meal !== lastMeal) {
-    setLastMeal(meal);
-    setM(meal);
+  // har ochilganda bosilgan ovqat vaqti tanlanadi (oldingi safar oyna ichida tanlangani qolib ketmasin)
+  const [shownFor, setShownFor] = useState<{ open: boolean; meal: Meal }>({ open, meal });
+  if (shownFor.open !== open || shownFor.meal !== meal) {
+    setShownFor({ open, meal });
+    if (open) setM(meal);
   }
   const close = () => {
     setQ('');

@@ -24,6 +24,7 @@ const GOAL_TEXT: Record<string, string> = {
 export default function Nutrition() {
   const profile = useStore((s) => s.profile)!;
   const kcalAdjust = useStore((s) => s.kcalAdjust);
+  const kcalAdjustAt = useStore((s) => s.kcalAdjustAt);
   const setKcalAdjust = useStore((s) => s.setKcalAdjust);
   const updateProfile = useStore((s) => s.updateProfile);
   const body = useStore((s) => s.body);
@@ -47,7 +48,9 @@ export default function Nutrition() {
   };
   const meals = useMemo(() => mealPlan(np, profile.dietPrefs), [np, profile.dietPrefs]);
   const trend = useMemo(() => weightTrend(body), [body]);
-  const check = useMemo(() => weeklyCheck(body, np, profile.weightKg), [body, np, profile.weightKg]);
+  const check = useMemo(() => weeklyCheck(body, np, profile.weightKg, { kcalAdjust, adjustedAt: kcalAdjustAt }), [body, np, profile.weightKg, kcalAdjust, kcalAdjustAt]);
+  // yashil belgi faqat "reja bo'yicha" xulosasida; "kuting" turidagi xabarlar — ma'lumot
+  const onPlan = !!check && check.delta === 0 && check.message.includes('reja bo‘yicha');
   const [how, setHow] = useState(false);
   const [logW, setLogW] = useState(false);
   const [w, setW] = useState(profile.weightKg);
@@ -87,8 +90,8 @@ export default function Nutrition() {
         {useAdaptive ? (
           <p className="tiny faint">Kaloriya moslashuvchan sarf bo‘yicha avtomatik yangilanadi — qo‘lda tuzatish shart emas.</p>
         ) : check ? (
-          <div className={`notice ${check.delta === 0 ? 'good' : 'gold'}`}>
-            <Icon name={check.delta === 0 ? 'check' : 'info'} />
+          <div className={`notice ${onPlan ? 'good' : check.delta === 0 ? 'info' : 'gold'}`}>
+            <Icon name={onPlan ? 'check' : 'info'} />
             <div className="stack gap-8">
               <span>{check.message}</span>
               {check.delta !== 0 && (
@@ -169,7 +172,7 @@ export default function Nutrition() {
                 </span>
               </div>
             )}
-            {kcalAdjust !== 0 && (
+            {kcalAdjust !== 0 && !useAdaptive && (
               <div className="row between small">
                 <span className="muted">Haftalik tekshiruv bo‘yicha tuzatish: {kcalAdjust > 0 ? '+' : ''}{kcalAdjust} kkal</span>
                 <button className="strong" style={{ color: 'var(--text-2)' }} onClick={() => setKcalAdjust(0)}>

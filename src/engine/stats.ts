@@ -80,33 +80,43 @@ export interface PR {
   date: string;
 }
 
-/** Mashg‘ulotdagi yangi rekordlar (avvalgi barcha mashg‘ulotlarga nisbatan) */
+/**
+ * Mashg‘ulotdagi yangi rekordlar (avvalgi barcha mashg‘ulotlarga nisbatan): har mashq uchun mashg‘ulotda ko‘pi bilan
+ * bitta — eng kuchlisi (og‘irlik rekordi takror rekordidan ustun). Bir mashq mashg‘ulotda ikki marta yozilgan bo'lsa ham
+ * bitta hisoblanadi; 1RM rekordi uchun kamida 1% o'sish kerak (tebranish rekord emas).
+ */
 export function detectPRs(log: WorkoutLog, previous: WorkoutLog[]): PR[] {
   const out: PR[] = [];
-  for (const e of log.exercises) {
-    const ex = EXERCISE_MAP[e.exerciseId];
+  const prev = finished(previous).filter((l) => l.id !== log.id);
+  const ids = [...new Set(log.exercises.map((e) => e.exerciseId))];
+  for (const id of ids) {
+    const ex = EXERCISE_MAP[id];
     if (!ex || ex.loadType === 'bodyweight' || ex.loadType === 'band') continue;
-    const prevSets = finished(previous)
-      .filter((l) => l.id !== log.id)
-      .flatMap((l) => l.exercises.filter((x) => x.exerciseId === e.exerciseId).flatMap((x) => x.sets.filter((s) => s.done && !s.warmup)));
+    const prevSets = prev.flatMap((l) => l.exercises.filter((x) => x.exerciseId === id).flatMap((x) => x.sets.filter((s) => s.done && !s.warmup && s.kg > 0)));
     if (!prevSets.length) continue; // birinchi marta — rekord emas, boshlang‘ich nuqta
     const bestE = Math.max(...prevSets.map((s) => e1rm(s.kg, s.reps)));
     const bestKg = Math.max(...prevSets.map((s) => s.kg));
-    const done = e.sets.filter((s) => s.done && !s.warmup && s.kg > 0);
+    const done = log.exercises.filter((e) => e.exerciseId === id).flatMap((e) => e.sets.filter((s) => s.done && !s.warmup && s.kg > 0 && s.reps > 0));
     if (!done.length) continue;
     const top = done.reduce((a, b) => (e1rm(b.kg, b.reps) > e1rm(a.kg, a.reps) ? b : a));
     const topE = e1rm(top.kg, top.reps);
-    const heaviest = done.reduce((a, b) => (b.kg > a.kg ? b : a));
-    if (heaviest.kg > bestKg) out.push({ exerciseId: e.exerciseId, kind: 'weight', kg: heaviest.kg, reps: heaviest.reps, value: heaviest.kg, date: log.startedAt });
-    else if (topE > bestE * 1.005) out.push({ exerciseId: e.exerciseId, kind: 'e1rm', kg: top.kg, reps: top.reps, value: Math.round(topE * 10) / 10, date: log.startedAt });
+    const heaviest = done.reduce((a, b) => (b.kg > a.kg || (b.kg === a.kg && b.reps > a.reps) ? b : a));
+    if (heaviest.kg > bestKg) out.push({ exerciseId: id, kind: 'weight', kg: heaviest.kg, reps: heaviest.reps, value: heaviest.kg, date: log.startedAt });
+    else if (topE > bestE * 1.01) out.push({ exerciseId: id, kind: 'e1rm', kg: top.kg, reps: top.reps, value: Math.round(topE * 10) / 10, date: log.startedAt });
   }
   return out;
 }
 
+/** Barcha rekordlar (Progress sahifasidagi son shu ro'yxat uzunligi): har mashg'ulotda har mashq uchun ko'pi bilan bitta */
 export function allPRs(logs: WorkoutLog[]): PR[] {
   const sorted = finished(logs).sort((a, b) => a.startedAt.localeCompare(b.startedAt));
+  const seen = new Set<string>();
   const out: PR[] = [];
-  sorted.forEach((l, i) => out.push(...detectPRs(l, sorted.slice(0, i))));
+  sorted.forEach((l, i) => {
+    if (seen.has(l.id)) return;
+    seen.add(l.id);
+    out.push(...detectPRs(l, sorted.slice(0, i)));
+  });
   return out;
 }
 
@@ -167,7 +177,7 @@ export function weeklyInsights(logs: WorkoutLog[], profile: Profile, now = new D
   const planned = profile.daysPerWeek;
 
   if (cur.workouts === 0 && prev.workouts === 0) {
-    out.push({ tone: 'info', title: 'Boshlash vaqti', text: "Bu va o‘tgan haftada mashg‘ulot yo‘q. 30 daqiqalik qisqa mashq ham hisobga kiradi — bugun boshlang." });
+    out.push({ tone: 'info', title: 'Boshlash vaqti', text: 'Bu va o‘tgan haftada mashg‘ulot yo‘q. 30 daqiqalik qisqa mashq ham hisobga kiradi — bugun boshlang.' });
     return out;
   }
   const dayIdx = (now.getDay() + 6) % 7;
@@ -190,8 +200,8 @@ export function weeklyInsights(logs: WorkoutLog[], profile: Profile, now = new D
 
   out.push(
     cur.workouts >= 2
-      ? { tone: 'good', title: 'JSST me’yori bajarildi', text: "Haftasiga kamida 2 kun kuch mashqi — Jahon sog‘liqni saqlash tashkiloti tavsiyasi. Bu o‘lim xavfini 10–17% kamaytiradi." }
-      : { tone: dayIdx >= 4 ? 'warn' : 'info', title: 'JSST me’yoriga yana ' + (2 - cur.workouts) + ' mashq', text: "Kattalar uchun haftasiga kamida 2 kun kuch mashqi tavsiya etiladi (WHO, 2020)." },
+      ? { tone: 'good', title: 'JSST me’yori bajarildi', text: 'Haftasiga kamida 2 kun kuch mashqi — Jahon sog‘liqni saqlash tashkiloti tavsiyasi. Bu o‘lim xavfini 10–17% kamaytiradi.' }
+      : { tone: dayIdx >= 4 ? 'warn' : 'info', title: 'JSST me’yoriga yana ' + (2 - cur.workouts) + ' mashq', text: 'Kattalar uchun haftasiga kamida 2 kun kuch mashqi tavsiya etiladi (WHO, 2020).' },
   );
 
   if (cur.workouts >= planned) out.push({ tone: 'good', title: 'Reja 100% bajarildi', text: `${planned} ta rejalashtirilgan mashg‘ulotning barchasi bajarildi.` });
@@ -205,12 +215,11 @@ export function weeklyInsights(logs: WorkoutLog[], profile: Profile, now = new D
     out.push({ tone: 'warn', title: 'Ishlatilmagan mushaklar', text: `${none.map((g) => GROUPS[g].name).join(', ')} — bu hafta umuman ishlamadi. Muvozanat uchun qo‘shing.` });
   if (low.length)
     out.push({ tone: 'info', title: 'Hajm kam', text: `${low.map((g) => `${GROUPS[g].name} (${Math.round(ref.groups[g])} set)`).join(', ')}. O‘sish uchun haftasiga ~10 set tavsiya etiladi.` });
-  if (high.length)
-    out.push({ tone: 'warn', title: 'Hajm juda yuqori', text: `${high.map((g) => GROUPS[g].name).join(', ')}: tiklanishga e’tibor bering — ko‘proq har doim yaxshiroq emas.` });
+  if (high.length) out.push({ tone: 'warn', title: 'Hajm juda yuqori', text: `${high.map((g) => GROUPS[g].name).join(', ')}: tiklanishga e’tibor bering — ko‘proq har doim yaxshiroq emas.` });
 
   const avg = cur.workouts ? cur.minutes / cur.workouts : 0;
   if (avg > profile.sessionMin + 20)
-    out.push({ tone: 'info', title: "Mashg‘ulot cho‘zilmoqda", text: `O‘rtacha ${Math.round(avg)} daqiqa (reja ${profile.sessionMin}). Dam olishni taymer bilan nazorat qiling.` });
+    out.push({ tone: 'info', title: 'Mashg‘ulot cho‘zilmoqda', text: `O‘rtacha ${Math.round(avg)} daqiqa (reja ${profile.sessionMin}). Dam olishni taymer bilan nazorat qiling.` });
 
   const avg4 = weeks.slice(0, 4).reduce((a, w) => a + w.workouts, 0) / 4;
   if (avg4 >= planned * 0.75 && weeks.slice(0, 4).every((w) => w.workouts > 0))
@@ -236,7 +245,7 @@ export function volumeComparison(kg: number): { text: string; next?: string } {
     [6000, 'fil'],
     [12000, 'avtobus'],
     [40000, 'yuk mashinasi (fura)'],
-    [150000, "ko‘k kit"],
+    [150000, 'ko‘k kit'],
     [400000, 'Boeing 747'],
   ];
   let best: [number, string] | null = null;

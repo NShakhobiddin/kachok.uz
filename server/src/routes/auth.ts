@@ -40,11 +40,7 @@ const trialKey = (env: Env, phone: string) => hmac(env.JWT_SECRET, `trial:${phon
 async function issueTokens(deps: Deps, user: UserRow) {
   const access = await signAccess(deps.env.JWT_SECRET, { sub: user.id, role: user.role });
   const refresh = randomToken();
-  await deps.db.query(`INSERT INTO refresh_tokens (token_hash, user_id, expires_at) VALUES ($1, $2, now() + make_interval(days => $3))`, [
-    sha256(refresh),
-    user.id,
-    REFRESH_DAYS,
-  ]);
+  await deps.db.query(`INSERT INTO refresh_tokens (token_hash, user_id, expires_at) VALUES ($1, $2, now() + make_interval(days => $3))`, [sha256(refresh), user.id, REFRESH_DAYS]);
   return { access, refresh };
 }
 
@@ -89,21 +85,16 @@ export function authRoutes(deps: Deps, meOnly = false) {
       const uid = c.get('uid');
       const { rows } = await db.query<UserRow>('SELECT * FROM users WHERE id = $1', [uid]);
       if (!rows[0]) return c.json({ error: 'not_found' }, 404);
-      const coach = await db.query<{ id: string; name: string }>(
-        `SELECT u.id, u.name FROM coach_links l JOIN users u ON u.id = l.coach_id WHERE l.client_id = $1 AND l.status = 'active' LIMIT 1`,
-        [uid],
-      );
+      const coach = await db.query<{ id: string; name: string }>(`SELECT u.id, u.name FROM coach_links l JOIN users u ON u.id = l.coach_id WHERE l.client_id = $1 AND l.status = 'active' LIMIT 1`, [
+        uid,
+      ]);
       return c.json({ user: publicUser(rows[0]), entitlements: await entitlements(db, uid), coach: coach.rows[0] ?? null });
     });
 
     r.patch('/me', async (c) => {
       const body = await readBody(c, z.object({ name: z.string().trim().max(60).optional(), role: z.enum(['athlete', 'coach']).optional() }));
       const uid = c.get('uid');
-      const { rows } = await db.query<UserRow>(`UPDATE users SET name = COALESCE($2, name), role = COALESCE($3, role) WHERE id = $1 RETURNING *`, [
-        uid,
-        body.name ?? null,
-        body.role ?? null,
-      ]);
+      const { rows } = await db.query<UserRow>(`UPDATE users SET name = COALESCE($2, name), role = COALESCE($3, role) WHERE id = $1 RETURNING *`, [uid, body.name ?? null, body.role ?? null]);
       if (!rows[0]) return c.json({ error: 'unauthorized', message: 'Qaytadan kiring' }, 401);
       // rol o'zgarsa yangi access token kerak
       const access = await signAccess(env.JWT_SECRET, { sub: uid, role: rows[0].role });
@@ -226,10 +217,7 @@ export function authRoutes(deps: Deps, meOnly = false) {
 
     // 2) Urinish avval hisoblanadi, keyin solishtiriladi: bir vaqtdagi so'rovlar ham 5 tadan ortiq taxmin qila olmaydi
     const row = (
-      await db.query<{ code_hash: string }>(
-        `UPDATE otp_codes SET attempts = attempts + 1 WHERE phone = $1 AND attempts < $2 AND expires_at > now() RETURNING code_hash`,
-        [phone, MAX_ATTEMPTS],
-      )
+      await db.query<{ code_hash: string }>(`UPDATE otp_codes SET attempts = attempts + 1 WHERE phone = $1 AND attempts < $2 AND expires_at > now() RETURNING code_hash`, [phone, MAX_ATTEMPTS])
     ).rows[0];
     if (!row) {
       await release();
@@ -243,6 +231,8 @@ export function authRoutes(deps: Deps, meOnly = false) {
     // 3) Kod bir martalik: faqat uni o'chira olgan so'rov davom etadi
     const used = await db.query('DELETE FROM otp_codes WHERE phone = $1 AND code_hash = $2 RETURNING 1', [phone, row.code_hash]);
     if (!used.rows.length) return c.json({ error: 'expired', message: 'Kod eskirgan. Yangi kod so‘rang.' }, 400);
+    // raqam egasi tasdiqlandi: boshqa qurilmadan darhol kirish uchun 60 soniyalik oraliq bekor qilinadi (soatlik/kunlik chegaralar qoladi)
+    await db.query('UPDATE phone_limits SET last_sent_at = NULL WHERE phone = $1', [phone]);
     const { user, isNew } = await findOrCreateUser(deps, phone);
     return c.json({ ...(await issueTokens(deps, user)), user: publicUser(user), isNew });
   });
@@ -251,12 +241,8 @@ export function authRoutes(deps: Deps, meOnly = false) {
     const { refresh } = await readBody(c, z.object({ refresh: z.string().min(10).max(200) }));
     const hash = sha256(refresh);
     // Atomik almashtirish: bitta token faqat bir marta ishlatiladi
-    const rot = (
-      await db.query<{ user_id: string }>(
-        `UPDATE refresh_tokens SET revoked_at = now() WHERE token_hash = $1 AND revoked_at IS NULL AND expires_at > now() RETURNING user_id`,
-        [hash],
-      )
-    ).rows[0];
+    const rot = (await db.query<{ user_id: string }>(`UPDATE refresh_tokens SET revoked_at = now() WHERE token_hash = $1 AND revoked_at IS NULL AND expires_at > now() RETURNING user_id`, [hash]))
+      .rows[0];
     if (!rot) {
       // Bekor qilingan token qayta ishlatildi — o'g'irlangan bo'lishi mumkin: foydalanuvchining barcha sessiyalari yopiladi
       const reused = (await db.query<{ user_id: string }>('SELECT user_id FROM refresh_tokens WHERE token_hash = $1 AND revoked_at IS NOT NULL', [hash])).rows[0];

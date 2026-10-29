@@ -3,7 +3,8 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { exById } from '../data/exercises';
 import { estimateMinutes, generateProgram, manualPlanned, weeklyVolume } from '../engine/program';
-import { mesoState, setChange, type MuscleFeedback } from '../engine/meso';
+import { mesoPerWeek, mesoState, setChange, type MuscleFeedback } from '../engine/meso';
+import { clampKcalAdjust } from '../engine/nutrition';
 import { detectPRs } from '../engine/stats';
 import { isoDate } from '../lib/date';
 import type { BodyEntry, ExerciseLog, FoodEntry, MuscleGroup, PlannedExercise, Profile, Program, SetLog, WorkoutDay, WorkoutLog } from '../types';
@@ -137,6 +138,8 @@ interface State {
   readiness: Record<string, number>;
   lessonsDone: string[];
   kcalAdjust: number;
+  /** tuzatish oxirgi marta qachon o'zgartirilgan (YYYY-MM-DD) — haftalik tekshiruv shundan keyingi vaznga qaraydi */
+  kcalAdjustAt?: string;
   setDelta: Partial<Record<MuscleGroup, number>>;
   /** setDelta qaysi blokka tegishli (yangi blokda qayta boshlanadi) */
   setDeltaMeso?: number;
@@ -212,6 +215,7 @@ const initial = {
   readiness: {} as Record<string, number>,
   lessonsDone: [] as string[],
   kcalAdjust: 0,
+  kcalAdjustAt: undefined as string | undefined,
   setDelta: {},
   setDeltaMeso: undefined as number | undefined,
   seenAchievements: [] as string[],
@@ -227,6 +231,10 @@ const initial = {
 export const INITIAL_SYNC: SyncState = { cursor: 0, hashes: {}, stamps: {}, status: 'idle' };
 
 const uid = () => Math.random().toString(36).slice(2, 10);
+const rotated = (program: Program | null, day: WorkoutDay | null) => {
+  const stored = day && program?.days.find((d) => d.id === day.id);
+  return !!stored && stored.exercises.map((e) => e.exerciseId).join() !== day.exercises.map((e) => e.exerciseId).join();
+};
 
 function mapDay(program: Program | null, dayId: string, fn: (d: WorkoutDay) => WorkoutDay): Program | null {
   if (!program) return program;
@@ -301,7 +309,8 @@ export const useStore = create<State>()(
             restTotal: 0,
             readiness,
             plan,
-            startIds: plan.map((p) => p.exerciseId),
+            // A/B navbati bilan almashgan kun (chiziqli dastur) — shablondan farq qiladi, dasturga yozilmaydi
+            startIds: rotated(get().program, day) ? undefined : plan.map((p) => p.exerciseId),
             programId: day ? get().program?.id : undefined,
           },
         });
@@ -400,14 +409,26 @@ export const useStore = create<State>()(
         const end = workoutEnd(a);
         const finishedAt = new Date(end).toISOString();
         const durationMin = Math.max(1, Math.round((end - new Date(a.log.startedAt).getTime()) / 60000));
-        const log: WorkoutLog = { ...a.log, exercises, finishedAt, durationMin, muscleFb: fb?.muscles, painEx: fb ? (fb.pain.length ? fb.pain : undefined) : a.log.painEx };
+        const program = get().program;
+        const profile = get().profile;
+        const perWeek = program ? mesoPerWeek(program, profile) : 1;
+        // yengillashtirish haftasida bajarilgan dastur mashg'uloti (shu mashg'ulotdan oldingi blok holati) — keyingi blok uchun tayanch bo'lmaydi
+        const msNow = program && profile ? mesoState(program, get().logs, profile.level, perWeek) : null;
+        const inProgram = !!(a.log.dayId && program?.days.some((d) => d.id === a.log.dayId));
+        const log: WorkoutLog = {
+          ...a.log,
+          exercises,
+          finishedAt,
+          durationMin,
+          muscleFb: fb?.muscles,
+          painEx: fb ? (fb.pain.length ? fb.pain : undefined) : a.log.painEx,
+          deload: msNow?.deload && inProgram ? true : undefined,
+        };
         const prs = detectPRs(log, get().logs);
         const logs = [...get().logs, log];
         // RP uslubidagi moslashuv: har mushak uchun alohida — kam pump/oson/tez tiklanish → set qo'shiladi,
         // hali og'riyotgan yoki juda og'ir → kamayadi. Haftalik hajm MRV dan oshmaydi.
-        const program = get().program;
-        const profile = get().profile;
-        const meso = program && profile ? mesoState(program, logs, profile.level).meso : 0;
+        const meso = program && profile ? mesoState(program, logs, profile.level, perWeek).meso : 0;
         const setDelta = get().setDeltaMeso === meso ? { ...get().setDelta } : {};
         if (fb?.muscles && program) {
           const vol = weeklyVolume(program);
@@ -443,7 +464,7 @@ export const useStore = create<State>()(
       completeLesson: (id) => {
         if (!get().lessonsDone.includes(id)) set({ lessonsDone: [...get().lessonsDone, id] });
       },
-      setKcalAdjust: (n) => set({ kcalAdjust: n }),
+      setKcalAdjust: (n) => set({ kcalAdjust: clampKcalAdjust(n), kcalAdjustAt: isoDate() }),
       markAchievements: (ids) => set({ seenAchievements: Array.from(new Set([...get().seenAchievements, ...ids])) }),
       setSettings: (patch) => set({ settings: { ...get().settings, ...patch } }),
       // akkaunt va sinxron holati saqlanadi: tiklangan ma'lumot "hozir tahrirlangan" deb belgilanadi va bulutga yuboriladi,
@@ -517,6 +538,11 @@ export const useStore = create<State>()(
     {
       name: 'kachok-v1',
       version: 1,
+      // eski versiyada saqlangan haddan tashqari tuzatish chegaraga keltiriladi
+      merge: (persisted, current) => {
+        const p = (persisted ?? {}) as Partial<State>;
+        return { ...current, ...p, kcalAdjust: clampKcalAdjust(typeof p.kcalAdjust === 'number' ? p.kcalAdjust : 0) };
+      },
       partialize: (s) => {
         const { lastPRs: _ignored, ...rest } = s;
         void _ignored;
@@ -541,6 +567,7 @@ export function exportData(): string {
     readiness: s.readiness,
     lessonsDone: s.lessonsDone,
     kcalAdjust: s.kcalAdjust,
+    kcalAdjustAt: s.kcalAdjustAt,
     setDelta: s.setDelta,
     setDeltaMeso: s.setDeltaMeso,
     seenAchievements: s.seenAchievements,

@@ -33,13 +33,9 @@ const syncLog = z
   })
   .passthrough();
 
-const syncBody = z
-  .object({ date: z.string().max(20), weightKg: num, waistCm: num, neckCm: num, hipCm: num, chestCm: num, armCm: num, thighCm: num })
-  .passthrough();
+const syncBody = z.object({ date: z.string().max(20), weightKg: num, waistCm: num, neckCm: num, hipCm: num, chestCm: num, armCm: num, thighCm: num }).passthrough();
 
-const syncFood = z
-  .array(z.object({ id: z.string().max(64), date: z.string().max(20), meal: num, name: str(500), g: num, kcal: num, p: num, f: num, c: num }).passthrough())
-  .max(500);
+const syncFood = z.array(z.object({ id: z.string().max(64), date: z.string().max(20), meal: num, name: str(500), g: num, kcal: num, p: num, f: num, c: num }).passthrough()).max(500);
 
 const syncProfile = z
   .object({

@@ -120,9 +120,10 @@ export default function Workout() {
     return active.plan.map((pe) => {
       const ex = EXERCISE_MAP[pe.exerciseId];
       // setlar soni mashg'ulot boshlanganda belgilangan (active.plan) — bu yerda faqat vazn va RIR
-      return { ...suggest(ex, pe, logs, { bodyKg: profile.weightKg, sex: profile.sex, level: profile.level, ...mesoCtx(meso, program), readiness: active.readiness }), sets: pe.sets };
+      const ctx = { bodyKg: profile.weightKg, sex: profile.sex, level: profile.level, ...mesoCtx(meso, program), readiness: active.readiness, barKg: settings.barKg, equipment: profile.equipment };
+      return { ...suggest(ex, pe, logs, ctx), sets: pe.sets };
     });
-  }, [active?.plan, logs, profile, meso, program, active?.readiness]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [active?.plan, logs, profile, meso, program, active?.readiness, settings.barKg]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const remaining = active?.restEndsAt ? (active.restEndsAt - now) / 1000 : null;
   // dam paneli balandligi: setlar uning ostida qolmasin (sahifa pastki bo'shlig'i va scroll-padding)
@@ -782,6 +783,7 @@ function FinishSheet({
   const [fb, setFb] = useState<Partial<Record<MuscleGroup, Partial<MuscleFeedback>>>>({});
   const [pain, setPain] = useState<string[]>(initialPain ?? []);
   const [saveDay, setSaveDay] = useState(true);
+  const [fbOpen, setFbOpen] = useState(false);
   const set = (g: MuscleGroup, k: keyof MuscleFeedback, v: number) => setFb((x) => ({ ...x, [g]: { ...x[g], [k]: v } }));
   if (doneSets === 0)
     return (
@@ -794,38 +796,34 @@ function FinishSheet({
       </div>
     );
   const complete = Object.fromEntries(Object.entries(fb).filter(([, f]) => f?.pump && f.work && f.recovery)) as FinishFeedback['muscles'];
+  const answered = Object.keys(complete).length;
   const rows: { k: keyof MuscleFeedback; q: string; o: readonly string[] }[] = [
     { k: 'pump', q: 'To‘lish (pump)', o: FB_TEXT.pump },
     { k: 'work', q: 'Yuklama', o: FB_TEXT.work },
     { k: 'recovery', q: 'O‘tgan safardan keyin', o: FB_TEXT.recovery },
   ];
+  const save = (
+    <button className="btn btn-success btn-block" onClick={() => onFinish({ muscles: complete, pain }, canSaveDay && saveDay)}>
+      <Icon name="check" size={18} stroke={3} /> Saqlash
+    </button>
+  );
   return (
     <div className="stack gap-12">
       <h3 className="title">Mashg‘ulotni yakunlash</h3>
-      {doneSets < totalSets && <p className="small muted">{totalSets - doneSets} ta set bajarilmagan — ular saqlanmaydi.</p>}
-      <Note label="Bu savollar nima uchun">Har bir mushak uchun 3 ta qisqa javob — keyingi haftada shu mushakka setlar soni alohida moslashadi (RP metodikasi). Javob bermasangiz ham bo‘ladi.</Note>
-      {groups.map((g) => (
-        <div key={g} className="card tight stack gap-8">
-          <span className="strong">{GROUPS[g].name}</span>
-          {rows.map((r) => (
-            <div key={r.k} className="stack gap-4">
-              <span className="tiny muted">{r.q}</span>
-              <div className="row gap-4">
-                {r.o.map((o, i) => (
-                  <button
-                    key={o}
-                    className={`chip sm fb-chip ${fb[g]?.[r.k] === i + 1 ? 'on' : ''}`}
-                    onClick={() => set(g, r.k, i + 1)}
-                    aria-pressed={fb[g]?.[r.k] === i + 1}
-                  >
-                    {o}
-                  </button>
-                ))}
-              </div>
-            </div>
-          ))}
-        </div>
-      ))}
+      <p className="small muted">
+        {doneSets} ta set bajarildi.{doneSets < totalSets ? ` ${totalSets - doneSets} ta bajarilmagan set saqlanmaydi.` : ''} Quyidagi savollar ixtiyoriy.
+      </p>
+      {canSaveDay && (
+        <label className="row between gap-12">
+          <span className="small">
+            <b>O‘zgarishlarni dasturga saqlash</b>
+            <span className="muted" style={{ display: 'block' }}>
+              Bugun almashtirilgan va qo‘shilgan mashqlar keyingi safar ham bo‘ladi
+            </span>
+          </span>
+          <Toggle on={saveDay} onChange={setSaveDay} label="Dasturga saqlash" />
+        </label>
+      )}
       <div className="stack gap-6">
         <span className="small strong">Bo‘g‘imda og‘riq bergan mashq bo‘ldimi?</span>
         <div className="row wrap gap-6">
@@ -840,20 +838,49 @@ function FinishSheet({
         </div>
         {pain.length > 0 && <p className="tiny" style={{ color: 'var(--yellow)' }}>Keyingi safar bu mashqlarda ogohlantirish va muqobil taklif chiqadi.</p>}
       </div>
-      {canSaveDay && (
-        <label className="row between gap-12">
-          <span className="small">
-            <b>O‘zgarishlarni dasturga saqlash</b>
-            <span className="muted" style={{ display: 'block' }}>
-              Bugun almashtirilgan va qo‘shilgan mashqlar keyingi safar ham bo‘ladi
+      {groups.length > 0 && (
+        <div className="card tight stack gap-8">
+          <button className="row between gap-8" style={{ width: '100%', textAlign: 'left', minHeight: 40 }} onClick={() => setFbOpen((v) => !v)} aria-expanded={fbOpen}>
+            <span className="small">
+              <b>Mushaklar bo‘yicha fikr (ixtiyoriy)</b>
+              <span className="muted" style={{ display: 'block' }}>
+                {answered ? `${answered} ta mushak baholandi` : 'Keyingi haftadagi setlar soni shunga qarab moslashadi'}
+              </span>
             </span>
-          </span>
-          <Toggle on={saveDay} onChange={setSaveDay} label="Dasturga saqlash" />
-        </label>
+            <Icon name={fbOpen ? 'up' : 'down'} size={18} />
+          </button>
+          {fbOpen && (
+            <>
+              <Note label="Bu savollar nima uchun">Har bir mushak uchun 3 ta qisqa javob — keyingi haftada shu mushakka setlar soni alohida moslashadi (RP metodikasi). Javob bermasangiz ham bo‘ladi.</Note>
+              {groups.map((g) => (
+                <div key={g} className="stack gap-8" style={{ paddingTop: 8, borderTop: '1px solid var(--line)' }}>
+                  <span className="strong">{GROUPS[g].name}</span>
+                  {rows.map((r) => (
+                    <div key={r.k} className="stack gap-4">
+                      <span className="tiny muted">{r.q}</span>
+                      <div className="row gap-4">
+                        {r.o.map((o, i) => (
+                          <button
+                            key={o}
+                            className={`chip sm fb-chip ${fb[g]?.[r.k] === i + 1 ? 'on' : ''}`}
+                            style={{ flex: '1 1 0', minWidth: 0, whiteSpace: 'normal', height: 'auto', minHeight: 36, lineHeight: 1.15, textAlign: 'center', padding: '4px 4px' }}
+                            onClick={() => set(g, r.k, i + 1)}
+                            aria-pressed={fb[g]?.[r.k] === i + 1}
+                          >
+                            {o}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ))}
+            </>
+          )}
+        </div>
       )}
-      <button className="btn btn-success btn-block mt-8" onClick={() => onFinish({ muscles: complete, pain }, canSaveDay && saveDay)}>
-        <Icon name="check" size={18} stroke={3} /> Saqlash
-      </button>
+      {/* Saqlash har doim ko'rinadi: savollar uzun bo'lsa ham pastda yopishib turadi */}
+      <div style={{ position: 'sticky', bottom: 0, zIndex: 2, margin: '0 -4px', padding: '10px 4px calc(var(--safe-b, 0px) + 6px)', background: 'linear-gradient(to bottom, transparent, var(--bg-2) 14px)' }}>{save}</div>
       <button className="btn btn-ghost btn-block" onClick={onDiscard}>
         Saqlamasdan chiqish
       </button>
@@ -865,6 +892,7 @@ function FinishSheet({
 function EffortAsk({ at, sugs }: { at: { ex: number; set: number }; sugs: Suggestion[] }) {
   const active = useStore((s) => s.active)!;
   const updateSet = useStore((s) => s.updateSet);
+  const barKg = useStore((s) => s.settings.barKg);
   const exLog = active.log.exercises[at.ex];
   const set = exLog?.sets[at.set];
   const ex = exLog ? EXERCISE_MAP[exLog.exerciseId] : undefined;
@@ -893,7 +921,7 @@ function EffortAsk({ at, sugs }: { at: { ex: number; set: number }; sugs: Sugges
     const reps = rest[0].x.reps || sug.reps;
     const from = rest[0].x.kg || sug.kg || set.kg;
     const e1 = e1rmFromSet(set.kg, set.reps, set.rir);
-    const kg = roundLoad(ex, Math.min(from * 1.1, Math.max(from * 0.9, loadFor(e1, reps, target))));
+    const kg = roundLoad(ex, Math.min(from * 1.1, Math.max(from * 0.9, loadFor(e1, reps, target))), barKg);
     if (Math.abs(kg - from) >= Math.max(ex.increment || 1, from * 0.02)) advice = { kg, from };
   }
   const off = set.rir - target;

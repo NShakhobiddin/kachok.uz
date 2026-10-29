@@ -1,5 +1,6 @@
 // Zaxira fayli va qurilmada saqlangan holatni tekshirish: noto'g'ri tuzilma (qo'lda tahrirlangan yoki boshqa
 // versiyadagi fayl) ilovani buzib qo'ymasin. Faqat exportData yozadigan kalitlar qabul qilinadi.
+import { clampKcalAdjust } from '../engine/nutrition';
 import type { BodyEntry, ExerciseLog, FoodEntry, PlannedExercise, Profile, Program, SetLog, WorkoutDay, WorkoutLog } from '../types';
 
 type Obj = Record<string, unknown>;
@@ -22,6 +23,7 @@ export const BACKUP_KEYS = [
   'readiness',
   'lessonsDone',
   'kcalAdjust',
+  'kcalAdjustAt',
   'setDelta',
   'setDeltaMeso',
   'seenAchievements',
@@ -173,6 +175,7 @@ export interface BackupData {
   readiness: Record<string, number>;
   lessonsDone: string[];
   kcalAdjust: number;
+  kcalAdjustAt: string | undefined;
   setDelta: Record<string, number>;
   setDeltaMeso: number | undefined;
   seenAchievements: string[];
@@ -231,7 +234,8 @@ export function sanitizeData(d: unknown, strict = true): { data: BackupData; dro
       water: rec('water', numRecord, {}),
       readiness: rec('readiness', numRecord, {}),
       lessonsDone: list('lessonsDone', (x) => (isStr(x) ? x : null)),
-      kcalAdjust: isNum(d.kcalAdjust) ? d.kcalAdjust : 0,
+      kcalAdjust: isNum(d.kcalAdjust) ? clampKcalAdjust(d.kcalAdjust) : 0,
+      kcalAdjustAt: isStr(d.kcalAdjustAt) && /^\d{4}-\d{2}-\d{2}/.test(d.kcalAdjustAt) ? d.kcalAdjustAt.slice(0, 10) : undefined,
       setDelta: rec('setDelta', numRecord, {}),
       setDeltaMeso: isNum(d.setDeltaMeso) ? d.setDeltaMeso : undefined,
       seenAchievements: list('seenAchievements', (x) => (isStr(x) ? x : null)),

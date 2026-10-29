@@ -96,99 +96,99 @@ export async function handlePayme(db: Db, body: unknown, now = Date.now()): Prom
   return 'err' in out ? { error: out.err, id } : { result: out.ok, id };
 
   async function run(q: Queryable): Promise<unknown> {
-      switch (req.method) {
-        case 'CheckPerformTransaction': {
-          const order = await orderById(q, (p.account as Record<string, unknown>)?.order_id);
-          const e = checkOrder(order, p.amount);
-          if (e) throw e;
-          if (order!.provider_state === 1) throw E.orderBusy();
-          return { allow: true };
-        }
-        case 'CreateTransaction': {
-          if (typeof p.id !== 'string' || !p.id || p.id.length > 64) throw E.invalid();
-          const existing = await orderByTxn(q, p.id);
-          if (existing) {
-            if (existing.provider_state !== 1) throw E.cantPerform();
-            if (now - Number(existing.provider_create_time) > PAYME_TIMEOUT_MS) {
-              await q.query(`UPDATE orders SET provider_state = -1, cancel_time = $2, cancel_reason = 4, status = 'cancelled' WHERE id = $1`, [existing.id, now]);
-              throw E.cantPerform();
-            }
-            return { create_time: Number(existing.provider_create_time), transaction: existing.id, state: 1 };
-          }
-          const order = await orderById(q, (p.account as Record<string, unknown>)?.order_id);
-          const e = checkOrder(order, p.amount);
-          if (e) throw e;
-          // shu buyurtma bo'yicha boshqa tranzaksiya kutilmoqda
-          if (order!.provider_state === 1) throw E.orderBusy();
-          await q.query(`UPDATE orders SET provider_txn_id = $2, provider_state = 1, provider_create_time = $3, status = 'pending' WHERE id = $1`, [order!.id, p.id, now]);
-          return { create_time: now, transaction: order!.id, state: 1 };
-        }
-        case 'PerformTransaction': {
-          const o = await orderByTxn(q, p.id);
-          if (!o) throw E.notFound();
-          if (o.provider_state === 2) return { transaction: o.id, perform_time: Number(o.perform_time), state: 2 };
-          if (o.provider_state !== 1 || !o.user_id) throw E.cantPerform();
-          if (now - Number(o.provider_create_time) > PAYME_TIMEOUT_MS) {
-            await q.query(`UPDATE orders SET provider_state = -1, cancel_time = $2, cancel_reason = 4, status = 'cancelled' WHERE id = $1`, [o.id, now]);
+    switch (req.method) {
+      case 'CheckPerformTransaction': {
+        const order = await orderById(q, (p.account as Record<string, unknown>)?.order_id);
+        const e = checkOrder(order, p.amount);
+        if (e) throw e;
+        if (order!.provider_state === 1) throw E.orderBusy();
+        return { allow: true };
+      }
+      case 'CreateTransaction': {
+        if (typeof p.id !== 'string' || !p.id || p.id.length > 64) throw E.invalid();
+        const existing = await orderByTxn(q, p.id);
+        if (existing) {
+          if (existing.provider_state !== 1) throw E.cantPerform();
+          if (now - Number(existing.provider_create_time) > PAYME_TIMEOUT_MS) {
+            await q.query(`UPDATE orders SET provider_state = -1, cancel_time = $2, cancel_reason = 4, status = 'cancelled' WHERE id = $1`, [existing.id, now]);
             throw E.cantPerform();
           }
-          await q.query(`UPDATE orders SET provider_state = 2, perform_time = $2, status = 'paid' WHERE id = $1`, [o.id, now]);
-          await activatePlan(q, o.user_id!, o.plan);
-          return { transaction: o.id, perform_time: now, state: 2 };
+          return { create_time: Number(existing.provider_create_time), transaction: existing.id, state: 1 };
         }
-        case 'CancelTransaction': {
-          const o = await orderByTxn(q, p.id);
-          if (!o) throw E.notFound();
-          if (o.provider_state === -1 || o.provider_state === -2) return { transaction: o.id, cancel_time: Number(o.cancel_time), state: o.provider_state };
-          const reason = typeof p.reason === 'number' ? p.reason : null;
-          if (o.provider_state === 1) {
-            await q.query(`UPDATE orders SET provider_state = -1, cancel_time = $2, cancel_reason = $3, status = 'cancelled' WHERE id = $1`, [o.id, now, reason]);
-            return { transaction: o.id, cancel_time: now, state: -1 };
-          }
-          if (o.provider_state === 2) {
-            // to'lov qaytarildi — obuna kunlari olib tashlanadi
-            await q.query(`UPDATE orders SET provider_state = -2, cancel_time = $2, cancel_reason = $3, status = 'cancelled' WHERE id = $1`, [o.id, now, reason]);
-            if (o.user_id) await revokePlan(q, o.user_id, o.plan);
-            return { transaction: o.id, cancel_time: now, state: -2 };
-          }
-          throw E.cantCancel();
+        const order = await orderById(q, (p.account as Record<string, unknown>)?.order_id);
+        const e = checkOrder(order, p.amount);
+        if (e) throw e;
+        // shu buyurtma bo'yicha boshqa tranzaksiya kutilmoqda
+        if (order!.provider_state === 1) throw E.orderBusy();
+        await q.query(`UPDATE orders SET provider_txn_id = $2, provider_state = 1, provider_create_time = $3, status = 'pending' WHERE id = $1`, [order!.id, p.id, now]);
+        return { create_time: now, transaction: order!.id, state: 1 };
+      }
+      case 'PerformTransaction': {
+        const o = await orderByTxn(q, p.id);
+        if (!o) throw E.notFound();
+        if (o.provider_state === 2) return { transaction: o.id, perform_time: Number(o.perform_time), state: 2 };
+        if (o.provider_state !== 1 || !o.user_id) throw E.cantPerform();
+        if (now - Number(o.provider_create_time) > PAYME_TIMEOUT_MS) {
+          await q.query(`UPDATE orders SET provider_state = -1, cancel_time = $2, cancel_reason = 4, status = 'cancelled' WHERE id = $1`, [o.id, now]);
+          throw E.cantPerform();
         }
-        case 'CheckTransaction': {
-          const o = await orderByTxn(q, p.id);
-          if (!o) throw E.notFound();
-          return {
+        await q.query(`UPDATE orders SET provider_state = 2, perform_time = $2, status = 'paid' WHERE id = $1`, [o.id, now]);
+        await activatePlan(q, o.user_id!, o.plan);
+        return { transaction: o.id, perform_time: now, state: 2 };
+      }
+      case 'CancelTransaction': {
+        const o = await orderByTxn(q, p.id);
+        if (!o) throw E.notFound();
+        if (o.provider_state === -1 || o.provider_state === -2) return { transaction: o.id, cancel_time: Number(o.cancel_time), state: o.provider_state };
+        const reason = typeof p.reason === 'number' ? p.reason : null;
+        if (o.provider_state === 1) {
+          await q.query(`UPDATE orders SET provider_state = -1, cancel_time = $2, cancel_reason = $3, status = 'cancelled' WHERE id = $1`, [o.id, now, reason]);
+          return { transaction: o.id, cancel_time: now, state: -1 };
+        }
+        if (o.provider_state === 2) {
+          // to'lov qaytarildi — obuna kunlari olib tashlanadi
+          await q.query(`UPDATE orders SET provider_state = -2, cancel_time = $2, cancel_reason = $3, status = 'cancelled' WHERE id = $1`, [o.id, now, reason]);
+          if (o.user_id) await revokePlan(q, o.user_id, o.plan);
+          return { transaction: o.id, cancel_time: now, state: -2 };
+        }
+        throw E.cantCancel();
+      }
+      case 'CheckTransaction': {
+        const o = await orderByTxn(q, p.id);
+        if (!o) throw E.notFound();
+        return {
+          create_time: Number(o.provider_create_time),
+          perform_time: Number(o.perform_time ?? 0),
+          cancel_time: Number(o.cancel_time ?? 0),
+          transaction: o.id,
+          state: o.provider_state,
+          reason: o.cancel_reason ?? null,
+        };
+      }
+      case 'GetStatement': {
+        if (typeof p.from !== 'number' || typeof p.to !== 'number' || !Number.isFinite(p.from) || !Number.isFinite(p.to)) throw E.invalid();
+        const { rows } = await q.query<OrderRow>(`SELECT * FROM orders WHERE provider = 'payme' AND provider_create_time BETWEEN $1 AND $2 ORDER BY provider_create_time`, [
+          Number(p.from),
+          Number(p.to),
+        ]);
+        return {
+          transactions: rows.map((o) => ({
+            id: o.provider_txn_id,
+            time: Number(o.provider_create_time),
+            amount: Number(o.amount_tiyin),
+            account: { order_id: o.id },
             create_time: Number(o.provider_create_time),
             perform_time: Number(o.perform_time ?? 0),
             cancel_time: Number(o.cancel_time ?? 0),
             transaction: o.id,
             state: o.provider_state,
             reason: o.cancel_reason ?? null,
-          };
-        }
-        case 'GetStatement': {
-          if (typeof p.from !== 'number' || typeof p.to !== 'number' || !Number.isFinite(p.from) || !Number.isFinite(p.to)) throw E.invalid();
-          const { rows } = await q.query<OrderRow>(
-            `SELECT * FROM orders WHERE provider = 'payme' AND provider_create_time BETWEEN $1 AND $2 ORDER BY provider_create_time`,
-            [Number(p.from), Number(p.to)],
-          );
-          return {
-            transactions: rows.map((o) => ({
-              id: o.provider_txn_id,
-              time: Number(o.provider_create_time),
-              amount: Number(o.amount_tiyin),
-              account: { order_id: o.id },
-              create_time: Number(o.provider_create_time),
-              perform_time: Number(o.perform_time ?? 0),
-              cancel_time: Number(o.cancel_time ?? 0),
-              transaction: o.id,
-              state: o.provider_state,
-              reason: o.cancel_reason ?? null,
-            })),
-          };
-        }
-        default:
-          throw E.method();
+          })),
+        };
       }
+      default:
+        throw E.method();
+    }
   }
 }
 

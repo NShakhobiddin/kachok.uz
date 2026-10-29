@@ -3,11 +3,11 @@
 import type { ActivityLevel, BodyEntry, Goal, Level, Profile, Sex } from '../types';
 
 export const ACTIVITY: Record<ActivityLevel, { k: number; name: string; desc: string }> = {
-  sedentary: { k: 1.2, name: 'Kam harakat', desc: "Asosan o‘tiraman, kuniga 5 000 qadamdan kam" },
+  sedentary: { k: 1.2, name: 'Kam harakat', desc: 'Asosan o‘tiraman, kuniga 5 000 qadamdan kam' },
   light: { k: 1.375, name: 'Yengil faol', desc: '5–7 ming qadam, ofis ishi' },
-  moderate: { k: 1.55, name: "O‘rtacha faol", desc: '7–10 ming qadam yoki tik turib ishlash' },
-  active: { k: 1.725, name: 'Faol', desc: "10 ming+ qadam yoki jismoniy ish" },
-  veryActive: { k: 1.9, name: 'Juda faol', desc: "Og‘ir jismoniy mehnat yoki ikki mahal mashq" },
+  moderate: { k: 1.55, name: 'O‘rtacha faol', desc: '7–10 ming qadam yoki tik turib ishlash' },
+  active: { k: 1.725, name: 'Faol', desc: '10 ming+ qadam yoki jismoniy ish' },
+  veryActive: { k: 1.9, name: 'Juda faol', desc: 'Og‘ir jismoniy mehnat yoki ikki mahal mashq' },
 };
 
 export function bmr(sex: Sex, kg: number, cm: number, age: number): number {
@@ -95,12 +95,14 @@ export function nutritionPlan(p: Profile, kcalAdjust = 0, tdeeOverride?: number)
   const notes: string[] = [];
   let kcal: number;
   let ratePct: number;
+  let floored = false;
   if (p.goal === 'fatLoss') {
     // haftasiga tana vaznining 0.5–0.7% (Garthe 2011, Helms 2014)
     const deficit = Math.min((0.006 * p.weightKg * 7700) / 7, tdee * 0.25);
+    floored = tdee - deficit < floor;
     kcal = Math.max(floor, tdee - deficit);
     // minimum yoki 25% chegarasi tufayli kamomad kichraygan bo'lsa — kutilayotgan sur'at ham sekinroq
-    ratePct = Math.round(Math.max(-0.6, (((kcal - tdee) * 7) / 7700 / p.weightKg) * 100) * 100) / 100;
+    ratePct = Math.round(Math.min(0, Math.max(-0.6, (((kcal - tdee) * 7) / 7700 / p.weightKg) * 100)) * 100) / 100;
   } else {
     const sp = surplusPct(p.goal, p.level);
     kcal = tdee * (1 + sp);
@@ -109,6 +111,9 @@ export function nutritionPlan(p: Profile, kcalAdjust = 0, tdeeOverride?: number)
   kcal += adjust;
   if (kcal < floor) {
     kcal = floor;
+    floored = true;
+  }
+  if (floored) {
     notes.push(p.goal === 'fatLoss' ? 'Kaloriya xavfsiz minimumdan pastga tushirilmadi — sekinroq, lekin mushakni saqlab ozasiz.' : 'Kaloriya xavfsiz minimumdan pastga tushirilmadi.');
   }
   kcal = Math.max(floor, Math.round(kcal / 10) * 10);
@@ -131,7 +136,7 @@ export function nutritionPlan(p: Profile, kcalAdjust = 0, tdeeOverride?: number)
   let carbs = Math.round((kcal - protein * 4 - fat * 9) / 4);
   if (carbs < 80) {
     carbs = 80;
-    notes.push("Uglevodlar juda kamaymasligi uchun yog‘ biroz kamaytirildi.");
+    notes.push('Uglevodlar juda kamaymasligi uchun yog‘ biroz kamaytirildi.');
     fat = Math.max(Math.round((kcal * 0.2) / 9), Math.round((kcal - protein * 4 - carbs * 4) / 9));
   }
   // makrolar yig'indisi kaloriyadan oshmasin: avval uglevod, keyin yog' (≥15%), oxirida oqsil kamayadi
@@ -143,11 +148,11 @@ export function nutritionPlan(p: Profile, kcalAdjust = 0, tdeeOverride?: number)
   const waterL = p.sex === 'male' ? 2.0 : 1.6;
   const waterTrainingL = Math.round((p.sessionMin / 60) * 0.6 * 10) / 10;
   const meals = 4;
-  const weeklyChangeKg = Math.round(((ratePct / 100) * p.weightKg) * 100) / 100;
+  const weeklyChangeKg = Math.round((ratePct / 100) * p.weightKg * 100) / 100;
 
-  if (p.goal === 'muscle') notes.push("Haftasiga vaznning ~0.25–0.5% qo‘shilishi — asosan mushak, kam yog‘.");
-  if (p.goal === 'fatLoss') notes.push("Haftasiga vaznning ~0.5–0.7% kamayishi — mushakni saqlagan holda yog‘ yo‘qotish uchun optimal.");
-  if (refW < p.weightKg) notes.push("Oqsil miqdori sog‘lom vazn (BMI 25) bo‘yicha hisoblandi.");
+  if (p.goal === 'muscle') notes.push('Haftasiga vaznning ~0.25–0.5% qo‘shilishi — asosan mushak, kam yog‘.');
+  if (p.goal === 'fatLoss') notes.push('Haftasiga vaznning ~0.5–0.7% kamayishi — mushakni saqlagan holda yog‘ yo‘qotish uchun optimal.');
+  if (refW < p.weightKg) notes.push('Oqsil miqdori sog‘lom vazn (BMI 25) bo‘yicha hisoblandi.');
 
   return {
     bmr: Math.round(b),
@@ -239,13 +244,7 @@ export function weeklyCheck(entries: BodyEntry[], plan: NutritionPlan, weightKg:
     why = 'kamaytirishni tavsiya qilamiz';
   } else {
     what =
-      target > 0
-        ? perWeek > 0
-          ? `Vazn rejadagidan sekinroq oshmoqda (${per})`
-          : `Vazn oshmayapti (${per})`
-        : target < 0
-          ? `Vazn rejadan tezroq kamaymoqda (${per})`
-          : `Vazn kamaymoqda (${per})`;
+      target > 0 ? (perWeek > 0 ? `Vazn rejadagidan sekinroq oshmoqda (${per})` : `Vazn oshmayapti (${per})`) : target < 0 ? `Vazn rejadan tezroq kamaymoqda (${per})` : `Vazn kamaymoqda (${per})`;
     why = target > 0 ? 'qo‘shing — mushak o‘sishi uchun energiya kerak' : target < 0 ? 'qo‘shing — mushakni saqlash uchun' : 'qo‘shing — vaznni saqlash uchun';
   }
   const step = reduce ? -STEP : STEP;
@@ -285,14 +284,14 @@ export interface Food {
 
 /** 100 g uchun taxminiy qiymatlar (USDA FoodData Central asosida, tayyor holatda) */
 export const FOODS: Record<string, Food> = {
-  chicken: { id: 'chicken', name: "Tovuq ko‘kragi (pishgan)", kcal: 165, p: 31, f: 3.6, c: 0, tags: ['meat'] },
-  beef: { id: 'beef', name: "Mol go‘shti, yog‘siz (qaynatilgan)", kcal: 217, p: 27, f: 12, c: 0, tags: ['meat'] },
+  chicken: { id: 'chicken', name: 'Tovuq ko‘kragi (pishgan)', kcal: 165, p: 31, f: 3.6, c: 0, tags: ['meat'] },
+  beef: { id: 'beef', name: 'Mol go‘shti, yog‘siz (qaynatilgan)', kcal: 217, p: 27, f: 12, c: 0, tags: ['meat'] },
   fish: { id: 'fish', name: 'Oq baliq (pishirilgan)', kcal: 105, p: 22, f: 1.5, c: 0, tags: ['fish'] },
   egg: { id: 'egg', name: 'Tuxum', unit: { name: 'dona', g: 55 }, kcal: 143, p: 12.6, f: 9.5, c: 0.7, tags: ['egg'] },
   tvorog: { id: 'tvorog', name: 'Tvorog 5%', kcal: 121, p: 17, f: 5, c: 3, tags: ['dairy'] },
   qatiq: { id: 'qatiq', name: 'Qatiq / kefir 2.5%', kcal: 53, p: 3, f: 2.5, c: 4, tags: ['dairy'] },
   milk: { id: 'milk', name: 'Sut 2.5%', kcal: 52, p: 2.9, f: 2.5, c: 4.7, tags: ['dairy'] },
-  chickpea: { id: 'chickpea', name: "No‘xat (pishgan)", kcal: 164, p: 8.9, f: 2.6, c: 27, tags: ['veg'] },
+  chickpea: { id: 'chickpea', name: 'No‘xat (pishgan)', kcal: 164, p: 8.9, f: 2.6, c: 27, tags: ['veg'] },
   mung: { id: 'mung', name: 'Mosh (pishgan)', kcal: 105, p: 7, f: 0.4, c: 19, tags: ['veg'] },
   rice: { id: 'rice', name: 'Guruch (pishgan)', kcal: 130, p: 2.7, f: 0.3, c: 28, tags: ['veg'] },
   buckwheat: { id: 'buckwheat', name: 'Grechka (pishgan)', kcal: 92, p: 3.4, f: 0.6, c: 20, tags: ['veg'] },
@@ -302,8 +301,8 @@ export const FOODS: Record<string, Food> = {
   pasta: { id: 'pasta', name: 'Makaron (pishgan)', kcal: 158, p: 5.8, f: 0.9, c: 31, tags: ['veg'] },
   banana: { id: 'banana', name: 'Banan', unit: { name: 'dona', g: 120 }, kcal: 89, p: 1.1, f: 0.3, c: 23, tags: ['veg'] },
   apple: { id: 'apple', name: 'Olma', unit: { name: 'dona', g: 160 }, kcal: 52, p: 0.3, f: 0.2, c: 14, tags: ['veg'] },
-  walnut: { id: 'walnut', name: "Yong‘oq", kcal: 654, p: 15, f: 65, c: 14, tags: ['veg'] },
-  oil: { id: 'oil', name: "O‘simlik yog‘i", kcal: 884, p: 0, f: 100, c: 0, tags: ['veg'] },
+  walnut: { id: 'walnut', name: 'Yong‘oq', kcal: 654, p: 15, f: 65, c: 14, tags: ['veg'] },
+  oil: { id: 'oil', name: 'O‘simlik yog‘i', kcal: 884, p: 0, f: 100, c: 0, tags: ['veg'] },
   salad: { id: 'salad', name: 'Sabzavot salati (pomidor, bodring, ko‘katlar)', kcal: 18, p: 0.9, f: 0.2, c: 3.6, tags: ['veg'] },
 };
 
@@ -390,8 +389,7 @@ function macro(items: MealItem[], role?: Role) {
 
 /** 3×3 chiziqli tenglama: P, F, C guruhlari koeffitsientlari bilan maqsadga erishish */
 function solve3(m: number[][], v: number[]): number[] | null {
-  const det = (a: number[][]) =>
-    a[0][0] * (a[1][1] * a[2][2] - a[1][2] * a[2][1]) - a[0][1] * (a[1][0] * a[2][2] - a[1][2] * a[2][0]) + a[0][2] * (a[1][0] * a[2][1] - a[1][1] * a[2][0]);
+  const det = (a: number[][]) => a[0][0] * (a[1][1] * a[2][2] - a[1][2] * a[2][1]) - a[0][1] * (a[1][0] * a[2][2] - a[1][2] * a[2][0]) + a[0][2] * (a[1][0] * a[2][1] - a[1][1] * a[2][0]);
   const D = det(m);
   if (Math.abs(D) < 1e-6) return null;
   return [0, 1, 2].map((col) => det(m.map((row, r) => row.map((x, c) => (c === col ? v[r] : x)))) / D);
@@ -456,7 +454,12 @@ export function mealPlan(plan: NutritionPlan, prefs: Profile['dietPrefs']): Meal
     // bir qadam maqsaddan uzoqlashtirmasin
     const helps = (x: (typeof flat)[number]) => (x.food.kcal * stepOf(x)) / 100 <= Math.abs(diff) * 2;
     let pickItem: (typeof flat)[number] | undefined;
-    for (const pass of [(x: (typeof flat)[number]) => !x.food.unit && x.role === 'C', (x: (typeof flat)[number]) => !x.food.unit && x.role === 'F', (x: (typeof flat)[number]) => !x.food.unit, () => true]) {
+    for (const pass of [
+      (x: (typeof flat)[number]) => !x.food.unit && x.role === 'C',
+      (x: (typeof flat)[number]) => !x.food.unit && x.role === 'F',
+      (x: (typeof flat)[number]) => !x.food.unit,
+      () => true,
+    ]) {
       const cands = flat.filter((x) => pass(x) && can(x) && helps(x));
       if (!cands.length) continue;
       // kamaytirishda — eng ko'p kaloriya berayotgani, oshirishda — nisbatan eng kam oshirilgani
@@ -469,35 +472,54 @@ export function mealPlan(plan: NutritionPlan, prefs: Profile['dietPrefs']): Meal
 
   return templates.map((t, ti) => {
     const items = rows[ti].map(({ food, g }) => ({ food, g, label: food.unit ? `${Math.round(g / food.unit.g)} ${food.unit.name}` : `${g} g` }));
-    const tot = items.reduce(
-      (a, i) => ({ kcal: a.kcal + (i.food.kcal * i.g) / 100, p: a.p + (i.food.p * i.g) / 100, f: a.f + (i.food.f * i.g) / 100, c: a.c + (i.food.c * i.g) / 100 }),
-      { kcal: 0, p: 0, f: 0, c: 0 },
-    );
+    const tot = items.reduce((a, i) => ({ kcal: a.kcal + (i.food.kcal * i.g) / 100, p: a.p + (i.food.p * i.g) / 100, f: a.f + (i.food.f * i.g) / 100, c: a.c + (i.food.c * i.g) / 100 }), {
+      kcal: 0,
+      p: 0,
+      f: 0,
+      c: 0,
+    });
     return { name: t.name, time: t.time, items, kcal: Math.round(tot.kcal), p: Math.round(tot.p), f: Math.round(tot.f), c: Math.round(tot.c) };
   });
 }
 
 /** Milliy taomlar — taxminiy kaloriya (porsiya tarkibi oshxonaga qarab farq qiladi) */
 export const NATIONAL_DISHES: { name: string; portion: string; kcal: number; p: number; tip: string }[] = [
-  { name: 'Osh (palov)', portion: '1 likopcha, ~350 g', kcal: 800, p: 24, tip: "Guruchni kamroq, go‘sht va achchiq-chuchukni ko‘proq oling. Haftada 1–2 marta — mutlaqo mumkin." },
-  { name: 'Somsa', portion: '1 dona, ~120 g', kcal: 350, p: 10, tip: "Tandir somsa yog‘li. Tovuqli yoki ko‘katli variant yengilroq." },
-  { name: "Lag‘mon", portion: '1 kosa, ~450 g', kcal: 600, p: 22, tip: "Go‘shtli qismini ko‘paytirib, xamirini kamaytiring." },
+  { name: 'Osh (palov)', portion: '1 likopcha, ~350 g', kcal: 800, p: 24, tip: 'Guruchni kamroq, go‘sht va achchiq-chuchukni ko‘proq oling. Haftada 1–2 marta — mutlaqo mumkin.' },
+  { name: 'Somsa', portion: '1 dona, ~120 g', kcal: 350, p: 10, tip: 'Tandir somsa yog‘li. Tovuqli yoki ko‘katli variant yengilroq.' },
+  { name: 'Lag‘mon', portion: '1 kosa, ~450 g', kcal: 600, p: 22, tip: 'Go‘shtli qismini ko‘paytirib, xamirini kamaytiring.' },
   { name: 'Mastava', portion: '1 kosa, ~400 g', kcal: 300, p: 12, tip: 'Yengil va to‘yimli — kechki ovqatga mos.' },
-  { name: "Sho‘rva", portion: '1 kosa, ~400 g', kcal: 320, p: 20, tip: "Go‘shtli sho‘rva oqsilga boy; yog‘ini olib tashlang." },
+  { name: 'Sho‘rva', portion: '1 kosa, ~400 g', kcal: 320, p: 20, tip: 'Go‘shtli sho‘rva oqsilga boy; yog‘ini olib tashlang.' },
   { name: 'Manti', portion: '5 dona, ~250 g', kcal: 550, p: 25, tip: 'Qatiq bilan yeng — oqsil qo‘shiladi.' },
-  { name: 'Chuchvara', portion: '1 kosa, ~350 g', kcal: 450, p: 20, tip: "Suyuq (sho‘rvali) variant qovurilganidan ancha yengil." },
+  { name: 'Chuchvara', portion: '1 kosa, ~350 g', kcal: 450, p: 20, tip: 'Suyuq (sho‘rvali) variant qovurilganidan ancha yengil.' },
   { name: 'Non', portion: '1 dona, ~250 g', kcal: 660, p: 22, tip: "Bir mahalda chorak non (~60 g) — 160 kkal. Butun nonni 'bilmasdan' yeb qo‘yish oson." },
-  { name: 'Moshxo‘rda', portion: '1 kosa, ~400 g', kcal: 380, p: 16, tip: "Mosh — o‘simlik oqsili va tolaga boy." },
-  { name: 'Qozon kabob', portion: '1 porsiya, ~300 g', kcal: 650, p: 30, tip: "Kartoshkasi yog‘da qovurilgan — salat bilan muvozanatlang." },
+  { name: 'Moshxo‘rda', portion: '1 kosa, ~400 g', kcal: 380, p: 16, tip: 'Mosh — o‘simlik oqsili va tolaga boy.' },
+  { name: 'Qozon kabob', portion: '1 porsiya, ~300 g', kcal: 650, p: 30, tip: 'Kartoshkasi yog‘da qovurilgan — salat bilan muvozanatlang.' },
 ];
 
 /** Ilmiy asoslangan qo‘shimchalar (dalil darajasi bilan) */
 export const SUPPLEMENTS: { name: string; grade: 'A' | 'B' | 'C' | 'X'; dose: string; text: string; source?: string }[] = [
-  { name: 'Kreatin monogidrat', grade: 'A', dose: 'Kuniga 3–5 g, har kuni', text: "Kuch va mushak o‘sishini isbotlangan holda oshiradi. Yuklash shart emas. Sog‘lom odamlar uchun xavfsiz.", source: 'kreider2017' },
-  { name: 'Kofein', grade: 'A', dose: '3–6 mg/kg, mashqdan 60 daqiqa oldin', text: "Kuch va chidamlilikni oshiradi. Kechki mashqdan oldin uyquni buzadi.", source: 'guest2021' },
-  { name: 'Oqsil kukuni (protein)', grade: 'B', dose: "Ovqatdan yetmagan qismi uchun", text: "Oddiy ovqatdan farqi yo‘q — faqat qulaylik. Kunlik oqsil miqdori muhim, kukun emas.", source: 'morton2018' },
-  { name: 'D vitamini', grade: 'C', dose: 'Faqat tahlil asosida', text: "Yetishmovchilik bo‘lsa foydali (qishda keng tarqalgan). Shifokor bilan."},
-  { name: 'BCAA, "yog‘ yoqardilar", testosteron kuchaytirgichlar', grade: 'X', dose: '—', text: "Yetarli oqsil iste’mol qilganda BCAA foyda bermaydi. Yog‘ yoqish va gormon 'kuchaytiruvchi' vositalar ishonchli dalilga ega emas, ba’zilari xavfli." },
+  {
+    name: 'Kreatin monogidrat',
+    grade: 'A',
+    dose: 'Kuniga 3–5 g, har kuni',
+    text: 'Kuch va mushak o‘sishini isbotlangan holda oshiradi. Yuklash shart emas. Sog‘lom odamlar uchun xavfsiz.',
+    source: 'kreider2017',
+  },
+  { name: 'Kofein', grade: 'A', dose: '3–6 mg/kg, mashqdan 60 daqiqa oldin', text: 'Kuch va chidamlilikni oshiradi. Kechki mashqdan oldin uyquni buzadi.', source: 'guest2021' },
+  {
+    name: 'Oqsil kukuni (protein)',
+    grade: 'B',
+    dose: 'Ovqatdan yetmagan qismi uchun',
+    text: 'Oddiy ovqatdan farqi yo‘q — faqat qulaylik. Kunlik oqsil miqdori muhim, kukun emas.',
+    source: 'morton2018',
+  },
+  { name: 'D vitamini', grade: 'C', dose: 'Faqat tahlil asosida', text: 'Yetishmovchilik bo‘lsa foydali (qishda keng tarqalgan). Shifokor bilan.' },
+  {
+    name: 'BCAA, "yog‘ yoqardilar", testosteron kuchaytirgichlar',
+    grade: 'X',
+    dose: '—',
+    text: "Yetarli oqsil iste’mol qilganda BCAA foyda bermaydi. Yog‘ yoqish va gormon 'kuchaytiruvchi' vositalar ishonchli dalilga ega emas, ba’zilari xavfli.",
+  },
 ];
 
 /* ---------------- Moslashuvchan sarf (adaptive TDEE) ---------------- */

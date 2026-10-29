@@ -22,9 +22,7 @@ const LOCKED_MESSAGE = `Murabbiy tarifi faol emas: bepul rejimda faqat dastlabki
 
 /** Murabbiyning faol mijozlari ulanish tartibida (birinchi ulanganlar tarif tugasa ham ochiq qoladi) */
 async function activeClients(q: Queryable, coachId: string) {
-  const { rows } = await q.query<{ client_id: string }>(`SELECT client_id FROM coach_links WHERE coach_id = $1 AND status = 'active' ORDER BY created_at, client_id`, [
-    coachId,
-  ]);
+  const { rows } = await q.query<{ client_id: string }>(`SELECT client_id FROM coach_links WHERE coach_id = $1 AND status = 'active' ORDER BY created_at, client_id`, [coachId]);
   return rows.map((r) => r.client_id);
 }
 
@@ -71,10 +69,11 @@ export function coachRoutes({ db, env }: Deps) {
     let code = '';
     for (let i = 0; i < 5; i++) {
       const candidate = inviteCode(INVITE_LEN);
-      const { rows } = await db.query(
-        `INSERT INTO coach_invites (code, coach_id, expires_at) VALUES ($1, $2, now() + make_interval(days => $3)) ON CONFLICT DO NOTHING RETURNING code`,
-        [candidate, uid, INVITE_DAYS],
-      );
+      const { rows } = await db.query(`INSERT INTO coach_invites (code, coach_id, expires_at) VALUES ($1, $2, now() + make_interval(days => $3)) ON CONFLICT DO NOTHING RETURNING code`, [
+        candidate,
+        uid,
+        INVITE_DAYS,
+      ]);
       if (rows.length) {
         code = candidate;
         break;
@@ -161,15 +160,9 @@ export function coachRoutes({ db, env }: Deps) {
     const clientId = c.req.param('id');
     const { rows: user } = await db.query<{ id: string; name: string; phone: string }>('SELECT id, name, phone FROM users WHERE id = $1', [clientId]);
     const doc = async (kind: string, id: string) =>
-      (await db.query<{ data: unknown }>(`SELECT data FROM docs WHERE user_id = $1 AND kind = $2 AND id = $3 AND NOT deleted`, [clientId, kind, id])).rows[0]?.data ??
-      null;
-    const logs = await db.query<{ data: unknown }>(
-      `SELECT data FROM docs WHERE user_id = $1 AND kind = 'log' AND NOT deleted ORDER BY data->>'startedAt' DESC LIMIT 120`,
-      [clientId],
-    );
-    const body = await db.query<{ data: unknown }>(`SELECT data FROM docs WHERE user_id = $1 AND kind = 'body' AND NOT deleted ORDER BY id DESC LIMIT 120`, [
-      clientId,
-    ]);
+      (await db.query<{ data: unknown }>(`SELECT data FROM docs WHERE user_id = $1 AND kind = $2 AND id = $3 AND NOT deleted`, [clientId, kind, id])).rows[0]?.data ?? null;
+    const logs = await db.query<{ data: unknown }>(`SELECT data FROM docs WHERE user_id = $1 AND kind = 'log' AND NOT deleted ORDER BY data->>'startedAt' DESC LIMIT 120`, [clientId]);
+    const body = await db.query<{ data: unknown }>(`SELECT data FROM docs WHERE user_id = $1 AND kind = 'body' AND NOT deleted ORDER BY id DESC LIMIT 120`, [clientId]);
     return c.json({
       client: { id: user[0].id, name: user[0].name, phone: maskPhone(user[0].phone) },
       profile: await doc('profile', 'me'),
@@ -207,21 +200,14 @@ export function coachRoutes({ db, env }: Deps) {
     const denied = await guard(c);
     if (denied) return denied;
     const { text } = await readBody(c, z.object({ text: z.string().trim().min(1).max(1000) }));
-    const { rows } = await db.query(`INSERT INTO coach_notes (coach_id, client_id, text) VALUES ($1, $2, $3) RETURNING id, text, created_at`, [
-      c.get('uid'),
-      c.req.param('id'),
-      text,
-    ]);
+    const { rows } = await db.query(`INSERT INTO coach_notes (coach_id, client_id, text) VALUES ($1, $2, $3) RETURNING id, text, created_at`, [c.get('uid'), c.req.param('id'), text]);
     return c.json({ note: rows[0] });
   });
 
   r.get('/clients/:id/notes', async (c) => {
     const denied = await guard(c);
     if (denied) return denied;
-    const { rows } = await db.query(`SELECT id, text, created_at FROM coach_notes WHERE coach_id = $1 AND client_id = $2 ORDER BY created_at DESC LIMIT 50`, [
-      c.get('uid'),
-      c.req.param('id'),
-    ]);
+    const { rows } = await db.query(`SELECT id, text, created_at FROM coach_notes WHERE coach_id = $1 AND client_id = $2 ORDER BY created_at DESC LIMIT 50`, [c.get('uid'), c.req.param('id')]);
     return c.json({ notes: rows });
   });
 
@@ -250,17 +236,14 @@ export function coachRoutes({ db, env }: Deps) {
     if (!parsed.success) return badCode();
     const { code } = parsed.data;
     const res = await db.tx(async (q): Promise<{ err: 'bad_code' | 'self' | 'coach_full' } | { coachId: string }> => {
-      const inv = (await q.query<{ coach_id: string }>(`SELECT coach_id FROM coach_invites WHERE code = $1 AND used_at IS NULL AND expires_at > now() FOR UPDATE`, [code]))
-        .rows[0];
+      const inv = (await q.query<{ coach_id: string }>(`SELECT coach_id FROM coach_invites WHERE code = $1 AND used_at IS NULL AND expires_at > now() FOR UPDATE`, [code])).rows[0];
       if (!inv) return { err: 'bad_code' };
       if (inv.coach_id === uid) return { err: 'self' };
       // murabbiy qatori qulflanadi: bir vaqtdagi qo'shilishlar limitni chetlab o'ta olmaydi
       const coach = (await q.query<{ role: string }>('SELECT role FROM users WHERE id = $1 FOR UPDATE', [inv.coach_id])).rows[0];
       if (coach?.role !== 'coach') return { err: 'bad_code' };
       const limit = await clientLimit(q, inv.coach_id);
-      const count = Number(
-        (await q.query<{ n: number }>(`SELECT count(*) AS n FROM coach_links WHERE coach_id = $1 AND status = 'active' AND client_id <> $2`, [inv.coach_id, uid])).rows[0].n,
-      );
+      const count = Number((await q.query<{ n: number }>(`SELECT count(*) AS n FROM coach_links WHERE coach_id = $1 AND status = 'active' AND client_id <> $2`, [inv.coach_id, uid])).rows[0].n);
       if (count >= limit) return { err: 'coach_full' };
       // kod bir martalik
       await q.query('UPDATE coach_invites SET used_at = now(), used_by = $2 WHERE code = $1', [code, uid]);

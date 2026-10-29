@@ -5,8 +5,8 @@ import { DAYS, fmtDate } from '../lib/date';
 import { saveFile } from '../lib/download';
 import type { Profile, Program, WorkoutLog } from '../types';
 import { mealPlan, nutritionPlan } from './nutrition';
-import { weeklyVolume } from './program';
-import { mesoState } from './meso';
+import { rotateLinear, weeklyVolume } from './program';
+import { mesoPerWeek, mesoState } from './meso';
 import { blockWeek, METHOD_INFO } from './methods';
 
 /** Standart PDF shriftlari Latin-1 bilan ishlaydi — maxsus belgilarni almashtiramiz */
@@ -45,7 +45,7 @@ export async function exportProgramPdf(program: Program, profile: Profile, kcalA
   const H = doc.internal.pageSize.getHeight();
   const M = 14;
   const T = (s: string) => pdfText(s);
-  const ms = mesoState(program, logs, profile.level);
+  const ms = mesoState(program, logs, profile.level, mesoPerWeek(program, profile));
   const week = ms.absWeek + 1;
   const meso = ms.week + 1;
   const bw = blockWeek(ms.week, program.mesoWeeks);
@@ -66,11 +66,7 @@ export async function exportProgramPdf(program: Program, profile: Profile, kcalA
   doc.text(T('Haftalik mashq dasturi'), M, 28);
   doc.setFontSize(9);
   doc.setTextColor(190, 198, 208);
-  doc.text(
-    T(`${profile.name || 'Sportchi'} · ${GOALS[profile.goal]} · ${METHOD_INFO[program.method ?? 'hypertrophy'].name} · ${week}-hafta (blok: ${meso}/${program.mesoWeeks})`),
-    M,
-    35,
-  );
+  doc.text(T(`${profile.name || 'Sportchi'} · ${GOALS[profile.goal]} · ${METHOD_INFO[program.method ?? 'hypertrophy'].name} · ${week}-hafta (blok: ${meso}/${program.mesoWeeks})`), M, 35);
   doc.text(T(`Tuzilgan: ${fmtDate(new Date(), true)} · kachok.uz`), M, 40.5);
 
   let y = 54;
@@ -79,7 +75,7 @@ export async function exportProgramPdf(program: Program, profile: Profile, kcalA
   doc.setTextColor(...MUTED);
   const intro = doc.splitTextToSize(
     T(
-      "Har bir setdan keyin vazn va takrorni katakka yozing (masalan 60x10). RIR — setdan keyin yana necha marta qila olishingiz. Barcha setlarda yuqori takrorga yetsangiz, keyingi safar vaznni oshiring." +
+      'Har bir setdan keyin vazn va takrorni katakka yozing (masalan 60x10). RIR — setdan keyin yana necha marta qila olishingiz. Barcha setlarda yuqori takrorga yetsangiz, keyingi safar vaznni oshiring.' +
         (program.method === 'strength' ? ' @% — bir martalik maksimumingiz (1RM) dan foiz; har hafta oshadi.' : '') +
         (program.method === 'linear' ? ' "+kg" — barcha takrorlar bajarilsa, keyingi safar: oyoq +5 kg, yuqori tana +2.5 kg.' : ''),
     ),
@@ -88,9 +84,12 @@ export async function exportProgramPdf(program: Program, profile: Profile, kcalA
   doc.text(intro, M, y);
   y += intro.length * 4 + 3;
 
-  const days = [...program.days].sort((a, b) => a.weekday - b.weekday);
+  // chiziqli A/B: shu haftaning navbati (A-B-A yoki B-A-B)
+  const days = program.days.map((d) => rotateLinear(program, d, ms.absWeek)).sort((a, b) => a.weekday - b.weekday);
   for (const d of days) {
-    const maxSets = Math.max(3, ...d.exercises.map((e) => e.sets));
+    // kuch blokidagi set soni — ilova bilan bir xil: blok rejasi, lekin dasturdagi (vaqtga moslangan) sondan oshmaydi
+    const setsOf = (pe: (typeof d.exercises)[number]) => (pe.scheme === 'block' ? Math.min(bw.sets, Math.max(2, pe.sets)) : pe.sets);
+    const maxSets = Math.max(3, ...d.exercises.map(setsOf));
     const setCols = Array.from({ length: Math.min(5, maxSets) }, (_, i) => String(i + 1));
     if (y > H - 60) {
       doc.addPage();
@@ -118,14 +117,14 @@ export async function exportProgramPdf(program: Program, profile: Profile, kcalA
           T(`${ex?.name ?? pe.exerciseId}\n${ex?.en ?? ''}`),
           T(
             pe.scheme === 'block'
-              ? `${bw.sets} x ${bw.reps} @${Math.round(bw.pct * 100)}%`
+              ? `${setsOf(pe)} x ${bw.reps} @${Math.round(bw.pct * 100)}%`
               : pe.scheme === 'linear'
                 ? `${pe.sets} x ${pe.repMin} +kg`
                 : `${pe.sets} x ${pe.repMin === pe.repMax ? pe.repMin : `${pe.repMin}-${pe.repMax}`}${ex?.timed ? ' s' : ''}`,
           ),
           pe.scheme === 'block' ? '—' : String(pe.rir),
-          `${Math.round(pe.restSec / 60 * 10) / 10}'`,
-          ...setCols.map((_, k) => (k < pe.sets ? '' : '—')),
+          `${Math.round((pe.restSec / 60) * 10) / 10}'`,
+          ...setCols.map((_, k) => (k < setsOf(pe) ? '' : '—')),
         ];
       }),
       theme: 'grid',
@@ -211,7 +210,9 @@ export async function exportProgramPdf(program: Program, profile: Profile, kcalA
     'Razminka: 5 daqiqa yengil kardio + birinchi mashqda 2–3 ta yengil isinish seti (40%, 60%, 80%).',
     'Progressiya: barcha setlarda yuqori takrorga yetsangiz — keyingi safar vaznni 2.5–5% oshiring.',
     'RIR 2 — setni yana 2 marta qila oladigan holatda tugatish. Har setni "muvaffaqiyatsizlik"gacha olib borish shart emas.',
-    `Har ${program.mesoWeeks}-haftada yengillashtirish (deload): setlar ~40% kam, vazn ~10% yengil.`,
+    program.method === 'strength'
+      ? `Har ${program.mesoWeeks}-haftada yengillashtirish (deload): asosiy mashqlar 3×5 @65% 1RM, qolganlarida setlar ~2 baravar kam, vazn ~15% yengil, 4+ takror zaxira bilan.`
+      : `Har ${program.mesoWeeks}-haftada yengillashtirish (deload): setlar ~2 baravar kam, vazn ~15% yengil, 4+ takror zaxira bilan.`,
     'O‘tkir og‘riq — darhol to‘xtang. Mushak charchog‘i normal, bo‘g‘imdagi og‘riq normal emas.',
     'Uyqu 7–9 soat, oqsil har mahalda ~0.4 g/kg — mushak dam olishda o‘sadi.',
   ];

@@ -43,9 +43,7 @@ interface Order {
 }
 
 export function clickSign(p: ClickParams, secret: string, withPrepare: boolean) {
-  return md5(
-    `${p.click_trans_id}${p.service_id}${secret}${p.merchant_trans_id}${withPrepare ? p.merchant_prepare_id : ''}${p.amount}${p.action}${p.sign_time}`,
-  );
+  return md5(`${p.click_trans_id}${p.service_id}${secret}${p.merchant_trans_id}${withPrepare ? p.merchant_prepare_id : ''}${p.amount}${p.action}${p.sign_time}`);
 }
 
 export async function handleClick(db: Db, p: ClickParams, cfg: { secret: string; serviceId: string }, stage: 'prepare' | 'complete') {

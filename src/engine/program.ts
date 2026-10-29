@@ -60,10 +60,13 @@ const PB = {
   pull: [s('vPull', 'secondary'), s('hPull', 'secondary'), s('rearDelt', 'accessory'), s('biceps', 'accessory'), s('biceps', 'accessory')],
 };
 
-function methodSplit(method: ConcreteMethod, days: number): { name: string; why: string; days: DayTpl[] } {
+function methodSplit(method: ConcreteMethod, days: number, goal?: Goal): { name: string; why: string; days: DayTpl[] } {
   if (method === 'linear' && days <= 3) {
-    const A: DayTpl = { title: 'Kuch A', focus: 'O‘tirish · jim · tortish', slots: LIN.A };
-    const B: DayTpl = { title: 'Kuch B', focus: 'O‘tirish · yelka · o‘lik tortish', slots: LIN.B };
+    // massa maqsadida asosiy mashqlardan keyin qo'llar va yelka uchun ikkita yordamchi mashq (vaqt yetmasa — birinchi bo'lib tushadi)
+    const accA = goal === 'muscle' ? [s('lateral', 'accessory'), s('biceps', 'accessory')] : [];
+    const accB = goal === 'muscle' ? [s('triceps', 'accessory'), s('rearDelt', 'accessory')] : [];
+    const A: DayTpl = { title: 'Kuch A', focus: 'O‘tirish · jim · tortish', slots: [...LIN.A.slice(0, -1), ...accA, ...LIN.A.slice(-1)] };
+    const B: DayTpl = { title: 'Kuch B', focus: 'O‘tirish · yelka · o‘lik tortish', slots: [...LIN.B.slice(0, -1), ...accB, ...LIN.B.slice(-1)] };
     return {
       name: 'Chiziqli progressiya A/B',
       why: 'Har mashg‘ulotda o‘tirib-turish va navbat bilan ikki xil kun. Kam mashq, ko‘p kuch: boshlovchi organizmi har 48–72 soatda moslashadi.',
@@ -81,7 +84,14 @@ function methodSplit(method: ConcreteMethod, days: number): { name: string; why:
         ? [upP, loP, upH, loH]
         : days === 5
           ? [upP, loP, upH, loH, arms]
-          : [upP, loP, { ...upH, title: 'Itarish — hajm', focus: 'Ko‘krak · yelka · triseps', slots: PB.push }, { ...upH, title: 'Tortish — hajm', focus: 'Orqa · bitseps', slots: PB.pull }, loH, arms];
+          : [
+              upP,
+              loP,
+              { ...upH, title: 'Itarish — hajm', focus: 'Ko‘krak · yelka · triseps', slots: PB.push },
+              { ...upH, title: 'Tortish — hajm', focus: 'Orqa · bitseps', slots: PB.pull },
+              loH,
+              arms,
+            ];
     return {
       name: `Powerbuilding ×${days}`,
       why: 'Haftada ikki og‘ir kun kuchni, ikki hajm kuni mushakni o‘stiradi. Har mushak haftasiga 2 marta, turli takror oralig‘ida (Schoenfeld 2016).',
@@ -94,37 +104,41 @@ function methodSplit(method: ConcreteMethod, days: number): { name: string; why:
 function splitFor(days: number): { name: string; why: string; days: DayTpl[] } {
   const fb = (k: 'A' | 'B' | 'C'): DayTpl => ({
     title: `Butun tana ${k}`,
-    focus: k === 'A' ? "O‘tirish · jim · tortish" : k === 'B' ? "Tos bukilishi · qiya jim · tortilish" : "Oyoq · yelka · orqa",
+    focus: k === 'A' ? 'O‘tirish · jim · tortish' : k === 'B' ? 'Tos bukilishi · qiya jim · tortilish' : 'Oyoq · yelka · orqa',
     slots: k === 'A' ? T.fbA : k === 'B' ? T.fbB : T.fbC,
   });
-  const up = (k: 'A' | 'B'): DayTpl => ({ title: `Yuqori tana ${k}`, focus: "Ko‘krak · orqa · yelka · qo‘llar", slots: k === 'A' ? T.upA : T.upB });
+  const up = (k: 'A' | 'B'): DayTpl => ({ title: `Yuqori tana ${k}`, focus: 'Ko‘krak · orqa · yelka · qo‘llar', slots: k === 'A' ? T.upA : T.upB });
   const lo = (k: 'A' | 'B'): DayTpl => ({ title: `Pastki tana ${k}`, focus: 'Son · dumba · boldir · press', slots: k === 'A' ? T.loA : T.loB });
-  const push: DayTpl = { title: 'Itarish', focus: "Ko‘krak · yelka · triseps", slots: T.push };
+  const push: DayTpl = { title: 'Itarish', focus: 'Ko‘krak · yelka · triseps', slots: T.push };
   const pull: DayTpl = { title: 'Tortish', focus: 'Orqa · orqa delta · bitseps', slots: T.pull };
   const legs: DayTpl = { title: 'Oyoqlar', focus: 'Son · dumba · boldir · press', slots: T.legs };
   switch (days) {
     case 2:
-      return { name: 'Butun tana ×2', why: "Haftasiga 2 kunda har bir mushak 2 marta ishlaydi — ACSM tavsiya etgan minimal chastota.", days: [fb('A'), fb('B')] };
+      return { name: 'Butun tana ×2', why: 'Haftasiga 2 kunda har bir mushak 2 marta ishlaydi — ACSM tavsiya etgan minimal chastota.', days: [fb('A'), fb('B')] };
     case 3:
-      return { name: 'Butun tana ×3', why: "Har mushak haftasiga 3 marta, har mashg‘ulotda kam set — tez o‘rganish va yaxshi tiklanish.", days: [fb('A'), fb('B'), fb('C')] };
+      return { name: 'Butun tana ×3', why: 'Har mushak haftasiga 3 marta, har mashg‘ulotda kam set — tez o‘rganish va yaxshi tiklanish.', days: [fb('A'), fb('B'), fb('C')] };
     case 4:
-      return { name: 'Yuqori / Pastki', why: "Har mushak haftasiga 2 marta, har kuni yetarli hajm. Eng ko‘p sinalgan va muvozanatli tizim.", days: [up('A'), lo('A'), up('B'), lo('B')] };
+      return { name: 'Yuqori / Pastki', why: 'Har mushak haftasiga 2 marta, har kuni yetarli hajm. Eng ko‘p sinalgan va muvozanatli tizim.', days: [up('A'), lo('A'), up('B'), lo('B')] };
     case 5:
       return {
         name: 'Yuqori / Pastki + Itarish / Tortish / Oyoq',
-        why: "5 kunda har mushak 2 marta — hajm ko‘p, lekin har kun qisqaroq.",
+        why: '5 kunda har mushak 2 marta — hajm ko‘p, lekin har kun qisqaroq.',
         days: [up('A'), lo('A'), push, pull, { ...legs, title: 'Oyoqlar', slots: T.loB }],
       };
     default:
       return {
         name: 'Itarish / Tortish / Oyoq ×2',
-        why: "Tajribali sportchilar uchun: har mushak haftasiga 2 marta, katta hajm.",
+        why: 'Tajribali sportchilar uchun: har mushak haftasiga 2 marta, katta hajm.',
         days: [
           { ...push, title: 'Itarish A' },
           { ...pull, title: 'Tortish A' },
           { ...legs, title: 'Oyoqlar A' },
           { ...push, title: 'Itarish B', slots: [s('iPush', 'main'), s('hPush', 'secondary'), s('vPush', 'secondary'), s('lateral', 'accessory'), s('fly', 'accessory'), s('triceps', 'accessory')] },
-          { ...pull, title: 'Tortish B', slots: [s('hPull', 'main'), s('vPull', 'secondary'), s('vPull', 'accessory'), s('rearDelt', 'accessory'), s('biceps', 'accessory'), s('biceps', 'accessory')] },
+          {
+            ...pull,
+            title: 'Tortish B',
+            slots: [s('hPull', 'main'), s('vPull', 'secondary'), s('vPull', 'accessory'), s('rearDelt', 'accessory'), s('biceps', 'accessory'), s('biceps', 'accessory')],
+          },
           { ...legs, title: 'Oyoqlar B', slots: T.loB },
         ],
       };
@@ -263,7 +277,7 @@ export function prescription(goal: Goal, level: Level, role: Role, ex: Exercise)
     repMax = level === 'beginner' ? 40 : 60;
   }
   let note: string | undefined;
-  if (ex.unilateral) note = "Har tomonga alohida";
+  if (ex.unilateral) note = 'Har tomonga alohida';
   if (ex.timed) note = 'Takror o‘rniga soniya';
   return { sets, repMin, repMax, rir, restSec, note };
 }
@@ -312,7 +326,7 @@ interface Built {
 export function generateProgram(p: Profile): Program {
   const method = resolveMethod(p);
   const mesoWeeks = methodMeso(method, p.level);
-  const split = methodSplit(method, Math.min(6, Math.max(2, p.daysPerWeek)));
+  const split = methodSplit(method, Math.min(6, Math.max(2, p.daysPerWeek)), p.goal);
   const used = new Map<string, number>();
   const weekdays = p.trainingDays.length === split.days.length ? [...p.trainingDays].sort((a, b) => a - b) : DEFAULT_DAYS[split.days.length];
   const maxSets = LEVEL_MAX_SETS[p.level];
@@ -372,8 +386,8 @@ export function generateProgram(p: Profile): Program {
     }
   }
 
-  // chiziqli progressiya ataylab minimal: hajm emas, har mashg'ulotdagi vazn o'sishi muhim
-  if (method !== 'linear') balanceVolume(days, built, p.sessionMin, maxSets, bound);
+  // chiziqli progressiya ataylab minimal: hajm qo'shilmaydi (vazn o'sishi muhim), faqat yuqori chegaradan oshgani kamaytiriladi
+  balanceVolume(days, built, p.sessionMin, maxSets, bound, p.focus, method !== 'linear');
   days.forEach((d) => (d.estMin = estimateMinutes(d.exercises)));
 
   return {
@@ -403,10 +417,10 @@ function fitsVolume(vol: Record<MuscleGroup, number>, exId: string, bound: (g: M
  * guruhlarning yuqori chegarasi imkon bersa); yuqori chegaradan oshgan guruhlarda setlar kamaytiriladi —
  * avval yakkalovchi, keyin yordamchi/ikkinchi darajali, oxirida asosiy mashqlarda (kamida 2 set qoladi).
  */
-function balanceVolume(days: WorkoutDay[], built: Built[][], minutes: number, maxSets: number, bound: (g: MuscleGroup) => number) {
+function balanceVolume(days: WorkoutDay[], built: Built[][], minutes: number, maxSets: number, bound: (g: MuscleGroup) => number, focus: MuscleGroup[], add = true) {
   const exs = EX_BY_ID;
   const groupOf = (id: string) => MUSCLES[exs[id].primary[0]].group;
-  for (let guard = 0; guard < 24; guard++) {
+  for (let guard = 0; add && guard < 24; guard++) {
     const vol = weeklyVolume({ days });
     const low = GROUP_ORDER.filter((g) => vol[g] > 0 && vol[g] < WEEKLY_TARGET[g][0]).sort((a, b) => vol[a] / WEEKLY_TARGET[a][0] - vol[b] / WEEKLY_TARGET[b][0]);
     let changed = false;
@@ -433,20 +447,43 @@ function balanceVolume(days: WorkoutDay[], built: Built[][], minutes: number, ma
     }
     if (!changed) break;
   }
-  const all = built.flat();
-  const order = (b: Built) => {
-    const ex = exs[b.pe.exerciseId];
-    return (ex.mechanics === 'isolation' ? 0 : b.role === 'main' ? 4 : 2) + (b.focus ? 1 : 0);
+  // Yuqori chegaradan oshgan guruhlar: shu guruhga hissa qo'shadigan mashqlarda set kamaytiriladi (avval asosiy mushak
+  // sifatida — yakkalovchi, keyin yordamchi sifatida 0.5 set beradigan murakkab mashqlar); boshqa guruhlar pastki
+  // chegaradan tushmaydi. Yetmasa — ortiqcha yordamchi mashq butunlay olib tashlanadi (kunda kamida 4 mashq qoladi).
+  const share = (id: string, g: MuscleGroup) => {
+    const out = Object.fromEntries(GROUP_ORDER.map((x) => [x, 0])) as Record<MuscleGroup, number>;
+    addVolume(out, exs[id], 1);
+    return g ? out[g] : 0;
   };
+  // boshqa guruh pastki chegaradan tushmasin, ustuvor guruhning hajmi esa boshqa guruh hisobiga kamaymasin
+  const othersOk = (vol: Record<MuscleGroup, number>, id: string, g: MuscleGroup, sets: number) =>
+    GROUP_ORDER.every((h) => h === g || !share(id, h) || (!focus.includes(h) && vol[h] - share(id, h) * sets >= WEEKLY_TARGET[h][0]));
+  const roleRank: Record<Role, number> = { accessory: 0, secondary: 1, main: 2 };
   for (const g of GROUP_ORDER) {
-    for (let guard = 0; guard < 60; guard++) {
+    for (let guard = 0; guard < 80; guard++) {
       const vol = weeklyVolume({ days });
       if (vol[g] <= bound(g)) break;
-      const cand = all
-        .filter((b) => exs[b.pe.exerciseId] && groupOf(b.pe.exerciseId) === g && !b.pe.scheme && b.pe.sets > 2)
-        .sort((a, b) => order(a) - order(b) || b.pe.sets - a.pe.sets)[0];
-      if (!cand) break;
-      cand.pe.sets--;
+      const all = built.flat().filter((b) => exs[b.pe.exerciseId] && share(b.pe.exerciseId, g) > 0);
+      const trim = all
+        .filter((b) => !b.pe.scheme && b.pe.sets > 2 && othersOk(vol, b.pe.exerciseId, g, 1))
+        .sort(
+          (a, b) =>
+            share(b.pe.exerciseId, g) - share(a.pe.exerciseId, g) ||
+            Number(a.focus) - Number(b.focus) ||
+            Number(exs[a.pe.exerciseId].mechanics === 'compound') - Number(exs[b.pe.exerciseId].mechanics === 'compound') ||
+            roleRank[a.role] - roleRank[b.role] ||
+            b.pe.sets - a.pe.sets,
+        )[0];
+      if (trim) {
+        trim.pe.sets--;
+        continue;
+      }
+      const di = built.findIndex((list) => list.some((b) => b.role === 'accessory' && !b.focus && share(b.pe.exerciseId, g) === 1 && list.length > 4 && othersOk(vol, b.pe.exerciseId, g, b.pe.sets)));
+      if (di < 0) break;
+      const list = built[di];
+      const at = list.findIndex((b) => b.role === 'accessory' && !b.focus && share(b.pe.exerciseId, g) === 1 && othersOk(vol, b.pe.exerciseId, g, b.pe.sets));
+      list.splice(at, 1);
+      days[di].exercises = list.map((b) => b.pe);
     }
   }
 }
@@ -517,8 +554,13 @@ function fitToTime(list: Built[], minutes: number) {
 export function rotateLinear(program: Pick<Program, 'method' | 'days'>, day: WorkoutDay, absWeek: number): WorkoutDay {
   if (program.method !== 'linear' || program.days.length !== 3 || absWeek % 2 === 0) return day;
   const [a, b, a2] = program.days;
-  const key = (d: WorkoutDay) => d.exercises.map((e) => e.exerciseId).join(',');
-  if (key(a) !== key(a2) || key(a) === key(b)) return day;
+  // asosiy (chiziqli sxemadagi) mashqlar bo'yicha: yordamchilar xilma-xillik uchun farq qilishi mumkin
+  const key = (d: WorkoutDay) =>
+    d.exercises
+      .filter((e) => e.scheme === 'linear')
+      .map((e) => e.exerciseId)
+      .join(',');
+  if (!key(a) || key(a) !== key(a2) || key(a) === key(b)) return day;
   const at = program.days.findIndex((d) => d.id === day.id);
   if (at < 0) return day;
   const src = at === 1 ? a : b;

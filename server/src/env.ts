@@ -64,9 +64,7 @@ export function loadEnv(src: Record<string, string | undefined> = process.env): 
   const env = schema.parse(src);
   const production = (src.NODE_ENV ?? process.env.NODE_ENV) === 'production';
   if (production && env.DEV_MODE === '1') throw new Error('Production’da DEV_MODE=1 ishlatib bo‘lmaydi');
-  if (env.SMS_PROVIDER === 'console' && env.DEV_MODE !== '1')
-    throw new Error('SMS_PROVIDER=console faqat ishlab chiqishda (DEV_MODE=1) ishlaydi. Production uchun: SMS_PROVIDER=eskiz');
-  if (env.PAYME_MERCHANT_ID && env.PAYME_KEY && !env.PAYME_TEST)
-    throw new Error('PAYME_TEST ni aniq belgilang: 0 — haqiqiy to‘lovlar, 1 — test.paycom.uz');
+  if (env.SMS_PROVIDER === 'console' && env.DEV_MODE !== '1') throw new Error('SMS_PROVIDER=console faqat ishlab chiqishda (DEV_MODE=1) ishlaydi. Production uchun: SMS_PROVIDER=eskiz');
+  if (env.PAYME_MERCHANT_ID && env.PAYME_KEY && !env.PAYME_TEST) throw new Error('PAYME_TEST ni aniq belgilang: 0 — haqiqiy to‘lovlar, 1 — test.paycom.uz');
   return env;
 }

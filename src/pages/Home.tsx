@@ -13,7 +13,7 @@ import { FACTS, dailyPick } from '../data/motivation';
 import { sourceById } from '../data/sources';
 import { fatigueLoad, loadGroups, planLoad } from '../engine/bodyLoad';
 import { ExercisePicker } from '../components/DayEditor';
-import { manualPlanned } from '../engine/program';
+import { estimateMinutes, manualPlanned } from '../engine/program';
 import { muscleRecovery, weekStreak } from '../engine/stats';
 import { DAYS, DAYS_SHORT, MONTHS, daysBetween, isoDate } from '../lib/date';
 import { useNutrition } from '../lib/useNutrition';
@@ -27,6 +27,8 @@ export default function Home() {
   const logs = useStore((s) => s.logs);
   const active = useStore((s) => s.active);
   const startWorkout = useStore((s) => s.startWorkout);
+  const finishWorkout = useStore((s) => s.finishWorkout);
+  const discardWorkout = useStore((s) => s.discardWorkout);
   const t = useToday();
   const [pickDay, setPickDay] = useState(false);
   const [chosen, setChosen] = useState<WorkoutDay | null>(null);
@@ -47,7 +49,9 @@ export default function Home() {
 
   const begin = () => {
     if (!day) return;
-    startWorkout(day, plan.map(({ pe, sug }) => ({ ...pe, sets: sug.sets, rir: sug.rir })), t.readinessToday);
+    // faqat bugungi set soni saqlanadi; RIR va vazn mashg'ulotda shu kontekst bilan qayta hisoblanadi
+    // (yengillashtirish/tayyorlik ikki marta qo'llanmasin)
+    startWorkout(day, plan.map(({ pe, sug }) => ({ ...pe, sets: sug.sets })), t.readinessToday);
     nav('/workout');
   };
   // erkin mashg'ulot: mashqlarni foydalanuvchi o'zi tanlaydi
@@ -57,14 +61,23 @@ export default function Home() {
   };
 
   const totalSets = plan.reduce((a, x) => a + x.sug.sets, 0);
-  const estMin = day?.estMin ?? 0;
+  // bugungi (tayyorlik/yengil hafta bo'yicha moslangan) setlar asosida
+  const estMin = useMemo(() => (plan.length ? estimateMinutes(plan.map(({ pe, sug }) => ({ ...pe, sets: sug.sets }))) : (day?.estMin ?? 0)), [plan, day]);
   const mode: 'active' | 'plan' | 'rest' = active ? 'active' : day && !(t.doneToday && !chosen) ? 'plan' : 'rest';
   const load = useMemo(() => {
     if (active) return planLoad(active.plan.map((p) => ({ exerciseId: p.exerciseId, sets: p.sets })));
     if (mode === 'plan') return planLoad(plan.map(({ pe, sug }) => ({ exerciseId: pe.exerciseId, sets: sug.sets })));
     return fatigueLoad(recovery);
   }, [active, mode, plan, recovery]);
-  const groups = loadGroups(load, MUSCLES);
+  // reja bo'yicha: mashqlar tartibidagi asosiy mushaklar (ro'yxatdagi birinchi mashqlarga mos)
+  const planGroups = (items: { exerciseId: string }[]) => [...new Set(items.flatMap((it) => (EXERCISE_MAP[it.exerciseId] ? [MUSCLES[EXERCISE_MAP[it.exerciseId].primary[0]].name] : [])))].slice(0, 3);
+  const groups = active ? planGroups(active.plan) : mode === 'plan' ? planGroups(plan.map(({ pe }) => pe)) : loadGroups(load, MUSCLES);
+  // unutilgan mashg'ulot: 6 soatdan ko'p ochiq turgan bo'lsa yakunlash taklif qilinadi
+  const staleHours = active ? Math.floor((now.getTime() - new Date(active.log.startedAt).getTime()) / 3600000) : 0;
+  const finishStale = () => {
+    const log = finishWorkout();
+    if (log) nav(`/summary/${log.id}`);
+  };
   const activeDone = active ? active.log.exercises.reduce((a, e) => a + e.sets.filter((s) => s.done).length, 0) : 0;
   const activeTotal = active ? active.log.exercises.reduce((a, e) => a + e.sets.length, 0) : 0;
   const untilNext = t.nextDay ? (t.nextDay.weekday - t.today + 7) % 7 || 7 : null;
@@ -158,6 +171,24 @@ export default function Home() {
         )}
       </motion.section>
 
+      {mode === 'active' && staleHours >= 6 && (
+        <div className="notice warn mt-12" role="status">
+          <Icon name="alert" />
+          <div className="grow stack gap-8">
+            <span className="small">
+              <b>Mashg‘ulot {staleHours} soatdan beri ochiq.</b> Yakunlashni unutdingizmi? Bajarilgan setlar saqlanadi, vaqt oxirgi set bo‘yicha hisoblanadi.
+            </span>
+            <div className="row gap-8">
+              <button className="btn btn-success btn-sm grow" onClick={finishStale}>
+                Yakunlash
+              </button>
+              <button className="btn btn-ghost btn-sm grow" onClick={discardWorkout}>
+                Saqlamasdan o‘chirish
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       {mode === 'active' ? (
         <button className="btn btn-primary btn-xl btn-block mt-12" onClick={() => nav('/workout')}>
           Davom ettirish <Icon name="play" size={18} />

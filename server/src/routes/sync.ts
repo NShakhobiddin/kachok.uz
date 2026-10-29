@@ -12,6 +12,8 @@ export const MAX_DOC_BYTES = 256 * 1024;
 /** Bitta so'rovdagi o'zgarishlar (ilova 400 talik paketlarda yuboradi); baytlar — app.ts dagi SYNC_BODY_LIMIT */
 const MAX_CHANGES = 400;
 const PAGE = 500;
+/** Javob sahifasi hajmi (bayt): bundan oshsa — qolgani keyingi sahifada (`more`) */
+const PAGE_BYTES = 4 * 1024 * 1024;
 /** Bitta foydalanuvchining bulutdagi umumiy hajmi */
 export const USER_QUOTA_BYTES = 20 * 1024 * 1024;
 
@@ -58,7 +60,7 @@ export function syncRoutes({ db, env }: Deps) {
       incoming += bytes;
     }
 
-    const out = await db.tx(async (q): Promise<{ rows: Row[] } | { status: 401 | 413 }> => {
+    const out = await db.tx(async (q): Promise<{ rows: Row[]; more: boolean } | { status: 401 | 413 }> => {
       await lockUserDocs(q, uid);
       // akkaunt o'chirilgan, lekin access token hali amal qilmoqda
       if (!(await q.query('SELECT 1 FROM users WHERE id = $1', [uid])).rows.length) return { status: 401 };
@@ -80,26 +82,26 @@ export function syncRoutes({ db, env }: Deps) {
           [uid, ch.kind, ch.id, ch.deleted ? null : JSON.stringify(ch.data ?? null), Math.min(ch.updatedAt, maxTs), !!ch.deleted, sizes.get(`${ch.kind}:${ch.id}`) ?? 0],
         );
       }
-      const { rows } = await q.query<Row>(`SELECT kind, id, data, updated_at, deleted, seq FROM docs WHERE user_id = $1 AND seq > $2 ORDER BY seq LIMIT $3`, [
-        uid,
-        since,
-        PAGE + 1,
-      ]);
-      return { rows };
+      // sahifa: ko'pi bilan PAGE hujjat va ~PAGE_BYTES bayt (kamida bitta hujjat)
+      const heads = (await q.query<{ seq: number; size: number }>(`SELECT seq, size FROM docs WHERE user_id = $1 AND seq > $2 ORDER BY seq LIMIT $3`, [uid, since, PAGE + 1])).rows;
+      let n = 0;
+      for (let bytes = 0; n < heads.length && n < PAGE; n++) {
+        bytes += Number(heads[n].size);
+        if (n > 0 && bytes > PAGE_BYTES) break;
+      }
+      if (!n) return { rows: [], more: false };
+      const { rows } = await q.query<Row>(`SELECT kind, id, data, updated_at, deleted, seq FROM docs WHERE user_id = $1 AND seq > $2 AND seq <= $3 ORDER BY seq`, [uid, since, heads[n - 1].seq]);
+      return { rows, more: heads.length > n };
     });
     if ('status' in out) {
       if (out.status === 401) return c.json({ error: 'unauthorized', message: 'Qaytadan kiring' }, 401);
-      return c.json(
-        { error: 'quota', message: `Bulutdagi joy tugadi (${USER_QUOTA_BYTES / 1024 / 1024} MB). Eski mashg‘ulot yoki ovqat yozuvlarini o‘chirib, qayta urinib ko‘ring.` },
-        413,
-      );
+      return c.json({ error: 'quota', message: `Bulutdagi joy tugadi (${USER_QUOTA_BYTES / 1024 / 1024} MB). Eski mashg‘ulot yoki ovqat yozuvlarini o‘chirib, qayta urinib ko‘ring.` }, 413);
     }
-    const more = out.rows.length > PAGE;
-    const page = out.rows.slice(0, PAGE);
+    const page = out.rows;
     return c.json({
       docs: page.map((d) => ({ kind: d.kind, id: d.id, data: d.data, updatedAt: Number(d.updated_at), deleted: d.deleted })),
       cursor: page.length ? Number(page[page.length - 1].seq) : since,
-      more,
+      more: out.more,
     });
   });
 

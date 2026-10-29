@@ -61,7 +61,7 @@ describe('kirish', () => {
     expect((await app.request('/me', json('GET'))).status).toBe(401);
   });
 
-  it("noto‘g‘ri raqam rad etiladi", async () => {
+  it('noto‘g‘ri raqam rad etiladi', async () => {
     expect((await app.request('/auth/otp', json('POST', { phone: '12345' }))).status).toBe(400);
   });
 });
@@ -154,7 +154,7 @@ describe('Payme', () => {
   const auth = { authorization: 'Basic ' + Buffer.from('Paycom:payme-key').toString('base64') };
   const rpc = (method: string, params: unknown, headers = auth) => app.request('/billing/payme', json('POST', { method, params, id: 7 }, undefined, headers)).then((r) => r.json());
 
-  it("to‘liq to‘lov: tekshirish, yaratish, bajarish, obuna, bekor qilish", async () => {
+  it('to‘liq to‘lov: tekshirish, yaratish, bajarish, obuna, bekor qilish', async () => {
     const u = await login('998906666666');
     const order = await (await app.request('/billing/orders', json('POST', { plan: 'pro_month', provider: 'payme' }, u.access))).json();
     expect(order.checkoutUrl).toContain('test.paycom.uz');
@@ -197,11 +197,21 @@ describe('Click', () => {
   const post = (path: string, form: Record<string, string>) =>
     app.request(path, { method: 'POST', headers: { 'content-type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams(form).toString() }).then((r) => r.json());
 
-  it("prepare va complete: imzo, summa va obuna", async () => {
+  it('prepare va complete: imzo, summa va obuna', async () => {
     const u = await login('998907777777');
     const order = await (await app.request('/billing/orders', json('POST', { plan: 'coach_month', provider: 'click' }, u.access))).json();
     expect(order.checkoutUrl).toContain('my.click.uz');
-    const base = { click_trans_id: '5001', service_id: '111', click_paydoc_id: '9', merchant_trans_id: order.orderId, amount: '99000.00', action: '0', error: '0', error_note: 'ok', sign_time: '2026-10-19 10:00:00' };
+    const base = {
+      click_trans_id: '5001',
+      service_id: '111',
+      click_paydoc_id: '9',
+      merchant_trans_id: order.orderId,
+      amount: '99000.00',
+      action: '0',
+      error: '0',
+      error_note: 'ok',
+      sign_time: '2026-10-19 10:00:00',
+    };
     const bad = await post('/billing/click/prepare', { ...base, sign_string: 'x' });
     expect(bad.error).toBe(-1);
     const wrongAmount = { ...base, amount: '100.00' };
