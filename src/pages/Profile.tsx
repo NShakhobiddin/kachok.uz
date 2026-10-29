@@ -9,6 +9,7 @@ import { GROUPS, GROUP_ORDER, INJURIES } from '../data/catalog';
 import { METHOD_INFO, resolveMethod } from '../engine/methods';
 import { ACTIVITY } from '../engine/nutrition';
 import { DEFAULT_DAYS } from '../engine/program';
+import { resizeSplit } from '../engine/split';
 import { DAYS_SHORT } from '../lib/date';
 import { apiEnabled } from '../api/client';
 import { saveFile } from '../lib/download';
@@ -268,7 +269,7 @@ export default function Profile() {
                     key={n}
                     className={`chip ${draft.daysPerWeek === n ? 'on' : ''}`}
                     style={{ flex: 1, justifyContent: 'center', height: 44 }}
-                    onClick={() => setDraft({ ...draft, daysPerWeek: n, trainingDays: DEFAULT_DAYS[n] })}
+                    onClick={() => setDraft({ ...draft, daysPerWeek: n, trainingDays: DEFAULT_DAYS[n], split: draft.split ? resizeSplit(draft.split, n) : undefined })}
                   >
                     {n}
                   </button>

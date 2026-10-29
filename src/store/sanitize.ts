@@ -1,7 +1,8 @@
 // Zaxira fayli va qurilmada saqlangan holatni tekshirish: noto'g'ri tuzilma (qo'lda tahrirlangan yoki boshqa
 // versiyadagi fayl) ilovani buzib qo'ymasin. Faqat exportData yozadigan kalitlar qabul qilinadi.
 import { clampKcalAdjust } from '../engine/nutrition';
-import type { BodyEntry, ExerciseLog, FoodEntry, PlannedExercise, Profile, Program, SetLog, WorkoutDay, WorkoutLog } from '../types';
+import { GROUP_ORDER } from '../data/catalog';
+import type { BodyEntry, ExerciseLog, FoodEntry, MuscleGroup, PlannedExercise, Profile, Program, SetLog, WorkoutDay, WorkoutLog } from '../types';
 
 type Obj = Record<string, unknown>;
 export const isObj = (v: unknown): v is Obj => !!v && typeof v === 'object' && !Array.isArray(v);
@@ -49,8 +50,16 @@ export function sanitizeProfile(v: unknown): Profile | undefined {
     activity: (isStr(v.activity) ? v.activity : 'light') as Profile['activity'],
     dietPrefs: { noPork: diet.noPork !== false, lactoseFree: diet.lactoseFree === true, vegetarian: diet.vegetarian === true },
     bodyFat: optNum(v.bodyFat),
+    split: sanitizeSplit(v.split),
     createdAt: isDate(v.createdAt) ? v.createdAt : new Date().toISOString(),
   };
+}
+
+/** Kunlar taqsimoti: faqat ma'lum mushak guruhlari, buzuq kunlar tashlanadi */
+function sanitizeSplit(v: unknown): Profile['split'] {
+  if (!Array.isArray(v)) return undefined;
+  const days = v.filter(Array.isArray).map((d: unknown[]) => d.filter((g): g is MuscleGroup => isStr(g) && (GROUP_ORDER as string[]).includes(g)));
+  return days.length ? days.slice(0, 7) : undefined;
 }
 
 function sanitizePlanned(v: unknown): PlannedExercise | null {

@@ -304,6 +304,8 @@ export interface Profile {
   dietPrefs: { noPork: boolean; lactoseFree: boolean; vegetarian: boolean };
   /** dastur uslubi; berilmasa — maqsad va darajaga qarab avtomatik */
   method?: Method;
+  /** kunlar taqsimoti: har mashg'ulot kuni uchun mushak guruhlari (o'zi tanlagan); berilmasa — tavsiya etilgan bo'linma */
+  split?: MuscleGroup[][];
   createdAt: string;
 }
 

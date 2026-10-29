@@ -11,6 +11,8 @@ import { EQUIPMENT_PRESETS, GROUPS, GROUP_ORDER, INJURIES } from '../data/catalo
 import { ACTIVITY, nutritionPlan } from '../engine/nutrition';
 import { planLoad } from '../engine/bodyLoad';
 import { DEFAULT_DAYS } from '../engine/program';
+import { resizeSplit } from '../engine/split';
+import { SplitBuilder } from '../components/SplitBuilder';
 import { DAYS_SHORT } from '../lib/date';
 import { telegramFirstName } from '../lib/telegram';
 import { useStore } from '../store/useStore';
@@ -114,7 +116,7 @@ export default function Onboarding() {
     setDir(1);
     setStep('done');
   };
-  const canNext = step !== 'schedule' || p.trainingDays.length === p.daysPerWeek;
+  const canNext = step !== 'schedule' || (p.trainingDays.length === p.daysPerWeek && (!p.split || p.split.every((d) => d.length)));
 
   const progress = idx <= 0 ? 0 : Math.min(1, idx / (STEPS.length - 2));
   const np = useMemo(() => (step === 'done' ? nutritionPlan({ ...p, createdAt: '' }) : null), [step, p]);
@@ -274,7 +276,7 @@ export default function Onboarding() {
                       key={n}
                       className={`chip ${p.daysPerWeek === n ? 'on' : ''}`}
                       style={{ flex: 1, height: 48, justifyContent: 'center', fontSize: 18, fontWeight: 800 }}
-                      onClick={() => up({ daysPerWeek: n, trainingDays: DEFAULT_DAYS[n] })}
+                      onClick={() => up({ daysPerWeek: n, trainingDays: DEFAULT_DAYS[n], split: p.split ? resizeSplit(p.split, n) : undefined })}
                     >
                       {n}
                     </button>
@@ -322,6 +324,21 @@ export default function Onboarding() {
                   ))}
                 </div>
               </div>
+              <div className="field">
+                <label>Kunlarga mushaklar</label>
+                <div className="row gap-6">
+                  <button className={`chip ${!p.split ? 'on' : ''}`} style={{ flex: 1, justifyContent: 'center' }} aria-pressed={!p.split} onClick={() => up({ split: undefined })}>
+                    Tavsiya etilgan
+                  </button>
+                  <button className={`chip ${p.split ? 'on' : ''}`} style={{ flex: 1, justifyContent: 'center' }} aria-pressed={!!p.split} onClick={() => up({ split: p.split ?? resizeSplit(undefined, p.daysPerWeek) })}>
+                    O‘zim tanlayman
+                  </button>
+                </div>
+                <span className="tiny faint">
+                  {p.split ? 'Har kuni qaysi mushaklar ishlashini belgilang — mashqlarni dastur tanlaydi.' : 'Dastur kunlarni o‘zi taqsimlaydi: har mushak haftasiga ~2 marta.'}
+                </span>
+              </div>
+              {p.split && <SplitBuilder value={p.split} onChange={(split) => up({ split })} trainingDays={p.trainingDays} sessionMin={p.sessionMin} />}
             </>
           )}
 
@@ -462,7 +479,7 @@ export default function Onboarding() {
           </button>
           {!canNext && (
             <p className="tiny faint mt-8" style={{ textAlign: 'center' }}>
-              {p.daysPerWeek} ta kunni tanlang
+              {p.trainingDays.length !== p.daysPerWeek ? `${p.daysPerWeek} ta kunni tanlang` : 'Har bir kunga kamida bitta mushak tanlang'}
             </p>
           )}
         </div>

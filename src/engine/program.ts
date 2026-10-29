@@ -2,10 +2,11 @@
 // Asos: ACSM 2026 (har mushak haftasiga 2+ marta), Schoenfeld 2017 / Pelland 2026 (haftalik hajm),
 // Refalo 2023 (1–3 takror zaxira), Schoenfeld 2016 (murakkab mashqlarda uzunroq dam).
 import { EXERCISES, EXERCISE_MAP } from '../data/exercises';
-import { GROUP_ORDER, MUSCLES, WEEKLY_TARGET } from '../data/catalog';
+import { GROUP_ORDER, GROUPS, MUSCLES, WEEKLY_TARGET } from '../data/catalog';
 import type { EquipmentId, Exercise, Goal, Level, MuscleGroup, Pattern, PlannedExercise, Profile, Program, WorkoutDay } from '../types';
 import { blockWeek, METHOD_INFO, methodMeso, resolveMethod, type ConcreteMethod } from './methods';
 import { personalSafety } from './safety';
+import { customSplitOf, splitDayTitle, type DaySplit } from './split';
 
 type Role = 'main' | 'secondary' | 'accessory';
 interface Slot {
@@ -15,6 +16,8 @@ interface Slot {
   focus?: boolean;
   /** ustuvor mushak uchun ikkinchi mashq — topilmasa, birinchisiga set qo'shiladi */
   extra?: boolean;
+  /** o'z taqsimotida guruhning birinchi mashqi: vaqt yoki hajm tejashda olib tashlanmaydi (tanlangan mushak kundan tushib qolmasin) */
+  keep?: boolean;
 }
 
 /** Darajaga ko'ra bitta mashqdagi maksimal ishchi setlar (boshlovchi — 3) */
@@ -143,6 +146,75 @@ function splitFor(days: number): { name: string; why: string; days: DayTpl[] } {
         ],
       };
   }
+}
+
+/** Mushak guruhi uchun mashq o'rinlari ustuvorlik tartibida: avval ko'p bo'g'imli, keyin yakkalovchi */
+const GROUP_SLOTS: Record<MuscleGroup, Slot[]> = {
+  quads: [s('squat', 'main'), s('lunge', 'secondary'), s('quadIso', 'accessory'), s('squat', 'secondary')],
+  hamstrings: [s('hinge', 'main'), s('hamIso', 'accessory'), s('hinge', 'secondary')],
+  glutes: [s('glute', 'secondary'), s('lunge', 'accessory')],
+  chest: [s('hPush', 'main'), s('iPush', 'secondary'), s('fly', 'accessory'), s('fly', 'accessory')],
+  back: [s('vPull', 'main'), s('hPull', 'secondary'), s('hPull', 'accessory'), s('traps', 'accessory')],
+  shoulders: [s('vPush', 'main'), s('lateral', 'accessory'), s('rearDelt', 'accessory')],
+  triceps: [s('triceps', 'accessory'), s('triceps', 'accessory'), s('triceps', 'accessory')],
+  biceps: [s('biceps', 'accessory'), s('biceps', 'accessory'), s('biceps', 'accessory')],
+  calves: [s('calf', 'accessory'), s('calf', 'accessory')],
+  core: [s('core', 'accessory'), s('core', 'accessory'), s('core', 'accessory')],
+};
+/** kun ichidagi tartib: katta oyoq mashqlari va murakkab harakatlar avval, kichik mushaklar oxirida */
+const DAY_ORDER: MuscleGroup[] = ['quads', 'hamstrings', 'glutes', 'chest', 'back', 'shoulders', 'triceps', 'biceps', 'calves', 'core'];
+const BIG: MuscleGroup[] = ['quads', 'hamstrings', 'chest', 'back'];
+const MID: MuscleGroup[] = ['shoulders', 'glutes'];
+
+/**
+ * Foydalanuvchi taqsimlagan kunlar: har guruhga mashqlar soni guruh kattaligi, haftalik chastotasi va kundagi guruhlar
+ * soniga qarab (bir marta ishlanadigan katta guruhga — 3 ta, ikki marta yoki ko'p guruhli kunda — 2 ta). Bir kunda
+ * eng ko'pi 2 ta "asosiy" (og'ir, uzun damli) mashq. Setlar keyin haftalik hajm tavsiyasiga moslanadi (balanceVolume).
+ */
+function customDays(split: DaySplit, p: Profile): { name: string; why: string; days: DayTpl[] } {
+  const freq = (g: MuscleGroup) => split.filter((d) => d.includes(g)).length;
+  // mashg'ulot vaqtiga sig'adigan mashqlar soni: 30 daq — 3, 45 — 4, 60 — 6, 75+ — 8
+  const target = Math.max(3, Math.min(8, Math.round((p.sessionMin - 10) / 8.5)));
+  const days = split.map((groups): DayTpl => {
+    const gs = DAY_ORDER.filter((g) => groups.includes(g));
+    const n = gs.length;
+    // guruh bo'yicha: qo'shimcha mashq ham o'z guruhi yonida turadi (yelka mashqlari — pressdan oldin)
+    const per = new Map<MuscleGroup, Slot[]>();
+    const left = new Map<MuscleGroup, Slot[]>();
+    let mains = 0;
+    for (const g of gs) {
+      const f = freq(g);
+      const crowded = f >= 2 || n >= 4;
+      // kunda yolg'iz katta guruh (masalan, "Ko'krak kuni") — 4 ta mashq, aks holda mashg'ulot juda qisqa bo'ladi
+      const k = BIG.includes(g) ? (crowded ? 2 : n === 1 ? 4 : 3) : MID.includes(g) ? (crowded ? 1 : 2) : n <= 2 && f === 1 ? 3 : crowded ? 1 : 2;
+      // ko'krak bilan bir kunda delta jimda allaqachon ishlaydi — yelkaga avval yon va orqa delta
+      const list = g === 'shoulders' && groups.includes('chest') ? [s('lateral', 'accessory'), s('rearDelt', 'accessory'), s('vPush', 'secondary')] : GROUP_SLOTS[g];
+      // son orqasida tos bukish (o'lik tortish) asosan dumbaga tushadi — tizza bukish (oyoq bukish) ham saqlanadi
+      const own = list.slice(0, k).map((sl, j): Slot => ({ ...sl, role: sl.role === 'main' && mains++ >= 2 ? 'secondary' : sl.role, keep: j === 0 || sl.pattern === 'hamIso' }));
+      if (p.focus.includes(g)) own.push({ ...s(FOCUS_SLOT[g], 'accessory'), focus: true, extra: true });
+      per.set(g, own);
+      // bir kunda guruhga ko'pi bilan: katta — 4, o'rta — 3, kichik — 3 (haftasiga 2+ marta bo'lsa 2) mashq
+      const cap = BIG.includes(g) ? 4 : MID.includes(g) ? 3 : f >= 2 ? 2 : 3;
+      left.set(g, list.slice(k, Math.max(k, cap)));
+    }
+    // vaqt qolsa — kun guruhlariga yana mashq: avval kam mashq olgan va haftada bir marta ishlaydigan katta guruhga
+    // (ortig'ini fitToTime qisqartiradi, haftalik hajmni balanceVolume chegaralaydi)
+    const weight = (g: MuscleGroup) => (BIG.includes(g) ? 4 : MID.includes(g) ? 3 : 2) / freq(g);
+    const total = () => gs.reduce((a, g) => a + per.get(g)!.length, 0);
+    while (total() < target) {
+      const g = gs.filter((x) => left.get(x)!.length).sort((a, b) => per.get(a)!.length / weight(a) - per.get(b)!.length / weight(b))[0];
+      if (!g) break;
+      const sl = left.get(g)!.shift()!;
+      per.get(g)!.push({ ...sl, role: sl.role === 'main' ? 'secondary' : sl.role });
+    }
+    const slots = gs.flatMap((g) => per.get(g)!);
+    return { title: splitDayTitle(gs), focus: gs.map((g) => GROUPS[g].name).join(' · '), slots };
+  });
+  return {
+    name: 'O‘z taqsimotingiz',
+    why: 'Kunlarni mushak guruhlari bo‘yicha o‘zingiz taqsimladingiz. Mashqlar jihozingiz, darajangiz va cheklovlaringizga qarab tanlandi, setlar haftalik tavsiya etilgan hajmga moslandi.',
+    days,
+  };
 }
 
 export const DEFAULT_DAYS: Record<number, number[]> = {
@@ -321,20 +393,25 @@ interface Built {
   pe: PlannedExercise;
   role: Role;
   focus: boolean;
+  keep?: boolean;
 }
 
 export function generateProgram(p: Profile): Program {
-  const method = resolveMethod(p);
+  const custom = customSplitOf(p);
+  const resolved = resolveMethod(p);
+  // o'z taqsimotida og'ir/hajm kunlari yo'q — powerbuilding o'rniga gipertrofiya; qolgan uslublar asosiy mashqlarga ta'sir qiladi
+  const method = custom && resolved === 'powerbuilding' ? 'hypertrophy' : resolved;
   const mesoWeeks = methodMeso(method, p.level);
-  const split = methodSplit(method, Math.min(6, Math.max(2, p.daysPerWeek)), p.goal);
+  const split = custom ? customDays(custom, p) : methodSplit(method, Math.min(6, Math.max(2, p.daysPerWeek)), p.goal);
   const used = new Map<string, number>();
   const weekdays = p.trainingDays.length === split.days.length ? [...p.trainingDays].sort((a, b) => a - b) : DEFAULT_DAYS[split.days.length];
   const maxSets = LEVEL_MAX_SETS[p.level];
 
   const built: Built[][] = split.days.map((tpl) => {
     const slots: Slot[] = [...tpl.slots];
-    // ustuvor mushaklar uchun qo‘shimcha mashq; shunday mashq kunda bo'lsa — ikkinchi mashq (yoki qo'shimcha set)
-    for (const f of p.focus) {
+    // ustuvor mushaklar uchun qo‘shimcha mashq; shunday mashq kunda bo'lsa — ikkinchi mashq (yoki qo'shimcha set).
+    // O'z taqsimotida bu customDays ichida qilingan
+    for (const f of custom ? [] : p.focus) {
       if (tpl.style === 'power') continue;
       const isUpperDay = /Yuqori|Itarish|Tortish|Butun|Yelka/.test(tpl.title);
       const isLowerDay = /Pastki|Oyoq|Butun/.test(tpl.title);
@@ -360,7 +437,7 @@ export function generateProgram(p: Profile): Program {
       }
       ids.add(ex.id);
       used.set(ex.id, (used.get(ex.id) ?? 0) + 1);
-      out.push({ pe: { exerciseId: ex.id, ...methodPrescription(method, p.goal, p.level, sl.role, ex, tpl.style, mesoWeeks) }, role: sl.role, focus: !!sl.focus });
+      out.push({ pe: { exerciseId: ex.id, ...methodPrescription(method, p.goal, p.level, sl.role, ex, tpl.style, mesoWeeks) }, role: sl.role, focus: !!sl.focus, keep: sl.keep });
     }
     fitToTime(out, p.sessionMin);
     return out;
@@ -478,10 +555,10 @@ function balanceVolume(days: WorkoutDay[], built: Built[][], minutes: number, ma
         trim.pe.sets--;
         continue;
       }
-      const di = built.findIndex((list) => list.some((b) => b.role === 'accessory' && !b.focus && share(b.pe.exerciseId, g) === 1 && list.length > 4 && othersOk(vol, b.pe.exerciseId, g, b.pe.sets)));
+      const di = built.findIndex((list) => list.some((b) => b.role === 'accessory' && !b.focus && !b.keep && share(b.pe.exerciseId, g) === 1 && list.length > 4 && othersOk(vol, b.pe.exerciseId, g, b.pe.sets)));
       if (di < 0) break;
       const list = built[di];
-      const at = list.findIndex((b) => b.role === 'accessory' && !b.focus && share(b.pe.exerciseId, g) === 1 && othersOk(vol, b.pe.exerciseId, g, b.pe.sets));
+      const at = list.findIndex((b) => b.role === 'accessory' && !b.focus && !b.keep && share(b.pe.exerciseId, g) === 1 && othersOk(vol, b.pe.exerciseId, g, b.pe.sets));
       list.splice(at, 1);
       days[di].exercises = list.map((b) => b.pe);
     }
@@ -509,8 +586,8 @@ function fitToTime(list: Built[], minutes: number) {
       continue;
     }
     // 2) oxirgi yordamchi mashqni olib tashlash (avval ustuvor bo'lmaganini)
-    const lastAcc = lastIndex((b) => b.role === 'accessory' && !b.focus);
-    const lastAccF = lastIndex((b) => b.role === 'accessory');
+    const lastAcc = lastIndex((b) => b.role === 'accessory' && !b.focus && !b.keep);
+    const lastAccF = lastIndex((b) => b.role === 'accessory' && !b.keep);
     if ((lastAcc >= 0 || lastAccF >= 0) && list.length > 3) {
       removeAt(lastAcc >= 0 ? lastAcc : lastAccF);
       continue;
@@ -540,7 +617,7 @@ function fitToTime(list: Built[], minutes: number) {
   // 6) qisqa mashg'ulot (30 daqiqa) hamon sig'masa — ikkinchi darajali/yordamchi mashqlar olib tashlanadi (kamida 2 mashq),
   //    keyin uzun dam 2 daqiqagacha qisqaradi: taxminiy vaqt rejadan 10 daqiqadan oshmasin
   while (est() > minutes + 10 && list.length > 2) {
-    const i = lastIndex((b) => b.role !== 'main');
+    const i = [lastIndex((b) => b.role !== 'main' && !b.keep), lastIndex((b) => b.role !== 'main')].find((x) => x >= 0) ?? -1;
     removeAt(i >= 0 ? i : list.length - 1);
   }
   for (const b of list) if (est() > minutes + 10 && b.pe.restSec > 120) b.pe.restSec = 120;

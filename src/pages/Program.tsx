@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { TargetBars } from '../components/charts';
 import { DayEditor } from '../components/DayEditor';
+import { SplitBuilder } from '../components/SplitBuilder';
 import { Icon } from '../components/ui/Icon';
 import { Note } from '../components/ui/Fold';
 import { Sheet } from '../components/ui/Sheet';
@@ -9,7 +10,8 @@ import { GROUPS, GROUP_ORDER, VOLUME_LANDMARKS, mrvAt } from '../data/catalog';
 import { EXERCISE_MAP } from '../data/exercises';
 import { blockWeek, METHOD_INFO, resolveMethod, type ConcreteMethod } from '../engine/methods';
 import { exportProgramPdf } from '../engine/pdf';
-import { estimateMinutes, groupFrequency, weeklyVolume } from '../engine/program';
+import { DEFAULT_DAYS, estimateMinutes, groupFrequency, weeklyVolume } from '../engine/program';
+import { customSplitOf, resizeSplit, type DaySplit } from '../engine/split';
 import { fmtKg, suggest } from '../engine/progression';
 import { mesoPlan, type MesoState } from '../engine/meso';
 import { useNutrition } from '../lib/useNutrition';
@@ -39,6 +41,7 @@ export default function ProgramPage() {
   const [selId, setSelId] = useState<string | null>(() => days.find((d) => d.weekday === weekdayIdx())?.id ?? null);
   const [confirmRegen, setConfirmRegen] = useState(false);
   const [methodOpen, setMethodOpen] = useState(false);
+  const [splitOpen, setSplitOpen] = useState(false);
   const [pdfBusy, setPdfBusy] = useState(false);
   const isPro = useIsPro();
   const nav = useNavigate();
@@ -91,6 +94,17 @@ export default function ProgramPage() {
 
       {meso && <MethodCard program={program} profile={profile} meso={meso} onChange={() => setMethodOpen(true)} />}
 
+      <button className="card row between gap-12 mt-12" style={{ width: '100%', textAlign: 'left' }} onClick={() => setSplitOpen(true)}>
+        <span className="stack" style={{ gap: 2, minWidth: 0 }}>
+          <span className="eyebrow">Kunlar taqsimoti</span>
+          <span className="strong">{customSplitOf(profile) ? 'Mushaklarni o‘zingiz tanlagansiz' : 'Tavsiya etilgan'}</span>
+          <span className="small muted">Qaysi kuni qaysi mushak ishlashini tanlang — mashqlarni dastur tanlaydi</span>
+        </span>
+        <span className="chip sm" style={{ flex: 'none' }}>
+          <Icon name="calendar" size={15} /> Tanlash
+        </span>
+      </button>
+
       <div className="hscroll mt-16" role="tablist" aria-label="Kunlar" ref={tabsRef}>
         {days.map((d) => (
           <button key={d.id} role="tab" aria-selected={d.id === day?.id} className={`chip ${d.id === day?.id ? 'on' : ''}`} style={{ height: 44 }} onClick={() => setSelId(d.id)}>
@@ -106,8 +120,8 @@ export default function ProgramPage() {
 
       {day && (
         <section className="mt-16">
-          <div className="row between" style={{ marginBottom: 10 }}>
-            <div>
+          <div className="row between gap-8" style={{ marginBottom: 10 }}>
+            <div style={{ minWidth: 0 }}>
               <h2 className="display display-m">{day.title}</h2>
               <p className="small muted mt-4">
                 {DAYS[day.weekday]} · {day.focus} · ~{estimateMinutes(day.exercises)} daq
@@ -124,7 +138,7 @@ export default function ProgramPage() {
                 aria-label="Hafta kunini o‘zgartirish"
                 value={day.weekday}
                 onChange={(e) => moveDay(day.id, Number(e.target.value))}
-                style={{ appearance: 'none', cursor: 'pointer' }}
+                style={{ appearance: 'none', cursor: 'pointer', maxWidth: 140, textOverflow: 'ellipsis' }}
               >
                 {DAYS.map((d, i) => {
                   // band kun tanlansa — ikki kun o'rin almashadi
@@ -177,6 +191,7 @@ export default function ProgramPage() {
       )}
 
       <MethodSheet open={methodOpen} onClose={() => setMethodOpen(false)} profile={profile} current={program.method ?? resolveMethod(profile)} />
+      <SplitSheet open={splitOpen} onClose={() => setSplitOpen(false)} profile={profile} />
 
       <NewDaySheet
         open={newDay}
@@ -359,6 +374,90 @@ function KeyLifts({ program, profile, meso }: { program: Program; profile: Profi
 }
 
 const METHOD_ORDER: ConcreteMethod[] = ['hypertrophy', 'strength', 'linear', 'powerbuilding'];
+
+/** Kunlar taqsimoti: tavsiya etilgan bo'linma yoki har kunga mushaklarni o'zi tanlash; saqlansa dastur qayta tuziladi */
+function SplitSheet({ open, onClose, profile }: { open: boolean; onClose: () => void; profile: Profile }) {
+  const updateProfile = useStore((s) => s.updateProfile);
+  const regenerate = useStore((s) => s.regenerate);
+  const [custom, setCustom] = useState(false);
+  const [days, setDays] = useState(profile.daysPerWeek);
+  const [tDays, setTDays] = useState(profile.trainingDays);
+  const [split, setSplit] = useState<DaySplit>([]);
+  // har ochilganda — profildagi holatdan
+  useEffect(() => {
+    if (!open) return;
+    const cur = customSplitOf(profile);
+    setCustom(!!cur);
+    setDays(profile.daysPerWeek);
+    setTDays(profile.trainingDays);
+    setSplit(cur ?? resizeSplit(undefined, profile.daysPerWeek));
+  }, [open, profile]);
+  const setCount = (n: number) => {
+    setDays(n);
+    setTDays(DEFAULT_DAYS[n]);
+    setSplit(resizeSplit(split, n));
+  };
+  const ok = tDays.length === days && (!custom || split.every((d) => d.length));
+  const apply = () => {
+    updateProfile({ daysPerWeek: days, trainingDays: tDays, split: custom ? split : undefined });
+    regenerate();
+    onClose();
+  };
+  return (
+    <Sheet open={open} onClose={onClose} label="Kunlar taqsimoti">
+      <h3 className="title">Kunlar taqsimoti</h3>
+      <p className="small muted mt-4">Haftasiga necha kun va har kuni qaysi mushaklar ishlashini tanlang. Mashqlar, set va takrorlarni dastur jihozingiz va darajangizga qarab o‘zi tanlaydi.</p>
+      <div className="field mt-16">
+        <label>Haftasiga kunlar</label>
+        <div className="row gap-8">
+          {[2, 3, 4, 5, 6].map((n) => (
+            <button key={n} className={`chip ${days === n ? 'on' : ''}`} style={{ flex: 1, justifyContent: 'center', height: 44 }} onClick={() => setCount(n)}>
+              {n}
+            </button>
+          ))}
+        </div>
+        <div className="row gap-6">
+          {DAYS_SHORT.map((d, i) => {
+            const on = tDays.includes(i);
+            return (
+              <button
+                key={d}
+                className={`chip ${on ? 'on' : ''}`}
+                style={{ flex: 1, justifyContent: 'center', padding: 0, height: 40 }}
+                aria-pressed={on}
+                onClick={() => {
+                  const next = on ? tDays.filter((x) => x !== i) : [...tDays, i].sort();
+                  if (next.length <= days) setTDays(next);
+                }}
+              >
+                {d}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+      <div className="stack gap-8 mt-12" role="radiogroup" aria-label="Taqsimot">
+        <button role="radio" aria-checked={!custom} className={`method-opt ${!custom ? 'on' : ''}`} onClick={() => setCustom(false)}>
+          <b>Tavsiya etilgan</b>
+          <span className="small muted">Kunlar soni, maqsad va uslubga qarab: har mushak haftasiga ~2 marta</span>
+        </button>
+        <button role="radio" aria-checked={custom} className={`method-opt ${custom ? 'on' : ''}`} onClick={() => setCustom(true)}>
+          <b>Mushaklarni o‘zim tanlayman</b>
+          <span className="small muted">Masalan: 1-kun ko‘krak va qo‘llar, 2-kun yelka va orqa, 3-kun oyoqlar</span>
+        </button>
+      </div>
+      {custom && (
+        <div className="mt-16">
+          <SplitBuilder value={split} onChange={setSplit} trainingDays={tDays} sessionMin={profile.sessionMin} />
+        </div>
+      )}
+      <p className="tiny faint mt-12">Dastur qayta tuziladi: qo‘lda qilgan o‘zgarishlaringiz yangisi bilan almashadi, mashg‘ulot tarixi saqlanadi.</p>
+      <button className="btn btn-primary btn-block mt-12" disabled={!ok} onClick={apply}>
+        Dasturni tuzish
+      </button>
+    </Sheet>
+  );
+}
 
 /** Uslub tanlash: 4 metodika + avtomatik; tanlansa dastur shu uslubda qayta tuziladi */
 function MethodSheet({ open, onClose, profile, current }: { open: boolean; onClose: () => void; profile: Profile; current: ConcreteMethod }) {

@@ -51,6 +51,7 @@ const syncProfile = z
     equipment: z.array(z.string().max(64)).max(200).nullish(),
     injuries: z.array(z.string().max(64)).max(50).nullish(),
     focus: z.array(z.string().max(64)).max(50).nullish(),
+    split: z.array(z.array(z.string().max(32)).max(12)).max(7).nullish(),
   })
   .passthrough();
 
