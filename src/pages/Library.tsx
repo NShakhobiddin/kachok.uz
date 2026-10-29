@@ -17,10 +17,10 @@ import type { MuscleId } from '../types';
 
 const AREAS: { k: string; label: string; muscles: MuscleId[] }[] = [
   { k: 'all', label: 'Hammasi', muscles: [] },
-  { k: 'chest', label: "Ko‘krak", muscles: ['chest'] },
+  { k: 'chest', label: 'Ko‘krak', muscles: ['chest'] },
   { k: 'back', label: 'Orqa', muscles: ['lats', 'upperBack', 'traps', 'lowerBack'] },
   { k: 'shoulders', label: 'Yelka', muscles: ['frontDelts', 'sideDelts', 'rearDelts'] },
-  { k: 'arms', label: "Qo‘llar", muscles: ['biceps', 'triceps', 'forearms'] },
+  { k: 'arms', label: 'Qo‘llar', muscles: ['biceps', 'triceps', 'forearms'] },
   { k: 'legs', label: 'Oyoqlar', muscles: ['quads', 'hamstrings', 'glutes', 'adductors', 'calves'] },
   { k: 'core', label: 'Press', muscles: ['abs', 'obliques'] },
 ];
@@ -87,9 +87,15 @@ function Exercises() {
       <div className="row gap-8">
         <div className="grow" style={{ position: 'relative' }}>
           <Icon name="search" size={18} style={{ position: 'absolute', left: 14, top: 16, color: 'var(--text-3)' }} />
-          <input className="input" style={{ paddingLeft: 40 }} placeholder="Mashq nomi (o‘zbekcha yoki inglizcha)" value={q} onChange={(e) => setQ(e.target.value)} aria-label="Mashq qidirish" />
+          <input className="input" style={{ paddingLeft: 40 }} placeholder="Mashq qidirish…" value={q} onChange={(e) => setQ(e.target.value)} aria-label="Mashq qidirish" />
         </div>
-        <button className={`icon-btn ${showMap ? 'filled' : ''}`} style={{ width: 50, height: 50, border: '1px solid var(--line)' }} onClick={() => setShowMap((v) => !v)} aria-label="Tana xaritasi" aria-pressed={showMap}>
+        <button
+          className={`icon-btn ${showMap ? 'filled' : ''}`}
+          style={{ width: 50, height: 50, border: '1px solid var(--line)' }}
+          onClick={() => setShowMap((v) => !v)}
+          aria-label="Tana xaritasi"
+          aria-pressed={showMap}
+        >
           <Icon name="user" />
         </button>
       </div>
@@ -157,7 +163,7 @@ function Exercises() {
                     {MUSCLES[m].name}
                   </span>
                 ))}
-                <span className="tag">{['', 'Oson', "O‘rta", 'Murakkab'][e.level]}</span>
+                <span className="tag">{['', 'Oson', 'O‘rta', 'Murakkab'][e.level]}</span>
                 <SafetyTag id={e.id} level={personalSafety(e, injuries).level} />
               </div>
             </div>

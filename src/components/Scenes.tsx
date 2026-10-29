@@ -21,7 +21,7 @@ function Svg({ children, label }: { children: React.ReactNode; label: string }) 
 function Balance({ surplus }: { surplus?: boolean }) {
   const ang = surplus ? -9 : 9;
   return (
-    <Svg label={surplus ? "Kaloriya ortiqchasi: ovqat sarfdan ko‘p" : 'Kaloriya taqchilligi: sarf ovqatdan ko‘p'}>
+    <Svg label={surplus ? 'Kaloriya ortiqchasi: ovqat sarfdan ko‘p' : 'Kaloriya taqchilligi: sarf ovqatdan ko‘p'}>
       <path d="M160 70 L140 190 H180 Z" fill="var(--surface-3)" />
       <rect x={110} y={188} width={100} height={8} rx={4} fill="var(--surface-3)" />
       <motion.g style={{ transformOrigin: '160px 70px' }} animate={{ rotate: [0, ang] }} transition={loop(1.6)}>
@@ -97,7 +97,17 @@ function FatCells() {
   return (
     <Svg label="Yog‘ hujayralari kichrayadi">
       {cells.map((c, i) => (
-        <motion.circle key={i} cx={c.x} cy={c.y} fill="var(--yellow-soft)" stroke="var(--plate-yellow)" strokeWidth={1.5} animate={{ r: [24, 15] }} transition={loop(2.4, i * 0.05)} />
+        <motion.circle
+          key={i}
+          cx={c.x}
+          cy={c.y}
+          fill="var(--yellow-soft)"
+          stroke="var(--plate-yellow)"
+          strokeWidth={1.5}
+          initial={{ r: 24 }}
+          animate={{ r: [24, 15] }}
+          transition={loop(2.4, i * 0.05)}
+        />
       ))}
       <text x={160} y={212} textAnchor="middle" {...M}>
         HUJAYRALAR KICHRAYADI · SONI EMAS
@@ -116,7 +126,16 @@ function Spot() {
       </motion.g>
       <BodySilhouette sk={SCENE_BODY} back={false} fill="var(--skin)" />
       {[0, 1, 2, 3].map((i) => (
-        <motion.text key={i} x={[90, 230, 100, 220][i]} y={[70, 70, 160, 160][i]} textAnchor="middle" fontSize={18} fill="var(--plate-yellow)" animate={{ y: [[70, 70, 160, 160][i], [60, 60, 150, 150][i]], opacity: [1, 0] }} transition={{ duration: 1.6, delay: i * 0.4, repeat: Infinity }}>
+        <motion.text
+          key={i}
+          x={[90, 230, 100, 220][i]}
+          y={[70, 70, 160, 160][i]}
+          textAnchor="middle"
+          fontSize={18}
+          fill="var(--plate-yellow)"
+          animate={{ y: [[70, 70, 160, 160][i], [60, 60, 150, 150][i]], opacity: [1, 0] }}
+          transition={{ duration: 1.6, delay: i * 0.4, repeat: Infinity }}
+        >
           −
         </motion.text>
       ))}
@@ -133,7 +152,18 @@ function Fiber() {
       <motion.g style={{ transformOrigin: '160px 100px' }} animate={{ scaleY: [1, 1.35] }} transition={loop(2.4)}>
         <rect x={40} y={78} width={240} height={44} rx={22} fill="var(--red-soft)" stroke="var(--plate-red)" strokeWidth={1.5} />
         {Array.from({ length: 11 }, (_, i) => (
-          <motion.line key={i} x1={62 + i * 18} x2={62 + i * 18} y1={84} y2={116} stroke="var(--plate-red)" strokeWidth={2} animate={{ x1: [62 + i * 18, 66 + i * 17], x2: [62 + i * 18, 66 + i * 17] }} transition={loop(0.9)} />
+          <motion.line
+            key={i}
+            x1={62 + i * 18}
+            x2={62 + i * 18}
+            y1={84}
+            y2={116}
+            stroke="var(--plate-red)"
+            strokeWidth={2}
+            initial={{ x1: 62 + i * 18, x2: 62 + i * 18 }}
+            animate={{ x1: [62 + i * 18, 66 + i * 17], x2: [62 + i * 18, 66 + i * 17] }}
+            transition={loop(0.9)}
+          />
         ))}
       </motion.g>
       <text x={40} y={40} fontSize={14} {...T}>
@@ -158,7 +188,16 @@ function Mps() {
       <text x={120} y={34} textAnchor="middle" {...M}>
         OQSIL + UYQU OYNASI
       </text>
-      <motion.path d={d} fill="none" stroke="var(--blue)" strokeWidth={2.5} strokeLinecap="round" initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 2, repeat: Infinity, repeatDelay: 1 }} />
+      <motion.path
+        d={d}
+        fill="none"
+        stroke="var(--blue)"
+        strokeWidth={2.5}
+        strokeLinecap="round"
+        initial={{ pathLength: 0 }}
+        animate={{ pathLength: 1 }}
+        transition={{ duration: 2, repeat: Infinity, repeatDelay: 1 }}
+      />
       {['0', '24', '48', '72 soat'].map((t, i) => (
         <text key={t} x={30 + i * 90} y={190} textAnchor={i === 3 ? 'end' : 'middle'} {...M}>
           {t}
@@ -203,7 +242,15 @@ function Dose() {
       </text>
       <line x1={30} y1={180} x2={300} y2={180} stroke="var(--line)" />
       <motion.path d={d} fill="none" stroke="var(--blue)" strokeWidth={2.5} initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 2 }} />
-      <motion.circle r={6} fill="var(--blue)" stroke="var(--surface)" strokeWidth={2} animate={{ cx: [30, 120, 180, 300], cy: [180, 92, 62, 48] }} transition={{ duration: 3.4, repeat: Infinity, ease: 'easeInOut' }} />
+      <motion.circle
+        r={6}
+        fill="var(--blue)"
+        stroke="var(--surface)"
+        strokeWidth={2}
+        initial={{ cx: 30, cy: 180 }}
+        animate={{ cx: [30, 120, 180, 300], cy: [180, 92, 62, 48] }}
+        transition={{ duration: 3.4, repeat: Infinity, ease: 'easeInOut' }}
+      />
       <text x={30} y={200} {...M}>
         0
       </text>
@@ -256,7 +303,15 @@ function Deload() {
         DELOAD
       </text>
       <motion.path d={fat} fill="none" stroke="var(--red)" strokeWidth={2.5} initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 2.2, repeat: Infinity, repeatDelay: 1 }} />
-      <motion.path d={fit} fill="none" stroke="var(--blue)" strokeWidth={2.5} initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 2.2, repeat: Infinity, repeatDelay: 1 }} />
+      <motion.path
+        d={fit}
+        fill="none"
+        stroke="var(--blue)"
+        strokeWidth={2.5}
+        initial={{ pathLength: 0 }}
+        animate={{ pathLength: 1 }}
+        transition={{ duration: 2.2, repeat: Infinity, repeatDelay: 1 }}
+      />
       <g>
         <line x1={24} y1={200} x2={40} y2={200} stroke="var(--red)" strokeWidth={2.5} />
         <text x={46} y={204} fontSize={11} fill="var(--text-2)">
@@ -287,7 +342,17 @@ function Plate() {
     <Svg label="Sog‘lom likopcha: yarmi sabzavot, chorak oqsil, chorak uglevod">
       <circle cx={160} cy={105} r={92} fill="var(--surface-3)" />
       {parts.map((p, i) => (
-        <motion.path key={p.k} d={p.d} fill={p.c} stroke="var(--surface)" strokeWidth={3} initial={{ scale: 0.6, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ delay: i * 0.3, type: 'spring' }} style={{ transformOrigin: '160px 105px' }} />
+        <motion.path
+          key={p.k}
+          d={p.d}
+          fill={p.c}
+          stroke="var(--surface)"
+          strokeWidth={3}
+          initial={{ scale: 0.6, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ delay: i * 0.3, type: 'spring' }}
+          style={{ transformOrigin: '160px 105px' }}
+        />
       ))}
       {parts.map((p) => (
         <text key={p.k + 't'} x={p.x} y={p.y} textAnchor="middle" fontSize={12} {...T}>
@@ -305,7 +370,15 @@ function ProteinDay() {
       <line x1={20} y1={170} x2={300} y2={170} stroke="var(--line)" />
       {meals.map((m, i) => (
         <g key={m}>
-          <motion.rect x={40 + i * 70} width={36} rx={6} fill="var(--plate-red)" initial={{ y: 170, height: 0 }} animate={{ y: 110, height: 60 }} transition={{ delay: 0.3 + i * 0.3, type: 'spring' }} />
+          <motion.rect
+            x={40 + i * 70}
+            width={36}
+            rx={6}
+            fill="var(--plate-red)"
+            initial={{ y: 170, height: 0 }}
+            animate={{ y: 110, height: 60 }}
+            transition={{ delay: 0.3 + i * 0.3, type: 'spring' }}
+          />
           <text x={58 + i * 70} y={102} textAnchor="middle" fontSize={12} {...T}>
             ~30 g
           </text>
@@ -350,11 +423,27 @@ function Sleep() {
   return (
     <Svg label="7–9 soat uyqu">
       <motion.path d="M190 40a50 50 0 1 0 60 70 42 42 0 0 1-60-70z" fill="var(--plate-yellow)" animate={{ rotate: [-6, 6] }} style={{ transformOrigin: '210px 80px' }} transition={loop(3)} />
-      {[[60, 40], [110, 70], [80, 100], [140, 30]].map(([cx, cy], i) => (
+      {[
+        [60, 40],
+        [110, 70],
+        [80, 100],
+        [140, 30],
+      ].map(([cx, cy], i) => (
         <motion.circle key={i} cx={cx} cy={cy} r={2.5} fill="var(--text)" animate={{ opacity: [0.2, 1] }} transition={loop(1 + i * 0.3)} />
       ))}
       {Array.from({ length: 9 }, (_, i) => (
-        <motion.rect key={i} x={40 + i * 26} width={18} rx={4} y={190 - 18} height={18} fill={i >= 6 ? 'var(--blue)' : 'var(--surface-3)'} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: i * 0.12 }} />
+        <motion.rect
+          key={i}
+          x={40 + i * 26}
+          width={18}
+          rx={4}
+          y={190 - 18}
+          height={18}
+          fill={i >= 6 ? 'var(--blue)' : 'var(--surface-3)'}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: i * 0.12 }}
+        />
       ))}
       <text x={40} y={160} {...M}>
         SOAT: 1 … 9
@@ -380,9 +469,29 @@ function Brace() {
           <BodySilhouette sk={SCENE_BODY} back={false} fill="var(--skin)" />
         </g>
       </g>
-      <motion.ellipse cx={160} cy={100 + (waist - 100) * 1.45} rx={34} ry={11} fill="none" stroke="var(--blue)" strokeWidth={4} animate={{ rx: [30, 40], opacity: [0.5, 1] }} transition={loop(1.4)} />
+      <motion.ellipse
+        cx={160}
+        cy={100 + (waist - 100) * 1.45}
+        rx={34}
+        ry={11}
+        fill="none"
+        stroke="var(--blue)"
+        strokeWidth={4}
+        initial={{ rx: 30 }}
+        animate={{ rx: [30, 40], opacity: [0.5, 1] }}
+        transition={loop(1.4)}
+      />
       {[-1, 1].map((k) => (
-        <motion.path key={k} d={`M${160 + k * 92} ${100 + (waist - 100) * 1.45} l${-k * 18} 0 m${k * 8} -8 l${-k * 8} 8 l${k * 8} 8`} stroke="var(--blue-2)" strokeWidth={2.5} fill="none" strokeLinecap="round" animate={{ x: [0, -k * 10] }} transition={loop(1.4)} />
+        <motion.path
+          key={k}
+          d={`M${160 + k * 92} ${100 + (waist - 100) * 1.45} l${-k * 18} 0 m${k * 8} -8 l${-k * 8} 8 l${k * 8} 8`}
+          stroke="var(--blue-2)"
+          strokeWidth={2.5}
+          fill="none"
+          strokeLinecap="round"
+          animate={{ x: [0, -k * 10] }}
+          transition={loop(1.4)}
+        />
       ))}
       <text x={160} y={212} textAnchor="middle" {...M}>
         360° QORIN BOSIMI = UMURTQA KORSETI
@@ -435,7 +544,16 @@ function Bone() {
     <Svg label="Suyak zichligi oshadi">
       <path d="M70 90a20 20 0 1 1 26-24h128a20 20 0 1 1 26 24 20 20 0 1 1-26 24H96a20 20 0 1 1-26-24z" fill="var(--surface-3)" stroke="var(--fig-near)" strokeWidth={2} />
       {Array.from({ length: 36 }, (_, i) => (
-        <motion.circle key={i} cx={104 + (i % 12) * 10} cy={80 + Math.floor(i / 12) * 10} r={2.6} fill="var(--fig-near)" initial={{ opacity: 0.1 }} animate={{ opacity: i % 3 === 0 ? [0.1, 1] : 0.8 }} transition={loop(1.6, (i % 7) * 0.1)} />
+        <motion.circle
+          key={i}
+          cx={104 + (i % 12) * 10}
+          cy={80 + Math.floor(i / 12) * 10}
+          r={2.6}
+          fill="var(--fig-near)"
+          initial={{ opacity: 0.1 }}
+          animate={{ opacity: i % 3 === 0 ? [0.1, 1] : 0.8 }}
+          transition={loop(1.6, (i % 7) * 0.1)}
+        />
       ))}
       <text x={160} y={170} textAnchor="middle" fontSize={26} fontFamily="var(--font-display)" fontWeight={800} fill="var(--text)">
         +2.9%
@@ -450,7 +568,13 @@ function Bone() {
 function Heart() {
   return (
     <Svg label="Yurak va qon bosimi">
-      <motion.path d="M160 170s-60-36-60-80a32 32 0 0 1 60-16 32 32 0 0 1 60 16c0 44-60 80-60 80z" fill="var(--plate-red)" animate={{ scale: [1, 1.08, 1] }} transition={{ duration: 0.9, repeat: Infinity }} style={{ transformOrigin: '160px 110px' }} />
+      <motion.path
+        d="M160 170s-60-36-60-80a32 32 0 0 1 60-16 32 32 0 0 1 60 16c0 44-60 80-60 80z"
+        fill="var(--plate-red)"
+        animate={{ scale: [1, 1.08, 1] }}
+        transition={{ duration: 0.9, repeat: Infinity }}
+        style={{ transformOrigin: '160px 110px' }}
+      />
       <text x={160} y={205} textAnchor="middle" {...M}>
         QON BOSIMI ↓ · QAND NAZORATI ↑
       </text>
@@ -462,7 +586,18 @@ function Brain() {
   return (
     <Svg label="Kayfiyat yaxshilanadi">
       {[0, 1, 2].map((i) => (
-        <motion.circle key={i} cx={160} cy={100} r={40} fill="none" stroke="var(--blue)" strokeWidth={2} animate={{ r: [40, 100], opacity: [0.8, 0] }} transition={{ duration: 2.4, delay: i * 0.8, repeat: Infinity }} />
+        <motion.circle
+          key={i}
+          cx={160}
+          cy={100}
+          r={40}
+          fill="none"
+          stroke="var(--blue)"
+          strokeWidth={2}
+          initial={{ r: 40 }}
+          animate={{ r: [40, 100], opacity: [0.8, 0] }}
+          transition={{ duration: 2.4, delay: i * 0.8, repeat: Infinity }}
+        />
       ))}
       <path d="M140 70a20 20 0 0 0-22 26 18 18 0 0 0 8 30 18 18 0 0 0 34 4V64a14 14 0 0 0-20 6zM180 70a20 20 0 0 1 22 26 18 18 0 0 1-8 30 18 18 0 0 1-34 4" fill="var(--fig-near)" />
       <text x={160} y={200} textAnchor="middle" {...M}>
@@ -503,7 +638,7 @@ function Water() {
       <clipPath id="glass">
         <path d="M120 30 H200 L190 190 H130 Z" />
       </clipPath>
-      <motion.rect x={110} width={100} fill="var(--blue)" opacity={0.75} clipPath="url(#glass)" animate={{ y: [170, 70], height: [20, 120] }} transition={loop(2.6)} />
+      <motion.rect x={110} width={100} fill="var(--blue)" opacity={0.75} clipPath="url(#glass)" initial={{ y: 170, height: 20 }} animate={{ y: [170, 70], height: [20, 120] }} transition={loop(2.6)} />
       <text x={160} y={212} textAnchor="middle" {...M}>
         2.0–2.5 L / KUN + MASHQ
       </text>
@@ -544,7 +679,13 @@ function Cardio() {
   return (
     <Svg label="O‘rtacha kardio">
       <ellipse cx={160} cy={110} rx={120} ry={60} fill="none" stroke="var(--surface-3)" strokeWidth={14} />
-      <motion.circle r={9} fill="var(--blue)" animate={{ cx: [280, 160, 40, 160, 280], cy: [110, 170, 110, 50, 110] }} transition={{ duration: 3, repeat: Infinity, ease: 'linear' }} />
+      <motion.circle
+        r={9}
+        fill="var(--blue)"
+        initial={{ cx: 280, cy: 110 }}
+        animate={{ cx: [280, 160, 40, 160, 280], cy: [110, 170, 110, 50, 110] }}
+        transition={{ duration: 3, repeat: Infinity, ease: 'linear' }}
+      />
       <text x={160} y={106} textAnchor="middle" fontSize={16} {...T}>
         20–40 daqiqa
       </text>

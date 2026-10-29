@@ -1507,6 +1507,10 @@ ol.steps li::before {
   right: 12px;
   pointer-events: none;
 }
+.m3d-controls[hidden],
+.m3d-top[hidden] {
+  display: none;
+}
 .m3d-controls {
   position: absolute;
   left: 12px;
@@ -1793,7 +1797,9 @@ ol.steps li::before {
   pointer-events: none;
 }
 .hero-copy .eyebrow {
-  white-space: nowrap;
+  /* uzun yozuv ("O‘tkazib yuborilgan · Dushanba · 1-hafta") kartadan chiqmasin */
+  white-space: normal;
+  line-height: 1.35;
 }
 .hero-title {
   font-size: 27px;

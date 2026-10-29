@@ -1,6 +1,7 @@
 // Bitta mushak haqida qo'llanma: 3D modelda ajratilgan holda, anatomiya, vazifa va EMG bo'yicha eng yaxshi mashqlar.
 import { lazy, Suspense, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
+import { BodyMap } from '../components/BodyMap';
 import { ExerciseThumb } from '../components/ExerciseThumb';
 import type { View3D } from '../components/Muscle3D';
 import { Fold, Note } from '../components/ui/Fold';
@@ -19,6 +20,7 @@ export default function MuscleDetail() {
   const nav = useNavigate();
   const back = useBack('/library?tab=muscles');
   const [viewOverride, setViewOverride] = useState<{ key: string; view: View3D } | null>(null);
+  const [m3State, setM3State] = useState<'loading' | 'ready' | 'error'>('loading');
   if (!isM3(key)) return <NotFound text="Mushak topilmadi" />;
   const info = M3_INFO[key];
   const g = MUSCLE_GUIDE[key];
@@ -54,6 +56,8 @@ export default function MuscleDetail() {
           }
         >
           <Muscle3D
+            onState={setM3State}
+            placeholder={info.group ? <BodyMap selected={[info.group]} views={[info.view === 'back' ? 'back' : 'front']} height={300} showLabels={false} /> : undefined}
             acts={[{ key, mvic: 100 }]}
             selected={key}
             focus
@@ -63,10 +67,12 @@ export default function MuscleDetail() {
             label={`3D model: ${info.name} ajratib ko‘rsatilgan`}
           />
         </Suspense>
-        <div className="m3d-top">
-          <span className="tag stage-tag">Boshqa mushakka bosing — unga o‘tasiz</span>
-        </div>
-        <div className="m3d-controls">
+        {m3State !== 'error' && (
+          <div className="m3d-top">
+            <span className="tag stage-tag">Boshqa mushakka bosing — unga o‘tasiz</span>
+          </div>
+        )}
+        <div className="m3d-controls" hidden={m3State === 'error'}>
           <div className="segmented m3d-seg" role="radiogroup" aria-label="Ko‘rinish">
             {(['front', 'side', 'back'] as const).map((v) => (
               <button key={v} role="radio" aria-checked={view === v} className={view === v ? 'on' : ''} onClick={() => setViewOverride({ key, view: v })}>

@@ -3,6 +3,7 @@ import { lazy, Suspense, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ATLAS_ORDER, MUSCLE_GUIDE, REGIONS, type Region } from '../data/muscleGuide';
 import { M3_INFO, type M3 } from '../data/muscles3d';
+import { BodyMap } from './BodyMap';
 import type { View3D } from './Muscle3D';
 import { Icon } from './ui/Icon';
 
@@ -12,6 +13,7 @@ export function MuscleAtlas() {
   const [sel, setSel] = useState<M3 | null>(null);
   const [view, setView] = useState<View3D>('front');
   const [region, setRegion] = useState<Region | 'all'>('all');
+  const [m3State, setM3State] = useState<'loading' | 'ready' | 'error'>('loading');
   const pick = (k: M3 | null) => {
     setSel(k);
     if (k) setView(M3_INFO[k].view);
@@ -31,6 +33,8 @@ export function MuscleAtlas() {
           }
         >
           <Muscle3D
+            onState={setM3State}
+            placeholder={m3State === 'error' ? <BodyMap selected={sel && M3_INFO[sel].group ? [M3_INFO[sel].group!] : []} height={300} showLabels={false} /> : undefined}
             acts={sel ? [{ key: sel, mvic: 100 }] : []}
             selected={sel}
             onSelect={pick}
@@ -39,11 +43,11 @@ export function MuscleAtlas() {
             label={sel ? `3D model: ${M3_INFO[sel].name}` : '3D anatomik model — mushakka bosing'}
           />
         </Suspense>
-        <div className="m3d-top">
+        <div className="m3d-top" hidden={m3State === 'error'}>
           <span className="tag stage-tag">{sel ? 'Boshqa mushakka bosing yoki bo‘sh joyga — qaytish' : 'Mushakka bosing · barmoq bilan aylantiring'}</span>
         </div>
         {/* ko'rinish tugmalari doim modelda; tanlangan mushak kartasi — model ostida (telefonda yopib qo'ymasin) */}
-        <div className="m3d-controls">
+        <div className="m3d-controls" hidden={m3State === 'error'}>
           <div className="segmented m3d-seg" role="radiogroup" aria-label="Ko‘rinish">
             {(['front', 'side', 'back'] as const).map((v) => (
               <button key={v} role="radio" aria-checked={view === v} className={view === v ? 'on' : ''} onClick={() => setView(v)}>

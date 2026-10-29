@@ -230,9 +230,11 @@ interface Props {
   label?: string;
   /** tanlangan mushakka kamerani yaqinlashtirish (atlas sahifasi) */
   focus?: boolean;
+  /** yuklanish holati (masalan, 3D ochilmasa boshqaruv tugmalarini yashirish uchun) */
+  onState?: (s: 'loading' | 'ready' | 'error') => void;
 }
 
-export default function Muscle3D({ acts, anim, selected = null, onSelect, view = 'front', mode = 'orbit', playing = true, onPhase, placeholder, className, label, focus = false }: Props) {
+export default function Muscle3D({ acts, anim, selected = null, onSelect, view = 'front', mode = 'orbit', playing = true, onPhase, placeholder, className, label, focus = false, onState }: Props) {
   const host = useRef<HTMLDivElement>(null);
   const [state, setState] = useState<'loading' | 'ready' | 'error'>('loading');
   // o'zgaruvchan qiymatlar render siklida o'qiladi (qayta montaj qilmasdan)
@@ -559,7 +561,16 @@ export default function Muscle3D({ acts, anim, selected = null, onSelect, view =
     else api.current?.goTo(view);
   }, [view, state, focus, selected]);
 
-  const aria = label ?? `3D anatomik model: ${acts.slice(0, 3).map((a) => `${M3_INFO[a.key].name} ${Math.round(a.mvic)}%`).join(', ')}`;
+  const onStateRef = useRef(onState);
+  onStateRef.current = onState;
+  useEffect(() => onStateRef.current?.(state), [state]);
+
+  const aria =
+    label ??
+    `3D anatomik model: ${acts
+      .slice(0, 3)
+      .map((a) => `${M3_INFO[a.key].name} ${Math.round(a.mvic)}%`)
+      .join(', ')}`;
   return (
     <div ref={host} className={`m3d-host ${className ?? ''}`} role="img" aria-label={aria}>
       {state !== 'ready' && placeholder && <div className="m3d-ph">{placeholder}</div>}

@@ -1,6 +1,6 @@
 import { AnimatePresence, motion } from 'framer-motion';
-import { useMemo, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { apiEnabled } from '../api/client';
 import { BodyHero } from '../components/BodyHero';
 import { Icon } from '../components/ui/Icon';
@@ -15,27 +15,27 @@ import { useStore } from '../store/useStore';
 import type { ActivityLevel, EquipmentId, Goal, Injury, Level, MuscleGroup, Profile, Sex } from '../types';
 
 export const GOALS: { id: Goal; title: string; desc: string; icon: string }[] = [
-  { id: 'muscle', title: "Mushak massasi (kachok bo‘lish)", desc: "Mushakni o‘stirish, kuchli va katta ko‘rinish", icon: 'dumbbell' },
-  { id: 'fatLoss', title: 'Ozish', desc: "Yog‘ni yo‘qotib, mushakni saqlash", icon: 'flame' },
-  { id: 'recomp', title: 'Shakl berish', desc: "Bir vaqtda yog‘ni kamaytirib, mushakni oshirish", icon: 'target' },
-  { id: 'strength', title: 'Kuch', desc: "Og‘irroq ko‘tarish — shtanga raqamlari", icon: 'bolt' },
-  { id: 'health', title: "Sog‘liq va tonus", desc: "Faol, baquvvat, og‘riqsiz hayot", icon: 'heart' },
+  { id: 'muscle', title: 'Mushak massasi (kachok bo‘lish)', desc: 'Mushakni o‘stirish, kuchli va katta ko‘rinish', icon: 'dumbbell' },
+  { id: 'fatLoss', title: 'Ozish', desc: 'Yog‘ni yo‘qotib, mushakni saqlash', icon: 'flame' },
+  { id: 'recomp', title: 'Shakl berish', desc: 'Bir vaqtda yog‘ni kamaytirib, mushakni oshirish', icon: 'target' },
+  { id: 'strength', title: 'Kuch', desc: 'Og‘irroq ko‘tarish — shtanga raqamlari', icon: 'bolt' },
+  { id: 'health', title: 'Sog‘liq va tonus', desc: 'Faol, baquvvat, og‘riqsiz hayot', icon: 'heart' },
 ];
 
 export const LEVELS: { id: Level; title: string; desc: string }[] = [
-  { id: 'beginner', title: 'Yangi boshlovchi', desc: "Zalga endi kelyapman yoki 6 oydan kam muntazam shug‘ullanganman" },
-  { id: 'intermediate', title: "O‘rta daraja", desc: "6 oydan 2 yilgacha muntazam, asosiy mashqlarni bilaman" },
+  { id: 'beginner', title: 'Yangi boshlovchi', desc: 'Zalga endi kelyapman yoki 6 oydan kam muntazam shug‘ullanganman' },
+  { id: 'intermediate', title: 'O‘rta daraja', desc: '6 oydan 2 yilgacha muntazam, asosiy mashqlarni bilaman' },
   { id: 'advanced', title: 'Tajribali', desc: '2 yildan ortiq, progressiyani o‘zim boshqaraman' },
 ];
 
 const PARQ = [
-  "Shifokor sizda yurak kasalligi yoki yuqori qon bosimi borligini aytganmi?",
-  "Dam olayotganda, kundalik ishda yoki jismoniy harakatda ko‘krak qafasida og‘riq sezasizmi?",
-  "So‘nggi 12 oyda bosh aylanishi tufayli muvozanatni yo‘qotganmisiz yoki hushdan ketganmisiz?",
-  "Sizda boshqa surunkali kasallik (diabet, astma va h.k.) aniqlanganmi?",
-  "Surunkali kasallik uchun doimiy dori ichasizmi?",
-  "Harakat bilan kuchayishi mumkin bo‘lgan suyak, bo‘g‘im yoki pay muammosi bormi (so‘nggi 12 oyda)?",
-  "Shifokor faqat tibbiy nazorat ostida shug‘ullanishingizni aytganmi?",
+  'Shifokor sizda yurak kasalligi yoki yuqori qon bosimi borligini aytganmi?',
+  'Dam olayotganda, kundalik ishda yoki jismoniy harakatda ko‘krak qafasida og‘riq sezasizmi?',
+  'So‘nggi 12 oyda bosh aylanishi tufayli muvozanatni yo‘qotganmisiz yoki hushdan ketganmisiz?',
+  'Sizda boshqa surunkali kasallik (diabet, astma va h.k.) aniqlanganmi?',
+  'Surunkali kasallik uchun doimiy dori ichasizmi?',
+  'Harakat bilan kuchayishi mumkin bo‘lgan suyak, bo‘g‘im yoki pay muammosi bormi (so‘nggi 12 oyda)?',
+  'Shifokor faqat tibbiy nazorat ostida shug‘ullanishingizni aytganmi?',
 ];
 
 /** kirish ekranidagi 3D tanada yonadigan mushaklar (yirik guruhlar) */
@@ -53,35 +53,62 @@ export default function Onboarding() {
   const setProfile = useStore((s) => s.setProfile);
   const importData = useStore((s) => s.importData);
   const fileRef = useRef<HTMLInputElement>(null);
-  const [step, setStep] = useState<Step>('welcome');
+  // qadam URL'da (?s=3): telefonning "orqaga" tugmasi oldingi qadamga qaytaradi, ilovadan chiqib ketmaydi
+  const [sp, setSp] = useSearchParams();
+  const loc = useLocation();
+  const step: Step = STEPS[Number(sp.get('s'))] ?? 'welcome';
+  const setStep = (s: Step) => setSp({ s: String(STEPS.indexOf(s)) });
   const [importErr, setImportErr] = useState(false);
   const [dir, setDir] = useState(1);
-  const [p, setP] = useState<Omit<Profile, 'createdAt'>>({
-    name: '',
-    sex: 'male',
-    age: 25,
-    heightCm: 175,
-    weightKg: 75,
-    goal: 'muscle',
-    level: 'beginner',
-    daysPerWeek: 3,
-    sessionMin: 60,
-    trainingDays: DEFAULT_DAYS[3],
-    equipment: EQUIPMENT_PRESETS[0].items,
-    injuries: [],
-    focus: [],
-    activity: 'light',
-    healthFlags: [],
-    dietPrefs: { noPork: true, lactoseFree: false, vegetarian: false },
+  const [p, setP] = useState<Omit<Profile, 'createdAt'>>(() => {
+    // javoblar sahifa yangilanganda ham saqlanadi (sessiya davomida)
+    try {
+      const saved = sessionStorage.getItem('kachok-onboarding');
+      if (saved) return JSON.parse(saved);
+    } catch {
+      /* saqlash imkoni yo'q */
+    }
+    return {
+      name: '',
+      sex: 'male',
+      age: 25,
+      heightCm: 175,
+      weightKg: 75,
+      goal: 'muscle',
+      level: 'beginner',
+      daysPerWeek: 3,
+      sessionMin: 60,
+      trainingDays: DEFAULT_DAYS[3],
+      equipment: EQUIPMENT_PRESETS[0].items,
+      injuries: [],
+      focus: [],
+      activity: 'light',
+      healthFlags: [],
+      dietPrefs: { noPork: true, lactoseFree: false, vegetarian: false },
+    };
   });
+  useEffect(() => {
+    try {
+      sessionStorage.setItem('kachok-onboarding', JSON.stringify(p));
+    } catch {
+      /* saqlash imkoni yo'q */
+    }
+  }, [p]);
   const up = (patch: Partial<Profile>) => setP((x) => ({ ...x, ...patch }));
   const idx = STEPS.indexOf(step);
   const go = (d: 1 | -1) => {
     setDir(d);
-    setStep(STEPS[Math.max(0, Math.min(STEPS.length - 1, idx + d))]);
+    // orqaga — tarix bo'yicha (ilova ichida kelingan bo'lsa), aks holda oldingi qadamni almashtirib
+    if (d === -1 && loc.key !== 'default') nav(-1);
+    else setSp({ s: String(Math.max(0, Math.min(STEPS.length - 1, idx + d))) }, { replace: d === -1 });
   };
   const finish = () => {
     setProfile({ ...p, createdAt: new Date().toISOString() });
+    try {
+      sessionStorage.removeItem('kachok-onboarding');
+    } catch {
+      /* saqlash imkoni yo'q */
+    }
     setDir(1);
     setStep('done');
   };
@@ -252,7 +279,11 @@ export default function Onboarding() {
                   ))}
                 </div>
                 <span className="tiny faint">
-                  {p.daysPerWeek <= 3 ? "Yangi boshlovchilar uchun ideal — har mushak haftasiga 2–3 marta." : p.daysPerWeek === 4 ? 'Eng muvozanatli tanlov.' : "Ko‘proq hajm — yaxshi tiklanish kerak."}
+                  {p.daysPerWeek <= 3
+                    ? 'Yangi boshlovchilar uchun ideal — har mushak haftasiga 2–3 marta.'
+                    : p.daysPerWeek === 4
+                      ? 'Eng muvozanatli tanlov.'
+                      : 'Ko‘proq hajm — yaxshi tiklanish kerak.'}
                 </span>
               </div>
               <div className="field">
@@ -315,7 +346,12 @@ export default function Onboarding() {
                   {INJURIES.map((inj) => {
                     const on = p.injuries.includes(inj.id);
                     return (
-                      <button key={inj.id} className={`chip ${on ? 'on' : ''}`} aria-pressed={on} onClick={() => up({ injuries: on ? p.injuries.filter((x) => x !== inj.id) : [...p.injuries, inj.id as Injury] })}>
+                      <button
+                        key={inj.id}
+                        className={`chip ${on ? 'on' : ''}`}
+                        aria-pressed={on}
+                        onClick={() => up({ injuries: on ? p.injuries.filter((x) => x !== inj.id) : [...p.injuries, inj.id as Injury] })}
+                      >
                         {inj.name}
                       </button>
                     );
@@ -398,7 +434,7 @@ export default function Onboarding() {
             <div className="stack gap-16" style={{ flex: 1 }}>
               <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ type: 'spring', damping: 18 }} className="stack gap-8" style={{ marginTop: 24 }}>
                 <span className="eyebrow">Dastur tayyor</span>
-                <h1 className="display display-xl">{p.name ? `${p.name},` : ''} boshladik</h1>
+                <h1 className="display display-xl">{p.name ? `${p.name}, boshladik` : 'Boshladik'}</h1>
               </motion.div>
               <div className="card stack gap-12">
                 <Row k="Tizim" v={program.split} />
@@ -422,7 +458,11 @@ export default function Onboarding() {
           <button className="btn btn-primary btn-block" disabled={!canNext} onClick={() => (step === 'health' ? finish() : go(1))}>
             {step === 'health' ? 'Dasturni tuzish' : 'Davom etish'}
           </button>
-          {!canNext && <p className="tiny faint mt-8" style={{ textAlign: 'center' }}>{p.daysPerWeek} ta kunni tanlang</p>}
+          {!canNext && (
+            <p className="tiny faint mt-8" style={{ textAlign: 'center' }}>
+              {p.daysPerWeek} ta kunni tanlang
+            </p>
+          )}
         </div>
       )}
     </div>
@@ -451,7 +491,19 @@ function Row({ k, v }: { k: string; v: string }) {
 
 function GoalIcon({ name, on }: { name: string; on: boolean }) {
   return (
-    <span style={{ width: 42, height: 42, borderRadius: 12, display: 'grid', placeItems: 'center', background: on ? 'var(--accent)' : 'var(--surface-2)', color: on ? 'var(--accent-ink)' : 'var(--text-2)', flex: 'none', transition: 'all .15s' }}>
+    <span
+      style={{
+        width: 42,
+        height: 42,
+        borderRadius: 12,
+        display: 'grid',
+        placeItems: 'center',
+        background: on ? 'var(--accent)' : 'var(--surface-2)',
+        color: on ? 'var(--accent-ink)' : 'var(--text-2)',
+        flex: 'none',
+        transition: 'all .15s',
+      }}
+    >
       <Icon name={name} />
     </span>
   );
