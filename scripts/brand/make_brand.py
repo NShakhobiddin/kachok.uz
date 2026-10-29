@@ -250,12 +250,16 @@ cover = svg_doc(cw, ch, tagline_body((cw - tag_w) / 2, (ch - tag_h) / 2), title=
 png(cover, os.path.join(BRAND, 'gymbos-cover-1200x630.png'), width=cw, height=ch)
 
 # ---------- 4. Ikonkalar ----------
-MARK_SIMPLE = (
-    f'<rect x="96" y="208" width="320" height="120" rx="60" fill="{LIME_DEPTH}"/>'
-    f'<rect x="96" y="196" width="320" height="120" rx="60" fill="{LIME}"/>'
-    f'<g fill="{INK}"><rect x="132" y="246" width="248" height="20" rx="10"/>'
-    f'<rect x="160" y="212" width="36" height="88" rx="9"/><rect x="316" y="212" width="36" height="88" rx="9"/></g>'
-)
+def mark_simple(pill=LIME, depth=LIME_DEPTH, ink=INK):
+    return (
+        f'<rect x="96" y="208" width="320" height="120" rx="60" fill="{depth}"/>'
+        f'<rect x="96" y="196" width="320" height="120" rx="60" fill="{pill}"/>'
+        f'<g fill="{ink}"><rect x="132" y="246" width="248" height="20" rx="10"/>'
+        f'<rect x="160" y="212" width="36" height="88" rx="9"/><rect x="316" y="212" width="36" height="88" rx="9"/></g>'
+    )
+
+
+MARK_SIMPLE = mark_simple()
 MARK_DETAILED = (
     f'<rect x="96" y="206" width="320" height="120" rx="60" fill="{LIME_DEPTH}"/>'
     f'<rect x="96" y="196" width="320" height="120" rx="60" fill="{LIME}"/>'
@@ -267,13 +271,13 @@ GLOW = (f'<defs><filter id="gbGlow" x="-40%" y="-80%" width="180%" height="260%"
         f'<rect x="116" y="244" width="280" height="100" rx="50" fill="{LIME}" opacity="0.5" filter="url(#gbGlow)"/>')
 
 
-def icon(mark, bg='rounded', scale=1.0, glow=False):
+def icon(mark, bg='rounded', scale=1.0, glow=False, bg_color=INK):
     if bg == 'rounded':
-        b = f'<rect width="512" height="512" rx="114" fill="{INK}"/>'
+        b = f'<rect width="512" height="512" rx="114" fill="{bg_color}"/>'
     elif bg == 'full':
-        b = f'<rect width="512" height="512" fill="{INK}"/>'
+        b = f'<rect width="512" height="512" fill="{bg_color}"/>'
     elif bg == 'circle':
-        b = f'<circle cx="256" cy="256" r="256" fill="{INK}"/>'
+        b = f'<circle cx="256" cy="256" r="256" fill="{bg_color}"/>'
     else:
         b = ''
     inner = (GLOW if glow else '') + mark
@@ -294,6 +298,62 @@ png(icon(MARK_SIMPLE, 'full'), os.path.join(PUB, 'apple-touch-icon.png'), 180, 1
 png(icon(MARK_SIMPLE, 'full'), os.path.join(BRAND, 'gymbos-telegram-avatar.png'), 640, 640)
 write(os.path.join(BRAND, 'gymbos-icon.svg'), icon(MARK_DETAILED, 'rounded', glow=True))
 png(icon(MARK_DETAILED, 'rounded'), os.path.join(BRAND, 'gymbos-icon-1024.png'), 1024, 1024)
+
+# ---------- 6. Telegram bot ----------
+TGD = os.path.join(BRAND, 'telegram')
+os.makedirs(TGD, exist_ok=True)
+
+# Profil rasmi 640x640 (Telegram o'zi aylana qiladi). Laym varianti qora mavzuli chatlar ro'yxatida yaxshi ajralib turadi.
+png(icon(MARK_SIMPLE, 'full'), os.path.join(TGD, 'bot-avatar-qora-640.png'), 640, 640)
+png(icon(mark_simple(INK, '#3A4A12', LIME), 'full', bg_color=LIME), os.path.join(TGD, 'bot-avatar-laym-640.png'), 640, 640)
+
+
+def centered_text(face, text, size, cx, baseline, tracking=0.0):
+    _, bb, _ = face.text(text, size, 0, baseline, tracking)
+    w = bb[2] - bb[0]
+    d, bb2, _ = face.text(text, size, cx - w / 2 - bb[0], baseline, tracking)
+    return d, bb2
+
+
+# Tavsif rasmi 640x360 — botni hali boshlamagan odam bo'sh chatda ko'radi (BotFather: /setdescriptionpic)
+gd = lockup_geometry(100)
+sl_size = 14
+sl_cap = sl_size * FMR.cap / FMR.upm
+gap = 30
+oy = (360 - (gd['Htot'] + gap + sl_cap)) / 2
+sl_d, _ = centered_text(FMR, slogan, sl_size, 320, oy + gd['Htot'] + gap + sl_cap, 0.32)
+desc = svg_doc(640, 360, lockup_elements(gd, 'dark', 'gbPillD', (640 - gd['W']) / 2, oy) + f'\n<path d="{sl_d}" fill="{GREY}"/>', bg=INK)
+png(desc, os.path.join(TGD, 'tavsif-640x360.png'), 640, 360)
+
+# /start xabari rasmi 1280x720 — bot birinchi xabarda "Ilovani ochish" tugmasi bilan yuboradi
+gs_ = lockup_geometry(150)
+sub = 'Zalda yoningizdagi aqlli murabbiy'
+sub_size = 34
+sub_cap = sub_size * FMR.cap / FMR.upm
+chips = ['Dastur', 'Texnika', 'Ovqatlanish', 'Natijalar']
+ch_size, ch_h, ch_pad, ch_gap = 24, 56, 28, 14
+ch_cap = ch_size * FMR.cap / FMR.upm
+widths = []
+for c in chips:
+    _, bb, _ = FMR.text(c, ch_size, 0, 0)
+    widths.append(bb[2] - bb[0] + 2 * ch_pad)
+row_w = sum(widths) + ch_gap * (len(chips) - 1)
+g1, g2 = 52, 44
+total = gs_['Htot'] + g1 + sub_cap + g2 + ch_h
+oy = (720 - total) / 2
+body = [lockup_elements(gs_, 'dark', 'gbPillS', (1280 - gs_['W']) / 2, oy)]
+sub_base = oy + gs_['Htot'] + g1 + sub_cap
+sd, _ = centered_text(FMR, sub, sub_size, 640, sub_base)
+body.append(f'<path d="{sd}" fill="{CHALK}"/>')
+cy0 = sub_base + g2
+x = (1280 - row_w) / 2
+for c, w in zip(chips, widths):
+    body.append(f'<rect x="{num(x)}" y="{num(cy0)}" width="{num(w)}" height="{ch_h}" rx="{ch_h / 2}" fill="#18181A" stroke="#2C2C31" stroke-width="2"/>')
+    cd, _ = centered_text(FMR, c, ch_size, x + w / 2, cy0 + ch_h / 2 + ch_cap / 2)
+    body.append(f'<path d="{cd}" fill="#ABAEA6"/>')
+    x += w + ch_gap
+start = svg_doc(1280, 720, '\n'.join(body), bg=INK)
+png(start, os.path.join(TGD, 'start-1280x720.png'), 1280, 720)
 
 # ---------- 5. Ilova ichidagi logo uchun ma'lumot ----------
 ts = f"""// Avtomatik yasalgan: GYMbos logosi (asosiy variant) — harflar konturga aylantirilgan, shrift kerak emas.
