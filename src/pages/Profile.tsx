@@ -45,7 +45,7 @@ export default function Profile() {
 
   const download = () => {
     const blob = new Blob([exportData()], { type: 'application/json' });
-    saveFile(`kachok-zaxira-${new Date().toISOString().slice(0, 10)}.json`, blob).catch(() => setImportMsg('Fayl saqlanmadi. Qaytadan urinib ko‘ring.'));
+    saveFile(`gymbos-zaxira-${new Date().toISOString().slice(0, 10)}.json`, blob).catch(() => setImportMsg('Fayl saqlanmadi. Qaytadan urinib ko‘ring.'));
   };
 
   return (
@@ -78,7 +78,7 @@ export default function Profile() {
               last={!(account?.user.role === 'coach') && !BILLING}
             />
             {account?.user.role === 'coach' && <Item icon="list" label="Mijozlarim" onClick={() => nav('/coach')} last={!BILLING} />}
-            {BILLING && <Item icon="spark" label="Kachok Pro" value={account?.entitlements?.pro.active ? 'Faol' : undefined} onClick={() => nav('/premium')} last />}
+            {BILLING && <Item icon="spark" label="GYMbos Pro" value={account?.entitlements?.pro.active ? 'Faol' : undefined} onClick={() => nav('/premium')} last />}
           </div>
         </section>
       )}
@@ -141,7 +141,7 @@ export default function Profile() {
           onChange={async (e) => {
             const f = e.target.files?.[0];
             if (!f) return;
-            setImportMsg(importData(await f.text()) ? 'Ma’lumotlar tiklandi.' : 'Fayl o‘qilmadi. Kachok’dan olingan .json zaxira faylini tanlang.');
+            setImportMsg(importData(await f.text()) ? 'Ma’lumotlar tiklandi.' : 'Fayl o‘qilmadi. GYMbos’dan olingan .json zaxira faylini tanlang.');
           }}
         />
         {importMsg && (
@@ -169,7 +169,7 @@ export default function Profile() {
         </button>
       </div>
       <p className="tiny faint mt-8" style={{ textAlign: 'center' }}>
-        Kachok 1.0 · Tavsiyalar ma’lumot uchun, tibbiy maslahat o‘rnini bosmaydi.
+        GYMbos 1.0 · Tavsiyalar ma’lumot uchun, tibbiy maslahat o‘rnini bosmaydi.
         <br />
         <Link to="/sources">ACSM · ISSN · WHO · EFSA manbalari</Link>
       </p>

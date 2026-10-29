@@ -1,4 +1,6 @@
-# Kachok — zal uchun aqlli murabbiy
+# GYMbos — zal uchun aqlli murabbiy
+
+> Avvalgi nomi Kachok (kachok.uz). Logo, ranglar va brend fayllari: [docs/BRAND.md](docs/BRAND.md).
 
 Telefonda ishlaydigan veb-ilova (PWA): sizga moslangan mashq dasturi, har bir mashqning animatsiyali texnikasi, ilmiy asoslangan ovqatlanish va natijalar statistikasi. Internetsiz ham ishlaydi, telefonga ilova kabi o'rnatiladi. Keyinchalik shu kod asosida App Store / Google Play ilovasi chiqariladi.
 

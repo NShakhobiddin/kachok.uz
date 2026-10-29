@@ -3,6 +3,7 @@ import { useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { apiEnabled } from '../api/client';
 import { BodyHero } from '../components/BodyHero';
+import { BrandLogo } from '../components/BrandLogo';
 import { Icon } from '../components/ui/Icon';
 import { Choice, Stepper } from '../components/ui/controls';
 import { EquipmentGrid } from '../components/EquipmentGrid';
@@ -99,8 +100,8 @@ export default function Onboarding() {
           <BodyHero load={WELCOME_LOAD} label="3D anatomik model: mashqda ishlaydigan mushaklar lime rangda yonadi" />
           <span className="eyebrow accent welcome-tag">Har bir mushak — 3D da</span>
         </motion.div>
-        <motion.h1 initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15, duration: 0.6 }} className="poster mt-24" style={{ fontSize: 68 }}>
-          Kachok
+        <motion.h1 initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15, duration: 0.6 }} className="mt-24" style={{ lineHeight: 0 }}>
+          <BrandLogo height={84} animate />
         </motion.h1>
         <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }} className="mt-12" style={{ fontSize: 17, lineHeight: 1.45, color: 'var(--text-2)' }}>
           Zalda yoningizdagi murabbiy: <span style={{ color: 'var(--text)' }}>sizga moslangan dastur</span>, har bir mashqda qaysi mushak qancha ishlashi va ilmiy asoslangan ovqatlanish.
@@ -125,7 +126,7 @@ export default function Onboarding() {
         )}
         {importErr && (
           <p className="small mt-8" role="alert" style={{ textAlign: 'center', color: 'var(--danger)' }}>
-            Fayl o‘qilmadi. Kachok’dan eksport qilingan .json faylni tanlang.
+            Fayl o‘qilmadi. GYMbos’dan eksport qilingan .json faylni tanlang.
           </p>
         )}
         <input

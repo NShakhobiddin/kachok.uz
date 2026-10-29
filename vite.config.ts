@@ -30,16 +30,16 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['icon.svg', 'apple-touch-icon.png'],
       manifest: {
-        name: 'Kachok — zal murabbiyi',
-        short_name: 'Kachok',
+        name: 'GYMbos — zal murabbiyi',
+        short_name: 'GYMbos',
         description: 'Sizga moslangan mashq dasturi, animatsion texnika, ovqatlanish va natijalar statistikasi.',
         lang: 'uz',
         start_url: base,
         scope: base,
         display: 'standalone',
         orientation: 'portrait',
-        background_color: '#0D1014',
-        theme_color: '#0D1014',
+        background_color: '#0b0b0c',
+        theme_color: '#0b0b0c',
         icons: [
           { src: 'icon-192.png', sizes: '192x192', type: 'image/png' },
           { src: 'icon-512.png', sizes: '512x512', type: 'image/png' },
@@ -48,6 +48,8 @@ export default defineConfig({
       },
       workbox: {
         globPatterns: ['**/*.{js,css,html,svg,png,woff2}', 'bodymap/*.webp', 'illustrations/thumb/*.webp'],
+        // brend fayllari (logo, muqova) ilova ishlashi uchun kerak emas — oldindan yuklanmaydi
+        globIgnores: ['brand/**'],
         navigateFallback: `${base}index.html`,
         // 3D model (~3.6 MB) oldindan yuklanmaydi: birinchi ochilganda keshga tushadi va keyin internetsiz ishlaydi
         runtimeCaching: [

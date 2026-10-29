@@ -12,7 +12,7 @@ if (applied.length) console.log('Migratsiyalar:', applied.join(', '));
 const app = createApp({ db, env, sms: createSms(env) });
 
 serve({ fetch: app.fetch, port: env.PORT }, (info) => {
-  console.log(`Kachok API: http://localhost:${info.port} (${env.DATABASE_URL ? 'PostgreSQL' : 'PGlite'}, SMS: ${env.SMS_PROVIDER})`);
+  console.log(`GYMbos API: http://localhost:${info.port} (${env.DATABASE_URL ? 'PostgreSQL' : 'PGlite'}, SMS: ${env.SMS_PROVIDER})`);
 });
 
 const stop = async () => {

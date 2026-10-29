@@ -13,7 +13,7 @@ export default function Sources() {
       </div>
       <h1 className="display display-l">Ilmiy manbalar</h1>
       <p className="muted mt-8">
-        Kachok’dagi har bir tavsiya — xalqaro tashkilotlar pozitsiyasi (ACSM, ISSN, JSST/WHO, EFSA) yoki meta-tahlillarga asoslangan. Har bir manba mualliflari, jurnali va DOI raqami bilan tekshirilgan.
+        GYMbos’dagi har bir tavsiya — xalqaro tashkilotlar pozitsiyasi (ACSM, ISSN, JSST/WHO, EFSA) yoki meta-tahlillarga asoslangan. Har bir manba mualliflari, jurnali va DOI raqami bilan tekshirilgan.
       </p>
       <div className="stack gap-10 mt-16">
         {SOURCES.map((s) => (

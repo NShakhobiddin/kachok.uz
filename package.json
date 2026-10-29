@@ -3,7 +3,7 @@
   "private": true,
   "version": "1.0.0",
   "type": "module",
-  "description": "Kachok — zalda ishlatiladigan aqlli murabbiy: mashq dasturi, ovqatlanish, statistika (PWA)",
+  "description": "GYMbos — zalda ishlatiladigan aqlli murabbiy: mashq dasturi, ovqatlanish, statistika (PWA)",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",

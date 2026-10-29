@@ -97,7 +97,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         title: 'Tarozi aldaydi — trendga qarang',
-        text: "Vazn kundan-kunga suv, tuz va ovqat hisobiga 1–2 kg o‘zgaradi. Har kuni ertalab tortiling va haftalik o‘rtacha (trend) bo‘yicha baho bering. Kachok buni avtomatik hisoblaydi.",
+        text: "Vazn kundan-kunga suv, tuz va ovqat hisobiga 1–2 kg o‘zgaradi. Har kuni ertalab tortiling va haftalik o‘rtacha (trend) bo‘yicha baho bering. GYMbos buni avtomatik hisoblaydi.",
         scene: 'trend',
       },
     ],
@@ -130,7 +130,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         title: 'Progressiv yuklama',
-        text: "Tana faqat yangi talabga moslashadi. Har hafta ozgina ko‘proq: +1 takror yoki +2.5 kg. Kachok har bir set uchun buni o‘zi hisoblab beradi.",
+        text: "Tana faqat yangi talabga moslashadi. Har hafta ozgina ko‘proq: +1 takror yoki +2.5 kg. GYMbos har bir set uchun buni o‘zi hisoblab beradi.",
         scene: 'stairs',
         source: 'acsm2026',
       },
@@ -598,7 +598,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         title: 'Dam olish kunlari',
-        text: "Bir mushak guruhini qayta og‘ir ishlatishdan oldin ~48 soat. Kachok 'Mushaklar tiklanishi' xaritasida buni ko‘rsatadi.",
+        text: "Bir mushak guruhini qayta og‘ir ishlatishdan oldin ~48 soat. GYMbos 'Mushaklar tiklanishi' xaritasida buni ko‘rsatadi.",
         scene: 'mps',
       },
     ],

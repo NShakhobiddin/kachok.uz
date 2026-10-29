@@ -104,7 +104,7 @@ export function authRoutes(deps: Deps, meOnly = false) {
          window_start = CASE WHEN $4 THEN otp_codes.window_start ELSE now() END`,
       [phone, hmac(env.JWT_SECRET, `${phone}:${code}`), new Date(now + OTP_TTL_MS), !!inWindow],
     );
-    await deps.sms.send(phone, `Kachok: tasdiqlash kodi ${code}. Hech kimga bermang.`);
+    await deps.sms.send(phone, `GYMbos: tasdiqlash kodi ${code}. Hech kimga bermang.`);
     return c.json({ ok: true, phone, ...(env.SMS_PROVIDER === 'console' ? { devCode: code } : {}) });
   });
 

@@ -50,9 +50,9 @@ export default function Summary() {
   const sec = Array.from(new Set(log.exercises.flatMap((e) => EXERCISE_MAP[e.exerciseId]?.secondary ?? []))).filter((m) => !prim.includes(m)) as MuscleId[];
 
   const share = async () => {
-    const text = `Kachok: ${log.title} — ${fmtDuration(log.durationMin)}, ${sets} set, ${Math.round(vol)} kg${prs.length ? `, ${prs.length} ta yangi rekord` : ''}. 💪`;
+    const text = `GYMbos: ${log.title} — ${fmtDuration(log.durationMin)}, ${sets} set, ${Math.round(vol)} kg${prs.length ? `, ${prs.length} ta yangi rekord` : ''}. 💪`;
     try {
-      if (navigator.share) await navigator.share({ text, title: 'Kachok' });
+      if (navigator.share) await navigator.share({ text, title: 'GYMbos' });
       else {
         await navigator.clipboard.writeText(text);
         setCopied(true);
