@@ -1,0 +1,523 @@
+{
+ "jobs": [
+  {
+   "id": "chin-up",
+   "frame": "main",
+   "phaseUz": "Yuqori nuqta",
+   "mode": "edit",
+   "change": "the GRIP: change it to an UNDERHAND (supinated) chin-up grip — palms facing the athlete's own face (toward the camera side), fingers wrapping over the bar from the camera side, thumbs pointing outward to the sides; hands exactly shoulder-width apart (narrower than now, directly above the shoulders), so the upper arms run almost parallel",
+   "base": "public/illustrations/chin-up.webp"
+  },
+  {
+   "id": "chin-up",
+   "frame": "pair",
+   "phaseUz": "Pastki nuqta",
+   "mode": "edit",
+   "change": "the GRIP: change it to an UNDERHAND (supinated) chin-up grip — palms facing the athlete's own face (toward the camera side), fingers wrapping over the bar from the camera side; hands exactly shoulder-width apart, arms straight in a dead hang",
+   "base": "public/illustrations/alt/chin-up.webp"
+  },
+  {
+   "id": "calf-raise",
+   "frame": "main",
+   "phaseUz": "Yuqori nuqta",
+   "mode": "edit",
+   "change": "the feet and ankles: the athlete rises HIGH onto the balls of the feet on the step edge — heels lifted about 8 cm above the step, ankles fully extended (plantar-flexed), knees straight, calves contracted and glowing brightest",
+   "base": "public/illustrations/calf-raise.webp"
+  },
+  {
+   "id": "calf-raise",
+   "frame": "pair",
+   "phaseUz": "Pastki nuqta",
+   "mode": "edit",
+   "change": "the feet and ankles: only the balls of the feet on the step edge, heels LOWERED BELOW the step edge (about 5 cm under its top surface), calves stretched, knees straight, body otherwise unchanged",
+   "base": "public/illustrations/calf-raise.webp"
+  },
+  {
+   "id": "db-shrug",
+   "frame": "main",
+   "phaseUz": "Yuqori nuqta",
+   "mode": "edit",
+   "change": "the shoulders: shrugged straight UP toward the ears as high as possible (about 5 cm higher than now), arms still straight, the dumbbells rise by the same amount; the upper trapezius bulges and glows brightest; neck neutral",
+   "base": "public/illustrations/db-shrug.webp"
+  },
+  {
+   "id": "bulgarian",
+   "frame": "main",
+   "phaseUz": "Pastki nuqta",
+   "mode": "edit",
+   "change": "the REAR foot: its top (instep) rests firmly ON the bench pad with no gap — the foot touches and slightly presses into the pad; everything else unchanged",
+   "base": "public/illustrations/bulgarian.webp"
+  },
+  {
+   "id": "hip-thrust",
+   "frame": "main",
+   "phaseUz": "Yuqori nuqta",
+   "mode": "edit",
+   "change": "the head: chin slightly tucked, gaze forward along the thighs toward the knees (not tipped back); everything else unchanged",
+   "base": "public/illustrations/hip-thrust.webp"
+  },
+  {
+   "id": "pike-push-up",
+   "frame": "main",
+   "phaseUz": "Pastki nuqta",
+   "mode": "edit",
+   "change": "the arms and head: elbows bent about 90° with the FOREARMS VERTICAL (hands flat on the floor under the elbows, forearms NOT lying on the floor), the top of the head lowered to just above the floor slightly in front of the hands, hips still high in an inverted V",
+   "base": "public/illustrations/pike-push-up.webp"
+  },
+  {
+   "id": "reverse-fly",
+   "frame": "main",
+   "phaseUz": "Qisqargan holat",
+   "mode": "edit",
+   "change": "the band: remove the rigid lime-green rod across the back. Instead the athlete holds a thin DARK-GREY elastic resistance band; the band runs IN FRONT of the chest between the two hands (so from behind only its two ends near the hands are visible), arms straight out to the sides at shoulder height. The band must not glow",
+   "base": "public/illustrations/reverse-fly.webp"
+  },
+  {
+   "id": "lateral-raise",
+   "frame": "main",
+   "phaseUz": "Yuqori nuqta",
+   "mode": "edit",
+   "change": "the dumbbells: each dumbbell handle runs ACROSS the palm, perpendicular to the forearm (seen end-on from the front exactly like the dumbbells in image 2), knuckles up, pinky side slightly higher; arms and everything else unchanged",
+   "base": "public/illustrations/lateral-raise.webp",
+   "ref2": "public/illustrations/alt/lateral-raise.webp"
+  },
+  {
+   "id": "ohp",
+   "frame": "main",
+   "phaseUz": "Yuqori nuqta",
+   "mode": "edit",
+   "change": "the arms: press the barbell to FULL LOCKOUT — arms completely straight overhead, elbows locked, the bar directly above the middle of the feet and slightly behind the forehead, head pushed slightly forward through the arms; body upright, glutes and core braced",
+   "base": "public/illustrations/ohp.webp"
+  },
+  {
+   "id": "ohp",
+   "frame": "pair",
+   "phaseUz": "Boshlang‘ich holat",
+   "mode": "edit",
+   "change": "the start of the press: the barbell RESTING ON THE FRONT SHOULDERS at collarbone height (touching the front deltoids, NOT at the chin or face), forearms vertical, elbows slightly in front of the bar, hands just outside shoulder width, head straight",
+   "base": "public/illustrations/ohp.webp"
+  },
+  {
+   "id": "goblet-squat",
+   "frame": "main",
+   "phaseUz": "Pastki nuqta",
+   "mode": "edit",
+   "change": "the glow: remove the lime glow from the shoulders, biceps and forearms (they become natural deep red); keep the glow on the thighs and glutes exactly as it is",
+   "base": "public/illustrations/goblet-squat.webp"
+  },
+  {
+   "id": "goblet-squat",
+   "frame": "pair",
+   "phaseUz": "Yuqori nuqta",
+   "mode": "edit",
+   "change": "the glow: remove the lime glow from the shoulders, biceps and forearms (they become natural deep red); keep the glow on the thighs and glutes exactly as it is",
+   "base": "public/illustrations/alt/goblet-squat.webp"
+  },
+  {
+   "id": "db-row",
+   "frame": "main",
+   "phaseUz": "Yuqori nuqta",
+   "mode": "edit",
+   "change": "the glow: remove the lime glow from the SUPPORTING arm that rests on the bench (it becomes natural deep red); keep the glow on the back and the working arm's rear shoulder exactly as it is",
+   "base": "public/illustrations/db-row.webp"
+  },
+  {
+   "id": "db-row",
+   "frame": "pair",
+   "phaseUz": "Pastki nuqta",
+   "mode": "edit",
+   "change": "the glow: remove the lime glow from the SUPPORTING arm that rests on the bench (it becomes natural deep red); keep the glow on the back exactly as it is",
+   "base": "public/illustrations/alt/db-row.webp"
+  },
+  {
+   "id": "incline-bench",
+   "frame": "main",
+   "phaseUz": "Pastki nuqta",
+   "mode": "edit",
+   "change": "the bar position: lower the barbell so it TOUCHES the upper chest just below the collarbones, forearms vertical under the bar, elbows about 60° from the torso",
+   "base": "public/illustrations/incline-bench.webp"
+  },
+  {
+   "id": "pec-deck",
+   "frame": "main",
+   "phaseUz": "Boshlang‘ich holat",
+   "mode": "edit",
+   "change": "the arms: make them SYMMETRIC — both arms open wide to the sides at shoulder height, elbows slightly bent, each forearm/hand on its machine handle or pad, chest stretched; both arms mirror each other",
+   "base": "public/illustrations/pec-deck.webp"
+  },
+  {
+   "id": "lat-pulldown",
+   "frame": "main",
+   "phaseUz": "Qisqargan holat",
+   "mode": "edit",
+   "change": "the knee pads and bar: BOTH thighs are locked under a pair of padded rollers directly on top of the thighs just above the knees; the bar is pulled down to the UPPER CHEST (just below the collarbones), not the chin",
+   "base": "public/illustrations/lat-pulldown.webp"
+  },
+  {
+   "id": "lat-pulldown",
+   "frame": "pair",
+   "phaseUz": "Boshlang‘ich holat",
+   "mode": "edit",
+   "change": "the knee pads: BOTH thighs are locked under a pair of padded rollers directly on top of the thighs just above the knees; everything else unchanged",
+   "base": "public/illustrations/alt/lat-pulldown.webp"
+  },
+  {
+   "id": "front-squat",
+   "frame": "main",
+   "phaseUz": "Pastki nuqta",
+   "mode": "new",
+   "change": "Camera: FRONT THREE-QUARTER view — 35° in front of the athlete's right side, at hip height, so the face, the bar on the front of the shoulders and the high elbows are all clearly visible; the plates must NOT hide the head. Front-rack: bar resting on the front deltoids against the collarbones, fingertips under the bar, elbows high and pointing forward, torso nearly upright, thighs parallel to the floor, heels flat."
+  },
+  {
+   "id": "inverted-row",
+   "frame": "main",
+   "phaseUz": "Yuqori nuqta",
+   "mode": "new",
+   "change": "Camera: front three-quarter view from the athlete's right at bench height, so the barbell runs INTO the depth of the image (seen at an angle, not parallel to the body). A barbell fixed in a power rack at hip height. The athlete hangs under it, body straight from head to heels, heels on the floor, both hands gripping the bar shoulder-width with an overhand grip, arms bent, CHEST TOUCHING the bar at the top, shoulder blades squeezed together. Glow on lats, mid-traps, rhomboids and rear delts."
+  },
+  {
+   "id": "push-up",
+   "frame": "main",
+   "phaseUz": "Pastki nuqta",
+   "mode": "new",
+   "change": "Camera: side view from the athlete's right at floor level. Bottom of a push-up: palms FLAT on the floor directly under the lower chest, slightly wider than shoulders, forearms VERTICAL, elbows about 45° from the torso, chest 3 cm above the floor, body one straight line from head to heels, no equipment at all."
+  },
+  {
+   "id": "dead-bug",
+   "frame": "main",
+   "phaseUz": "Cho‘zilgan holat",
+   "mode": "new",
+   "change": "Camera: high three-quarter view from above the athlete's right side. Lying on the back on the floor, lower back pressed flat. The athlete's RIGHT arm is extended back overhead, hovering just above the floor; the LEFT leg is extended straight, hovering just above the floor. The LEFT arm points straight up to the ceiling and the RIGHT knee is bent 90° directly above the hip (thigh vertical, shin horizontal). Opposite arm and leg are extended — never the same side."
+  },
+  {
+   "id": "cable-crunch",
+   "frame": "main",
+   "phaseUz": "Qisqargan holat",
+   "mode": "new",
+   "change": "Camera: side view from the athlete's right at hip height. The athlete kneels FACING the cable column (the weight stack in front of him), holding a rope attachment from the HIGH pulley with both hands beside the head. Contracted position: spine flexed and curled down, ribs pulled toward the pelvis, elbows down near the mid-thighs, hips stay above the knees (they do not sit back)."
+  },
+  {
+   "id": "hack-squat",
+   "frame": "main",
+   "phaseUz": "Pastki nuqta",
+   "mode": "new",
+   "change": "A real plate-loaded HACK SQUAT machine: an inclined back-pad sled (45°) that slides on two rails, with shoulder pads attached to the top of the same sled, and an angled foot platform at the bottom. Bottom position: the athlete's ENTIRE BACK, from hips to shoulders, is pressed flat against the inclined back pad, shoulders under the shoulder pads, hands on the side handles, both feet flat on the angled platform shoulder-width, thighs parallel to the platform. Camera: side view from the athlete's right."
+  },
+  {
+   "id": "leg-extension",
+   "frame": "main",
+   "phaseUz": "Yuqori nuqta",
+   "mode": "new",
+   "change": "A seated LEG EXTENSION machine: the athlete's knees are exactly in line with the machine's pivot axis (a round cam at the front edge of the seat, right beside the knee joint); a lever arm runs from that pivot down to a padded roller resting on the front of the lower shins just above the ankles. Back against the backrest, hands gripping the side handles by the seat. Top position: legs straight out in front, the lever arm and roller lifted with them. Camera: side view from the athlete's right."
+  },
+  {
+   "id": "leg-curl",
+   "frame": "main",
+   "phaseUz": "Qisqargan holat",
+   "mode": "new",
+   "change": "A SEATED LEG CURL machine: back against the backrest, a thigh pad clamping the thighs from above, knees in line with the machine's pivot axis at the front edge of the seat; a lever arm from the pivot to a padded roller BEHIND the lower calves at the Achilles tendon. Contracted position: knees bent about 90°, the roller pushed down and back under the seat. Hands on the side handles. Camera: side view from the athlete's right."
+  },
+  {
+   "id": "machine-chest-press",
+   "frame": "main",
+   "phaseUz": "Boshlang‘ich holat",
+   "mode": "new",
+   "change": "A seated CHEST PRESS machine: two handles on lever arms that are clearly attached to the machine frame and pivot (no floating handles); the weight stack is BEHIND the athlete, not in front. Start position: back flat on the upright back pad, handles at mid-chest height beside the chest, elbows about 60° from the torso, forearms horizontal and in line with the handles, feet flat on the floor. Camera: front three-quarter view from the athlete's right."
+  },
+  {
+   "id": "machine-shoulder-press",
+   "frame": "main",
+   "phaseUz": "Boshlang‘ich holat",
+   "mode": "new",
+   "change": "A seated SHOULDER PRESS machine: two handles on press arms that are clearly attached to the machine frame (no floating handles). Start position: back against the upright pad, handles beside the head at shoulder level, forearms vertical under the handles, elbows below the hands and slightly forward. Camera: front three-quarter view from the athlete's right."
+  },
+  {
+   "id": "hack-squat",
+   "frame": "pair",
+   "phaseUz": "Yuqori nuqta",
+   "mode": "pair",
+   "change": "standing up at the top: knees almost straight, the back still flat on the pad — the whole sled (back pad + shoulder pads together) has slid UP along the rails with the athlete; feet still on the platform",
+   "base": "NEW_MAIN"
+  },
+  {
+   "id": "leg-extension",
+   "frame": "pair",
+   "phaseUz": "Boshlang‘ich holat",
+   "mode": "pair",
+   "change": "the start: knees bent about 90° with the shins vertical under the seat; the lever arm has rotated DOWN around the pivot at the knee and the roller still rests on the front of the lower shins",
+   "base": "NEW_MAIN"
+  },
+  {
+   "id": "leg-curl",
+   "frame": "pair",
+   "phaseUz": "Boshlang‘ich holat",
+   "mode": "pair",
+   "change": "the start: legs extended forward almost straight, the roller still BEHIND the lower calves at the Achilles tendon; the lever arm rotated forward/up with the legs",
+   "base": "NEW_MAIN"
+  },
+  {
+   "id": "front-squat",
+   "frame": "pair",
+   "phaseUz": "Yuqori nuqta",
+   "mode": "pair",
+   "change": "standing tall at the top: knees and hips extended, the barbell still in the front-rack position on the front shoulders with elbows high",
+   "base": "NEW_MAIN"
+  },
+  {
+   "id": "inverted-row",
+   "frame": "pair",
+   "phaseUz": "Pastki nuqta",
+   "mode": "pair",
+   "change": "the bottom: arms fully straight, hanging under the bar, body still one straight line, heels on the floor, same grip",
+   "base": "NEW_MAIN"
+  },
+  {
+   "id": "push-up",
+   "frame": "pair",
+   "phaseUz": "Yuqori nuqta",
+   "mode": "pair",
+   "change": "the top: arms straight, palms in the same place on the floor, body one straight line from head to heels",
+   "base": "NEW_MAIN"
+  },
+  {
+   "id": "dead-bug",
+   "frame": "pair",
+   "phaseUz": "Boshlang‘ich holat",
+   "mode": "pair",
+   "change": "the start: lying on the back, BOTH arms pointing straight up to the ceiling, BOTH knees bent 90° directly above the hips (thighs vertical, shins horizontal); no limb is extended",
+   "base": "NEW_MAIN"
+  },
+  {
+   "id": "cable-crunch",
+   "frame": "pair",
+   "phaseUz": "Boshlang‘ich holat",
+   "mode": "pair",
+   "change": "the start: kneeling tall with a long straight spine, hips above the knees, rope still beside the head, cable taut",
+   "base": "NEW_MAIN"
+  },
+  {
+   "id": "machine-chest-press",
+   "frame": "pair",
+   "phaseUz": "Itarilgan holat",
+   "mode": "pair",
+   "change": "the pressed position: both arms pushed forward almost straight (elbows slightly bent), the handles and their lever arms moved forward with the hands, back still on the pad",
+   "base": "NEW_MAIN"
+  },
+  {
+   "id": "machine-shoulder-press",
+   "frame": "pair",
+   "phaseUz": "Yuqori nuqta",
+   "mode": "pair",
+   "change": "the top: arms extended overhead (elbows not locked), the handles and press arms moved up with the hands, back still on the pad",
+   "base": "NEW_MAIN"
+  },
+  {
+   "id": "hip-thrust",
+   "frame": "pair",
+   "phaseUz": "Pastki nuqta",
+   "mode": "pair",
+   "change": "the bottom: the hips lowered about 30 cm toward the floor (hips flexed about 90°, buttocks just above the floor), the barbell moves DOWN with the hips and still rests on the hip crease; upper back still on the bench, feet in the same place",
+   "base": "public/illustrations/hip-thrust.webp"
+  },
+  {
+   "id": "step-up",
+   "frame": "pair",
+   "phaseUz": "Yuqori nuqta",
+   "mode": "pair",
+   "change": "the top: standing tall on the box on the lead leg — hip and knee fully extended — and the trailing foot brought up beside the lead foot on the box; dumbbells still at the sides",
+   "base": "public/illustrations/alt/step-up.webp"
+  },
+  {
+   "id": "cable-fly",
+   "frame": "pair",
+   "phaseUz": "Qisqargan holat",
+   "mode": "pair",
+   "change": "the contracted position: the hands brought together in front of the lower chest at arm's length, elbows with the SAME slight bend as in image 1 (arms nearly straight, not bent 90°), cables still attached to the handles",
+   "base": "public/illustrations/alt/cable-fly.webp"
+  },
+  {
+   "id": "db-bench",
+   "frame": "pair",
+   "phaseUz": "Pastki nuqta",
+   "mode": "pair",
+   "change": "the bottom: the dumbbells lowered beside the MID-CHEST, forearms vertical under the dumbbells, elbows about 45–60° from the torso, same grip as image 1",
+   "base": "public/illustrations/alt/db-bench.webp"
+  },
+  {
+   "id": "hammer-curl",
+   "frame": "pair",
+   "phaseUz": "Yuqori nuqta",
+   "mode": "pair",
+   "change": "the top: elbows still at the sides, forearms curled up to shoulder height, the SAME neutral hammer grip (thumbs up, the dumbbell's two heads front and back, palm facing the thigh side)",
+   "base": "public/illustrations/alt/hammer-curl.webp"
+  },
+  {
+   "id": "cable-row",
+   "frame": "pair",
+   "phaseUz": "Boshlang‘ich holat",
+   "mode": "pair",
+   "change": "the start: arms extended forward toward the LOW pulley at the footplate (the cable still runs down-forward to the SAME low pulley as in image 1), torso upright, shoulder blades stretched forward",
+   "base": "public/illustrations/cable-row.webp"
+  },
+  {
+   "id": "overhead-extension",
+   "frame": "pair",
+   "phaseUz": "Yuqori nuqta",
+   "mode": "pair",
+   "change": "the top: arms extended straight overhead, both hands cupping the top plate of the SAME SINGLE dumbbell held vertically (one dumbbell only)",
+   "base": "public/illustrations/overhead-extension.webp"
+  },
+  {
+   "id": "db-shrug",
+   "frame": "pair",
+   "phaseUz": "Pastki nuqta",
+   "mode": "pair",
+   "change": "the bottom: shoulders relaxed down, arms straight holding the dumbbells",
+   "base": "NEW_MAIN"
+  },
+  {
+   "id": "pike-push-up",
+   "frame": "pair",
+   "phaseUz": "Yuqori nuqta",
+   "mode": "pair",
+   "change": "the TOP position: arms fully straight, the head lifted off the floor between the upper arms, hips high in an inverted V",
+   "base": "NEW_MAIN"
+  },
+  {
+   "id": "reverse-fly",
+   "frame": "pair",
+   "phaseUz": "Boshlang‘ich holat",
+   "mode": "pair",
+   "change": "the start: both arms reaching straight FORWARD in front of the chest at shoulder height (from behind, the arms point away from the camera and are mostly hidden), the dark-grey band slack between the hands",
+   "base": "NEW_MAIN"
+  },
+  {
+   "id": "glute-bridge",
+   "frame": "pair",
+   "phaseUz": "Pastki nuqta",
+   "mode": "pair",
+   "change": "the bottom: hips resting ON THE FLOOR, lying flat on the back, knees bent, feet flat; no barbell or plate",
+   "base": "public/illustrations/glute-bridge.webp"
+  },
+  {
+   "id": "dips",
+   "frame": "pair",
+   "phaseUz": "Yuqori nuqta",
+   "mode": "pair",
+   "change": "the TOP of the dip: arms fully straight (elbows locked), body lifted about 25 cm, shoulders well above the hands, torso leaning forward 20°, still gripping the same bars",
+   "base": "public/illustrations/dips.webp"
+  },
+  {
+   "id": "back-squat",
+   "frame": "pair",
+   "phaseUz": "Yuqori nuqta",
+   "mode": "pair",
+   "change": "standing tall at the top: hips and knees fully extended, the barbell still on the upper back, hands on the bar. The camera must stay EXACTLY the same rear three-quarter view as image 1 (the athlete's right side slightly visible), same scale",
+   "base": "public/illustrations/back-squat-bottom.webp"
+  },
+  {
+   "id": "rdl",
+   "frame": "pair",
+   "phaseUz": "Yuqori nuqta",
+   "mode": "pair",
+   "change": "standing tall at the top, knees soft, the barbell hanging in straight arms against the thighs. Keep the SAME three-quarter camera as image 1 (both plates visible, the bar seen at an angle), same scale",
+   "base": "public/illustrations/rdl.webp"
+  },
+  {
+   "id": "deadlift",
+   "frame": "pair",
+   "phaseUz": "Yuqori nuqta",
+   "mode": "pair",
+   "change": "standing tall at lockout, the barbell hanging in straight arms against the thighs. Keep the SAME camera, framing and SCALE as image 1 — the athlete must appear the same size",
+   "base": "public/illustrations/deadlift.webp"
+  },
+  {
+   "id": "db-rdl",
+   "frame": "pair",
+   "phaseUz": "Yuqori nuqta",
+   "mode": "pair",
+   "change": "standing tall at the top, the dumbbells hanging in straight arms IN FRONT OF THE THIGHS with the SAME overhand grip as image 1 (dumbbells across the front of the thighs, not at the sides)",
+   "base": "public/illustrations/db-rdl.webp"
+  },
+  {
+   "id": "smith-squat",
+   "frame": "pair",
+   "phaseUz": "Yuqori nuqta",
+   "mode": "pair",
+   "change": "standing tall at the top, the bar still on the upper back inside the guide rails; the Smith machine frame stays exactly as in image 1 with its uprights standing on the floor",
+   "base": "public/illustrations/smith-squat.webp"
+  },
+  {
+   "id": "leg-press",
+   "frame": "pair",
+   "phaseUz": "Yozilgan holat",
+   "mode": "pair",
+   "change": "legs pushed out almost straight (knees slightly bent, not locked); the footplate AND the weight horns with the plates move together as one sled along the rails; back still flat on the pad",
+   "base": "public/illustrations/leg-press.webp"
+  },
+  {
+   "id": "back-extension",
+   "frame": "pair",
+   "phaseUz": "Pastki nuqta",
+   "mode": "pair",
+   "change": "the bottom: torso bent forward over the hip pad until it points DOWN toward the floor (about 90° to the legs), head toward the floor, back flat, arms still crossed on the chest",
+   "base": "public/illustrations/back-extension.webp"
+  },
+  {
+   "id": "db-curl",
+   "frame": "pair",
+   "phaseUz": "Pastki nuqta",
+   "mode": "pair",
+   "change": "the bottom: arms straight down at the sides holding the dumbbells with palms facing FORWARD (supinated), each dumbbell seen end-on like in image 1",
+   "base": "public/illustrations/db-curl.webp"
+  },
+  {
+   "id": "incline-curl",
+   "frame": "pair",
+   "phaseUz": "Pastki nuqta",
+   "mode": "pair",
+   "change": "the bottom: arms hanging straight down behind the torso line holding the dumbbells with palms facing FORWARD, the BICEPS glowing (front of the upper arm), not the triceps",
+   "base": "public/illustrations/incline-curl.webp"
+  },
+  {
+   "id": "db-fly",
+   "frame": "pair",
+   "phaseUz": "Yuqori nuqta",
+   "mode": "pair",
+   "change": "the top: the dumbbells brought together above the chest in a hugging arc with the SAME slight elbow bend as image 1 (arms nearly straight), the two dumbbells side by side, not crossed",
+   "base": "public/illustrations/db-fly.webp"
+  },
+  {
+   "id": "lat-pulldown",
+   "frame": "pair",
+   "phaseUz": "Boshlang‘ich holat",
+   "mode": "pair",
+   "change": "the start: arms fully extended overhead holding the bar, still seated with BOTH thighs under the pair of knee pads",
+   "base": "NEW_MAIN"
+  },
+  {
+   "id": "incline-bench",
+   "frame": "pair",
+   "phaseUz": "Yuqori nuqta",
+   "mode": "pair",
+   "change": "the top: arms straight, the barbell locked out above the upper chest",
+   "base": "NEW_MAIN"
+  },
+  {
+   "id": "pec-deck",
+   "frame": "pair",
+   "phaseUz": "Qisqargan holat",
+   "mode": "pair",
+   "change": "the squeeze: both arms brought together symmetrically in front of the chest, elbows slightly bent, the machine arms moved with them",
+   "base": "NEW_MAIN"
+  },
+  {
+   "id": "chin-up",
+   "frame": "pair",
+   "phaseUz": "Pastki nuqta",
+   "mode": "pair",
+   "change": "dead hang with straight arms, the SAME underhand shoulder-width grip as image 1",
+   "base": "NEW_MAIN"
+  }
+ ]
+}
