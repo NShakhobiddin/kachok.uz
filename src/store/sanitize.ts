@@ -198,7 +198,7 @@ export function sanitizeData(d: unknown, strict = true): { data: BackupData; dro
   const list = <T>(k: string, fn: (v: unknown) => T | null): T[] => {
     const v = d[k];
     if (v === undefined || v === null) return [];
-    if (!Array.isArray(v)) return bad(), [];
+    if (!Array.isArray(v)) return (bad(), []);
     const out = v.map(fn).filter((x): x is T => x !== null);
     dropped += v.length - out.length;
     return out;
@@ -206,7 +206,7 @@ export function sanitizeData(d: unknown, strict = true): { data: BackupData; dro
   const rec = <T>(k: string, fn: (v: Obj) => T, empty: T): T => {
     const v = d[k];
     if (v === undefined || v === null) return empty;
-    if (!isObj(v)) return bad(), empty;
+    if (!isObj(v)) return (bad(), empty);
     return fn(v);
   };
   try {

@@ -93,14 +93,7 @@ export default function ProgramPage() {
 
       <div className="hscroll mt-16" role="tablist" aria-label="Kunlar" ref={tabsRef}>
         {days.map((d) => (
-          <button
-            key={d.id}
-            role="tab"
-            aria-selected={d.id === day?.id}
-            className={`chip ${d.id === day?.id ? 'on' : ''}`}
-            style={{ height: 44 }}
-            onClick={() => setSelId(d.id)}
-          >
+          <button key={d.id} role="tab" aria-selected={d.id === day?.id} className={`chip ${d.id === day?.id ? 'on' : ''}`} style={{ height: 44 }} onClick={() => setSelId(d.id)}>
             <b>{DAYS_SHORT[d.weekday]}</b> {thisWeek.get(d.id)?.title ?? d.title}
           </button>
         ))}

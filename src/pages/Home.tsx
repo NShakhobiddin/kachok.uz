@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { BodyHero } from '../components/BodyHero';
 import { CoachBanner } from '../components/CoachBanner';
 import { ExerciseThumb } from '../components/ExerciseThumb';
+import { Logo } from '../components/Logo';
 import { Icon } from '../components/ui/Icon';
 import { Sheet } from '../components/ui/Sheet';
 import { MUSCLES } from '../data/catalog';
@@ -51,12 +52,20 @@ export default function Home() {
     if (!day) return;
     // faqat bugungi set soni saqlanadi; RIR va vazn mashg'ulotda shu kontekst bilan qayta hisoblanadi
     // (yengillashtirish/tayyorlik ikki marta qo'llanmasin)
-    startWorkout(day, plan.map(({ pe, sug }) => ({ ...pe, sets: sug.sets })), t.readinessToday);
+    startWorkout(
+      day,
+      plan.map(({ pe, sug }) => ({ ...pe, sets: sug.sets })),
+      t.readinessToday,
+    );
     nav('/workout');
   };
   // erkin mashg'ulot: mashqlarni foydalanuvchi o'zi tanlaydi
   const startFree = (ids: string[]) => {
-    startWorkout(null, ids.flatMap((id) => (EXERCISE_MAP[id] ? [manualPlanned(EXERCISE_MAP[id], profile)] : [])), t.readinessToday);
+    startWorkout(
+      null,
+      ids.flatMap((id) => (EXERCISE_MAP[id] ? [manualPlanned(EXERCISE_MAP[id], profile)] : [])),
+      t.readinessToday,
+    );
     nav('/workout');
   };
 
@@ -84,16 +93,17 @@ export default function Home() {
 
   return (
     <div className="page home">
-      <header className="row between" style={{ marginBottom: 16 }}>
-        <div className="stack gap-6">
-          <span className="eyebrow">
-            {DAYS[t.today]} · {now.getDate()} {MONTHS[now.getMonth()]}
-          </span>
-          <h1 className="display display-l">{profile.name ? `Salom, ${profile.name}` : 'Bugun'}</h1>
+      <header className="stack gap-6" style={{ marginBottom: 16 }}>
+        <div className="row between gap-12">
+          <Logo size={18} flat />
+          <Link to="/profile" className="avatar" aria-label="Profil va sozlamalar">
+            {profile.name ? profile.name[0].toUpperCase() : <Icon name="user" />}
+          </Link>
         </div>
-        <Link to="/profile" className="avatar" aria-label="Profil va sozlamalar">
-          {profile.name ? profile.name[0].toUpperCase() : <Icon name="user" />}
-        </Link>
+        <span className="eyebrow">
+          {DAYS[t.today]} · {now.getDate()} {MONTHS[now.getMonth()]}
+        </span>
+        <h1 className="display display-l">{profile.name ? `Salom, ${profile.name}` : 'Bugun'}</h1>
       </header>
 
       <CoachBanner />
@@ -101,10 +111,7 @@ export default function Home() {
       {/* Asosiy kartochka: 3D tana — bugun ishlaydigan (yoki hali tiklanayotgan) mushaklar */}
       <motion.section initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35 }} className="hero card glow">
         <div className="hero-body">
-          <BodyHero
-            load={load}
-            label={mode === 'rest' ? `Hali tiklanayotgan mushaklar: ${groups.join(', ') || 'yo‘q'}` : `Bugun ishlaydigan mushaklar: ${groups.join(', ')}`}
-          />
+          <BodyHero load={load} label={mode === 'rest' ? `Hali tiklanayotgan mushaklar: ${groups.join(', ') || 'yo‘q'}` : `Bugun ishlaydigan mushaklar: ${groups.join(', ')}`} />
         </div>
         <div className="hero-copy">
           <span className="eyebrow accent">
@@ -116,9 +123,7 @@ export default function Home() {
                   ? 'Bugungi mashq bajarildi'
                   : 'Dam olish kuni'}
           </span>
-          <h2 className="display display-m hero-title">
-            {mode === 'active' ? active!.log.title : mode === 'plan' ? day!.title : t.doneToday ? 'Barakalla!' : 'Tiklanish ham mashq'}
-          </h2>
+          <h2 className="display display-m hero-title">{mode === 'active' ? active!.log.title : mode === 'plan' ? day!.title : t.doneToday ? 'Barakalla!' : 'Tiklanish ham mashq'}</h2>
           {groups.length > 0 && (
             <div className="stack gap-4 mt-8">
               {groups.map((g) => (
@@ -212,9 +217,7 @@ export default function Home() {
       ) : (
         <div className="stack gap-8 mt-12">
           <p className="small muted" style={{ padding: '0 4px' }}>
-            {t.doneToday
-              ? 'Mushak hozir — dam olayotganda o‘sadi: oqsil, suv va 7–9 soat uyqu.'
-              : 'Mushaklar dam olishda o‘sadi. Bugun 7–10 ming qadam va 5 daqiqa cho‘zilish yetarli.'}
+            {t.doneToday ? 'Mushak hozir — dam olayotganda o‘sadi: oqsil, suv va 7–9 soat uyqu.' : 'Mushaklar dam olishda o‘sadi. Bugun 7–10 ming qadam va 5 daqiqa cho‘zilish yetarli.'}
           </p>
           <button className="btn btn-secondary btn-block" onClick={() => setPickDay(true)}>
             Baribir mashq qilaman

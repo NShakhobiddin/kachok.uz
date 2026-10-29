@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { EquipmentGrid } from '../components/EquipmentGrid';
+import { Logo } from '../components/Logo';
 import { Icon } from '../components/ui/Icon';
 import { Sheet } from '../components/ui/Sheet';
 import { Choice, Stepper, Toggle } from '../components/ui/controls';
@@ -46,7 +47,7 @@ export default function Profile() {
 
   const download = () => {
     const blob = new Blob([exportData()], { type: 'application/json' });
-    saveFile(`kachok-zaxira-${new Date().toISOString().slice(0, 10)}.json`, blob).catch(() => setImportMsg('Fayl saqlanmadi. Qaytadan urinib ko‘ring.'));
+    saveFile(`gymbos-zaxira-${new Date().toISOString().slice(0, 10)}.json`, blob).catch(() => setImportMsg('Fayl saqlanmadi. Qaytadan urinib ko‘ring.'));
   };
 
   return (
@@ -58,7 +59,21 @@ export default function Profile() {
         </button>
       </div>
       <div className="row gap-16">
-        <span style={{ width: 64, height: 64, borderRadius: 22, background: 'var(--accent)', display: 'grid', placeItems: 'center', fontSize: 28, fontWeight: 800, fontFamily: 'var(--font-display)', fontStretch: '125%', color: 'var(--accent-ink)' }}>
+        <span
+          style={{
+            width: 64,
+            height: 64,
+            borderRadius: 22,
+            background: 'var(--accent)',
+            display: 'grid',
+            placeItems: 'center',
+            fontSize: 28,
+            fontWeight: 800,
+            fontFamily: 'var(--font-display)',
+            fontStretch: '125%',
+            color: 'var(--accent-ink)',
+          }}
+        >
           {(profile.name || 'K')[0].toUpperCase()}
         </span>
         <div>
@@ -80,7 +95,7 @@ export default function Profile() {
               last={!(account?.user.role === 'coach') && !BILLING}
             />
             {account?.user.role === 'coach' && <Item icon="list" label="Mijozlarim" onClick={() => nav('/coach')} last={!BILLING} />}
-            {BILLING && <Item icon="spark" label="Kachok Pro" value={account?.entitlements?.pro.active ? 'Faol' : undefined} onClick={() => nav('/premium')} last />}
+            {BILLING && <Item icon="spark" label="GYMbos Pro" value={account?.entitlements?.pro.active ? 'Faol' : undefined} onClick={() => nav('/premium')} last />}
           </div>
         </section>
       )}
@@ -94,7 +109,7 @@ export default function Profile() {
           <Item icon="target" label="Maqsad va daraja" value={GOALS.find((g) => g.id === profile.goal)?.title.split(' (')[0] ?? ''} onClick={() => open('goal')} />
           <Item icon="calendar" label="Jadval" value={`${profile.daysPerWeek} kun · ${profile.sessionMin} daq`} onClick={() => open('schedule')} />
           <Item icon="dumbbell" label="Zal jihozlari" value={`${profile.equipment.length} ta`} onClick={() => open('equipment')} />
-          <Item icon="alert" label="Cheklovlar va ustuvorlik" value={profile.injuries.length ? `${profile.injuries.length} ta` : "Yo‘q"} onClick={() => open('limits')} />
+          <Item icon="alert" label="Cheklovlar va ustuvorlik" value={profile.injuries.length ? `${profile.injuries.length} ta` : 'Yo‘q'} onClick={() => open('limits')} />
           <Item icon="bolt" label="Kundalik faollik" value={ACTIVITY[profile.activity].name} onClick={() => open('activity')} />
           <Item icon="shield" label="Xavfsizlik markazi" onClick={() => nav('/safety')} last />
         </div>
@@ -146,7 +161,7 @@ export default function Profile() {
             if (!f) return;
             const ok = importData(await f.text());
             input.value = ''; // shu faylni yana tanlash mumkin bo'lsin
-            setImportMsg(ok ? 'Ma’lumotlar tiklandi.' : 'Fayl o‘qilmadi yoki buzilgan — ma’lumotlaringiz o‘zgarmadi. Kachok’dan olingan .json zaxira faylini tanlang.');
+            setImportMsg(ok ? 'Ma’lumotlar tiklandi.' : 'Fayl o‘qilmadi yoki buzilgan — ma’lumotlaringiz o‘zgarmadi. GYMbos’dan olingan .json zaxira faylini tanlang.');
           }}
         />
         {importMsg && (
@@ -158,11 +173,7 @@ export default function Profile() {
           {account ? 'Ma’lumotlar telefonda va bulutda saqlanadi.' : 'Barcha ma’lumotlar faqat shu qurilmada saqlanadi. Telefonni almashtirishdan oldin zaxira nusxa oling'}
           {!account && apiEnabled ? ' yoki akkauntga kiring.' : !account ? '.' : ''}
         </p>
-        <button
-          className="btn btn-ghost btn-block mt-16"
-          style={{ color: 'var(--danger)' }}
-          onClick={() => setResetOpen(true)}
-        >
+        <button className="btn btn-ghost btn-block mt-16" style={{ color: 'var(--danger)' }} onClick={() => setResetOpen(true)}>
           Hammasini o‘chirish
         </button>
       </section>
@@ -173,16 +184,21 @@ export default function Profile() {
           Yangilanishni tekshirish
         </button>
       </div>
-      <p className="tiny faint mt-8" style={{ textAlign: 'center' }}>
-        Kachok 1.0 · Tavsiyalar ma’lumot uchun, tibbiy maslahat o‘rnini bosmaydi.
-        <br />
-        <Link to="/sources">ACSM · ISSN · WHO · EFSA manbalari</Link>
-      </p>
+      <div className="stack gap-8 mt-12" style={{ alignItems: 'center' }}>
+        <Logo size={16} flat />
+        <p className="tiny faint" style={{ textAlign: 'center' }}>
+          GYMbos · Tavsiyalar ma’lumot uchun, tibbiy maslahat o‘rnini bosmaydi.
+          <br />
+          <Link to="/sources">ACSM · ISSN · WHO · EFSA manbalari</Link>
+        </p>
+      </div>
 
       <Sheet open={resetOpen} onClose={() => setResetOpen(false)} label="Hammasini o‘chirish">
         <h3 className="title">Hammasini o‘chirasizmi?</h3>
-        <p className="muted mt-8">Profil, dastur va butun mashg‘ulotlar tarixi shu qurilmadan o‘chiriladi.{' '}
-          {account ? 'Akkauntdan ham chiqasiz — bulutdagi nusxa saqlanib qoladi, qayta kirsangiz tiklanadi.' : 'Buni qaytarib bo‘lmaydi — avval zaxira nusxa oling.'}</p>
+        <p className="muted mt-8">
+          Profil, dastur va butun mashg‘ulotlar tarixi shu qurilmadan o‘chiriladi.{' '}
+          {account ? 'Akkauntdan ham chiqasiz — bulutdagi nusxa saqlanib qoladi, qayta kirsangiz tiklanadi.' : 'Buni qaytarib bo‘lmaydi — avval zaxira nusxa oling.'}
+        </p>
         <div className="row gap-8 mt-16">
           <button className="btn btn-secondary grow" onClick={() => setResetOpen(false)}>
             Bekor qilish
@@ -226,9 +242,20 @@ export default function Profile() {
                 <Choice key={l.id} on={draft.level === l.id} onClick={() => setDraft({ ...draft, level: l.id })} title={l.title} desc={l.desc} />
               ))}
               <h3 className="title mt-8">Dastur uslubi</h3>
-              <Choice on={(draft.method ?? 'auto') === 'auto'} onClick={() => setDraft({ ...draft, method: 'auto' })} title="Avtomatik" desc={`Maqsad va darajaga qarab — hozir: ${METHOD_INFO[resolveMethod({ ...draft, method: 'auto' })].name}`} />
+              <Choice
+                on={(draft.method ?? 'auto') === 'auto'}
+                onClick={() => setDraft({ ...draft, method: 'auto' })}
+                title="Avtomatik"
+                desc={`Maqsad va darajaga qarab — hozir: ${METHOD_INFO[resolveMethod({ ...draft, method: 'auto' })].name}`}
+              />
               {(['hypertrophy', 'strength', 'linear', 'powerbuilding'] as const).map((m) => (
-                <Choice key={m} on={draft.method === m} onClick={() => setDraft({ ...draft, method: m })} title={METHOD_INFO[m].name} desc={m === 'powerbuilding' && draft.daysPerWeek < 4 ? `${METHOD_INFO[m].short} · haftasiga 4+ kun kerak` : METHOD_INFO[m].short} />
+                <Choice
+                  key={m}
+                  on={draft.method === m}
+                  onClick={() => setDraft({ ...draft, method: m })}
+                  title={METHOD_INFO[m].name}
+                  desc={m === 'powerbuilding' && draft.daysPerWeek < 4 ? `${METHOD_INFO[m].short} · haftasiga 4+ kun kerak` : METHOD_INFO[m].short}
+                />
               ))}
             </>
           )}
@@ -237,7 +264,12 @@ export default function Profile() {
               <h3 className="title">Jadval</h3>
               <div className="row gap-8">
                 {[2, 3, 4, 5, 6].map((n) => (
-                  <button key={n} className={`chip ${draft.daysPerWeek === n ? 'on' : ''}`} style={{ flex: 1, justifyContent: 'center', height: 44 }} onClick={() => setDraft({ ...draft, daysPerWeek: n, trainingDays: DEFAULT_DAYS[n] })}>
+                  <button
+                    key={n}
+                    className={`chip ${draft.daysPerWeek === n ? 'on' : ''}`}
+                    style={{ flex: 1, justifyContent: 'center', height: 44 }}
+                    onClick={() => setDraft({ ...draft, daysPerWeek: n, trainingDays: DEFAULT_DAYS[n] })}
+                  >
                     {n}
                   </button>
                 ))}
@@ -283,7 +315,11 @@ export default function Profile() {
                 {INJURIES.map((inj) => {
                   const on = draft.injuries.includes(inj.id);
                   return (
-                    <button key={inj.id} className={`chip ${on ? 'on' : ''}`} onClick={() => setDraft({ ...draft, injuries: on ? draft.injuries.filter((x) => x !== inj.id) : [...draft.injuries, inj.id] })}>
+                    <button
+                      key={inj.id}
+                      className={`chip ${on ? 'on' : ''}`}
+                      onClick={() => setDraft({ ...draft, injuries: on ? draft.injuries.filter((x) => x !== inj.id) : [...draft.injuries, inj.id] })}
+                    >
                       {inj.name}
                     </button>
                   );
@@ -294,7 +330,11 @@ export default function Profile() {
                 {GROUP_ORDER.map((g) => {
                   const on = draft.focus.includes(g);
                   return (
-                    <button key={g} className={`chip ${on ? 'on' : ''}`} onClick={() => setDraft({ ...draft, focus: on ? draft.focus.filter((x) => x !== g) : draft.focus.length < 3 ? [...draft.focus, g] : draft.focus })}>
+                    <button
+                      key={g}
+                      className={`chip ${on ? 'on' : ''}`}
+                      onClick={() => setDraft({ ...draft, focus: on ? draft.focus.filter((x) => x !== g) : draft.focus.length < 3 ? [...draft.focus, g] : draft.focus })}
+                    >
                       {GROUPS[g].name}
                     </button>
                   );
@@ -335,7 +375,11 @@ function Item({ icon, label, value, onClick, last }: { icon: string; label: stri
     <button className="row gap-12" onClick={onClick} style={{ width: '100%', padding: '14px 16px', borderBottom: last ? 0 : '1px solid var(--line)', textAlign: 'left' }}>
       <Icon name={icon} size={20} style={{ color: 'var(--text-2)' }} />
       <span className="grow">{label}</span>
-      {value && <span className="small muted ellipsis" style={{ maxWidth: 150 }}>{value}</span>}
+      {value && (
+        <span className="small muted ellipsis" style={{ maxWidth: 150 }}>
+          {value}
+        </span>
+      )}
       <Icon name="right" size={16} style={{ color: 'var(--text-3)' }} />
     </button>
   );

@@ -268,10 +268,8 @@ export const useStore = create<State>()(
         if (p) set({ program: generateProgram(p), setDelta: {} });
       },
       setProgram: (program) => set({ program }),
-      swapExercise: (dayId, index, newId) =>
-        set({ program: mapDay(get().program, dayId, (d) => ({ ...d, exercises: d.exercises.map((e, i) => (i === index ? { ...e, exerciseId: newId } : e)) })) }),
-      updatePlanned: (dayId, index, patch) =>
-        set({ program: mapDay(get().program, dayId, (d) => ({ ...d, exercises: d.exercises.map((e, i) => (i === index ? { ...e, ...patch } : e)) })) }),
+      swapExercise: (dayId, index, newId) => set({ program: mapDay(get().program, dayId, (d) => ({ ...d, exercises: d.exercises.map((e, i) => (i === index ? { ...e, exerciseId: newId } : e)) })) }),
+      updatePlanned: (dayId, index, patch) => set({ program: mapDay(get().program, dayId, (d) => ({ ...d, exercises: d.exercises.map((e, i) => (i === index ? { ...e, ...patch } : e)) })) }),
       removePlanned: (dayId, index) => set({ program: mapDay(get().program, dayId, (d) => ({ ...d, exercises: d.exercises.filter((_, i) => i !== index) })) }),
       addPlanned: (dayId, exId) => {
         const ex = exById(exId);
@@ -299,11 +297,10 @@ export const useStore = create<State>()(
       },
 
       startWorkout: (day, plan, readiness, initialEx) => {
-        const exercises: ExerciseLog[] =
-          initialEx ?? plan.map((pe) => ({ exerciseId: pe.exerciseId, sets: Array.from({ length: pe.sets }, () => ({ kg: 0, reps: 0, done: false })) }));
+        const exercises: ExerciseLog[] = initialEx ?? plan.map((pe) => ({ exerciseId: pe.exerciseId, sets: Array.from({ length: pe.sets }, () => ({ kg: 0, reps: 0, done: false })) }));
         set({
           active: {
-            log: { id: uid(), dayId: day?.id, title: day?.title ?? "Erkin mashg‘ulot", startedAt: new Date().toISOString(), durationMin: 0, exercises, readiness },
+            log: { id: uid(), dayId: day?.id, title: day?.title ?? 'Erkin mashg‘ulot', startedAt: new Date().toISOString(), durationMin: 0, exercises, readiness },
             index: 0,
             restEndsAt: null,
             restTotal: 0,
@@ -398,9 +395,7 @@ export const useStore = create<State>()(
       finishWorkout: (fb) => {
         const a = get().active;
         if (!a) return null;
-        const exercises = a.log.exercises
-          .map((e) => ({ ...e, sets: e.sets.filter((s) => s.done) }))
-          .filter((e) => e.sets.length > 0);
+        const exercises = a.log.exercises.map((e) => ({ ...e, sets: e.sets.filter((s) => s.done) })).filter((e) => e.sets.length > 0);
         if (!exercises.length) {
           set({ active: null });
           return null;

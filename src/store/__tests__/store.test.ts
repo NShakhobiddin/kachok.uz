@@ -47,7 +47,13 @@ describe('faol mashg‘ulot', () => {
     const alt = altFor(first);
     S().swapActive(0, alt);
     const a = S().active!;
-    expect(a.log.exercises[0]).toMatchObject({ exerciseId: first, sets: [{ kg: 100, done: true }, { kg: 100, done: true }] });
+    expect(a.log.exercises[0]).toMatchObject({
+      exerciseId: first,
+      sets: [
+        { kg: 100, done: true },
+        { kg: 100, done: true },
+      ],
+    });
     expect(a.log.exercises[1].exerciseId).toBe(alt);
     expect(a.log.exercises[1].sets.length).toBe(Math.max(1, total - 2));
     expect(a.plan.length).toBe(a.log.exercises.length);
@@ -97,7 +103,15 @@ describe('faol mashg‘ulot', () => {
     const t = new Date().toISOString();
     const need = (p.mesoWeeks - 1) * profile.daysPerWeek;
     useStore.setState({
-      logs: Array.from({ length: need }, (_, i) => ({ id: 'l' + i, dayId: p.days[i % p.days.length].id, title: 'x', startedAt: t, finishedAt: t, durationMin: 40, exercises: [{ exerciseId: p.days[0].exercises[0].exerciseId, sets: [{ kg: 40, reps: 8, done: true }] }] })),
+      logs: Array.from({ length: need }, (_, i) => ({
+        id: 'l' + i,
+        dayId: p.days[i % p.days.length].id,
+        title: 'x',
+        startedAt: t,
+        finishedAt: t,
+        durationMin: 40,
+        exercises: [{ exerciseId: p.days[0].exercises[0].exerciseId, sets: [{ kg: 40, reps: 8, done: true }] }],
+      })),
     });
     expect(finish(null).deload).toBeUndefined(); // erkin mashg'ulot
     expect(finish(1).deload).toBe(true);
@@ -125,7 +139,9 @@ describe('mashg‘ulotdan dasturga saqlash', () => {
     expect(edits.swaps).toEqual([{ from: ids[0], to: alt }]);
     expect(edits.added.map((p) => p.exerciseId)).toEqual([extra]);
     S().applyWorkoutToDay(day.id, edits);
-    const after = S().program!.days.find((d) => d.id === day.id)!.exercises.map((p) => p.exerciseId);
+    const after = S()
+      .program!.days.find((d) => d.id === day.id)!
+      .exercises.map((p) => p.exerciseId);
     expect(after).toEqual([alt, ...ids.slice(1, -1), extra]);
   });
 

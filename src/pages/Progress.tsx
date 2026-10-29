@@ -39,7 +39,10 @@ export default function Progress() {
   const exIds = useMemo(() => {
     const count = new Map<string, number>();
     finished(logs).forEach((l) => l.exercises.forEach((e) => count.set(e.exerciseId, (count.get(e.exerciseId) ?? 0) + 1)));
-    return [...count.entries()].filter(([id]) => EXERCISE_MAP[id] && EXERCISE_MAP[id].loadType !== 'bodyweight').sort((a, b) => b[1] - a[1]).map(([id]) => id);
+    return [...count.entries()]
+      .filter(([id]) => EXERCISE_MAP[id] && EXERCISE_MAP[id].loadType !== 'bodyweight')
+      .sort((a, b) => b[1] - a[1])
+      .map(([id]) => id);
   }, [logs]);
   const [exSel, setExSel] = useState<string | null>(null);
   const curEx = exSel ?? exIds[0] ?? null;
@@ -103,7 +106,12 @@ export default function Progress() {
           <ColumnChart
             label="Haftalik mashg‘ulot daqiqalari"
             unit="daq"
-            data={weeks.map((w, i) => ({ label: i === weeks.length - 1 ? 'Shu' : fmtDate(w.start).split('-')[0] + '-' + fmtDate(w.start).split('-')[1].slice(0, 3), value: w.minutes, note: `${w.workouts} mashg‘ulot`, highlight: i === weeks.length - 1 }))}
+            data={weeks.map((w, i) => ({
+              label: i === weeks.length - 1 ? 'Shu' : fmtDate(w.start).split('-')[0] + '-' + fmtDate(w.start).split('-')[1].slice(0, 3),
+              value: w.minutes,
+              note: `${w.workouts} mashg‘ulot`,
+              highlight: i === weeks.length - 1,
+            }))}
           />
           <div className="stack gap-8">
             {insights.map((ins, i) => (
@@ -132,7 +140,10 @@ export default function Progress() {
           <span className="small muted">{volWeek === cur ? 'bu hafta' : 'o‘tgan hafta'}</span>
         </div>
         <div className="card">
-          <TargetBars label="Haftalik setlar mushak guruhlari bo‘yicha" rows={GROUP_ORDER.map((g) => ({ label: GROUPS[g].name, value: volWeek.groups[g], mev: VOLUME_LANDMARKS[g].mev, mav: VOLUME_LANDMARKS[g].mav, mrv: mrvAt(g, freq[g]) }))} />
+          <TargetBars
+            label="Haftalik setlar mushak guruhlari bo‘yicha"
+            rows={GROUP_ORDER.map((g) => ({ label: GROUPS[g].name, value: volWeek.groups[g], mev: VOLUME_LANDMARKS[g].mev, mav: VOLUME_LANDMARKS[g].mav, mrv: mrvAt(g, freq[g]) }))}
+          />
         </div>
       </section>
 
@@ -194,18 +205,21 @@ export default function Progress() {
             <h2>Rekordlar</h2>
           </div>
           <div className="card flush">
-            {[...prs].reverse().slice(0, 8).map((p, i) => (
-              <div key={i} className="row gap-12" style={{ padding: '10px 14px', borderBottom: '1px solid var(--line)' }}>
-                <Icon name="trophy" size={18} style={{ color: 'var(--yellow)' }} />
-                <div className="grow" style={{ minWidth: 0 }}>
-                  <div className="small strong ellipsis">{EXERCISE_MAP[p.exerciseId]?.name}</div>
-                  <div className="tiny faint">{fmtDate(p.date)}</div>
+            {[...prs]
+              .reverse()
+              .slice(0, 8)
+              .map((p, i) => (
+                <div key={i} className="row gap-12" style={{ padding: '10px 14px', borderBottom: '1px solid var(--line)' }}>
+                  <Icon name="trophy" size={18} style={{ color: 'var(--yellow)' }} />
+                  <div className="grow" style={{ minWidth: 0 }}>
+                    <div className="small strong ellipsis">{EXERCISE_MAP[p.exerciseId]?.name}</div>
+                    <div className="tiny faint">{fmtDate(p.date)}</div>
+                  </div>
+                  <span className="strong num small">
+                    {fmtKg(p.kg)} × {p.reps}
+                  </span>
                 </div>
-                <span className="strong num small">
-                  {fmtKg(p.kg)} × {p.reps}
-                </span>
-              </div>
-            ))}
+              ))}
           </div>
         </section>
       )}

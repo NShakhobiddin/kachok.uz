@@ -7,7 +7,23 @@ export function parseNum(raw: string): number {
   return /^-?\d*\.?\d*$/.test(t) && /\d/.test(t) ? parseFloat(t) : NaN;
 }
 
-export function Stepper({ value, onChange, step = 1, min = 0, max = 999, unit, label }: { value: number; onChange: (v: number) => void; step?: number; min?: number; max?: number; unit?: string; label?: string }) {
+export function Stepper({
+  value,
+  onChange,
+  step = 1,
+  min = 0,
+  max = 999,
+  unit,
+  label,
+}: {
+  value: number;
+  onChange: (v: number) => void;
+  step?: number;
+  min?: number;
+  max?: number;
+  unit?: string;
+  label?: string;
+}) {
   const clamp = (v: number) => Math.min(max, Math.max(min, Math.round(v * 100) / 100));
   // yozilayotgan matn: har bosishda cheklanmaydi ("9" → 30 bo'lib ketmasin), maydondan chiqqanda tekshiriladi
   const [draft, setDraft] = useState<string | null>(null);

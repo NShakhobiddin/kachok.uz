@@ -11,7 +11,8 @@ function handle(body: { since: number; changes: { kind: string; id: string; upda
     const k = ch.kind + ':' + ch.id;
     const ts = Math.min(ch.updatedAt, maxTs);
     const cur = rows.get(k);
-    if (!cur || cur.updated_at <= ts) rows.set(k, { kind: ch.kind, id: ch.id, data: ch.deleted ? null : JSON.parse(JSON.stringify(ch.data ?? null)), updated_at: ts, deleted: !!ch.deleted, seq: ++seq });
+    if (!cur || cur.updated_at <= ts)
+      rows.set(k, { kind: ch.kind, id: ch.id, data: ch.deleted ? null : JSON.parse(JSON.stringify(ch.data ?? null)), updated_at: ts, deleted: !!ch.deleted, seq: ++seq });
   }
   const page = [...rows.values()].filter((r) => r.seq > body.since).sort((a, b) => a.seq - b.seq);
   return { docs: page.map((d) => ({ kind: d.kind, id: d.id, data: d.data, updatedAt: d.updated_at, deleted: d.deleted })), cursor: page.length ? page[page.length - 1].seq : body.since, more: false };
@@ -32,9 +33,7 @@ beforeAll(async () => {
   vi.stubGlobal('fetch', async (url: string, init: { body?: string }) => {
     const path = url.replace('http://api.test', '');
     const json =
-      path === '/sync'
-        ? handle(JSON.parse(init.body!))
-        : { user: acc.user, entitlements: { pro: { active: false, until: null, trial: false }, coach: { active: false, until: null } }, coach: null };
+      path === '/sync' ? handle(JSON.parse(init.body!)) : { user: acc.user, entitlements: { pro: { active: false, until: null, trial: false }, coach: { active: false, until: null } }, coach: null };
     return new Response(JSON.stringify(json), { status: 200, headers: { 'content-type': 'application/json' } });
   });
   ({ useStore, exportData } = await import('../../store/useStore'));
@@ -209,7 +208,11 @@ describe('sinxronlash', () => {
     expect(S().profile?.name).toBe('A');
     await tick();
     await syncNow();
-    expect(S().logs.map((l) => l.id).sort()).toEqual(['new', 'old']);
+    expect(
+      S()
+        .logs.map((l) => l.id)
+        .sort(),
+    ).toEqual(['new', 'old']);
     expect(rows.get('log:new')?.deleted).toBe(false);
     expect((rows.get('profile:me')?.data as Profile).name).toBe('A');
   });

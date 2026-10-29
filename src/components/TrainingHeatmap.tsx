@@ -54,7 +54,7 @@ export function TrainingHeatmap({ logs, perWeek, since }: { logs: WorkoutLog[]; 
   }, [logs, perWeek, since]);
 
   const level = (sets: number) => (sets === 0 ? 0 : sets < 12 ? 1 : sets < 20 ? 2 : sets < 28 ? 3 : 4);
-  const picked = sel ? data.byDay.get(sel) ?? [] : [];
+  const picked = sel ? (data.byDay.get(sel) ?? []) : [];
 
   return (
     <div className="card stack gap-12">
@@ -91,7 +91,11 @@ export function TrainingHeatmap({ logs, perWeek, since }: { logs: WorkoutLog[]; 
       <div className="row between tiny muted">
         <span>{sel ? fmtDate(sel) : 'Katakni bosing'}</span>
         <span className="row gap-4" aria-hidden="true">
-          Kam {[0, 1, 2, 3, 4].map((l) => <i key={l} className={`heat-cell l${l}`} style={{ width: 10, height: 10 }} />)} Ko‘p
+          Kam{' '}
+          {[0, 1, 2, 3, 4].map((l) => (
+            <i key={l} className={`heat-cell l${l}`} style={{ width: 10, height: 10 }} />
+          ))}{' '}
+          Ko‘p
         </span>
       </div>
       {sel && (

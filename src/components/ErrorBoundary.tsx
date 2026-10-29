@@ -44,7 +44,7 @@ function Fallback({ error }: { error: Error }) {
     } catch {
       /* JSON buzilgan — xom holicha saqlanadi */
     }
-    saveFile(`kachok-zaxira-${new Date().toISOString().slice(0, 10)}.json`, new Blob([body], { type: 'application/json' }))
+    saveFile(`gymbos-zaxira-${new Date().toISOString().slice(0, 10)}.json`, new Blob([body], { type: 'application/json' }))
       .then(() => setMsg('Zaxira fayli saqlandi.'))
       .catch(() => setMsg('Fayl saqlanmadi.'));
   };
@@ -110,7 +110,7 @@ export class ErrorBoundary extends Component<{ children: ReactNode }, { error: E
     return { error };
   }
   componentDidCatch(error: Error, info: ErrorInfo) {
-    console.error('Kachok xatosi:', error, info.componentStack);
+    console.error('GYMbos xatosi:', error, info.componentStack);
   }
   render() {
     return this.state.error ? <Fallback error={this.state.error} /> : this.props.children;

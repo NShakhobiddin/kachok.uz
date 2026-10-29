@@ -25,13 +25,31 @@ export default function Summary() {
   const [copied, setCopied] = useState(false);
   const log = logs.find((l) => l.id === id);
   // rekordlar tarixdan hisoblanadi (sahifa qayta yuklansa ham yo'qolmaydi): shu mashg'ulotdan oldingilarga nisbatan
-  const prs = useMemo(() => (log ? detectPRs(log, logs.filter((l) => l.id !== log.id && l.startedAt < log.startedAt)) : []), [log, logs]);
+  const prs = useMemo(
+    () =>
+      log
+        ? detectPRs(
+            log,
+            logs.filter((l) => l.id !== log.id && l.startedAt < log.startedAt),
+          )
+        : [],
+    [log, logs],
+  );
   const finishedCount = logs.filter((l) => l.finishedAt).length;
   const streak = useMemo(() => weekStreak(logs, profile.daysPerWeek), [logs, profile.daysPerWeek]);
   // yangi yutuqlar sahifa ochilganda bir marta aniqlanadi va "ko'rilgan" deb belgilanadi — ekranda qoladi
   const [newAch] = useState(() => {
     const t = totals(logs);
-    const ctx = { logs, totalWorkouts: t.workouts, totalVolume: t.volume, totalMinutes: t.minutes, prCount: allPRs(logs).length, streak, lessonsDone: lessonsDone.length, lessonsTotal: LESSONS.length };
+    const ctx = {
+      logs,
+      totalWorkouts: t.workouts,
+      totalVolume: t.volume,
+      totalMinutes: t.minutes,
+      prCount: allPRs(logs).length,
+      streak,
+      lessonsDone: lessonsDone.length,
+      lessonsTotal: LESSONS.length,
+    };
     return ACHIEVEMENTS.filter((a) => !seen.includes(a.id) && a.test(ctx));
   });
   useEffect(() => {
@@ -55,9 +73,9 @@ export default function Summary() {
   const sec = Array.from(new Set(log.exercises.flatMap((e) => EXERCISE_MAP[e.exerciseId]?.secondary ?? []))).filter((m) => !prim.includes(m)) as MuscleId[];
 
   const share = async () => {
-    const text = `Kachok: ${log.title} — ${fmtDuration(log.durationMin)}, ${sets} set, ${Math.round(vol)} kg${prs.length ? `, ${prs.length} ta yangi rekord` : ''}. 💪`;
+    const text = `GYMbos: ${log.title} — ${fmtDuration(log.durationMin)}, ${sets} set, ${Math.round(vol)} kg${prs.length ? `, ${prs.length} ta yangi rekord` : ''}. 💪`;
     try {
-      if (navigator.share) await navigator.share({ text, title: 'Kachok' });
+      if (navigator.share) await navigator.share({ text, title: 'GYMbos' });
       else {
         await navigator.clipboard.writeText(text);
         setCopied(true);
@@ -104,7 +122,7 @@ export default function Summary() {
                 <div className="grow">
                   <div className="strong">{EXERCISE_MAP[p.exerciseId]?.name}</div>
                   <div className="small muted num">
-                    {fmtKg(p.kg)} kg × {p.reps} · {p.kind === 'weight' ? "eng og‘ir vazn" : `taxminiy 1RM ${fmtKg(p.value)} kg`}
+                    {fmtKg(p.kg)} kg × {p.reps} · {p.kind === 'weight' ? 'eng og‘ir vazn' : `taxminiy 1RM ${fmtKg(p.value)} kg`}
                   </div>
                 </div>
               </motion.div>

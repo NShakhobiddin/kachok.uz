@@ -266,7 +266,19 @@ function MealChips({ meal, setMeal }: { meal: Meal; setMeal: (m: Meal) => void }
   );
 }
 
-function PortionStep({ food, meal, setMeal, onBack, onAdd }: { food: FoodItem; meal: Meal; setMeal: (m: Meal) => void; onBack: () => void; onAdd: (e: Omit<FoodEntry, 'id' | 'date' | 'meal'>) => void }) {
+function PortionStep({
+  food,
+  meal,
+  setMeal,
+  onBack,
+  onAdd,
+}: {
+  food: FoodItem;
+  meal: Meal;
+  setMeal: (m: Meal) => void;
+  onBack: () => void;
+  onAdd: (e: Omit<FoodEntry, 'id' | 'date' | 'meal'>) => void;
+}) {
   const units = [...(food.units ?? []), { name: 'g', g: 1 }];
   const [ui, setUi] = useState(0);
   const unit = units[ui];
@@ -369,10 +381,14 @@ export function TdeeCard({ est, on, setOn }: { est: TdeeEstimate; on: boolean; s
       </div>
       {ready ? (
         <p className="small">
-          Formula bo‘yicha {est.prior} kkal edi; sizning kundalik va vazningiz {diff === 0 ? 'uni tasdiqladi' : `${Math.abs(diff)} kkal ${diff > 0 ? 'ko‘proq' : 'kamroq'} sarflayotganingizni ko‘rsatdi`}. {on ? 'Kaloriya rejasi shu asosda.' : 'Yoqsangiz, kaloriya rejasi shu raqamdan hisoblanadi.'}
+          Formula bo‘yicha {est.prior} kkal edi; sizning kundalik va vazningiz{' '}
+          {diff === 0 ? 'uni tasdiqladi' : `${Math.abs(diff)} kkal ${diff > 0 ? 'ko‘proq' : 'kamroq'} sarflayotganingizni ko‘rsatdi`}.{' '}
+          {on ? 'Kaloriya rejasi shu asosda.' : 'Yoqsangiz, kaloriya rejasi shu raqamdan hisoblanadi.'}
         </p>
       ) : (
-        <p className="small muted">Kaloriyani formula emas, aynan sizning tanangiz bo‘yicha hisoblash uchun: 3 hafta ichida kamida 8 kun ovqatni to‘liq yozing va 4+ marta (10 kun oralig‘ida) tortiling.</p>
+        <p className="small muted">
+          Kaloriyani formula emas, aynan sizning tanangiz bo‘yicha hisoblash uchun: 3 hafta ichida kamida 8 kun ovqatni to‘liq yozing va 4+ marta (10 kun oralig‘ida) tortiling.
+        </p>
       )}
       <div className="conf-bar" role="img" aria-label={`Ishonch: ${Math.round(est.confidence * 100)}%`}>
         {[0, 1, 2].map((i) => (

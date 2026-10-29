@@ -184,7 +184,9 @@ export default function Workout() {
   const totalSets = active.log.exercises.reduce((a, e) => a + e.sets.length, 0);
   const allDoneHere = exLog?.sets.length > 0 && exLog.sets.every((s) => s.done);
   // og'riq tufayli to'xtatilgan (seti bajarilmagan) mashq ham hisobga olinadi
-  const lastWithEx = ex ? [...logs].filter((l) => l.finishedAt && (l.exercises.some((e) => e.exerciseId === ex.id) || l.painEx?.includes(ex.id))).sort((a, b) => b.startedAt.localeCompare(a.startedAt))[0] : undefined;
+  const lastWithEx = ex
+    ? [...logs].filter((l) => l.finishedAt && (l.exercises.some((e) => e.exerciseId === ex.id) || l.painEx?.includes(ex.id))).sort((a, b) => b.startedAt.localeCompare(a.startedAt))[0]
+    : undefined;
   const painLast = !!ex && !!lastWithEx?.painEx?.includes(ex.id);
   const doneExercises = active.log.exercises.filter((e) => e.sets.some((s) => s.done && !s.warmup));
   const finishGroups = [...new Set(doneExercises.flatMap((e) => EXERCISE_MAP[e.exerciseId]?.primary.map((m) => MUSCLES[m].group) ?? []))];
@@ -230,7 +232,7 @@ export default function Workout() {
         const cur = e1rm(kg, reps);
         if ((cur > best * 1.005 || kg > bestKg) && cur > sessionBest) {
           setPrSets((p) => [...p, `${idx}-${j}`]);
-          setPr(`${fmtKg(kg)} kg × ${reps} — ${kg > bestKg ? "eng og‘ir vazn" : 'eng kuchli set'}!`);
+          setPr(`${fmtKg(kg)} kg × ${reps} — ${kg > bestKg ? 'eng og‘ir vazn' : 'eng kuchli set'}!`);
           if (settings.vibrate) vibrate([40, 60, 40, 60, 120]);
           setTimeout(() => setPr(null), 3200);
         }
@@ -326,7 +328,11 @@ export default function Workout() {
             <button className="chip sm" style={{ height: 40 }} onClick={() => setNoteEdit((v) => !v)} aria-expanded={noteEdit}>
               <Icon name="edit" size={14} /> Eslatma
             </button>
-            <button className="chip sm" onClick={() => setPainOpen(true)} style={{ height: 40, ...(active.log.painEx?.includes(ex.id) ? { borderColor: 'var(--red)', background: 'var(--red-soft)' } : {}) }}>
+            <button
+              className="chip sm"
+              onClick={() => setPainOpen(true)}
+              style={{ height: 40, ...(active.log.painEx?.includes(ex.id) ? { borderColor: 'var(--red)', background: 'var(--red-soft)' } : {}) }}
+            >
               <Icon name="alert" size={14} /> Og‘riq
             </button>
           </div>
@@ -388,7 +394,12 @@ export default function Workout() {
               const prev = sug?.last?.sets[j] ?? sug?.last?.sets[sug.last.sets.length - 1];
               return (
                 <div key={j} data-scroll={`${idx}-${j}`} className={`set-grid set-row ${s.done ? 'done' : ''} ${s.warmup ? 'warm' : ''}`}>
-                  <button style={{ minWidth: 34, height: 40 }} className={`pill-num set-type ${s.warmup ? 'w' : s.kind === 'drop' ? 'd' : s.kind === 'failure' ? 'f' : ''}`} onClick={() => setTypeFor(j)} aria-label={`${j + 1}-set turi: ${s.warmup ? 'isinish' : s.kind === 'drop' ? 'drop-set' : s.kind === 'failure' ? 'chegaragacha' : 'ishchi set'}`}>
+                  <button
+                    style={{ minWidth: 34, height: 40 }}
+                    className={`pill-num set-type ${s.warmup ? 'w' : s.kind === 'drop' ? 'd' : s.kind === 'failure' ? 'f' : ''}`}
+                    onClick={() => setTypeFor(j)}
+                    aria-label={`${j + 1}-set turi: ${s.warmup ? 'isinish' : s.kind === 'drop' ? 'drop-set' : s.kind === 'failure' ? 'chegaragacha' : 'ishchi set'}`}
+                  >
                     {s.warmup ? 'I' : s.kind === 'drop' ? 'D' : s.kind === 'failure' ? 'Ch' : j + 1 - exLog.sets.slice(0, j).filter((x) => x.warmup).length}
                   </button>
                   <button
@@ -477,14 +488,7 @@ export default function Workout() {
       {/* Dam olish taymeri */}
       <AnimatePresence>
         {remaining !== null && (
-          <motion.div
-            initial={{ y: 200 }}
-            animate={{ y: 0 }}
-            exit={{ y: 220 }}
-            transition={{ type: 'spring', damping: 26, stiffness: 300 }}
-            className="rest-panel"
-            ref={restRef}
-          >
+          <motion.div initial={{ y: 200 }} animate={{ y: 0 }} exit={{ y: 220 }} transition={{ type: 'spring', damping: 26, stiffness: 300 }} className="rest-panel" ref={restRef}>
             {lastDone && <EffortAsk key={`${lastDone.ex}-${lastDone.set}`} at={lastDone} sugs={sugs} />}
             <PlateRing remaining={remaining} total={active.restTotal} size={112} />
             <div className="stack gap-8 grow">
@@ -498,7 +502,7 @@ export default function Workout() {
                 </button>
               </div>
               <button className="btn btn-primary btn-sm" onClick={() => st.stopRest()}>
-                {remaining > 0 ? "O‘tkazib yuborish" : 'Davom etish'}
+                {remaining > 0 ? 'O‘tkazib yuborish' : 'Davom etish'}
               </button>
             </div>
           </motion.div>
@@ -688,7 +692,7 @@ function TargetCard({ ex, sug, repMax, barKg }: { ex: Exercise; sug: Suggestion;
             <small>kg</small>
           </span>
         ) : (
-          <span className="score">{ex.loadType === 'bodyweight' ? "O‘z vazni" : '—'}</span>
+          <span className="score">{ex.loadType === 'bodyweight' ? 'O‘z vazni' : '—'}</span>
         )}
         <span className="title muted num">
           × {sug.reps}
@@ -714,7 +718,7 @@ function TargetCard({ ex, sug, repMax, barKg }: { ex: Exercise; sug: Suggestion;
             <div className="stack gap-4">
               <PlateStack plates={pp.plates} />
               <span className="tiny muted">
-                Har tomonga: {pp.plates.length ? pp.plates.map(fmtKg).join(' + ') : "disk yo‘q"} kg · grif {ex.id.includes('curl') || ex.id.includes('skull') ? 10 : barKg} kg
+                Har tomonga: {pp.plates.length ? pp.plates.map(fmtKg).join(' + ') : 'disk yo‘q'} kg · grif {ex.id.includes('curl') || ex.id.includes('skull') ? 10 : barKg} kg
               </span>
             </div>
           )}
@@ -830,13 +834,23 @@ function FinishSheet({
           {exercises.map((e) => {
             const on = pain.includes(e.id);
             return (
-              <button key={e.id} className={`chip sm ${on ? 'on' : ''}`} style={on ? { borderColor: 'var(--red)', background: 'var(--red-soft)' } : undefined} onClick={() => setPain((p) => (on ? p.filter((x) => x !== e.id) : [...p, e.id]))} aria-pressed={on}>
+              <button
+                key={e.id}
+                className={`chip sm ${on ? 'on' : ''}`}
+                style={on ? { borderColor: 'var(--red)', background: 'var(--red-soft)' } : undefined}
+                onClick={() => setPain((p) => (on ? p.filter((x) => x !== e.id) : [...p, e.id]))}
+                aria-pressed={on}
+              >
                 {e.name}
               </button>
             );
           })}
         </div>
-        {pain.length > 0 && <p className="tiny" style={{ color: 'var(--yellow)' }}>Keyingi safar bu mashqlarda ogohlantirish va muqobil taklif chiqadi.</p>}
+        {pain.length > 0 && (
+          <p className="tiny" style={{ color: 'var(--yellow)' }}>
+            Keyingi safar bu mashqlarda ogohlantirish va muqobil taklif chiqadi.
+          </p>
+        )}
       </div>
       {groups.length > 0 && (
         <div className="card tight stack gap-8">
@@ -851,7 +865,9 @@ function FinishSheet({
           </button>
           {fbOpen && (
             <>
-              <Note label="Bu savollar nima uchun">Har bir mushak uchun 3 ta qisqa javob — keyingi haftada shu mushakka setlar soni alohida moslashadi (RP metodikasi). Javob bermasangiz ham bo‘ladi.</Note>
+              <Note label="Bu savollar nima uchun">
+                Har bir mushak uchun 3 ta qisqa javob — keyingi haftada shu mushakka setlar soni alohida moslashadi (RP metodikasi). Javob bermasangiz ham bo‘ladi.
+              </Note>
               {groups.map((g) => (
                 <div key={g} className="stack gap-8" style={{ paddingTop: 8, borderTop: '1px solid var(--line)' }}>
                   <span className="strong">{GROUPS[g].name}</span>
@@ -880,7 +896,18 @@ function FinishSheet({
         </div>
       )}
       {/* Saqlash har doim ko'rinadi: savollar uzun bo'lsa ham pastda yopishib turadi */}
-      <div style={{ position: 'sticky', bottom: 0, zIndex: 2, margin: '0 -4px', padding: '10px 4px calc(var(--safe-b, 0px) + 6px)', background: 'linear-gradient(to bottom, transparent, var(--bg-2) 14px)' }}>{save}</div>
+      <div
+        style={{
+          position: 'sticky',
+          bottom: 0,
+          zIndex: 2,
+          margin: '0 -4px',
+          padding: '10px 4px calc(var(--safe-b, 0px) + 6px)',
+          background: 'linear-gradient(to bottom, transparent, var(--bg-2) 14px)',
+        }}
+      >
+        {save}
+      </div>
       <button className="btn btn-ghost btn-block" onClick={onDiscard}>
         Saqlamasdan chiqish
       </button>
@@ -928,8 +955,7 @@ function EffortAsk({ at, sugs }: { at: { ex: number; set: number }; sugs: Sugges
   return (
     <div className="effort">
       <span className="small">
-        <b>{rirText(set.rir)}</b>{' '}
-        <span className="muted">{off === 0 ? '— aynan reja bo‘yicha.' : off > 0 ? `— rejadan yengil (maqsad ${target}).` : `— rejadan og‘ir (maqsad ${target}).`}</span>
+        <b>{rirText(set.rir)}</b> <span className="muted">{off === 0 ? '— aynan reja bo‘yicha.' : off > 0 ? `— rejadan yengil (maqsad ${target}).` : `— rejadan og‘ir (maqsad ${target}).`}</span>
       </span>
       {advice && (
         <div className="row between gap-8">

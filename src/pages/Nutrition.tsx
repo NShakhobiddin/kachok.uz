@@ -18,7 +18,7 @@ const GOAL_TEXT: Record<string, string> = {
   muscle: 'mushak massasi',
   strength: 'kuch',
   recomp: 'shakl berish',
-  health: "sog‘liq",
+  health: 'sog‘liq',
 };
 
 export default function Nutrition() {
@@ -96,7 +96,8 @@ export default function Nutrition() {
               <span>{check.message}</span>
               {check.delta !== 0 && (
                 <button className="btn btn-secondary btn-xs" style={{ alignSelf: 'flex-start' }} onClick={() => setKcalAdjust(clampKcalAdjust(kcalAdjust + check.delta))}>
-                  Qo‘llash ({check.delta > 0 ? '+' : ''}{check.delta} kkal)
+                  Qo‘llash ({check.delta > 0 ? '+' : ''}
+                  {check.delta} kkal)
                 </button>
               )}
             </div>
@@ -168,13 +169,21 @@ export default function Nutrition() {
               <div className="notice info">
                 <Icon name="target" />
                 <span>
-                  Kutilayotgan o‘zgarish: <b>haftasiga {np.weeklyChangeKg > 0 ? '+' : ''}{np.weeklyChangeKg} kg</b>. {np.notes[0]}
+                  Kutilayotgan o‘zgarish:{' '}
+                  <b>
+                    haftasiga {np.weeklyChangeKg > 0 ? '+' : ''}
+                    {np.weeklyChangeKg} kg
+                  </b>
+                  . {np.notes[0]}
                 </span>
               </div>
             )}
             {kcalAdjust !== 0 && !useAdaptive && (
               <div className="row between small">
-                <span className="muted">Haftalik tekshiruv bo‘yicha tuzatish: {kcalAdjust > 0 ? '+' : ''}{kcalAdjust} kkal</span>
+                <span className="muted">
+                  Haftalik tekshiruv bo‘yicha tuzatish: {kcalAdjust > 0 ? '+' : ''}
+                  {kcalAdjust} kkal
+                </span>
                 <button className="strong" style={{ color: 'var(--text-2)' }} onClick={() => setKcalAdjust(0)}>
                   Bekor qilish
                 </button>
@@ -192,7 +201,10 @@ export default function Nutrition() {
               <button className={`chip ${profile.dietPrefs.vegetarian ? 'on' : ''}`} onClick={() => updateProfile({ dietPrefs: { ...profile.dietPrefs, vegetarian: !profile.dietPrefs.vegetarian } })}>
                 Go‘shtsiz
               </button>
-              <button className={`chip ${profile.dietPrefs.lactoseFree ? 'on' : ''}`} onClick={() => updateProfile({ dietPrefs: { ...profile.dietPrefs, lactoseFree: !profile.dietPrefs.lactoseFree } })}>
+              <button
+                className={`chip ${profile.dietPrefs.lactoseFree ? 'on' : ''}`}
+                onClick={() => updateProfile({ dietPrefs: { ...profile.dietPrefs, lactoseFree: !profile.dietPrefs.lactoseFree } })}
+              >
                 Sut mahsulotlarisiz
               </button>
             </div>
@@ -224,7 +236,10 @@ export default function Nutrition() {
                 ))}
               </div>
             </ProGate>
-            <Note className="mt-4">Miqdorlar maqsadingizga moslab hisoblandi (USDA ma’lumotlari asosida, taxminiy). Mahsulotlarni teng qiymatlilariga almashtirish mumkin: tovuq ↔ baliq ↔ mol go‘shti, guruch ↔ grechka ↔ kartoshka.</Note>
+            <Note className="mt-4">
+              Miqdorlar maqsadingizga moslab hisoblandi (USDA ma’lumotlari asosida, taxminiy). Mahsulotlarni teng qiymatlilariga almashtirish mumkin: tovuq ↔ baliq ↔ mol go‘shti, guruch ↔ grechka ↔
+              kartoshka.
+            </Note>
           </section>
 
           {/* Milliy taomlar */}
@@ -286,7 +301,9 @@ export default function Nutrition() {
                 </div>
               ))}
             </div>
-            <Note className="mt-4" label="A, B, C, X nima">A — kuchli dalil, B — o‘rtacha, C — faqat ma’lum holatlarda, X — samarasiz yoki xavfli.</Note>
+            <Note className="mt-4" label="A, B, C, X nima">
+              A — kuchli dalil, B — o‘rtacha, C — faqat ma’lum holatlarda, X — samarasiz yoki xavfli.
+            </Note>
           </section>
         </>
       )}
