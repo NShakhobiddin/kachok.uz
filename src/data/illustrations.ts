@@ -457,8 +457,8 @@ export const ILLUSTRATIONS: Partial<Record<string, Illustration>> = {
     ],
     checks: [
       { text: 'Yelka–tos–tizza bir chiziqda', x: 60, y: 62, side: 'r', ly: 22 },
-      { text: 'Oyoq kaftlari yerda, tovon dumbaga yaqin', x: 82, y: 90, side: 'r', ly: 86 },
-      { text: 'Qo‘llar yerda', x: 61, y: 86, side: 'r', ly: 72 },
+      { text: 'Oyoq kaftlari yerda, tovon dumbaga yaqin', x: 82, y: 90, side: 'r', ly: 45 },
+      { text: 'Qo‘llar yerda', x: 61, y: 86, side: 'l', ly: 62 },
     ],
   },
   'calf-raise': {
