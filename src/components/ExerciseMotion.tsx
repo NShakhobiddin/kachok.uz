@@ -13,7 +13,8 @@ interface Frame {
 
 /** boshlanish kadri birinchi: "Boshlang‘ich holat" bo'lsa — u; aks holda mashq qaysi fazadan boshlanishiga qarab (o'tirish — yuqoridan, tortish — pastdan) */
 export function motionFrames(ex: Exercise, ill: Illustration): Frame[] {
-  const main = { src: ill.src, phase: ill.phase };
+  // masshtabi ikkinchi kadrga moslangan nusxa bo'lsa — harakatda o'shani (odam "o'sib" ketmasin)
+  const main = { src: ill.pair?.mainSrc ?? ill.src, phase: ill.phase };
   if (!ill.pair) return [main];
   const pair = ill.pair;
   const START = 'Boshlang‘ich holat';
