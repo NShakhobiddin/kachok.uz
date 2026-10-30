@@ -80,6 +80,9 @@ export interface PR {
   date: string;
 }
 
+/** e1RM bo'yicha rekord: oldingi eng yaxshidan kamida 1% yuqori (mashg'ulot paytidagi banner ham shu chegarada) */
+export const PR_MARGIN = 1.01;
+
 /**
  * Mashg‘ulotdagi yangi rekordlar (avvalgi barcha mashg‘ulotlarga nisbatan): har mashq uchun mashg‘ulotda ko‘pi bilan
  * bitta — eng kuchlisi (og‘irlik rekordi takror rekordidan ustun). Bir mashq mashg‘ulotda ikki marta yozilgan bo'lsa ham
@@ -102,7 +105,7 @@ export function detectPRs(log: WorkoutLog, previous: WorkoutLog[]): PR[] {
     const topE = e1rm(top.kg, top.reps);
     const heaviest = done.reduce((a, b) => (b.kg > a.kg || (b.kg === a.kg && b.reps > a.reps) ? b : a));
     if (heaviest.kg > bestKg) out.push({ exerciseId: id, kind: 'weight', kg: heaviest.kg, reps: heaviest.reps, value: heaviest.kg, date: log.startedAt });
-    else if (topE > bestE * 1.01) out.push({ exerciseId: id, kind: 'e1rm', kg: top.kg, reps: top.reps, value: Math.round(topE * 10) / 10, date: log.startedAt });
+    else if (topE > bestE * PR_MARGIN) out.push({ exerciseId: id, kind: 'e1rm', kg: top.kg, reps: top.reps, value: Math.round(topE * 10) / 10, date: log.startedAt });
   }
   return out;
 }

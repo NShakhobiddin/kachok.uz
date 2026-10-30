@@ -2,7 +2,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { exById } from '../data/exercises';
-import { estimateMinutes, generateProgram, manualPlanned, weeklyVolume } from '../engine/program';
+import { estimateMinutes, generateProgram, manualPlanned, swapPlanned, weeklyVolume } from '../engine/program';
 import { mesoPerWeek, mesoState, setChange, type MuscleFeedback } from '../engine/meso';
 import { clampKcalAdjust } from '../engine/nutrition';
 import { detectPRs } from '../engine/stats';
@@ -254,8 +254,18 @@ export const useStore = create<State>()(
       ...initial,
 
       setProfile: (p, regenerate = true) => {
+        const prev = get().profile;
         set({ profile: p });
         if (regenerate) set({ program: generateProgram(p) });
+        else {
+          // dastur saqlanadi, lekin hafta kunlari o'zgargan bo'lsa — kunlar yangi kunlarga ko'chadi (tartib saqlanib)
+          const program = get().program;
+          const days = [...p.trainingDays].sort((a, b) => a - b);
+          if (program && prev && program.days.length === days.length && days.join() !== [...prev.trainingDays].sort((a, b) => a - b).join()) {
+            const order = [...program.days].sort((a, b) => a.weekday - b.weekday).map((d) => d.id);
+            set({ program: { ...program, days: program.days.map((d) => ({ ...d, weekday: days[order.indexOf(d.id)] })) } });
+          }
+        }
         const today = isoDate();
         if (!get().body.some((b) => b.date === today)) set({ body: [...get().body, { date: today, weightKg: p.weightKg }] });
       },
@@ -268,7 +278,10 @@ export const useStore = create<State>()(
         if (p) set({ program: generateProgram(p), setDelta: {} });
       },
       setProgram: (program) => set({ program }),
-      swapExercise: (dayId, index, newId) => set({ program: mapDay(get().program, dayId, (d) => ({ ...d, exercises: d.exercises.map((e, i) => (i === index ? { ...e, exerciseId: newId } : e)) })) }),
+      swapExercise: (dayId, index, newId) => {
+        const ex = exById(newId);
+        if (ex) set({ program: mapDay(get().program, dayId, (d) => ({ ...d, exercises: d.exercises.map((e, i) => (i === index ? swapPlanned(e, ex, get().profile) : e)) })) });
+      },
       updatePlanned: (dayId, index, patch) => set({ program: mapDay(get().program, dayId, (d) => ({ ...d, exercises: d.exercises.map((e, i) => (i === index ? { ...e, ...patch } : e)) })) }),
       removePlanned: (dayId, index) => set({ program: mapDay(get().program, dayId, (d) => ({ ...d, exercises: d.exercises.filter((_, i) => i !== index) })) }),
       addPlanned: (dayId, exId) => {
@@ -342,14 +355,15 @@ export const useStore = create<State>()(
       swapActive: (exIdx, newId) => {
         const a = get().active;
         const cur = a?.log.exercises[exIdx];
-        if (!a || !cur || cur.exerciseId === newId) return;
+        const newEx = exById(newId);
+        if (!a || !cur || !newEx || cur.exerciseId === newId) return;
         const done = cur.sets.filter((s) => s.done);
         const fresh = (n: number) => Array.from({ length: Math.max(1, n) }, () => ({ kg: 0, reps: 0, done: false }));
-        const pe = a.plan[exIdx] ?? manualPlanned(exById(newId)!, get().profile);
+        const pe = a.plan[exIdx] ?? manualPlanned(newEx, get().profile);
         const swaps = [...(a.swaps ?? []), { from: cur.exerciseId, to: newId }];
         if (!done.length) {
           const exercises = a.log.exercises.map((e, i) => (i !== exIdx ? e : { exerciseId: newId, sets: fresh(e.sets.length) }));
-          const plan = a.plan.map((p, i) => (i === exIdx ? { ...p, exerciseId: newId } : p));
+          const plan = a.plan.map((p, i) => (i === exIdx ? swapPlanned(p, newEx, get().profile) : p));
           set({ active: { ...a, plan, swaps, log: { ...a.log, exercises } } });
           return;
         }
@@ -357,7 +371,7 @@ export const useStore = create<State>()(
         const exercises = [...a.log.exercises];
         exercises.splice(exIdx, 1, { ...cur, sets: done }, { exerciseId: newId, sets: fresh(left) });
         const plan = [...a.plan];
-        plan.splice(exIdx + 1, 0, { ...pe, exerciseId: newId, sets: Math.max(1, left) });
+        plan.splice(exIdx + 1, 0, { ...swapPlanned(pe, newEx, get().profile), sets: Math.max(1, left) });
         set({ active: { ...a, plan, swaps, index: exIdx + 1, log: { ...a.log, exercises } } });
       },
       markPain: (exerciseId) => {

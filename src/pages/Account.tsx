@@ -238,7 +238,15 @@ function Signed({ account }: { account: Acc }) {
     });
 
   const logout = async (wipe: boolean) => {
-    if (wipe) await syncNow();
+    if (wipe) {
+      await syncNow();
+      // syncNow xatoni o'zi ushlaydi — internet yo'q bo'lsa oxirgi mashg'ulotlar bulutga yetmagan, o'chirib bo'lmaydi
+      if (useStore.getState().sync.status === 'error') {
+        setSheet(null);
+        setMsg({ ok: false, text: 'Bulut bilan sinxronlab bo‘lmadi (internet yo‘qmi?). Oxirgi ma’lumotlar yo‘qolmasligi uchun telefondan o‘chirilmadi — internetga ulanib qayta urinib ko‘ring.' });
+        return;
+      }
+    }
     await api('/auth/logout', { body: { refresh: account.refresh }, auth: false }).catch(() => null);
     if (wipe) {
       reset();

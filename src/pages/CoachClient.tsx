@@ -9,7 +9,7 @@ import { api, ApiError } from '../api/client';
 import { EXERCISE_MAP } from '../data/exercises';
 import { INJURIES } from '../data/catalog';
 import { weightTrend } from '../engine/nutrition';
-import { generateProgram } from '../engine/program';
+import { generateProgram, swapPlanned } from '../engine/program';
 import { allPRs, lastWeeks, logSets, logVolume, totals, weeklyInsights } from '../engine/stats';
 import { DAYS_SHORT, fmtDate, fmtDuration } from '../lib/date';
 import type { BodyEntry, PlannedExercise, Profile, Program, WorkoutDay, WorkoutLog } from '../types';
@@ -297,7 +297,7 @@ function ProgramEditor({ data, onSaved }: { data: ClientData; onSaved: (p: Progr
           <DayEditor
             day={day}
             profile={profile}
-            onSwap={(i, exId) => patchEx((l) => l.map((e, j) => (j === i ? { ...e, exerciseId: exId } : e)))}
+            onSwap={(i, exId) => patchEx((l) => l.map((e, j) => (j === i && EXERCISE_MAP[exId] ? swapPlanned(e, EXERCISE_MAP[exId]) : e)))}
             onUpdate={(i, patch) => patchEx((l) => l.map((e, j) => (j === i ? { ...e, ...patch } : e)))}
             onRemove={(i) => patchEx((l) => l.filter((_, j) => j !== i))}
             onAdd={(exId) => {

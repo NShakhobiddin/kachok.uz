@@ -32,6 +32,7 @@ export default function Home() {
   const discardWorkout = useStore((s) => s.discardWorkout);
   const t = useToday();
   const [pickDay, setPickDay] = useState(false);
+  const [discardAsk, setDiscardAsk] = useState(false);
   const [chosen, setChosen] = useState<WorkoutDay | null>(null);
   const [freeOpen, setFreeOpen] = useState(false);
   const day = chosen ?? t.todayDay ?? (t.missed && !t.doneToday ? t.missed : null);
@@ -187,9 +188,15 @@ export default function Home() {
               <button className="btn btn-success btn-sm grow" onClick={finishStale}>
                 Yakunlash
               </button>
-              <button className="btn btn-ghost btn-sm grow" onClick={discardWorkout}>
-                Saqlamasdan o‘chirish
-              </button>
+              {discardAsk ? (
+                <button className="btn btn-danger btn-sm grow" onClick={discardWorkout}>
+                  Ha, o‘chirilsin
+                </button>
+              ) : (
+                <button className="btn btn-ghost btn-sm grow" onClick={() => setDiscardAsk(true)}>
+                  Saqlamasdan o‘chirish
+                </button>
+              )}
             </div>
           </div>
         </div>

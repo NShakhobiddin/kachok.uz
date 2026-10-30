@@ -16,6 +16,7 @@ import { alternatives, hasEquipment } from '../engine/program';
 import { mesoCtx, useMeso } from '../lib/useToday';
 import { e1rm, exerciseHistory, fmtKg, platesPerSide, roundLoad, suggest, type Suggestion } from '../engine/progression';
 import { e1rmFromSet, loadFor, RIR_LABEL, rirText } from '../engine/rpe';
+import { PR_MARGIN } from '../engine/stats';
 import { fmtClock } from '../lib/date';
 import { useNow } from '../lib/hooks';
 import { useStore, workoutEdits, type FinishFeedback } from '../store/useStore';
@@ -226,7 +227,7 @@ export default function Workout() {
         const doneBefore = exLog.sets.filter((x, k) => x.done && k !== j);
         const sessionBest = Math.max(0, ...doneBefore.map((x) => e1rm(x.kg, x.reps)));
         const cur = e1rm(kg, reps);
-        if ((cur > best * 1.005 || kg > bestKg) && cur > sessionBest) {
+        if ((cur > best * PR_MARGIN || kg > bestKg) && cur > sessionBest) {
           setPrSets((p) => [...p, `${idx}-${j}`]);
           setPr(`${fmtKg(kg)} kg × ${reps} — ${kg > bestKg ? 'eng og‘ir vazn' : 'eng kuchli set'}!`);
           if (settings.vibrate) haptic('record');
@@ -794,6 +795,8 @@ function FinishSheet({
   const [fb, setFb] = useState<Partial<Record<MuscleGroup, Partial<MuscleFeedback>>>>({});
   const [pain, setPain] = useState<string[]>(initialPain ?? []);
   const [saveDay, setSaveDay] = useState(true);
+  // saqlamasdan chiqish — ikki bosqichda (bitta tasodifiy bosish butun mashg'ulotni o'chirmasin)
+  const [discardAsk, setDiscardAsk] = useState(false);
   const [fbOpen, setFbOpen] = useState(false);
   const set = (g: MuscleGroup, k: keyof MuscleFeedback, v: number) => setFb((x) => ({ ...x, [g]: { ...x[g], [k]: v } }));
   if (doneSets === 0)
@@ -915,9 +918,25 @@ function FinishSheet({
       >
         {save}
       </div>
-      <button className="btn btn-ghost btn-block" onClick={onDiscard}>
-        Saqlamasdan chiqish
-      </button>
+      {discardAsk ? (
+        <div className="stack gap-8 mt-8">
+          <p className="small muted" style={{ textAlign: 'center' }}>
+            {doneSets ? `Bajarilgan ${doneSets} ta set saqlanmaydi.` : 'Mashg‘ulot saqlanmaydi.'} Ishonchingiz komilmi?
+          </p>
+          <div className="row gap-8">
+            <button className="btn btn-secondary grow" onClick={() => setDiscardAsk(false)}>
+              Qaytish
+            </button>
+            <button className="btn btn-danger grow" onClick={onDiscard}>
+              Ha, o‘chirish
+            </button>
+          </div>
+        </div>
+      ) : (
+        <button className="btn btn-ghost btn-block" onClick={() => setDiscardAsk(true)}>
+          Saqlamasdan chiqish
+        </button>
+      )}
     </div>
   );
 }

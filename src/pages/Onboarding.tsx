@@ -1,6 +1,6 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
+import { Navigate, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { apiEnabled } from '../api/client';
 import { BodyHero } from '../components/BodyHero';
 import { Logo } from '../components/Logo';
@@ -64,6 +64,8 @@ export default function Onboarding() {
   const setStep = (s: Step) => setSp({ s: String(STEPS.indexOf(s)) });
   const [importErr, setImportErr] = useState(false);
   const [dir, setDir] = useState(1);
+  // shu sahifada tugatildi — profil endi bor, lekin "Tayyor" ekrani ko'rsatiladi
+  const [finished, setFinished] = useState(false);
   const [p, setP] = useState<Omit<Profile, 'createdAt'>>(() => {
     // javoblar sahifa yangilanganda ham saqlanadi (sessiya davomida)
     try {
@@ -107,6 +109,7 @@ export default function Onboarding() {
     else setSp({ s: String(Math.max(0, Math.min(STEPS.length - 1, idx + d))) }, { replace: d === -1 });
   };
   const finish = () => {
+    setFinished(true);
     setProfile({ ...p, createdAt: new Date().toISOString() });
     try {
       sessionStorage.removeItem('kachok-onboarding');
@@ -121,6 +124,11 @@ export default function Onboarding() {
   const progress = idx <= 0 ? 0 : Math.min(1, idx / (STEPS.length - 2));
   const np = useMemo(() => (step === 'done' ? nutritionPlan({ ...p, createdAt: '' }) : null), [step, p]);
   const program = useStore((s) => s.program);
+  const hasProfile = useStore((s) => !!s.profile);
+
+  // profil allaqachon bor (masalan, tugatgandan keyin telefonning "orqaga" tugmasi) — so'rovnoma qayta ochilmaydi,
+  // aks holda standart javoblar bilan "Dasturni tuzish" profilni ustidan yozib yuborardi
+  if (hasProfile && !finished && step !== 'done') return <Navigate to="/" replace />;
 
   if (step === 'welcome') {
     return (

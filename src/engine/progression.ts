@@ -339,7 +339,10 @@ export function suggest(ex: Exercise, pe: PlannedExercise, logs: WorkoutLog[], c
   // yoki o'tgan safar yuksiz bajarilgan bo'lsa — tana vazni bilan takror progressiyasi
   const freeWeight = ex.equipment.length === 0 && !ex.equipmentAny?.length && ex.loadType === 'dumbbell';
   const unloaded = freeWeight && ((!!ctx.equipment && !ctx.equipment.includes('dumbbells')) || (!!last && last.sets.every((s) => !s.kg)));
-  const bodyweight = (ex.loadType === 'bodyweight' && ex.increment === 0) || unloaded;
+  // tortilish, brusya kabi mashqlar: qo'shimcha yuk (kamar bilan) faqat foydalanuvchi o'zi yozgan bo'lsa hisoblanadi —
+  // aks holda takror progressiyasi (aks holda "+2.5 kg" tavsiyasi yuksiz setga ham yozilib qolardi)
+  const noAdded = !last || last.sets.every((s) => !s.kg);
+  const bodyweight = (ex.loadType === 'bodyweight' && (ex.increment === 0 || noAdded)) || unloaded;
   const unit = ex.timed ? 'soniya' : 'takror';
 
   if (pe.scheme === 'block' && !bodyweight && ex.loadType !== 'band') return suggestBlock(ex, pe, hist, ctx, out);

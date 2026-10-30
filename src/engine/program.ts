@@ -189,8 +189,7 @@ function customDays(split: DaySplit, p: Profile): { name: string; why: string; d
       const k = BIG.includes(g) ? (crowded ? 2 : n === 1 ? 4 : 3) : MID.includes(g) ? (crowded ? 1 : 2) : n <= 2 && f === 1 ? 3 : crowded ? 1 : 2;
       // ko'krak bilan bir kunda delta jimda allaqachon ishlaydi — yelkaga avval yon va orqa delta
       const list = g === 'shoulders' && groups.includes('chest') ? [s('lateral', 'accessory'), s('rearDelt', 'accessory'), s('vPush', 'secondary')] : GROUP_SLOTS[g];
-      // son orqasida tos bukish (o'lik tortish) asosan dumbaga tushadi — tizza bukish (oyoq bukish) ham saqlanadi
-      const own = list.slice(0, k).map((sl, j): Slot => ({ ...sl, role: sl.role === 'main' && mains++ >= 2 ? 'secondary' : sl.role, keep: j === 0 || sl.pattern === 'hamIso' }));
+      const own = list.slice(0, k).map((sl, j): Slot => ({ ...sl, role: sl.role === 'main' && mains++ >= 2 ? 'secondary' : sl.role, keep: j === 0 }));
       if (p.focus.includes(g)) own.push({ ...s(FOCUS_SLOT[g], 'accessory'), focus: true, extra: true });
       per.set(g, own);
       // bir kunda guruhga ko'pi bilan: katta — 4, o'rta — 3, kichik — 3 (haftasiga 2+ marta bo'lsa 2) mashq
@@ -369,6 +368,13 @@ export function exerciseMinutes(pe: PlannedExercise, ex?: Exercise): number {
 }
 
 const EX_BY_ID: Record<string, Exercise> = Object.fromEntries(EXERCISES.map((e) => [e.id, e]));
+
+/** Mashqni almashtirish: vaqtli ↔ takrorli (planka ↔ krunch) bo'lsa takror, dam va izoh yangi mashqdan (setlar soni qoladi), aks holda reja o'zgarmaydi */
+export function swapPlanned(pe: PlannedExercise, ex: Exercise, p?: Pick<Profile, 'goal' | 'level'> | null): PlannedExercise {
+  const old = EX_BY_ID[pe.exerciseId];
+  if (!old || !!old.timed === !!ex.timed) return { ...pe, exerciseId: ex.id };
+  return { ...manualPlanned(ex, p), sets: pe.sets };
+}
 
 export function estimateMinutes(list: PlannedExercise[]): number {
   return Math.round(8 + list.reduce((a, pe) => a + exerciseMinutes(pe, EX_BY_ID[pe.exerciseId]), 0));
@@ -616,11 +622,17 @@ function fitToTime(list: Built[], minutes: number) {
   }
   // 6) qisqa mashg'ulot (30 daqiqa) hamon sig'masa — ikkinchi darajali/yordamchi mashqlar olib tashlanadi (kamida 2 mashq),
   //    keyin uzun dam 2 daqiqagacha qisqaradi: taxminiy vaqt rejadan 10 daqiqadan oshmasin
+  //    (o'z taqsimotida guruhning yagona mashqi — eng oxirida: avval dam qisqaradi)
   while (est() > minutes + 10 && list.length > 2) {
-    const i = [lastIndex((b) => b.role !== 'main' && !b.keep), lastIndex((b) => b.role !== 'main')].find((x) => x >= 0) ?? -1;
-    removeAt(i >= 0 ? i : list.length - 1);
+    const i = lastIndex((b) => b.role !== 'main' && !b.keep);
+    if (i < 0) break;
+    removeAt(i);
   }
   for (const b of list) if (est() > minutes + 10 && b.pe.restSec > 120) b.pe.restSec = 120;
+  while (est() > minutes + 10 && list.length > 2) {
+    const i = lastIndex((b) => b.role !== 'main');
+    removeAt(i >= 0 ? i : list.length - 1);
+  }
 }
 
 /**

@@ -9,7 +9,7 @@ import { GROUPS, GROUP_ORDER, INJURIES } from '../data/catalog';
 import { METHOD_INFO, resolveMethod } from '../engine/methods';
 import { ACTIVITY } from '../engine/nutrition';
 import { DEFAULT_DAYS } from '../engine/program';
-import { resizeSplit } from '../engine/split';
+import { customSplitOf, resizeSplit } from '../engine/split';
 import { DAYS_SHORT } from '../lib/date';
 import { apiEnabled } from '../api/client';
 import { saveFile } from '../lib/download';
@@ -356,9 +356,16 @@ export default function Profile() {
               <button className="btn btn-primary btn-block" disabled={panel === 'schedule' && draft.trainingDays.length !== draft.daysPerWeek} onClick={() => save(true)}>
                 Saqlash va dasturni yangilash
               </button>
-              <button className="btn btn-ghost btn-block" onClick={() => save(false)}>
-                Faqat saqlash
-              </button>
+              {/* kunlar soni o'zgarsa eski dastur yangi jadvalga mos kelmaydi — faqat qayta tuzish */}
+              {panel === 'schedule' && profile && draft.daysPerWeek !== profile.daysPerWeek ? (
+                <p className="tiny faint" style={{ textAlign: 'center' }}>
+                  Kunlar soni o‘zgargani uchun dastur yangi jadvalga qayta tuziladi{customSplitOf(profile) ? '; o‘zingiz tanlagan mushaklar taqsimoti ham moslanadi («Dastur» → «Kunlar taqsimoti»)' : ''}.
+                </p>
+              ) : (
+                <button className="btn btn-ghost btn-block" onClick={() => save(false)}>
+                  Faqat saqlash
+                </button>
+              )}
             </div>
           ) : (
             <button className="btn btn-primary btn-block mt-8" onClick={() => save(false)}>

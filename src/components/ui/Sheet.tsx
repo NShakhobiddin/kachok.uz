@@ -1,8 +1,11 @@
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence, motion, useDragControls } from 'framer-motion';
 import { useEffect } from 'react';
 import { createPortal } from 'react-dom';
 
 export function Sheet({ open, onClose, children, label }: { open: boolean; onClose: () => void; children: React.ReactNode; label?: string }) {
+  // pastga tortib yopish faqat tutqichdan: butun oynada drag bo'lsa framer `touch-action: pan-x` qo'yadi
+  // va oynaning o'zini barmoq bilan aylantirib bo'lmay qoladi (pastdagi "Saqlash" tugmalariga yetib bo'lmaydi)
+  const drag = useDragControls();
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => e.key === 'Escape' && onClose();
@@ -30,13 +33,15 @@ export function Sheet({ open, onClose, children, label }: { open: boolean; onClo
             exit={{ y: '100%', x: '-50%' }}
             transition={{ type: 'spring', damping: 32, stiffness: 340 }}
             drag="y"
+            dragControls={drag}
+            dragListener={false}
             dragConstraints={{ top: 0, bottom: 0 }}
             dragElastic={{ top: 0, bottom: 0.6 }}
             onDragEnd={(_, info) => {
               if (info.offset.y > 120 || info.velocity.y > 600) onClose();
             }}
           >
-            <div className="sheet-grip" />
+            <div className="sheet-grip" onPointerDown={(e) => drag.start(e)} />
             {children}
           </motion.div>
         </>

@@ -124,7 +124,8 @@ export function splitAdvice(split: DaySplit, trainingDays: number[], sessionMin:
   // har guruhga kamida bitta mashq (~10–12 daqiqa) — undan ko'p guruh bo'lsa, kunda har biriga bittadan tushadi
   const cap = Math.max(3, Math.floor(sessionMin / 11));
   split.forEach((d, i) => {
-    if (d.length > cap) out.push({ level: 'info', text: `${i + 1}-kun: ${d.length} guruh ${sessionMin} daqiqaga ko‘p — har biriga bittadan mashq tushadi.` });
+    if (d.length > cap)
+      out.push({ level: 'info', text: `${i + 1}-kun: ${d.length} guruh ${sessionMin} daqiqaga ko‘p — har biriga bittadan mashq, vaqt yetmasa ba’zilari tushib qoladi. Kamroq guruh tanlang yoki vaqtni oshiring.` });
   });
   return out;
 }

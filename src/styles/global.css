@@ -769,6 +769,15 @@ p {
   border-radius: 9px;
   background: var(--line-2);
   margin: 0 auto 14px;
+  position: relative;
+  touch-action: none;
+  cursor: grab;
+}
+/* tutqichning bosiladigan maydoni kattaroq (barmoq uchun ~44 px) */
+.sheet-grip::before {
+  content: '';
+  position: absolute;
+  inset: -18px -80px -16px;
 }
 
 /* ---------- Turli ---------- */

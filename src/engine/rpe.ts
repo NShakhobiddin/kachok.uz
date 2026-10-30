@@ -51,7 +51,8 @@ export function pct1rm(reps: number, rir: number): number {
 /** Bajarilgan setdan taxminiy 1RM. rir berilmasa — set chegaraga yaqin (RIR 1) deb olinadi */
 export function e1rmFromSet(kg: number, reps: number, rir?: number): number {
   if (!kg || reps <= 0) return 0;
-  return kg / pct1rm(reps, rir ?? 1);
+  // 12 takrordan ko'p setlar 1RM ni ishonchsiz (va keskin oshirib) baholaydi — Epley kabi 12 da cheklanadi
+  return kg / pct1rm(Math.min(reps, 12), rir ?? 1);
 }
 
 /** Taxminiy 1RM dan: reps takror rir zaxira bilan uchun vazn */
