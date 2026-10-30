@@ -2274,7 +2274,7 @@ ol.steps li::before {
   opacity: 0;
   transition: opacity 0.3s;
 }
-.illu.ready img {
+.illu.loaded img {
   opacity: 1;
 }
 .illu svg {

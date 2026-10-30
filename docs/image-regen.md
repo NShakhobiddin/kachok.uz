@@ -1,6 +1,6 @@
 # Qayta yaratilishi kerak bo'lgan mashq rasmlari
 
-## Holat (2026-10-29)
+## Holat (2026-10-30)
 
 **Birinchi tekshiruv.** Har bir rasm, uning ikkinchi kadri, mushak yorliqlari va texnika belgilari kattalashtirib tekshirildi. Yorliqlar va rasmga zid matnlar o'shanda tuzatilgan.
 
@@ -34,16 +34,49 @@ Flow ham xatoni takrorlagan. Ikkinchi kadri yo'q mashqlarda ilova faqat mushak v
 | Mashq | Muammo |
 |---|---|
 | ohp | Qo'llar to'liq yozilmagan (lockout yo'q); ikkinchi kadr yo'q |
-| lateral-raise | Yuqori kadrda gantel dastasi bilak bo'ylab |
+| lateral-raise | Yuqori kadrda gantel dastasi bilak bo'ylab; qo'llar butunlay tik (matnda — tirsak biroz bukik) |
 | reverse-fly | Lenta bel ustidagi qattiq lime tayoq; Flow lentani oyoq ostiga bog'lab chizdi (boshqa mashq) |
-| dead-bug | Cho'zilgan qo'l va oyoq bir tomonda (rasmga zid belgi olib tashlangan) |
 | push-up | Faqat yuqori holat; pastki holat (bilak tik, ko'krak poldan 2–3 sm) yo'q |
 | incline-bench | Pastki nuqtada shtanga ko'krakka tushmagan |
 | goblet-squat | Ikki kadrning kamerasi va masshtabi har xil — ikkinchi kadr olib tashlangan |
 | cable-fly, db-bench, hip-thrust, glute-bridge, hack-squat, ko'krak trenajyori, inverted-row | Ikkinchi kadrda harakat chiqmadi |
 | deadlift | Ikkinchi kadr masshtabi va kamerasi boshqa |
-| leg-press | Platforma harakatlanadi, yuk joyida qoladi |
-| db-rdl, db-curl | Kadrlar orasida gantel ushlashi o'zgaradi |
+| leg-press | Platforma harakatlanadi, yuk joyida qoladi; yozilgan holat (tizza 160–170°) kerak |
+| db-rdl | Kadrlar orasida gantel ushlashi o'zgaradi |
 | hanging-leg-raise | Profilda turnik ko'ndalang |
+
+### 2026-10-30 auditida topilganlar
+
+**Ilovadan olib tashlandi** (rasm yangilangach, `git log` dagi oldingi yozuvdan qaytariladi):
+- **dead-bug — butun rasm.** Bir tomondagi qo'l va oyoq cho'zilgan, to'g'risi qarama-qarshi tomonlar. Hozircha chizma-animatsiya ko'rsatiladi (u ham tuzatildi).
+- **Ikkinchi kadri olib tashlanganlar:**
+  - machine-shoulder-press — "Yuqori nuqta" kadrida tirsaklar hali 90°;
+  - db-shrug — ikki kadr deyarli bir xil, harakat ko'rinmaydi;
+  - calf-raise, dips, db-fly — haqiqiy ikkinchi chet holati yo'q.
+- **chin-up — "Kaftlar o‘zingizga, yelka kengligida" belgisi.** Rasmda ushlash pull-up bilan bir xil: kaft oldinga, yelkadan keng.
+
+**Qayta yaratish kerak:**
+
+| Mashq | Nima kerak |
+|---|---|
+| chin-up | Kaft o'ziga qaragan, yelka kengligida. Kamera oldidan yoki 3/4 burchakdan (orqadan kaft yo'nalishi ko'rinmaydi) |
+| pull-up, chin-up | Iyak turnikdan aniq yuqori (hozir sathida; belgi "sathiga yetadi" deb o'zgartirildi) |
+| front-squat | Tirsaklar ikki kadrda ham past; tirsak oldinga va yuqoriga, yelka tokchasi kerak |
+| machine-shoulder-press | Yuqori nuqta: qo'llar to'liq yozilgan |
+| db-shrug | Yuqori kadr: yelka va gantellar ~5% yuqori |
+| barbell-row | Yuqori nuqta: shtanga qorin pastiga tegadi, bilak qiya (hozir son yuqorisida) |
+| close-grip-bench | Pastki nuqta: shtanga ko'krak pastiga tegadi (hozir ~15 sm yuqorida) |
+| calf-raise | Oyoq uchi zina chetida; tovon pastda va yuqorida — ikki kadr |
+| dips | Pastki kadr: yelka tirsak sathida |
+| db-fly | Yuqori kadr: tirsak burchagi pastki kadrdagidek |
+| back-extension | Pastki kadr: gavda 70–90° pastga, umurtqa tekis |
+| leg-extension | Boshlang'ich holatda tizza ~90° bukilgan |
+| leg-curl | Qisqargan holatda tizza to'liqroq bukilgan |
+| step-up | Orqa oyoq platformaga yaqinroq, orqa oyoqda yorug'lik yo'q |
+| glute-bridge | Oyoqdagi ortiqcha naqsh va yoy chizig'i |
+| bulgarian | Ikki kadr orasida pol chizig'i miltillaydi |
+| db-row | Tayanch qo'lning yelkasida lime yorug'lik qolgan |
+
+Eslatma: back-squat harakatida pastki kadrning masshtabi asosiy kadrga moslangan nusxasi ishlatiladi (`alt/back-squat-bottom-m.webp`, faqat animatsiyada).
 
 Generatsiya tartibi: `scripts/images/README.md` va `scripts/images/regen.mjs`.

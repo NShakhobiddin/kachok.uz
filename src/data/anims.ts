@@ -666,7 +666,7 @@ export function crunch(): AnimSpec {
 
 export function deadBug(): AnimSpec {
   const start: S = { torso: 270, head: 272, ua: 0, fa: 0, ua2: 0, fa2: 0, th: 0, sh: 90, th2: 0, sh2: 90, ft: 0, ft2: 0 };
-  const end: S = { ...start, ua: 266, fa: 266, th: 84, sh: 86, ft: 356 };
+  const end: S = { ...start, ua: 266, fa: 266, th2: 84, sh2: 86, ft2: 356 }; // qarama-qarshi qo'l va oyoq
   return {
     view: 'side',
     anchor: { joint: 'hip', x: 120, y: 202 },

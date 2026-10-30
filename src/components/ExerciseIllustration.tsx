@@ -73,7 +73,7 @@ function LabeledIllustration({ ill, layer, act }: { ill: Illustration; layer: Il
   const col = (side: 'l' | 'r') => (side === 'l' ? 27 : 73);
   const at = (p: Placed) => adj[p.id] ?? p.ly;
   return (
-    <figure ref={fig} className={`illu ${loaded ? 'ready' : ''}`}>
+    <figure ref={fig} className={`illu ${loaded ? 'loaded' : ''}`}>
       <img src={ill.src} alt={ill.alt} loading="lazy" decoding="async" onLoad={() => setLoaded(true)} />
       <svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
         {items.map((p) => {
@@ -133,7 +133,7 @@ const shortName = (n: string) => n.replace(/ \(.*?\)/g, '').replace(/ qismi$/, '
 function LegendIllustration({ ill, top }: { ill: Illustration; top: { key: M3; mvic: number; est?: boolean }[] }) {
   return (
     <div className="stack gap-8">
-      <figure className="illu ready">
+      <figure className="illu loaded">
         <img src={ill.src} alt={ill.alt} loading="lazy" decoding="async" />
         <figcaption className="illu-phase">{ill.phase}</figcaption>
       </figure>
@@ -156,7 +156,7 @@ function LegendIllustration({ ill, top }: { ill: Illustration; top: { key: M3; m
 function CuesIllustration({ ill, cues }: { ill: Illustration; cues: string[] }) {
   return (
     <div className="stack gap-8">
-      <figure className="illu ready">
+      <figure className="illu loaded">
         <img src={ill.src} alt={ill.alt} loading="lazy" decoding="async" />
         <figcaption className="illu-phase">{ill.phase}</figcaption>
       </figure>
