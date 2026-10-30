@@ -56,7 +56,7 @@ export const ILLUSTRATIONS: Partial<Record<string, Illustration>> = {
     checks: [
       { text: 'Nigoh 2 m oldinga, bo‘yin tabiiy', x: 37, y: 19, side: 'l', ly: 6 },
       { text: 'Shtanga trapetsiya ustida', x: 47, y: 27.5, side: 'r', ly: 36 },
-      { text: 'Ushlash keng, tirsaklar pastga', x: 41, y: 40, side: 'l', ly: 42 },
+      { text: 'Ushlash yelkadan biroz keng, tirsaklar pastga', x: 41, y: 40, side: 'l', ly: 42 },
       { text: 'Bel tekis, tabiiy egilish saqlangan', x: 53, y: 44, side: 'r', ly: 54 },
       { text: 'Son pol bilan parallel', x: 46, y: 59, side: 'l', ly: 57 },
       { text: 'Tizza oyoq uchi yo‘nalishida', x: 27, y: 63, side: 'l', ly: 71 },
@@ -75,7 +75,7 @@ export const ILLUSTRATIONS: Partial<Record<string, Illustration>> = {
     ],
     checks: [
       { text: 'Shtanga ko‘krakka tegadi', x: 50, y: 41, side: 'l', ly: 28 },
-      { text: 'Bilaklar tik, tirsak 45–60°', x: 71.5, y: 46, side: 'r', ly: 30 },
+      { text: 'Bilaklar tik, tirsak 45–70°', x: 71.5, y: 46, side: 'r', ly: 30 },
       { text: 'Kuraklar yig‘ilgan, dumba skameykada', x: 40, y: 55, side: 'l', ly: 72 },
       { text: 'Oyoqlar polda', x: 34, y: 90, side: 'r', ly: 88 },
     ],
@@ -125,7 +125,7 @@ export const ILLUSTRATIONS: Partial<Record<string, Illustration>> = {
     checks: [
       { text: 'Shtanga oyoq kafti o‘rtasi ustida', x: 50, y: 17, side: 'r', ly: 6 },
       { text: 'Qorin va dumba tarang, orqaga egilmaydi', x: 48, y: 48, side: 'l', ly: 62 },
-      { text: 'Oyoqlar son kengligida', x: 45, y: 88, side: 'r', ly: 84 },
+      { text: 'Oyoqlar tos kengligida', x: 45, y: 88, side: 'r', ly: 84 },
     ],
   },
   'pull-up': {
@@ -385,7 +385,7 @@ export const ILLUSTRATIONS: Partial<Record<string, Illustration>> = {
     ],
   },
   'step-up': {
-    src: img('alt/step-up.webp'),
+    src: img('step-up.webp'),
     phase: 'Boshlang‘ich holat',
     pair: { src: img('alt/step-up.webp'), phase: 'Yuqori nuqta' },
     alt: 'Platformaga chiqish, boshlang‘ich holat: old oyoq butun kafti bilan qutida, orqa oyoq yerda; ishlayotgan mushaklar lime rangda yonmoqda',
@@ -823,7 +823,7 @@ export const ILLUSTRATIONS: Partial<Record<string, Illustration>> = {
     ],
   },
   'hammer-curl': {
-    src: img('alt/hammer-curl.webp'),
+    src: img('hammer-curl.webp'),
     phase: 'Boshlang‘ich holat',
     pair: { src: img('alt/hammer-curl.webp'), phase: 'Yuqori nuqta' },
     alt: 'Bolg‘a bukish, boshlang‘ich holat: gantel neytral ushlangan, kaft songa qaragan; ishlayotgan mushaklar lime rangda yonmoqda',

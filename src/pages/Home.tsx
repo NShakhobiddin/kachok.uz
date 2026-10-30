@@ -255,7 +255,8 @@ export default function Home() {
                       <span className="tiny muted">{ex.primary.map((m) => MUSCLES[m].name).join(', ')}</span>
                     </span>
                     <span className="ex-meta num">
-                      {sug.sets}×{pe.repMin}–{pe.repMax}
+                      {sug.sets}×{pe.repMin === pe.repMax ? pe.repMin : `${pe.repMin}–${pe.repMax}`}
+                      {ex.timed ? ' s' : ''}
                     </span>
                   </Link>
                 </li>

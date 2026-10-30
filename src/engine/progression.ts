@@ -479,7 +479,10 @@ export function warmupSets(ex: Exercise, kg: number | null, reps = 8, barKg = DE
             [0.85, 2],
           ];
     const w = ladder.map(([p, r]) => ({ kg: roundLoad(ex, kg * p, barKg), reps: Math.min(r, reps) }));
-    return dedupe([{ kg: bar, reps: 10 }, ...w]).filter((s) => (s.kg ?? 0) < kg);
+    // qadam kamida 5 kg: 20 → 22.5 kabi deyarli bir xil setlar tashlanadi (yengil vaznda zinapoya qisqaradi)
+    const out: SetTarget[] = [];
+    for (const s of dedupe([{ kg: bar, reps: 10 }, ...w])) if ((s.kg ?? 0) < kg && (!out.length || (s.kg ?? 0) - (out[out.length - 1].kg ?? 0) >= 5)) out.push(s);
+    return out;
   }
   if (ex.loadType === 'machine' || ex.loadType === 'cable') {
     return dedupe([0.5, 0.75].map((p, i) => ({ kg: roundLoad(ex, kg * p), reps: [10, 5][i] }))).filter((s) => (s.kg ?? 0) < kg);

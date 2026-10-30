@@ -132,7 +132,7 @@ export const ACTIVATION: Record<string, ExerciseActivation> = {
       }
     },
     "rom": "Son oldi va katta dumba eng ko‘p pastdan ko‘tarilishning boshida (eng og‘ir nuqta) ishlaydi va tik turishga qarab kamayadi.",
-    "notes": "Sonning tashqi keng mushagi 100% MVIC dan oshadi — og‘ir dinamik harakat izometrik testdan kuchliroq. Parallel chuqurlikda dumba faolligi to‘liq cho‘kishdagidan yuqoriroq o‘lchangan."
+    "notes": "Sonning tashqi keng mushagi 100% MVIC dan oshadi — og‘ir dinamik harakat izometrik testdan kuchliroq. Parallel chuqurlikda dumba faolligi to‘liq o‘tirishdagidan yuqoriroq o‘lchangan."
   },
   "front-squat": {
     "basis": "direct",
@@ -229,8 +229,8 @@ export const ACTIVATION: Record<string, ExerciseActivation> = {
         ]
       }
     },
-    "rom": "Tana tikroq — yuklama son oldiga ko‘proq o‘tadi; sonning to‘g‘ri mushagi orqa cho‘kishdagidan faolroq.",
-    "notes": "Har biri o‘z 10RM ida orqa va old cho‘kish deyarli bir xil faollik bergan (old cho‘kishda vazn yengilroq bo‘lsa ham)."
+    "rom": "Tana tikroq — yuklama son oldiga ko‘proq o‘tadi; sonning to‘g‘ri mushagi orqa o‘tirishdagidan faolroq.",
+    "notes": "Har biri o‘z 10RM ida orqa va old o‘tirish deyarli bir xil faollik bergan (old o‘tirishda vazn yengilroq bo‘lsa ham)."
   },
   "goblet-squat": {
     "basis": "similar:front-squat",
@@ -320,8 +320,8 @@ export const ACTIVATION: Record<string, ExerciseActivation> = {
         "est": true
       }
     },
-    "rom": "Old cho‘kish kabi: son oldi va dumba pastki nuqtadan chiqishda eng faol.",
-    "notes": "Goblet cho‘kish bo‘yicha EMG tadqiqot topilmadi — old cho‘kish natijalari yengilroq vazn uchun kamaytirilgan."
+    "rom": "Old o‘tirish kabi: son oldi va dumba pastki nuqtadan chiqishda eng faol.",
+    "notes": "Kubok o‘tirish bo‘yicha EMG tadqiqot topilmadi — old o‘tirish natijalari yengilroq vazn uchun kamaytirilgan."
   },
   "smith-squat": {
     "basis": "similar:back-squat",
@@ -416,7 +416,7 @@ export const ACTIVATION: Record<string, ExerciseActivation> = {
       }
     },
     "rom": "Oyoqlarni grifdan oldinroq qo‘yish yuklamani dumba va son orqasiga suradi.",
-    "notes": "Erkin shtangada cho‘kish Smitdagidan o‘rtacha 43% ko‘proq faollik bergan (ichki keng mushak +49%, boldir +34%)."
+    "notes": "Erkin shtangada o‘tirish Smitdagidan o‘rtacha 43% ko‘proq faollik bergan (ichki keng mushak +49%, boldir +34%)."
   },
   "leg-press": {
     "basis": "direct",
@@ -509,7 +509,7 @@ export const ACTIVATION: Record<string, ExerciseActivation> = {
       }
     },
     "rom": "Son oldi tizza eng bukilgan (pastki) holatda eng faol; oyoqlar platformada baland va keng qo‘yilsa dumba va son orqasi ko‘proq ishlaydi.",
-    "notes": "Son oldi 39–52% MVIC, son orqasi ~12%. Cho‘kishdan farqli — orqa va bel deyarli yuklanmaydi."
+    "notes": "Son oldi 39–52% MVIC, son orqasi ~12%. O‘tirishdan farqli — orqa va bel deyarli yuklanmaydi."
   },
   "hack-squat": {
     "basis": "direct",
@@ -589,7 +589,7 @@ export const ACTIVATION: Record<string, ExerciseActivation> = {
       }
     },
     "rom": "Son oldi tizza chuqur bukilganda eng faol.",
-    "notes": "Ichki va tashqi keng mushaklar hack-squat va orqa cho‘kishda oyoq pressidan yuqori bo‘lgan; qiymatlar baho."
+    "notes": "Ichki va tashqi keng mushaklar gakk-mashina va orqa o‘tirishda oyoq pressidan yuqori bo‘lgan; qiymatlar baho."
   },
   "bw-squat": {
     "basis": "similar:back-squat",
@@ -668,7 +668,7 @@ export const ACTIVATION: Record<string, ExerciseActivation> = {
       }
     },
     "rom": "Son oldi pastki nuqtada eng faol; boldirning old mushagi muvozanatni ushlab turadi.",
-    "notes": "Vaznsiz cho‘kishda faollik og‘ir cho‘kishdan ancha past — o‘rganish va qizdirish uchun yaxshi."
+    "notes": "Vaznsiz o‘tirishda faollik og‘ir o‘tirishdan ancha past — o‘rganish va qizdirish uchun yaxshi."
   },
   "deadlift": {
     "basis": "direct",
@@ -1183,7 +1183,7 @@ export const ACTIVATION: Record<string, ExerciseActivation> = {
       }
     },
     "rom": "Oldingi oyoqda son oldi va dumba pastki nuqtada eng faol; set oxiriga qarab son orqasi ham ko‘proq qatnashadi.",
-    "notes": "Cho‘qqi qiymatlar. Dumba faolligi bolgar cho‘kishi va bir oyoqda cho‘kish bilan bir xil."
+    "notes": "Cho‘qqi qiymatlar. Dumba faolligi bolgar o‘tirishi va bir oyoqda o‘tirish bilan bir xil."
   },
   "bulgarian": {
     "basis": "direct",
@@ -1277,7 +1277,7 @@ export const ACTIVATION: Record<string, ExerciseActivation> = {
         "est": true
       }
     },
-    "rom": "Orqa oyoq ko‘tarilgan — oldingi oyoqda son orqasi oddiy hamladan ko‘proq ishlaydi.",
+    "rom": "Orqa oyoq ko‘tarilgan — oldingi oyoqda son orqasi oddiy hamla (lunge) dan ko‘proq ishlaydi.",
     "notes": "Cho‘qqi qiymatlar. Ikki boshli son mushagi 76% (oddiy hamlada 62%)."
   },
   "step-up": {
@@ -1504,8 +1504,8 @@ export const ACTIVATION: Record<string, ExerciseActivation> = {
         ]
       }
     },
-    "rom": "Ochiq zanjirda son oldi oyoq to‘liq yozilishiga yaqinlashganda eng ko‘p ishlaydi (cho‘kishning aksi).",
-    "notes": "Sonning to‘g‘ri mushagi bu mashqda cho‘kishdagidan faolroq; son orqasi deyarli ishlamaydi."
+    "rom": "Ochiq zanjirda son oldi oyoq to‘liq yozilishiga yaqinlashganda eng ko‘p ishlaydi (o‘tirishning aksi).",
+    "notes": "Sonning to‘g‘ri mushagi bu mashqda o‘tirishdagidan faolroq; son orqasi deyarli ishlamaydi."
   },
   "leg-curl": {
     "basis": "similar:son orqasini bukish (yotib yoki o‘tirib)",
@@ -1633,7 +1633,7 @@ export const ACTIVATION: Record<string, ExerciseActivation> = {
       }
     },
     "rom": "Katta dumba tos to‘liq yozilgan (tepadagi) holatda eng faol — yuqori qismda trap-grif o‘lik tortishidan 26% ko‘proq.",
-    "notes": "Katta dumba 82% (cho‘kishda ~30–53%). Son orqasi cho‘kishdagidan ~3 baravar ko‘proq ishlaydi."
+    "notes": "Katta dumba 82% (o‘tirishda ~30–53%). Son orqasi o‘tirishdagidan ~3 baravar ko‘proq ishlaydi."
   },
   "glute-bridge": {
     "basis": "similar:hip-thrust",
@@ -1705,7 +1705,7 @@ export const ACTIVATION: Record<string, ExerciseActivation> = {
       }
     },
     "rom": "Ko‘prik deyarli faqat yuqori amplitudada ishlaydi — dumba tepada eng faol.",
-    "notes": "Hip thrust natijalaridan kamaytirilgan baho."
+    "notes": "Shtanga bilan tos ko‘tarish natijalaridan kamaytirilgan baho."
   },
   "calf-raise": {
     "basis": "similar:bir oyoqda tovonni ko‘tarish",
@@ -2216,7 +2216,7 @@ export const ACTIVATION: Record<string, ExerciseActivation> = {
       }
     },
     "rom": "Pastki nuqtada (yelka orqaga cho‘zilganda) ko‘krak faolligi yuqori va charchaganda keskin oshadi.",
-    "notes": "%MVIC tadqiqoti topilmadi (faqat mV) — baho. Barlarda brusdagi ko‘tarilish skameykadagidan barcha mushaklarda kuchliroq."
+    "notes": "%MVIC tadqiqoti topilmadi (faqat mV) — baho. Brusyada qo‘l bukish skameykadagi variantdan barcha mushaklarda kuchliroq."
   },
   "incline-db-press": {
     "basis": "direct",
@@ -2483,7 +2483,7 @@ export const ACTIVATION: Record<string, ExerciseActivation> = {
       }
     },
     "rom": "Kabel qo‘llar yaqinlashganda ham yuklamani ushlab turadi (gantelda tepada yuklama yo‘qoladi).",
-    "notes": "Ilmiy jurnalda chop etilgan EMG tadqiqot topilmadi — pec-deck va yotib jim natijalari asosida baho. Yuqori yoki pastki ko‘krak ulushi kabel yo‘nalishiga bog‘liq."
+    "notes": "Ilmiy jurnalda chop etilgan EMG tadqiqot topilmadi — batterflay trenajyori va yotib jim natijalari asosida baho. Yuqori yoki pastki ko‘krak ulushi kabel yo‘nalishiga bog‘liq."
   },
   "pec-deck": {
     "basis": "direct",
@@ -2882,7 +2882,7 @@ export const ACTIVATION: Record<string, ExerciseActivation> = {
     "notes": "Old delta qiymati Smit-trenajyordagi jimdan olingan."
   },
   "pike-push-up": {
-    "basis": "similar:push-up va tik turib jim",
+    "basis": "similar:otjimaniya va tik turib jim",
     "load": "o‘z vazni",
     "metric": "mean",
     "muscles": {
@@ -2972,7 +2972,7 @@ export const ACTIVATION: Record<string, ExerciseActivation> = {
       }
     },
     "rom": "Tana qanchalik tik bo‘lsa, ish ko‘krakdan deltaga shuncha ko‘p o‘tadi.",
-    "notes": "EMG tadqiqot topilmadi — push-up va tik turib jim oralig‘ida baho."
+    "notes": "EMG tadqiqot topilmadi — otjimaniya va tik turib jim oralig‘ida baho."
   },
   "lateral-raise": {
     "basis": "direct",
@@ -3504,7 +3504,7 @@ export const ACTIVATION: Record<string, ExerciseActivation> = {
       }
     },
     "rom": "Qo‘llar yuqoriga-orqaga tortilib, yelka tashqariga burilganda orqa delta, qirra osti mushagi va pastki trapetsiya ko‘proq ishlaydi.",
-    "notes": "Face pull bo‘yicha EMG tadqiqot topilmadi — orqa ochish va rezinani cho‘zish mashqlari asosida baho."
+    "notes": "Arqonni yuzga tortish bo‘yicha EMG tadqiqot topilmadi — orqa ochish va rezinani cho‘zish mashqlari asosida baho."
   },
   "reverse-fly": {
     "basis": "direct",
@@ -3670,8 +3670,8 @@ export const ACTIVATION: Record<string, ExerciseActivation> = {
         ]
       }
     },
-    "rom": "Bel va dumba butun harakat davomida statik ushlab turadi — bel yuklamasi eng katta eshkak eshish turi.",
-    "notes": "Lat qiymati (53%) tadqiqot qisqacha bayonidan olingan; trapetsiya va romb qiymatlari baho."
+    "rom": "Bel va dumba butun harakat davomida statik ushlab turadi — bel yuklamasi eng katta tortish turi.",
+    "notes": "Keng orqa mushagi qiymati (53%) tadqiqot qisqacha bayonidan olingan; trapetsiya va romb qiymatlari baho."
   },
   "db-row": {
     "basis": "direct",
@@ -3842,8 +3842,8 @@ export const ACTIVATION: Record<string, ExerciseActivation> = {
         "est": true
       }
     },
-    "rom": "Tirsaklar yon tomonga ochilsa trapetsiya va orqa delta, tanaga yopishtirilsa lat ko‘proq ishlaydi.",
-    "notes": "Kurakni ataylab qisish lat faolligini oshirmagan."
+    "rom": "Tirsaklar yon tomonga ochilsa trapetsiya va orqa delta, tanaga yopishtirilsa keng orqa mushagi ko‘proq ishlaydi.",
+    "notes": "Kurakni ataylab qisish keng orqa mushagi faolligini oshirmagan."
   },
   "chest-supported-row": {
     "basis": "similar:barbell-row",
@@ -3911,7 +3911,7 @@ export const ACTIVATION: Record<string, ExerciseActivation> = {
       }
     },
     "rom": "Ko‘krak tayanchda — bel va dumba deyarli ishlamaydi, butun ish yelka kamari va orqaga tushadi.",
-    "notes": "Egilib eshkak eshish natijalaridan bel va dumbasiz baho."
+    "notes": "Engashib tortish natijalaridan bel va dumbasiz baho."
   },
   "inverted-row": {
     "basis": "direct",
@@ -4021,7 +4021,7 @@ export const ACTIVATION: Record<string, ExerciseActivation> = {
         ]
       }
     },
-    "rom": "Ko‘tarish fazasida lat ~65% MVIC; uch xil eshkak eshish ichida lat va orqa eng faol, bel yuklamasi esa eng kam.",
+    "rom": "Ko‘tarish fazasida keng orqa mushagi ~65% MVIC; uch xil tortish ichida keng orqa mushagi va orqa eng faol, bel yuklamasi esa eng kam.",
     "notes": "Ko‘pchilik qiymatlar tadqiqotdagi oraliqlar ichida baho."
   },
   "pull-up": {
@@ -4125,8 +4125,8 @@ export const ACTIVATION: Record<string, ExerciseActivation> = {
         ]
       }
     },
-    "rom": "Tortishni pastki trapetsiya va ko‘krak boshlaydi, tepada bitseps va lat yakunlaydi.",
-    "notes": "Lat 100% dan oshadi — eng kuchli orqa mashqlaridan. Laboratoriyalar orasida farq katta (boshqa tadqiqotda ~55%)."
+    "rom": "Tortishni pastki trapetsiya va ko‘krak boshlaydi, tepada bitseps va keng orqa mushagi yakunlaydi.",
+    "notes": "Keng orqa mushagi 100% dan oshadi — eng kuchli orqa mashqlaridan. Laboratoriyalar orasida farq katta (boshqa tadqiqotda ~55%)."
   },
   "chin-up": {
     "basis": "direct",
@@ -4231,7 +4231,7 @@ export const ACTIVATION: Record<string, ExerciseActivation> = {
       }
     },
     "rom": "Supinatsiya (kaft o‘ziga) ushlashda bitseps va ko‘krak turnikdagidan ko‘proq, pastki trapetsiya kamroq ishlaydi.",
-    "notes": "Lat 117 ± 46% MVIC."
+    "notes": "Keng orqa mushagi 117 ± 46% MVIC."
   },
   "lat-pulldown": {
     "basis": "direct",
@@ -4319,8 +4319,8 @@ export const ACTIVATION: Record<string, ExerciseActivation> = {
         ]
       }
     },
-    "rom": "Old tomonga (ko‘krakka) tortish latni eng barqaror faollashtiradi; ushlash kengligi deyarli farq qilmaydi.",
-    "notes": "Keng va tor ushlash lat, trapetsiya va bitseps bo‘yicha farq bermagan."
+    "rom": "Old tomonga (ko‘krakka) tortish keng orqa mushagini eng barqaror faollashtiradi; ushlash kengligi deyarli farq qilmaydi.",
+    "notes": "Keng va tor ushlash keng orqa mushagi, trapetsiya va bitseps bo‘yicha farq bermagan."
   },
   "db-shrug": {
     "basis": "direct",

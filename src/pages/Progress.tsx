@@ -19,6 +19,11 @@ import { groupFrequency } from '../engine/program';
 import { fmtKg } from '../engine/progression';
 import { allPRs, exerciseSeries, finished, lastWeeks, logSets, logVolume, totals, volumeComparison, weekStreak, weeklyInsights } from '../engine/stats';
 import { fmtDate, fmtDuration, startOfWeek } from '../lib/date';
+
+const shortDate = (d: Date | string) => {
+  const x = new Date(d);
+  return `${x.getDate()}.${String(x.getMonth() + 1).padStart(2, '0')}`;
+};
 import { useStore } from '../store/useStore';
 import type { WorkoutLog } from '../types';
 
@@ -107,7 +112,8 @@ export default function Progress() {
             label="Haftalik mashg‘ulot daqiqalari"
             unit="daq"
             data={weeks.map((w, i) => ({
-              label: i === weeks.length - 1 ? 'Shu' : fmtDate(w.start).split('-')[0] + '-' + fmtDate(w.start).split('-')[1].slice(0, 3),
+              // tor ekranda 8 ta "14-sen" sig'maydi — qisqa raqamli sana (14.09)
+              label: i === weeks.length - 1 ? 'Shu' : shortDate(w.start),
               value: w.minutes,
               note: `${w.workouts} mashg‘ulot`,
               highlight: i === weeks.length - 1,

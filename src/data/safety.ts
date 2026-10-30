@@ -123,12 +123,17 @@ const SAFETY: Record<string, ExerciseSafety> = {
       {
         at: 'wrist',
         how: 'Klassik ushlashda bilak keskin orqaga bukiladi — harakatchanlik yetmasa bilak va tirsak zo‘riqadi.',
-        mod: 'Qo‘llarni chalishtirib ushlang yoki lyamka ishlating: shtanga kaftda emas, yelka mushaklaridagi «tokchada» tursin.',
+        mod: 'Qo‘llarni chalishtirib ushlang yoki ushlash tasmasi (lyamka) ishlating: shtanga kaftda emas, yelka mushaklaridagi «tokchada» tursin.',
       },
       {
         at: 'knee',
         how: 'Tizzalar oldinga ko‘p chiqadi — tizza qopqog‘i ostiga yuklama yuqori.',
         mod: 'Og‘riqsiz chuqurlik, sekin pastga tushish; og‘riq bo‘lsa — qutiga o‘tirish yoki kubok o‘tirish.',
+      },
+      {
+        at: 'lowerBack',
+        how: 'Tik gavdada ham og‘ir shtanga umurtqaga o‘q yuklamasi beradi; tirsaklar tushsa gavda engashib bel yuklanadi.',
+        mod: 'Tavsiya etilmaydi: kubok o‘tirish, gakk-mashina yoki oyoq press — umurtqaga o‘q yuklamasi kam.',
       },
     ],
     check: [C.warm, C.pinsSquat, C.collars, 'Tirsaklar oldinga-yuqoriga ko‘tarilgan — shtanga bo‘yinga emas, yelka mushaklariga tayanadi.'],
@@ -162,7 +167,7 @@ const SAFETY: Record<string, ExerciseSafety> = {
       {
         at: 'lowerBack',
         how: 'Oyoqlar juda oldinda bo‘lsa, pastda tos «qayrilib» bel dumaloqlanadi.',
-        mod: 'Chuqurlikni bel tekis qoladigan nuqtagacha cheklang, bel spinkasiz — tana tik.',
+        mod: 'Chuqurlikni bel tekis qoladigan nuqtagacha cheklang, gavda tik qolsin.',
       },
     ],
     check: ['Pastki to‘xtatgichlarni eng past nuqtangizdan biroz pastga qo‘ying.', 'Shtangani ilgakdan chiqarish va qayta ilishni avval bo‘sh shtangada mashq qiling.', C.warm],
@@ -259,7 +264,7 @@ const SAFETY: Record<string, ExerciseSafety> = {
       {
         at: 'lowerBack',
         how: 'Pastga tushish son orqasining cho‘zilish chegarasidan oshsa, harakat sondan emas, beldan bukilishga aylanadi.',
-        mod: 'Amplitudani bel tekis qoladigan nuqtagacha (ko‘pincha tizza ostigacha) cheklang, vaznni kamaytiring yoki gantel bilan bajaring.',
+        mod: 'Tavsiya etilmaydi: yengil gantel bilan rumincha tortish, giperekstenziya yoki tos ko‘tarish. Shifokor ruxsati bilan — bel tekis qoladigan qisqa amplituda, yengil vazn.',
       },
     ],
     check: [C.warm, C.collars, 'Shtanga sonlar va boldirga tegib harakatlanadi — tanadan uzoqlashmasin.'],
@@ -602,7 +607,7 @@ const SAFETY: Record<string, ExerciseSafety> = {
       {
         at: 'lowerBack',
         how: 'Dumba qisilmay, qorin bo‘sh bo‘lsa, tana orqaga «yotadi» — bel bo‘g‘imchalari siqiladi.',
-        mod: 'Dumba va qorinni qattiq siqing, qovurg‘alarni pastga tuting; og‘riq bo‘lsa — spinkali o‘rindiqda gantel jimi.',
+        mod: 'Dumba va qorinni qattiq siqing, qovurg‘alarni pastga tuting; og‘riq bo‘lsa — suyanchiqli o‘rindiqda gantel jimi.',
       },
     ],
     check: [
@@ -903,7 +908,7 @@ const SAFETY: Record<string, ExerciseSafety> = {
         mod: 'Amplitudani qisqartiring, yengil vazn, sekin sur’at; og‘riq bo‘lsa — blokda triseps.',
       },
     ],
-    check: ['Gantelni yuqori diski ostidan ikki kaft bilan mahkam «kosacha» qilib ushlang; gantel disklari qotirilgan bo‘lsin.', 'O‘tirib, spinkali o‘rindiqda — bel egilmaydi.'],
+    check: ['Gantelni yuqori diski ostidan ikki kaft bilan mahkam «kosacha» qilib ushlang; gantel disklari qotirilgan bo‘lsin.', 'O‘tirib, suyanchiqli o‘rindiqda — bel egilmaydi.'],
     bail: 'Gantelni bosh ortidan yelka ustiga olib, oldingizga tushiring; ushlash bo‘shay boshlasa — set tugadi.',
     stop: [S.elbow, S.shoulder],
   },
