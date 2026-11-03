@@ -97,4 +97,20 @@ Ikkinchi kadri yo'q eski mashqlar — **16 ta** (plankada kerak emas): goblet-sq
 
 Flow to'plami: `node scripts/images/flow-pack.mjs --out <papka> --ids … --poses <poza-papka> --nopose …`. Figura aniq chiza olmaydigan harakatlarda poza namunasi berilmaydi (`--nopose`): fire-hydrant, clamshell, side-leg-raise, side-plank, curtsy-lunge, t-bar-row, supine-twist, pigeon, cross-body-shoulder, neck-stretch.
 
+## Rasm asosidagi harakat: to'liq Flow to'plami (2026-11-03)
+
+Har mashq uchun ikki rasm kerak: boshlang'ich va oxirgi nuqta. Ilova ularni almashtirib, harakatni ko'rsatadi (`ExerciseMotion`). Chizma-animatsiya faqat rasm kelguncha ko'rsatiladi.
+
+- **Yaratish:** `npx vite-node scripts/images/flow-pack2.ts -- <chiqish> <poza-A> <poza-B>`. To'plam uch qismdan iborat:
+  - `1_yangi` — 44 ta yangi mashq, A va B kadr;
+  - `2_eski` — 34 ta eski rasm tuzatishi va ikkinchi kadr (ustuvorlik bilan);
+  - `3_jihoz` — 8 ta jihoz.
+- **Manbalar:**
+  - ikkinchi kadr tavsiflari — `scripts/images/pairsNew.ts`;
+  - eski rasmlardagi xatolar va tuzatish matnlari — `scripts/images/fixesOld.ts`.
+- **Joylash:** `python3 scripts/images/place_flow.py <natijalar>`. Har ish papkasidagi `natija-A.png` va `natija-B.png` olinadi:
+  - webp va kichik rasm yaratiladi;
+  - `illustrations.ts` ga yozuv va ikkinchi kadr qo'shiladi;
+  - asosiy kadri almashgan eski mashqlar yorliqlarni qayta tekshirish uchun ro'yxatga chiqariladi.
+
 Generatsiya tartibi: `scripts/images/README.md` va `scripts/images/regen.mjs`.

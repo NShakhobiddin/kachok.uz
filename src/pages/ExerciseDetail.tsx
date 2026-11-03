@@ -110,7 +110,7 @@ function IllustratedStage({ ex }: { ex: Exercise }) {
   // ikki kadrli harakat bo'lsa — u birinchi; bo'lmasa — mushaklar va texnika rasmlari
   const tabs = (
     ex.kind === 'stretch'
-      ? [['form', 'Texnika']]
+      ? [...(ill.pair ? [['motion', 'Harakat']] : []), ['form', 'Texnika']]
       : ill.pair
       ? [
           ['motion', 'Harakat'],
