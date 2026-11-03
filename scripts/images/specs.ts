@@ -673,6 +673,7 @@ export const EXERCISE_SPECS: Record<string, ExerciseSpec> = {
       'Lying on the back, lower back pressed flat into the floor.',
       'Right arm extended overhead just above the floor and left leg extended straight just above the floor.',
       'Left arm pointing straight up to the ceiling; right knee bent 90° directly above the hip.',
+      'CRITICAL: the extended arm and the extended leg are on OPPOSITE sides of the body (right arm + left leg) — never arm and leg of the same side.',
     ],
     equipment: 'No equipment, plain floor.',
   },

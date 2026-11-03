@@ -79,4 +79,22 @@ Flow ham xatoni takrorlagan. Ikkinchi kadri yo'q mashqlarda ilova faqat mushak v
 
 Eslatma: back-squat harakatida pastki kadrning masshtabi asosiy kadrga moslangan nusxasi ishlatiladi (`alt/back-squat-bottom-m.webp`, faqat animatsiyada).
 
+## 2026-11-03: yangi bo'limlar (uyda, cho'zilish, yangi trenajyorlar)
+
+Rasmi umuman yo'q mashqlar — **45 ta**:
+- **19 ta uy mashqi** (figura ayol): sumo-squat, reverse-lunge, curtsy-lunge, wall-sit, single-leg-bridge, glute-kickback, fire-hydrant, clamshell, side-leg-raise, banded-lateral-walk, ball-leg-curl, superman, knee-push-up, band-row, bird-dog, side-plank, reverse-crunch, bicycle-crunch, mountain-climber.
+- **9 ta trenajyor mashqi** (figura ayol): hip-abduction, hip-adduction, cable-kickback, cable-pull-through, seated-calf-raise, assisted-pull-up, preacher-curl, t-bar-row, ab-wheel.
+- **16 ta cho'zilish** (figura ayol; yorug'lik — cho'ziladigan mushak): cat-cow, childs-pose, down-dog, cobra, thread-needle, supine-twist, hip-flexor-stretch, pigeon, figure-four, butterfly, hamstring-stretch, quad-stretch, calf-stretch, doorway-chest, cross-body-shoulder, neck-stretch.
+- **dead-bug** — qarama-qarshi qo'l va oyoq bilan qayta.
+
+Rasmi yo'q jihozlar — **8 ta**: hipAbAd, seatedCalf, assistedPullup, preacher, tbar, abWheel, fitball, miniBand.
+
+Rasm kelguncha ilovada chizma-animatsiya ko'rsatiladi.
+
+Keyingi bosqich — 28 ta yangi kuch mashqiga ikkinchi kadr (harakat). Cho'zilishlarga kerak emas.
+
+Ikkinchi kadri yo'q eski mashqlar — **16 ta** (plankada kerak emas): goblet-squat, hack-squat, hip-thrust, glute-bridge, calf-raise, db-bench, machine-chest-press, push-up, dips, cable-fly, db-fly, ohp, machine-shoulder-press, reverse-fly, inverted-row, db-shrug.
+
+Flow to'plami: `node scripts/images/flow-pack.mjs --out <papka> --ids … --poses <poza-papka> --nopose …`. Figura aniq chiza olmaydigan harakatlarda poza namunasi berilmaydi (`--nopose`): fire-hydrant, clamshell, side-leg-raise, side-plank, curtsy-lunge, t-bar-row, supine-twist, pigeon, cross-body-shoulder, neck-stretch.
+
 Generatsiya tartibi: `scripts/images/README.md` va `scripts/images/regen.mjs`.

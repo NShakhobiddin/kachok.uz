@@ -1546,6 +1546,7 @@ Correct technique (must be exact):
 - Lying on the back, lower back pressed flat into the floor.
 - Right arm extended overhead just above the floor and left leg extended straight just above the floor.
 - Left arm pointing straight up to the ceiling; right knee bent 90° directly above the hip.
+- CRITICAL: the extended arm and the extended leg are on OPPOSITE sides of the body (right arm + left leg) — never arm and leg of the same side.
 
 Muscle activation shown as a neon lime-green glow (#D4FA50) from within the muscles, brightness proportional to effort:
 - brightest (100%): obliques, rectus abdominis;
@@ -1559,9 +1560,1104 @@ Composition: square 1:1, the whole figure and equipment fully visible with gener
 Absolutely no text, letters, numbers, labels, arrows, logos, watermarks or UI. No extra limbs or fingers, no floating or disconnected equipment.
 ```
 
+### 64. Sumo o‘tirish (Sumo Squat) — pastki nuqta — `sumo-squat`
+
+```
+Photorealistic anatomical render of an athletic woman performing the sumo squat, captured at the bottom position. Camera: front three-quarter view — 30° in front of the athlete's right side, at hip height, 50mm lens.
+
+Body: an athletic adult WOMAN with clearly female proportions (narrower shoulders, wider pelvis, natural female build), rendered in écorché style — skin removed, realistic deep-red striated muscle fibers, pearly white tendons, anatomically accurate muscle shapes; hair pulled back into a neat low bun. Plain opaque dark grey sports bra and dark grey compression shorts fully covering chest and hips. Black flat-soled training shoes (barefoot on a mat for floor stretches).
+
+Correct technique (must be exact):
+- Very wide stance, about twice shoulder width, toes turned out about 30–45°, heels flat.
+- One dumbbell held vertically by its top end with both hands, arms straight, hanging between the legs below the hips; it does not touch the floor.
+- Thighs parallel to the floor, knees pushed out directly over the toes (not caving in), torso upright with a neutral spine, chest up.
+
+Muscle activation shown as a neon lime-green glow (#D4FA50) from within the muscles, brightness proportional to effort:
+- brightest (100%): vastus lateralis (outer front thigh), vastus medialis (inner front thigh);
+- clearly dimmer, about half as bright: gluteus maximus, inner-thigh adductors;
+- very faint: erector spinae (lower back), rectus femoris;
+- all other muscles: no glow, natural deep red.
+
+Equipment: One hexagonal black dumbbell.
+Scene: pure charcoal-black background (#0B0B0C), soft top-left key light, subtle lime-green rim light from behind, soft contact shadow, no floor texture.
+Composition: square 1:1, the whole figure and equipment fully visible with generous empty margins on the left and right, centered.
+
+Absolutely no text, letters, numbers, labels, arrows, logos, watermarks or UI. No extra limbs or fingers, no floating or disconnected equipment.
+```
+
+### 65. Orqaga hamla (Reverse Lunge) — pastki nuqta — `reverse-lunge`
+
+```
+Photorealistic anatomical render of an athletic woman performing the reverse lunge, captured at the bottom position. Camera: side view from the athlete's right at hip height, 50mm lens.
+
+Body: an athletic adult WOMAN with clearly female proportions (narrower shoulders, wider pelvis, natural female build), rendered in écorché style — skin removed, realistic deep-red striated muscle fibers, pearly white tendons, anatomically accurate muscle shapes; hair pulled back into a neat low bun. Plain opaque dark grey sports bra and dark grey compression shorts fully covering chest and hips. Black flat-soled training shoes (barefoot on a mat for floor stretches).
+
+Correct technique (must be exact):
+- Long split stance after stepping backward: front foot flat, front shin nearly vertical, front thigh parallel to the floor.
+- Back knee about 3 cm above the floor directly under the hip, back heel raised, weight on the ball of the back foot.
+- Torso upright with a slight forward lean from the hips, neutral spine, hands on the hips.
+
+Muscle activation shown as a neon lime-green glow (#D4FA50) from within the muscles, brightness proportional to effort:
+- brightest (100%): vastus lateralis (outer front thigh), vastus medialis (inner front thigh);
+- clearly dimmer, about half as bright: gluteus maximus, gluteus medius;
+- very faint: biceps femoris (outer hamstring), inner-thigh adductors;
+- all other muscles: no glow, natural deep red.
+
+Equipment: No equipment, plain floor.
+Scene: pure charcoal-black background (#0B0B0C), soft top-left key light, subtle lime-green rim light from behind, soft contact shadow, no floor texture.
+Composition: square 1:1, the whole figure and equipment fully visible with generous empty margins on the left and right, centered.
+
+Absolutely no text, letters, numbers, labels, arrows, logos, watermarks or UI. No extra limbs or fingers, no floating or disconnected equipment.
+```
+
+### 66. Reverans hamla (Curtsy Lunge) — pastki nuqta — `curtsy-lunge`
+
+```
+Photorealistic anatomical render of an athletic woman performing the curtsy lunge, captured at the bottom position. Camera: front three-quarter view — 30° in front of the athlete's right side, at hip height, 50mm lens.
+
+Body: an athletic adult WOMAN with clearly female proportions (narrower shoulders, wider pelvis, natural female build), rendered in écorché style — skin removed, realistic deep-red striated muscle fibers, pearly white tendons, anatomically accurate muscle shapes; hair pulled back into a neat low bun. Plain opaque dark grey sports bra and dark grey compression shorts fully covering chest and hips. Black flat-soled training shoes (barefoot on a mat for floor stretches).
+
+Correct technique (must be exact):
+- The back leg has stepped diagonally behind and across the front leg, like a curtsy; back heel raised, back knee a few centimeters above the floor.
+- Front foot flat, front knee bent about 90° and tracking over the middle toes, not collapsing inward.
+- Hips and shoulders square to the camera-facing front (not rotated), torso upright, hands on the hips.
+
+Muscle activation shown as a neon lime-green glow (#D4FA50) from within the muscles, brightness proportional to effort:
+- brightest (100%): vastus lateralis (outer front thigh), vastus medialis (inner front thigh), gluteus medius;
+- clearly dimmer, about half as bright: gluteus maximus, inner-thigh adductors;
+- very faint: biceps femoris (outer hamstring);
+- all other muscles: no glow, natural deep red.
+
+Equipment: No equipment, plain floor.
+Scene: pure charcoal-black background (#0B0B0C), soft top-left key light, subtle lime-green rim light from behind, soft contact shadow, no floor texture.
+Composition: square 1:1, the whole figure and equipment fully visible with generous empty margins on the left and right, centered.
+
+Absolutely no text, letters, numbers, labels, arrows, logos, watermarks or UI. No extra limbs or fingers, no floating or disconnected equipment.
+```
+
+### 67. Devorga suyanib o‘tirish (Wall Sit) — ushlab turish — `wall-sit`
+
+```
+Photorealistic anatomical render of an athletic woman performing the wall sit, captured at the hold. Camera: side view from the athlete's right at hip height, 50mm lens.
+
+Body: an athletic adult WOMAN with clearly female proportions (narrower shoulders, wider pelvis, natural female build), rendered in écorché style — skin removed, realistic deep-red striated muscle fibers, pearly white tendons, anatomically accurate muscle shapes; hair pulled back into a neat low bun. Plain opaque dark grey sports bra and dark grey compression shorts fully covering chest and hips. Black flat-soled training shoes (barefoot on a mat for floor stretches).
+
+Correct technique (must be exact):
+- Back, shoulders and back of the head flat against a plain wall.
+- Thighs parallel to the floor, knees bent 90° directly above the ankles, shins vertical, feet flat hip width apart.
+- Arms extended straight forward at shoulder height, not resting on the thighs.
+
+Muscle activation shown as a neon lime-green glow (#D4FA50) from within the muscles, brightness proportional to effort:
+- brightest (100%): vastus lateralis (outer front thigh), vastus medialis (inner front thigh);
+- very faint: rectus femoris, gluteus maximus;
+- all other muscles: no glow, natural deep red.
+
+Equipment: A plain flat wall behind the athlete, no other equipment.
+Scene: pure charcoal-black background (#0B0B0C), soft top-left key light, subtle lime-green rim light from behind, soft contact shadow, no floor texture.
+Composition: square 1:1, the whole figure and equipment fully visible with generous empty margins on the left and right, centered.
+
+Absolutely no text, letters, numbers, labels, arrows, logos, watermarks or UI. No extra limbs or fingers, no floating or disconnected equipment.
+```
+
+### 68. Bir oyoqda ko‘prikcha (Single-Leg Glute Bridge) — yuqori nuqta — `single-leg-bridge`
+
+```
+Photorealistic anatomical render of an athletic woman performing the single-leg glute bridge, captured at the top position. Camera: side view from the athlete's right at floor height (low camera), 50mm lens.
+
+Body: an athletic adult WOMAN with clearly female proportions (narrower shoulders, wider pelvis, natural female build), rendered in écorché style — skin removed, realistic deep-red striated muscle fibers, pearly white tendons, anatomically accurate muscle shapes; hair pulled back into a neat low bun. Plain opaque dark grey sports bra and dark grey compression shorts fully covering chest and hips. Black flat-soled training shoes (barefoot on a mat for floor stretches).
+
+Correct technique (must be exact):
+- Lying on the back, one foot flat on the floor with the knee bent about 90°, arms resting on the floor beside the body.
+- Hips lifted so the shoulder, hip and knee of the working leg form one straight line; pelvis level (not dropping toward the free leg), ribs down, no lower-back arch.
+- The other leg held straight, extended in line with the working thigh, toes pulled toward the shin.
+
+Muscle activation shown as a neon lime-green glow (#D4FA50) from within the muscles, brightness proportional to effort:
+- brightest (100%): gluteus medius, gluteus maximus;
+- clearly dimmer, about half as bright: erector spinae (lower back), biceps femoris (outer hamstring), inner hamstrings;
+- all other muscles: no glow, natural deep red.
+
+Equipment: A plain dark exercise mat on the floor, no other equipment.
+Scene: pure charcoal-black background (#0B0B0C), soft top-left key light, subtle lime-green rim light from behind, soft contact shadow, no floor texture.
+Composition: square 1:1, the whole figure and equipment fully visible with generous empty margins on the left and right, centered.
+
+Absolutely no text, letters, numbers, labels, arrows, logos, watermarks or UI. No extra limbs or fingers, no floating or disconnected equipment.
+```
+
+### 69. To‘rt oyoqlab orqaga tepish (Quadruped Glute Kickback) — yuqori nuqta — `glute-kickback`
+
+```
+Photorealistic anatomical render of an athletic woman performing the quadruped glute kickback, captured at the top position. Camera: side view from the athlete's right at hip height, 50mm lens.
+
+Body: an athletic adult WOMAN with clearly female proportions (narrower shoulders, wider pelvis, natural female build), rendered in écorché style — skin removed, realistic deep-red striated muscle fibers, pearly white tendons, anatomically accurate muscle shapes; hair pulled back into a neat low bun. Plain opaque dark grey sports bra and dark grey compression shorts fully covering chest and hips. Black flat-soled training shoes (barefoot on a mat for floor stretches).
+
+Correct technique (must be exact):
+- On all fours: hands flat directly under the shoulders, the support knee directly under the hip, back flat.
+- The working leg kicked back and up with the knee bent 90°: thigh parallel to the floor in line with the torso, sole of the foot facing the ceiling.
+- No lower-back arch, pelvis level and square to the floor, neck neutral with eyes on the floor.
+
+Muscle activation shown as a neon lime-green glow (#D4FA50) from within the muscles, brightness proportional to effort:
+- brightest (100%): gluteus maximus;
+- clearly dimmer, about half as bright: gluteus medius, biceps femoris (outer hamstring), erector spinae (lower back), inner hamstrings;
+- all other muscles: no glow, natural deep red.
+
+Equipment: A plain dark exercise mat on the floor, no other equipment.
+Scene: pure charcoal-black background (#0B0B0C), soft top-left key light, subtle lime-green rim light from behind, soft contact shadow, no floor texture.
+Composition: square 1:1, the whole figure and equipment fully visible with generous empty margins on the left and right, centered.
+
+Absolutely no text, letters, numbers, labels, arrows, logos, watermarks or UI. No extra limbs or fingers, no floating or disconnected equipment.
+```
+
+### 70. Tizzani yonga ko‘tarish («gidrant») (Fire Hydrant) — yuqori nuqta — `fire-hydrant`
+
+```
+Photorealistic anatomical render of an athletic woman performing the fire hydrant, captured at the top position. Camera: rear three-quarter view — 30° behind the athlete's right side, at hip height, 50mm lens.
+
+Body: an athletic adult WOMAN with clearly female proportions (narrower shoulders, wider pelvis, natural female build), rendered in écorché style — skin removed, realistic deep-red striated muscle fibers, pearly white tendons, anatomically accurate muscle shapes; hair pulled back into a neat low bun. Plain opaque dark grey sports bra and dark grey compression shorts fully covering chest and hips. Black flat-soled training shoes (barefoot on a mat for floor stretches).
+
+Correct technique (must be exact):
+- On all fours: hands flat directly under the shoulders, the support knee directly under the hip, back flat.
+- The working leg lifted out to the side with the knee bent 90°: thigh close to parallel with the floor, pointing sideways, lower leg parallel to the floor behind the knee.
+- Torso and pelvis stay level and square to the floor — no leaning away from the lifted leg, no back arch.
+
+Muscle activation shown as a neon lime-green glow (#D4FA50) from within the muscles, brightness proportional to effort:
+- brightest (100%): gluteus medius;
+- clearly dimmer, about half as bright: gluteus maximus;
+- very faint: obliques, erector spinae (lower back);
+- all other muscles: no glow, natural deep red.
+
+Equipment: A plain dark exercise mat on the floor, no other equipment.
+Scene: pure charcoal-black background (#0B0B0C), soft top-left key light, subtle lime-green rim light from behind, soft contact shadow, no floor texture.
+Composition: square 1:1, the whole figure and equipment fully visible with generous empty margins on the left and right, centered.
+
+Absolutely no text, letters, numbers, labels, arrows, logos, watermarks or UI. No extra limbs or fingers, no floating or disconnected equipment.
+```
+
+### 71. «Chig‘anoq» (yonboshlab tizzani ochish) (Clamshell) — yuqori nuqta — `clamshell`
+
+```
+Photorealistic anatomical render of an athletic woman performing the clamshell, captured at the open position. Camera: view from in front of the athlete (facing the chest and knees), camera slightly above floor height and about 20° down, 50mm lens.
+
+Body: an athletic adult WOMAN with clearly female proportions (narrower shoulders, wider pelvis, natural female build), rendered in écorché style — skin removed, realistic deep-red striated muscle fibers, pearly white tendons, anatomically accurate muscle shapes; hair pulled back into a neat low bun. Plain opaque dark grey sports bra and dark grey compression shorts fully covering chest and hips. Black flat-soled training shoes (barefoot on a mat for floor stretches).
+
+Correct technique (must be exact):
+- Lying on the side, head resting on the extended bottom arm; hips bent about 45° and knees about 90°; hips and shoulders stacked vertically.
+- Heels together, the top knee opened upward like a clamshell about 30–40° while the feet stay touching.
+- The pelvis does not roll backward; the top hand rests on the top hip.
+
+Muscle activation shown as a neon lime-green glow (#D4FA50) from within the muscles, brightness proportional to effort:
+- brightest (100%): gluteus medius, gluteus maximus;
+- all other muscles: no glow, natural deep red.
+
+Equipment: A plain dark exercise mat on the floor, no other equipment.
+Scene: pure charcoal-black background (#0B0B0C), soft top-left key light, subtle lime-green rim light from behind, soft contact shadow, no floor texture.
+Composition: square 1:1, the whole figure and equipment fully visible with generous empty margins on the left and right, centered.
+
+Absolutely no text, letters, numbers, labels, arrows, logos, watermarks or UI. No extra limbs or fingers, no floating or disconnected equipment.
+```
+
+### 72. Yonboshlab oyoq ko‘tarish (Side-Lying Leg Raise) — yuqori nuqta — `side-leg-raise`
+
+```
+Photorealistic anatomical render of an athletic woman performing the side-lying leg raise, captured at the top position. Camera: view from in front of the athlete (facing the chest and knees), camera slightly above floor height and about 20° down, 50mm lens.
+
+Body: an athletic adult WOMAN with clearly female proportions (narrower shoulders, wider pelvis, natural female build), rendered in écorché style — skin removed, realistic deep-red striated muscle fibers, pearly white tendons, anatomically accurate muscle shapes; hair pulled back into a neat low bun. Plain opaque dark grey sports bra and dark grey compression shorts fully covering chest and hips. Black flat-soled training shoes (barefoot on a mat for floor stretches).
+
+Correct technique (must be exact):
+- Lying on the side, head resting on the bottom arm, bottom knee slightly bent for stability; hips and shoulders stacked vertically.
+- The top leg straight, raised about 35° from the bottom leg, in line with the torso or slightly behind it (not drifting forward).
+- Top toes pointing forward (not toward the ceiling), the top hand resting on the hip, pelvis not rolling.
+
+Muscle activation shown as a neon lime-green glow (#D4FA50) from within the muscles, brightness proportional to effort:
+- brightest (100%): gluteus medius;
+- clearly dimmer, about half as bright: gluteus maximus;
+- all other muscles: no glow, natural deep red.
+
+Equipment: A plain dark exercise mat on the floor, no other equipment.
+Scene: pure charcoal-black background (#0B0B0C), soft top-left key light, subtle lime-green rim light from behind, soft contact shadow, no floor texture.
+Composition: square 1:1, the whole figure and equipment fully visible with generous empty margins on the left and right, centered.
+
+Absolutely no text, letters, numbers, labels, arrows, logos, watermarks or UI. No extra limbs or fingers, no floating or disconnected equipment.
+```
+
+### 73. Mini-lenta bilan yonga yurish (Banded Lateral Walk) — qisqargan holat — `banded-lateral-walk`
+
+```
+Photorealistic anatomical render of an athletic woman performing the banded lateral walk, captured at the wide step. Camera: straight-on front view at hip height, 50mm lens.
+
+Body: an athletic adult WOMAN with clearly female proportions (narrower shoulders, wider pelvis, natural female build), rendered in écorché style — skin removed, realistic deep-red striated muscle fibers, pearly white tendons, anatomically accurate muscle shapes; hair pulled back into a neat low bun. Plain opaque dark grey sports bra and dark grey compression shorts fully covering chest and hips. Black flat-soled training shoes (barefoot on a mat for floor stretches).
+
+Correct technique (must be exact):
+- A mini loop band around both legs just above the ankles, stretched taut between them.
+- Half-squat position: hips back, knees bent about 30°, torso leaning slightly forward with a neutral spine, hands on the hips.
+- Mid side-step: feet about shoulder width apart, toes pointing forward, knees pushed out over the toes (not caving in).
+
+Muscle activation shown as a neon lime-green glow (#D4FA50) from within the muscles, brightness proportional to effort:
+- brightest (100%): gluteus medius;
+- very faint: gluteus maximus, vastus lateralis (outer front thigh);
+- all other muscles: no glow, natural deep red.
+
+Equipment: One lime-green elastic mini loop band around the lower legs.
+Scene: pure charcoal-black background (#0B0B0C), soft top-left key light, subtle lime-green rim light from behind, soft contact shadow, no floor texture.
+Composition: square 1:1, the whole figure and equipment fully visible with generous empty margins on the left and right, centered.
+
+Absolutely no text, letters, numbers, labels, arrows, logos, watermarks or UI. No extra limbs or fingers, no floating or disconnected equipment.
+```
+
+### 74. Fitbolda oyoq bukish (Stability Ball Leg Curl) — qisqargan holat — `ball-leg-curl`
+
+```
+Photorealistic anatomical render of an athletic woman performing the stability ball leg curl, captured at the curled position. Camera: side view from the athlete's right at floor height (low camera), 50mm lens.
+
+Body: an athletic adult WOMAN with clearly female proportions (narrower shoulders, wider pelvis, natural female build), rendered in écorché style — skin removed, realistic deep-red striated muscle fibers, pearly white tendons, anatomically accurate muscle shapes; hair pulled back into a neat low bun. Plain opaque dark grey sports bra and dark grey compression shorts fully covering chest and hips. Black flat-soled training shoes (barefoot on a mat for floor stretches).
+
+Correct technique (must be exact):
+- Lying on the back, shoulders and arms on the floor, arms beside the body with palms down.
+- Hips lifted high; knees bent about 90°, soles of both feet flat on top of a large stability ball pulled in toward the buttocks.
+- Shoulders, hips and knees in one line, no lower-back arch.
+
+Muscle activation shown as a neon lime-green glow (#D4FA50) from within the muscles, brightness proportional to effort:
+- brightest (100%): inner hamstrings, biceps femoris (outer hamstring);
+- clearly dimmer, about half as bright: gluteus maximus;
+- very faint: gastrocnemius (calf), erector spinae (lower back);
+- all other muscles: no glow, natural deep red.
+
+Equipment: One large matte black stability ball (about 65 cm) resting on the floor; a plain dark exercise mat.
+Scene: pure charcoal-black background (#0B0B0C), soft top-left key light, subtle lime-green rim light from behind, soft contact shadow, no floor texture.
+Composition: square 1:1, the whole figure and equipment fully visible with generous empty margins on the left and right, centered.
+
+Absolutely no text, letters, numbers, labels, arrows, logos, watermarks or UI. No extra limbs or fingers, no floating or disconnected equipment.
+```
+
+### 75. «Supermen» (qorinda yotib ko‘tarilish) (Superman) — yuqori nuqta — `superman`
+
+```
+Photorealistic anatomical render of an athletic woman performing the superman, captured at the top position. Camera: side view from the athlete's right at floor height (low camera), 50mm lens.
+
+Body: an athletic adult WOMAN with clearly female proportions (narrower shoulders, wider pelvis, natural female build), rendered in écorché style — skin removed, realistic deep-red striated muscle fibers, pearly white tendons, anatomically accurate muscle shapes; hair pulled back into a neat low bun. Plain opaque dark grey sports bra and dark grey compression shorts fully covering chest and hips. Black flat-soled training shoes (barefoot on a mat for floor stretches).
+
+Correct technique (must be exact):
+- Lying face down, arms extended straight forward beyond the head, legs straight.
+- Arms, chest and legs lifted only a few centimeters off the floor; the belly and pelvis stay on the floor.
+- Long body shape, glutes squeezed, neck neutral — eyes looking at the floor, head not thrown back.
+
+Muscle activation shown as a neon lime-green glow (#D4FA50) from within the muscles, brightness proportional to effort:
+- brightest (100%): erector spinae (lower back);
+- clearly dimmer, about half as bright: gluteus maximus, middle trapezius;
+- very faint: biceps femoris (outer hamstring);
+- all other muscles: no glow, natural deep red.
+
+Equipment: A plain dark exercise mat on the floor, no other equipment.
+Scene: pure charcoal-black background (#0B0B0C), soft top-left key light, subtle lime-green rim light from behind, soft contact shadow, no floor texture.
+Composition: square 1:1, the whole figure and equipment fully visible with generous empty margins on the left and right, centered.
+
+Absolutely no text, letters, numbers, labels, arrows, logos, watermarks or UI. No extra limbs or fingers, no floating or disconnected equipment.
+```
+
+### 76. Tizzada otjimaniya (Knee Push-up) — pastki nuqta — `knee-push-up`
+
+```
+Photorealistic anatomical render of an athletic woman performing the knee push-up, captured at the bottom position. Camera: side view from the athlete's right at floor height (low camera), 50mm lens.
+
+Body: an athletic adult WOMAN with clearly female proportions (narrower shoulders, wider pelvis, natural female build), rendered in écorché style — skin removed, realistic deep-red striated muscle fibers, pearly white tendons, anatomically accurate muscle shapes; hair pulled back into a neat low bun. Plain opaque dark grey sports bra and dark grey compression shorts fully covering chest and hips. Black flat-soled training shoes (barefoot on a mat for floor stretches).
+
+Correct technique (must be exact):
+- Kneeling push-up: knees on the mat, lower legs raised with ankles crossed.
+- Body in one straight line from knees to head — hips neither piked nor sagging; chest about 5 cm above the floor.
+- Hands slightly wider than the shoulders, under the chest; elbows at about 45° from the torso.
+
+Muscle activation shown as a neon lime-green glow (#D4FA50) from within the muscles, brightness proportional to effort:
+- brightest (100%): middle chest (sternal pectoralis major), serratus anterior, triceps lateral head;
+- clearly dimmer, about half as bright: front deltoid;
+- very faint: rectus abdominis;
+- all other muscles: no glow, natural deep red.
+
+Equipment: A plain dark exercise mat on the floor, no other equipment.
+Scene: pure charcoal-black background (#0B0B0C), soft top-left key light, subtle lime-green rim light from behind, soft contact shadow, no floor texture.
+Composition: square 1:1, the whole figure and equipment fully visible with generous empty margins on the left and right, centered.
+
+Absolutely no text, letters, numbers, labels, arrows, logos, watermarks or UI. No extra limbs or fingers, no floating or disconnected equipment.
+```
+
+### 77. O‘tirib rezina lentani tortish (Seated Band Row) — qisqargan holat — `band-row`
+
+```
+Photorealistic anatomical render of an athletic woman performing the seated band row, captured at the contracted position. Camera: side view from the athlete's right at hip height, 50mm lens.
+
+Body: an athletic adult WOMAN with clearly female proportions (narrower shoulders, wider pelvis, natural female build), rendered in écorché style — skin removed, realistic deep-red striated muscle fibers, pearly white tendons, anatomically accurate muscle shapes; hair pulled back into a neat low bun. Plain opaque dark grey sports bra and dark grey compression shorts fully covering chest and hips. Black flat-soled training shoes (barefoot on a mat for floor stretches).
+
+Correct technique (must be exact):
+- Sitting upright on the floor, legs extended forward with knees slightly bent, a long resistance band looped around the soles of both feet.
+- Band ends pulled to the lower ribs: elbows driven back close to the body, behind the torso.
+- Shoulder blades squeezed together and down, chest up, torso upright (not leaning back).
+
+Muscle activation shown as a neon lime-green glow (#D4FA50) from within the muscles, brightness proportional to effort:
+- brightest (100%): latissimus dorsi, middle trapezius, rhomboids, rear deltoid;
+- clearly dimmer, about half as bright: biceps;
+- very faint: erector spinae (lower back);
+- all other muscles: no glow, natural deep red.
+
+Equipment: One long lime-green resistance band looped under the feet.
+Scene: pure charcoal-black background (#0B0B0C), soft top-left key light, subtle lime-green rim light from behind, soft contact shadow, no floor texture.
+Composition: square 1:1, the whole figure and equipment fully visible with generous empty margins on the left and right, centered.
+
+Absolutely no text, letters, numbers, labels, arrows, logos, watermarks or UI. No extra limbs or fingers, no floating or disconnected equipment.
+```
+
+### 78. «Qush-it» (qarama-qarshi qo‘l va oyoq) (Bird Dog) — cho‘zilgan holat — `bird-dog`
+
+```
+Photorealistic anatomical render of an athletic woman performing the bird dog, captured at the extended position. Camera: side view from the athlete's right at hip height, 50mm lens.
+
+Body: an athletic adult WOMAN with clearly female proportions (narrower shoulders, wider pelvis, natural female build), rendered in écorché style — skin removed, realistic deep-red striated muscle fibers, pearly white tendons, anatomically accurate muscle shapes; hair pulled back into a neat low bun. Plain opaque dark grey sports bra and dark grey compression shorts fully covering chest and hips. Black flat-soled training shoes (barefoot on a mat for floor stretches).
+
+Correct technique (must be exact):
+- On all fours: one hand flat under the shoulder, the opposite knee under the hip.
+- The other arm extended straight forward at shoulder height, thumb up; the opposite leg extended straight back at hip height, toes pointing down.
+- Back flat like a table, hips and shoulders level and square to the floor, neck neutral.
+
+Muscle activation shown as a neon lime-green glow (#D4FA50) from within the muscles, brightness proportional to effort:
+- brightest (100%): gluteus maximus;
+- clearly dimmer, about half as bright: gluteus medius, erector spinae (lower back);
+- very faint: front deltoid, obliques;
+- all other muscles: no glow, natural deep red.
+
+Equipment: A plain dark exercise mat on the floor, no other equipment.
+Scene: pure charcoal-black background (#0B0B0C), soft top-left key light, subtle lime-green rim light from behind, soft contact shadow, no floor texture.
+Composition: square 1:1, the whole figure and equipment fully visible with generous empty margins on the left and right, centered.
+
+Absolutely no text, letters, numbers, labels, arrows, logos, watermarks or UI. No extra limbs or fingers, no floating or disconnected equipment.
+```
+
+### 79. Yon planka (Side Plank) — ushlab turish — `side-plank`
+
+```
+Photorealistic anatomical render of an athletic woman performing the side plank, captured at the hold. Camera: straight-on front view at floor height (low camera), 50mm lens.
+
+Body: an athletic adult WOMAN with clearly female proportions (narrower shoulders, wider pelvis, natural female build), rendered in écorché style — skin removed, realistic deep-red striated muscle fibers, pearly white tendons, anatomically accurate muscle shapes; hair pulled back into a neat low bun. Plain opaque dark grey sports bra and dark grey compression shorts fully covering chest and hips. Black flat-soled training shoes (barefoot on a mat for floor stretches).
+
+Correct technique (must be exact):
+- Forearm side plank: the bottom elbow directly under the shoulder, forearm on the floor pointing forward.
+- Body in one straight line from feet to head, feet stacked, hips lifted (not sagging and not rotated backward).
+- The top arm extended straight up toward the ceiling, the bottom shoulder pushed away from the ear.
+
+Muscle activation shown as a neon lime-green glow (#D4FA50) from within the muscles, brightness proportional to effort:
+- brightest (100%): gluteus medius, obliques;
+- clearly dimmer, about half as bright: rectus abdominis, erector spinae (lower back);
+- very faint: gluteus maximus;
+- all other muscles: no glow, natural deep red.
+
+Equipment: A plain dark exercise mat on the floor, no other equipment.
+Scene: pure charcoal-black background (#0B0B0C), soft top-left key light, subtle lime-green rim light from behind, soft contact shadow, no floor texture.
+Composition: square 1:1, the whole figure and equipment fully visible with generous empty margins on the left and right, centered.
+
+Absolutely no text, letters, numbers, labels, arrows, logos, watermarks or UI. No extra limbs or fingers, no floating or disconnected equipment.
+```
+
+### 80. Teskari qisqarish (Reverse Crunch) — qisqargan holat — `reverse-crunch`
+
+```
+Photorealistic anatomical render of an athletic woman performing the reverse crunch, captured at the top position. Camera: side view from the athlete's right at floor height (low camera), 50mm lens.
+
+Body: an athletic adult WOMAN with clearly female proportions (narrower shoulders, wider pelvis, natural female build), rendered in écorché style — skin removed, realistic deep-red striated muscle fibers, pearly white tendons, anatomically accurate muscle shapes; hair pulled back into a neat low bun. Plain opaque dark grey sports bra and dark grey compression shorts fully covering chest and hips. Black flat-soled training shoes (barefoot on a mat for floor stretches).
+
+Correct technique (must be exact):
+- Lying on the back, arms on the floor beside the body, palms down; head and shoulders stay on the floor.
+- Knees bent about 90° and pulled toward the chest; the pelvis curled up so the lower back lifts a few centimeters off the floor.
+- Movement comes from curling the pelvis, not from swinging the legs.
+
+Muscle activation shown as a neon lime-green glow (#D4FA50) from within the muscles, brightness proportional to effort:
+- brightest (100%): rectus abdominis;
+- clearly dimmer, about half as bright: obliques;
+- very faint: rectus femoris, hip flexors (iliopsoas);
+- all other muscles: no glow, natural deep red.
+
+Equipment: A plain dark exercise mat on the floor, no other equipment.
+Scene: pure charcoal-black background (#0B0B0C), soft top-left key light, subtle lime-green rim light from behind, soft contact shadow, no floor texture.
+Composition: square 1:1, the whole figure and equipment fully visible with generous empty margins on the left and right, centered.
+
+Absolutely no text, letters, numbers, labels, arrows, logos, watermarks or UI. No extra limbs or fingers, no floating or disconnected equipment.
+```
+
+### 81. «Velosiped» (Bicycle Crunch) — qisqargan holat — `bicycle-crunch`
+
+```
+Photorealistic anatomical render of an athletic woman performing the bicycle crunch, captured at the twist to one side. Camera: high three-quarter view from above the right side (about 40° down), 50mm lens.
+
+Body: an athletic adult WOMAN with clearly female proportions (narrower shoulders, wider pelvis, natural female build), rendered in écorché style — skin removed, realistic deep-red striated muscle fibers, pearly white tendons, anatomically accurate muscle shapes; hair pulled back into a neat low bun. Plain opaque dark grey sports bra and dark grey compression shorts fully covering chest and hips. Black flat-soled training shoes (barefoot on a mat for floor stretches).
+
+Correct technique (must be exact):
+- Lying on the back, shoulder blades lifted off the floor, fingertips lightly at the temples, elbows wide.
+- One knee pulled toward the chest while the torso rotates so the opposite shoulder (not just the elbow) moves toward that knee.
+- The other leg extended straight about 30–45° above the floor; lower back pressed into the floor.
+
+Muscle activation shown as a neon lime-green glow (#D4FA50) from within the muscles, brightness proportional to effort:
+- brightest (100%): rectus abdominis, obliques;
+- clearly dimmer, about half as bright: hip flexors (iliopsoas);
+- very faint: rectus femoris;
+- all other muscles: no glow, natural deep red.
+
+Equipment: A plain dark exercise mat on the floor, no other equipment.
+Scene: pure charcoal-black background (#0B0B0C), soft top-left key light, subtle lime-green rim light from behind, soft contact shadow, no floor texture.
+Composition: square 1:1, the whole figure and equipment fully visible with generous empty margins on the left and right, centered.
+
+Absolutely no text, letters, numbers, labels, arrows, logos, watermarks or UI. No extra limbs or fingers, no floating or disconnected equipment.
+```
+
+### 82. «Alpinist» (Mountain Climber) — qisqargan holat — `mountain-climber`
+
+```
+Photorealistic anatomical render of an athletic woman performing the mountain climber, captured at one knee driven forward. Camera: side view from the athlete's right at hip height, 50mm lens.
+
+Body: an athletic adult WOMAN with clearly female proportions (narrower shoulders, wider pelvis, natural female build), rendered in écorché style — skin removed, realistic deep-red striated muscle fibers, pearly white tendons, anatomically accurate muscle shapes; hair pulled back into a neat low bun. Plain opaque dark grey sports bra and dark grey compression shorts fully covering chest and hips. Black flat-soled training shoes (barefoot on a mat for floor stretches).
+
+Correct technique (must be exact):
+- High plank: arms straight, hands flat directly under the shoulders.
+- One knee driven forward under the chest with the foot off the floor; the other leg extended straight back on the ball of the foot.
+- Hips level with the shoulders (not piked up, not sagging), back flat, neck neutral.
+
+Muscle activation shown as a neon lime-green glow (#D4FA50) from within the muscles, brightness proportional to effort:
+- brightest (100%): rectus abdominis, obliques;
+- clearly dimmer, about half as bright: hip flexors (iliopsoas), rectus femoris, front deltoid;
+- all other muscles: no glow, natural deep red.
+
+Equipment: A plain dark exercise mat on the floor, no other equipment.
+Scene: pure charcoal-black background (#0B0B0C), soft top-left key light, subtle lime-green rim light from behind, soft contact shadow, no floor texture.
+Composition: square 1:1, the whole figure and equipment fully visible with generous empty margins on the left and right, centered.
+
+Absolutely no text, letters, numbers, labels, arrows, logos, watermarks or UI. No extra limbs or fingers, no floating or disconnected equipment.
+```
+
+### 83. Trenajyorda sonni ochish (Machine Hip Abduction) — ochilgan holat — `hip-abduction`
+
+```
+Photorealistic anatomical render of an athletic woman performing the machine hip abduction, captured at the open position, knees pushed fully apart. Camera: rear three-quarter view — 30° behind the athlete's right side, at hip height, 50mm lens — so the outer hips and the glutes on the seat are clearly visible.
+
+Body: an athletic adult WOMAN with clearly female proportions (narrower shoulders, wider pelvis, natural female build), rendered in écorché style — skin removed, realistic deep-red striated muscle fibers, pearly white tendons, anatomically accurate muscle shapes; hair pulled back into a neat low bun. Plain opaque dark grey sports bra and dark grey compression shorts fully covering chest and hips. Black flat-soled training shoes (barefoot on a mat for floor stretches).
+
+Correct technique (must be exact):
+- Seated upright with the back against the backrest, feet on the two foot bars, thighs roughly parallel to the floor.
+- The two thigh pads press on the OUTSIDE of the thighs just above the knees; the knees are pushed outward against them to about 40–45° of hip abduction on each side.
+- Hands grip the side handles beside the seat, hips stay down on the seat, torso still, no leaning back.
+
+Muscle activation shown as a neon lime-green glow (#D4FA50) from within the muscles, brightness proportional to effort:
+- brightest (100%): gluteus medius, gluteus maximus;
+- all other muscles: no glow, natural deep red.
+
+Equipment: Seated hip abduction machine (abductor): a padded seat with an upright backrest, two vertical padded thigh pads on swinging arms placed on the OUTSIDE of the knees, two foot bars, short side handles and a weight stack behind the seat.
+Scene: pure charcoal-black background (#0B0B0C), soft top-left key light, subtle lime-green rim light from behind, soft contact shadow, no floor texture.
+Composition: square 1:1, the whole figure and equipment fully visible with generous empty margins on the left and right, centered.
+
+Absolutely no text, letters, numbers, labels, arrows, logos, watermarks or UI. No extra limbs or fingers, no floating or disconnected equipment.
+```
+
+### 84. Trenajyorda sonni yopish (Machine Hip Adduction) — yopilgan holat — `hip-adduction`
+
+```
+Photorealistic anatomical render of an athletic woman performing the machine hip adduction, captured at the closed position, knees squeezed together. Camera: front three-quarter view — 30° in front of the athlete's right side, at hip height, 50mm lens — so the inner thighs are clearly visible.
+
+Body: an athletic adult WOMAN with clearly female proportions (narrower shoulders, wider pelvis, natural female build), rendered in écorché style — skin removed, realistic deep-red striated muscle fibers, pearly white tendons, anatomically accurate muscle shapes; hair pulled back into a neat low bun. Plain opaque dark grey sports bra and dark grey compression shorts fully covering chest and hips. Black flat-soled training shoes (barefoot on a mat for floor stretches).
+
+Correct technique (must be exact):
+- Seated upright with the back against the backrest, feet on the two foot bars, thighs roughly parallel to the floor.
+- The two thigh pads press on the INSIDE of the thighs just above the knees; the knees are squeezed together until the pads almost touch.
+- Hands grip the side handles beside the seat, hips stay down on the seat, torso upright.
+
+Muscle activation shown as a neon lime-green glow (#D4FA50) from within the muscles, brightness proportional to effort:
+- brightest (100%): inner-thigh adductors;
+- very faint: inner hamstrings;
+- all other muscles: no glow, natural deep red.
+
+Equipment: Seated hip adduction machine (adductor): a padded seat with an upright backrest, two vertical padded thigh pads on swinging arms placed on the INSIDE of the knees, two foot bars, short side handles and a weight stack behind the seat.
+Scene: pure charcoal-black background (#0B0B0C), soft top-left key light, subtle lime-green rim light from behind, soft contact shadow, no floor texture.
+Composition: square 1:1, the whole figure and equipment fully visible with generous empty margins on the left and right, centered.
+
+Absolutely no text, letters, numbers, labels, arrows, logos, watermarks or UI. No extra limbs or fingers, no floating or disconnected equipment.
+```
+
+### 85. Blokda oyoqni orqaga uzatish (Cable Glute Kickback) — yuqori nuqta — `cable-kickback`
+
+```
+Photorealistic anatomical render of an athletic woman performing the cable glute kickback, captured at the top position, working leg extended back. Camera: side view from the athlete's right at hip height, 50mm lens.
+
+Body: an athletic adult WOMAN with clearly female proportions (narrower shoulders, wider pelvis, natural female build), rendered in écorché style — skin removed, realistic deep-red striated muscle fibers, pearly white tendons, anatomically accurate muscle shapes; hair pulled back into a neat low bun. Plain opaque dark grey sports bra and dark grey compression shorts fully covering chest and hips. Black flat-soled training shoes (barefoot on a mat for floor stretches).
+
+Correct technique (must be exact):
+- Standing facing a cable column, about two small steps away, both hands holding the column frame at chest height, torso leaning forward about 20–30°.
+- A padded ankle cuff on the RIGHT ankle is clipped to the LOW pulley; the cable runs forward and down from the ankle to the pulley near the floor.
+- The right leg is pushed straight back from the hip until the thigh is in line with the torso (not higher), knee almost straight, foot flexed; the left standing leg slightly bent.
+- Neutral spine — no lower-back arch, pelvis square to the column, glutes squeezed.
+
+Muscle activation shown as a neon lime-green glow (#D4FA50) from within the muscles, brightness proportional to effort:
+- brightest (100%): gluteus maximus;
+- clearly dimmer, about half as bright: biceps femoris (outer hamstring), inner hamstrings, gluteus medius, erector spinae (lower back);
+- all other muscles: no glow, natural deep red.
+
+Equipment: Cable column with the pulley set at the lowest position, a padded ankle strap (ankle cuff) clipped to the cable; the cable clearly attached to the ankle cuff.
+Scene: pure charcoal-black background (#0B0B0C), soft top-left key light, subtle lime-green rim light from behind, soft contact shadow, no floor texture.
+Composition: square 1:1, the whole figure and equipment fully visible with generous empty margins on the left and right, centered.
+
+Absolutely no text, letters, numbers, labels, arrows, logos, watermarks or UI. No extra limbs or fingers, no floating or disconnected equipment.
+```
+
+### 86. Blokda oyoq orasidan tortish (Cable Pull-Through) — pastki nuqta — `cable-pull-through`
+
+```
+Photorealistic anatomical render of an athletic woman performing the cable pull-through, captured at the bottom (hinged) position. Camera: side view from the athlete's right at hip height, 50mm lens.
+
+Body: an athletic adult WOMAN with clearly female proportions (narrower shoulders, wider pelvis, natural female build), rendered in écorché style — skin removed, realistic deep-red striated muscle fibers, pearly white tendons, anatomically accurate muscle shapes; hair pulled back into a neat low bun. Plain opaque dark grey sports bra and dark grey compression shorts fully covering chest and hips. Black flat-soled training shoes (barefoot on a mat for floor stretches).
+
+Correct technique (must be exact):
+- Standing with the back to a low pulley, feet slightly wider than shoulders, about two steps away from the column.
+- A rope attachment runs from the low pulley forward BETWEEN the legs; both hands hold the rope ends between the thighs with straight arms.
+- Hip hinge: hips pushed back, torso leaning forward about 45° with a flat neutral back, knees softly bent (not a squat), shins nearly vertical, hands pulled back just behind the knees.
+
+Muscle activation shown as a neon lime-green glow (#D4FA50) from within the muscles, brightness proportional to effort:
+- brightest (100%): gluteus maximus, inner hamstrings, biceps femoris (outer hamstring);
+- clearly dimmer, about half as bright: erector spinae (lower back);
+- very faint: forearm flexors;
+- all other muscles: no glow, natural deep red.
+
+Equipment: Cable column with the pulley at the lowest position and a triceps rope attachment; the cable clearly passes between the legs to the rope.
+Scene: pure charcoal-black background (#0B0B0C), soft top-left key light, subtle lime-green rim light from behind, soft contact shadow, no floor texture.
+Composition: square 1:1, the whole figure and equipment fully visible with generous empty margins on the left and right, centered.
+
+Absolutely no text, letters, numbers, labels, arrows, logos, watermarks or UI. No extra limbs or fingers, no floating or disconnected equipment.
+```
+
+### 87. O‘tirib boldir ko‘tarish (Seated Calf Raise) — yuqori nuqta — `seated-calf-raise`
+
+```
+Photorealistic anatomical render of an athletic woman performing the seated calf raise, captured at the top position, heels raised. Camera: side view from the athlete's right at hip height, 50mm lens.
+
+Body: an athletic adult WOMAN with clearly female proportions (narrower shoulders, wider pelvis, natural female build), rendered in écorché style — skin removed, realistic deep-red striated muscle fibers, pearly white tendons, anatomically accurate muscle shapes; hair pulled back into a neat low bun. Plain opaque dark grey sports bra and dark grey compression shorts fully covering chest and hips. Black flat-soled training shoes (barefoot on a mat for floor stretches).
+
+Correct technique (must be exact):
+- Seated with knees bent at 90°, thighs horizontal, the padded lever resting across the lower thighs just above the knees.
+- The balls of both feet on the edge of the foot plate, heels free; ankles fully extended so the heels are lifted as high as possible.
+- Torso upright, hands holding the lever handles on top of the knee pad.
+
+Muscle activation shown as a neon lime-green glow (#D4FA50) from within the muscles, brightness proportional to effort:
+- brightest (100%): soleus;
+- clearly dimmer, about half as bright: gastrocnemius (calf);
+- all other muscles: no glow, natural deep red.
+
+Equipment: Plate-loaded seated calf raise machine: a low seat, a horizontal padded knee lever above the thighs with a safety catch handle and a weight-plate horn at its front end, and a small angled foot plate in front of the seat.
+Scene: pure charcoal-black background (#0B0B0C), soft top-left key light, subtle lime-green rim light from behind, soft contact shadow, no floor texture.
+Composition: square 1:1, the whole figure and equipment fully visible with generous empty margins on the left and right, centered.
+
+Absolutely no text, letters, numbers, labels, arrows, logos, watermarks or UI. No extra limbs or fingers, no floating or disconnected equipment.
+```
+
+### 88. Gravitronda tortilish (Assisted Pull-up (Gravitron)) — yuqori nuqta — `assisted-pull-up`
+
+```
+Photorealistic anatomical render of an athletic woman performing the assisted pull-up (gravitron), captured at the top position, chin above the handles. Camera: rear three-quarter view — 30° behind the athlete's right side, at chest height, 50mm lens — so the kneeling pad, the back and the handles are all visible.
+
+Body: an athletic adult WOMAN with clearly female proportions (narrower shoulders, wider pelvis, natural female build), rendered in écorché style — skin removed, realistic deep-red striated muscle fibers, pearly white tendons, anatomically accurate muscle shapes; hair pulled back into a neat low bun. Plain opaque dark grey sports bra and dark grey compression shorts fully covering chest and hips. Black flat-soled training shoes (barefoot on a mat for floor stretches).
+
+Correct technique (must be exact):
+- Kneeling on the padded assist platform with both knees, shins resting on the pad, torso vertical, slight lean back.
+- Hands on the high handles about shoulder width (neutral or overhand grip), chin just above the handles, elbows pulled down beside the ribs, shoulders down.
+- The platform has risen with the athlete — it pushes up on the knees from below.
+
+Muscle activation shown as a neon lime-green glow (#D4FA50) from within the muscles, brightness proportional to effort:
+- brightest (100%): latissimus dorsi;
+- clearly dimmer, about half as bright: teres major, biceps, lower trapezius, infraspinatus and teres minor, forearm flexors, rear deltoid;
+- all other muscles: no glow, natural deep red.
+
+Equipment: Counterweight assisted pull-up/dip machine (gravitron): a tall frame with high pull-up handles, a padded kneeling platform on a lever arm in the middle, step-up foot rails on both sides and a selectorized weight stack at the back.
+Scene: pure charcoal-black background (#0B0B0C), soft top-left key light, subtle lime-green rim light from behind, soft contact shadow, no floor texture.
+Composition: square 1:1, the whole figure and equipment fully visible with generous empty margins on the left and right, centered.
+
+Absolutely no text, letters, numbers, labels, arrows, logos, watermarks or UI. No extra limbs or fingers, no floating or disconnected equipment.
+```
+
+### 89. T-shtanga tortish (T-Bar Row) — yuqori nuqta — `t-bar-row`
+
+```
+Photorealistic anatomical render of an athletic woman performing the t-bar row, captured at the top position. Camera: side view from the athlete's right at hip height, 50mm lens.
+
+Body: an athletic adult WOMAN with clearly female proportions (narrower shoulders, wider pelvis, natural female build), rendered in écorché style — skin removed, realistic deep-red striated muscle fibers, pearly white tendons, anatomically accurate muscle shapes; hair pulled back into a neat low bun. Plain opaque dark grey sports bra and dark grey compression shorts fully covering chest and hips. Black flat-soled training shoes (barefoot on a mat for floor stretches).
+
+Correct technique (must be exact):
+- Standing astride an Olympic bar whose far end is anchored in a floor landmine pivot behind the athlete; plates are loaded on the free end in front of the feet.
+- A close-grip V-handle hooked under the bar right next to the plates, neutral grip (palms facing each other).
+- Hip hinge with the torso at about 45° to the floor, knees bent, back flat; the bar pulled to the upper abdomen, elbows close to the body pointing back, shoulder blades squeezed, neck neutral.
+
+Muscle activation shown as a neon lime-green glow (#D4FA50) from within the muscles, brightness proportional to effort:
+- brightest (100%): latissimus dorsi, middle trapezius, rhomboids, rear deltoid;
+- clearly dimmer, about half as bright: erector spinae (lower back), biceps, forearm flexors, lower trapezius;
+- all other muscles: no glow, natural deep red.
+
+Equipment: Landmine T-bar row setup: an Olympic barbell with one end in a floor landmine pivot, medium matte black plates on the other end, and a double-D V-handle under the bar; the bar clearly runs from the pivot on the floor through the athlete’s legs to the plates.
+Scene: pure charcoal-black background (#0B0B0C), soft top-left key light, subtle lime-green rim light from behind, soft contact shadow, no floor texture.
+Composition: square 1:1, the whole figure and equipment fully visible with generous empty margins on the left and right, centered.
+
+Absolutely no text, letters, numbers, labels, arrows, logos, watermarks or UI. No extra limbs or fingers, no floating or disconnected equipment.
+```
+
+### 90. Skott skameykasida bitseps (Preacher Curl) — o‘rta holat — `preacher-curl`
+
+```
+Photorealistic anatomical render of an athletic woman performing the preacher curl, captured at midway, forearms horizontal. Camera: side view from the athlete's right at chest height, 50mm lens.
+
+Body: an athletic adult WOMAN with clearly female proportions (narrower shoulders, wider pelvis, natural female build), rendered in écorché style — skin removed, realistic deep-red striated muscle fibers, pearly white tendons, anatomically accurate muscle shapes; hair pulled back into a neat low bun. Plain opaque dark grey sports bra and dark grey compression shorts fully covering chest and hips. Black flat-soled training shoes (barefoot on a mat for floor stretches).
+
+Correct technique (must be exact):
+- Seated at a preacher bench, armpits on the top edge of the pad, the backs of both upper arms lying flat on the angled pad (about 45°).
+- Underhand grip on an EZ curl bar at shoulder width, curled up until the forearms are horizontal; elbows stay on the pad.
+- Torso upright and still, shoulders down, wrists straight.
+
+Muscle activation shown as a neon lime-green glow (#D4FA50) from within the muscles, brightness proportional to effort:
+- brightest (100%): biceps, brachialis;
+- clearly dimmer, about half as bright: brachioradialis;
+- very faint: forearm flexors;
+- all other muscles: no glow, natural deep red.
+
+Equipment: Preacher (Scott) curl bench: an adjustable seat and a sloping arm pad at about 45° on a steel post, with a bar rack; an EZ curl bar with small matte black plates.
+Scene: pure charcoal-black background (#0B0B0C), soft top-left key light, subtle lime-green rim light from behind, soft contact shadow, no floor texture.
+Composition: square 1:1, the whole figure and equipment fully visible with generous empty margins on the left and right, centered.
+
+Absolutely no text, letters, numbers, labels, arrows, logos, watermarks or UI. No extra limbs or fingers, no floating or disconnected equipment.
+```
+
+### 91. Rolikda press (tiz cho‘kib) (Ab Wheel Rollout (Kneeling)) — cho‘zilgan holat — `ab-wheel`
+
+```
+Photorealistic anatomical render of an athletic woman performing the ab wheel rollout (kneeling), captured at the extended position. Camera: side view from the athlete's right at floor height (low camera), 50mm lens.
+
+Body: an athletic adult WOMAN with clearly female proportions (narrower shoulders, wider pelvis, natural female build), rendered in écorché style — skin removed, realistic deep-red striated muscle fibers, pearly white tendons, anatomically accurate muscle shapes; hair pulled back into a neat low bun. Plain opaque dark grey sports bra and dark grey compression shorts fully covering chest and hips. Black flat-soled training shoes (barefoot on a mat for floor stretches).
+
+Correct technique (must be exact):
+- Kneeling on a soft mat, both hands on the handles of an ab wheel that has rolled forward ahead of the head.
+- Body in one straight line from knees to shoulders, slightly inclined (shoulders higher than knees), hips NOT sagging, glutes squeezed, ribs down.
+- Arms straight, extended forward and overhead, neck neutral, eyes on the floor.
+
+Muscle activation shown as a neon lime-green glow (#D4FA50) from within the muscles, brightness proportional to effort:
+- brightest (100%): rectus abdominis;
+- clearly dimmer, about half as bright: obliques;
+- very faint: latissimus dorsi, rectus femoris;
+- all other muscles: no glow, natural deep red.
+
+Equipment: An ab wheel (small single wheel with a handle on each side) and a thin exercise mat.
+Scene: pure charcoal-black background (#0B0B0C), soft top-left key light, subtle lime-green rim light from behind, soft contact shadow, no floor texture.
+Composition: square 1:1, the whole figure and equipment fully visible with generous empty margins on the left and right, centered.
+
+Absolutely no text, letters, numbers, labels, arrows, logos, watermarks or UI. No extra limbs or fingers, no floating or disconnected equipment.
+```
+
+### 92. Mushuk–sigir (Cat-Cow) — «mushuk» holati — `cat-cow`
+
+```
+Photorealistic anatomical render of a woman holding the cat-cow stretch, captured at the cat position — spine fully rounded. Camera: side view from the athlete's right, camera low at about 40 cm above the floor, 50mm lens.
+
+Body: an athletic adult WOMAN with clearly female proportions (narrower shoulders, wider pelvis, natural female build), rendered in écorché style — skin removed, realistic deep-red striated muscle fibers, pearly white tendons, anatomically accurate muscle shapes; hair pulled back into a neat low bun. Plain opaque dark grey sports bra and dark grey compression shorts fully covering chest and hips. Black flat-soled training shoes (barefoot on a mat for floor stretches).
+
+Correct position (must be exact):
+- On all fours on the mat: hands directly under the shoulders with fingers spread, knees directly under the hips, tops of the feet flat on the mat.
+- Arms straight but not locked; the whole spine rounded up toward the ceiling in one smooth arc from the tailbone to the neck, pelvis tucked under.
+- Head relaxed down between the arms, chin drawn toward the chest, gaze toward the knees.
+- Hands pressing the floor away so the shoulder blades spread apart.
+Relaxed face and shoulders, calm breathing, no strain.
+
+The STRETCHED muscles are shown with a soft neon lime-green glow (#D4FA50) running along their length:
+- brightest: lower-back erector spinae;
+- faint: abdominal wall, rhomboids and mid back;
+- all other muscles: no glow, natural deep red.
+
+Equipment: Yoga mat on the floor.
+Scene: pure charcoal-black background (#0B0B0C), soft top-left key light, subtle lime-green rim light from behind, soft contact shadow, no floor texture.
+Composition: square 1:1, the whole figure fully visible with generous empty margins, centered.
+
+Absolutely no text, letters, numbers, labels, arrows, logos, watermarks or UI. No extra limbs or fingers.
+```
+
+### 93. Bola pozasi (Child's Pose) — cho‘zilgan holat — `childs-pose`
+
+```
+Photorealistic anatomical render of a woman holding the child's pose stretch, captured at the resting held position. Camera: side view from the athlete's right, camera low at about 40 cm above the floor, 50mm lens.
+
+Body: an athletic adult WOMAN with clearly female proportions (narrower shoulders, wider pelvis, natural female build), rendered in écorché style — skin removed, realistic deep-red striated muscle fibers, pearly white tendons, anatomically accurate muscle shapes; hair pulled back into a neat low bun. Plain opaque dark grey sports bra and dark grey compression shorts fully covering chest and hips. Black flat-soled training shoes (barefoot on a mat for floor stretches).
+
+Correct position (must be exact):
+- Kneeling on the mat with the big toes touching and the knees about hip-width apart, tops of the feet flat on the mat.
+- Hips sitting back onto (or just above) the heels; torso folded forward and resting on the thighs, back gently rounded.
+- Both arms extended straight forward on the mat beyond the head, palms down, shoulders relaxed away from the ears.
+- Forehead resting on the mat, neck long and relaxed.
+Relaxed face and shoulders, calm breathing, no strain.
+
+The STRETCHED muscles are shown with a soft neon lime-green glow (#D4FA50) running along their length:
+- brightest: lower-back erector spinae, latissimus dorsi;
+- faint: gluteal muscles, rhomboids and mid back;
+- all other muscles: no glow, natural deep red.
+
+Equipment: Yoga mat on the floor.
+Scene: pure charcoal-black background (#0B0B0C), soft top-left key light, subtle lime-green rim light from behind, soft contact shadow, no floor texture.
+Composition: square 1:1, the whole figure fully visible with generous empty margins, centered.
+
+Absolutely no text, letters, numbers, labels, arrows, logos, watermarks or UI. No extra limbs or fingers.
+```
+
+### 94. Pastga qaragan it (Downward Dog) — cho‘zilgan holat — `down-dog`
+
+```
+Photorealistic anatomical render of a woman holding the downward dog stretch, captured at the held inverted-V position. Camera: side view from the athlete's right, camera at about 60 cm above the floor, 50mm lens.
+
+Body: an athletic adult WOMAN with clearly female proportions (narrower shoulders, wider pelvis, natural female build), rendered in écorché style — skin removed, realistic deep-red striated muscle fibers, pearly white tendons, anatomically accurate muscle shapes; hair pulled back into a neat low bun. Plain opaque dark grey sports bra and dark grey compression shorts fully covering chest and hips. Black flat-soled training shoes (barefoot on a mat for floor stretches).
+
+Correct position (must be exact):
+- Inverted V shape: hands on the mat shoulder-width apart, slightly in front of the shoulders, fingers spread; feet hip-width apart.
+- Hips pushed high up and back; spine long and straight from the hands to the tailbone — the lower back is not rounded.
+- Arms straight and in line with the torso, upper arms beside the ears, head relaxed between the arms, gaze toward the knees.
+- Knees straight or very slightly bent, heels reaching toward the mat (a few centimeters above it is fine).
+Relaxed face and shoulders, calm breathing, no strain.
+
+The STRETCHED muscles are shown with a soft neon lime-green glow (#D4FA50) running along their length:
+- brightest: hamstrings, calves;
+- faint: latissimus dorsi;
+- all other muscles: no glow, natural deep red.
+
+Equipment: Yoga mat on the floor.
+Scene: pure charcoal-black background (#0B0B0C), soft top-left key light, subtle lime-green rim light from behind, soft contact shadow, no floor texture.
+Composition: square 1:1, the whole figure fully visible with generous empty margins, centered.
+
+Absolutely no text, letters, numbers, labels, arrows, logos, watermarks or UI. No extra limbs or fingers.
+```
+
+### 95. Kobra (Cobra) — yuqori holat — `cobra`
+
+```
+Photorealistic anatomical render of a woman holding the cobra stretch, captured at the lifted held position. Camera: side view from the athlete's right, camera low at about 40 cm above the floor, 50mm lens.
+
+Body: an athletic adult WOMAN with clearly female proportions (narrower shoulders, wider pelvis, natural female build), rendered in écorché style — skin removed, realistic deep-red striated muscle fibers, pearly white tendons, anatomically accurate muscle shapes; hair pulled back into a neat low bun. Plain opaque dark grey sports bra and dark grey compression shorts fully covering chest and hips. Black flat-soled training shoes (barefoot on a mat for floor stretches).
+
+Correct position (must be exact):
+- Lying face down on the mat, legs extended straight back hip-width apart, tops of the feet flat on the mat.
+- Pelvis and the front of the thighs stay on the mat; chest lifted so the torso is at about 30–40° to the floor.
+- Palms on the mat under or slightly in front of the shoulders, elbows slightly bent, tucked close to the ribs and pointing back.
+- Shoulders down away from the ears, chest open, neck long with the gaze forward and slightly down — the head is not thrown back.
+Relaxed face and shoulders, calm breathing, no strain.
+
+The STRETCHED muscles are shown with a soft neon lime-green glow (#D4FA50) running along their length:
+- brightest: abdominal wall;
+- faint: pectoral muscles;
+- all other muscles: no glow, natural deep red.
+
+Equipment: Yoga mat on the floor.
+Scene: pure charcoal-black background (#0B0B0C), soft top-left key light, subtle lime-green rim light from behind, soft contact shadow, no floor texture.
+Composition: square 1:1, the whole figure fully visible with generous empty margins, centered.
+
+Absolutely no text, letters, numbers, labels, arrows, logos, watermarks or UI. No extra limbs or fingers.
+```
+
+### 96. Ignaga ip o‘tkazish (Thread the Needle) — pastki holat — `thread-needle`
+
+```
+Photorealistic anatomical render of a woman holding the thread the needle stretch, captured at the threaded position. Camera: front three-quarter view — 40° in front of the athlete's left side, camera at about 50 cm above the floor, 50mm lens — so the threaded arm and the rotated upper back are visible.
+
+Body: an athletic adult WOMAN with clearly female proportions (narrower shoulders, wider pelvis, natural female build), rendered in écorché style — skin removed, realistic deep-red striated muscle fibers, pearly white tendons, anatomically accurate muscle shapes; hair pulled back into a neat low bun. Plain opaque dark grey sports bra and dark grey compression shorts fully covering chest and hips. Black flat-soled training shoes (barefoot on a mat for floor stretches).
+
+Correct position (must be exact):
+- On all fours on the mat, hips stacked directly above the knees, tops of the feet on the mat.
+- Left hand planted on the mat under the left shoulder, left elbow slightly bent, supporting the body.
+- Right arm threaded under the left arm along the mat toward the left side, palm facing up; the right shoulder and the right side of the head rest on the mat.
+- Upper back rotated toward the left while the hips stay level above the knees.
+Relaxed face and shoulders, calm breathing, no strain.
+
+The STRETCHED muscles are shown with a soft neon lime-green glow (#D4FA50) running along their length:
+- brightest: rhomboids and mid back;
+- faint: rear deltoids, obliques;
+- all other muscles: no glow, natural deep red.
+
+Equipment: Yoga mat on the floor.
+Scene: pure charcoal-black background (#0B0B0C), soft top-left key light, subtle lime-green rim light from behind, soft contact shadow, no floor texture.
+Composition: square 1:1, the whole figure fully visible with generous empty margins, centered.
+
+Absolutely no text, letters, numbers, labels, arrows, logos, watermarks or UI. No extra limbs or fingers.
+```
+
+### 97. Yotib burilish (Supine Spinal Twist) — cho‘zilgan holat — `supine-twist`
+
+```
+Photorealistic anatomical render of a woman holding the supine spinal twist stretch, captured at the held twist with the knees dropped to one side. Camera: high three-quarter view from above the athlete's feet on the right side (about 45° down), 50mm lens — so the flat shoulders and the knees dropped to the side are both visible.
+
+Body: an athletic adult WOMAN with clearly female proportions (narrower shoulders, wider pelvis, natural female build), rendered in écorché style — skin removed, realistic deep-red striated muscle fibers, pearly white tendons, anatomically accurate muscle shapes; hair pulled back into a neat low bun. Plain opaque dark grey sports bra and dark grey compression shorts fully covering chest and hips. Black flat-soled training shoes (barefoot on a mat for floor stretches).
+
+Correct position (must be exact):
+- Lying on the back on the mat, both arms extended out to the sides at shoulder height in a T, palms down, both shoulder blades flat on the mat.
+- Knees bent about 90° and stacked together, both dropped over to the right side, resting on or close to the mat.
+- Head turned gently to the left, looking away from the knees.
+- The twist comes from the waist and ribcage; face and body relaxed.
+Relaxed face and shoulders, calm breathing, no strain.
+
+The STRETCHED muscles are shown with a soft neon lime-green glow (#D4FA50) running along their length:
+- brightest: lower-back erector spinae, obliques;
+- faint: gluteal muscles, pectoral muscles;
+- all other muscles: no glow, natural deep red.
+
+Equipment: Yoga mat on the floor.
+Scene: pure charcoal-black background (#0B0B0C), soft top-left key light, subtle lime-green rim light from behind, soft contact shadow, no floor texture.
+Composition: square 1:1, the whole figure fully visible with generous empty margins, centered.
+
+Absolutely no text, letters, numbers, labels, arrows, logos, watermarks or UI. No extra limbs or fingers.
+```
+
+### 98. Tiz cho‘kib son bukuvchisini cho‘zish (Half-Kneeling Hip Flexor Stretch) — cho‘zilgan holat — `hip-flexor-stretch`
+
+```
+Photorealistic anatomical render of a woman holding the half-kneeling hip flexor stretch, captured at the held position with the hips shifted forward. Camera: side view from the athlete's left, camera at about 60 cm above the floor, 50mm lens — the back (stretched) leg is nearest the camera.
+
+Body: an athletic adult WOMAN with clearly female proportions (narrower shoulders, wider pelvis, natural female build), rendered in écorché style — skin removed, realistic deep-red striated muscle fibers, pearly white tendons, anatomically accurate muscle shapes; hair pulled back into a neat low bun. Plain opaque dark grey sports bra and dark grey compression shorts fully covering chest and hips. Black flat-soled training shoes (barefoot on a mat for floor stretches).
+
+Correct position (must be exact):
+- Half-kneeling: left knee on a folded towel on the mat, directly under or slightly behind the hip, top of the left foot flat on the mat.
+- Right foot flat on the mat in front, right knee bent about 90° directly above the ankle.
+- Torso upright and tall, pelvis tucked under with the glutes squeezed, hips shifted a few centimeters forward so the front of the left hip and thigh are stretched; lower back neutral, not arched.
+- Both hands resting on the front thigh, shoulders relaxed.
+Relaxed face and shoulders, calm breathing, no strain.
+
+The STRETCHED muscles are shown with a soft neon lime-green glow (#D4FA50) running along their length:
+- brightest: front thigh and hip flexors (rectus femoris, iliopsoas);
+- all other muscles: no glow, natural deep red.
+
+Equipment: Yoga mat on the floor with a small folded towel under the back knee.
+Scene: pure charcoal-black background (#0B0B0C), soft top-left key light, subtle lime-green rim light from behind, soft contact shadow, no floor texture.
+Composition: square 1:1, the whole figure fully visible with generous empty margins, centered.
+
+Absolutely no text, letters, numbers, labels, arrows, logos, watermarks or UI. No extra limbs or fingers.
+```
+
+### 99. Kaptar pozasi (Pigeon Pose) — cho‘zilgan holat — `pigeon`
+
+```
+Photorealistic anatomical render of a woman holding the pigeon pose stretch, captured at the upright held position. Camera: front three-quarter view — 40° in front of the athlete's right side, camera at about 50 cm above the floor, 50mm lens — so the bent front shin and the long back leg are both clearly visible.
+
+Body: an athletic adult WOMAN with clearly female proportions (narrower shoulders, wider pelvis, natural female build), rendered in écorché style — skin removed, realistic deep-red striated muscle fibers, pearly white tendons, anatomically accurate muscle shapes; hair pulled back into a neat low bun. Plain opaque dark grey sports bra and dark grey compression shorts fully covering chest and hips. Black flat-soled training shoes (barefoot on a mat for floor stretches).
+
+Correct position (must be exact):
+- Right leg in front: right knee bent and resting on the mat behind the right wrist, right shin lying diagonally across the mat with the right heel in front of the left hip, right foot flexed.
+- Left leg extended straight back along the mat, the left knee and the top of the left foot on the mat, toes pointing straight back.
+- Pelvis level and squared to the front; the right buttock resting on the mat or on a folded blanket.
+- Torso upright and long, fingertips on the mat on either side of the hips, shoulders relaxed.
+Relaxed face and shoulders, calm breathing, no strain.
+
+The STRETCHED muscles are shown with a soft neon lime-green glow (#D4FA50) running along their length:
+- brightest: gluteal muscles;
+- faint: front thigh and hip flexors (rectus femoris, iliopsoas);
+- all other muscles: no glow, natural deep red.
+
+Equipment: Yoga mat on the floor; a small folded blanket under the right buttock.
+Scene: pure charcoal-black background (#0B0B0C), soft top-left key light, subtle lime-green rim light from behind, soft contact shadow, no floor texture.
+Composition: square 1:1, the whole figure fully visible with generous empty margins, centered.
+
+Absolutely no text, letters, numbers, labels, arrows, logos, watermarks or UI. No extra limbs or fingers.
+```
+
+### 100. «4» raqami (chalqancha) (Supine Figure-Four Stretch) — cho‘zilgan holat — `figure-four`
+
+```
+Photorealistic anatomical render of a woman holding the supine figure-four stretch, captured at the held position with the support thigh pulled in. Camera: high three-quarter view from above the athlete's right side (about 35° down), 50mm lens — so the ankle crossed on the opposite knee and the open right knee are clearly visible.
+
+Body: an athletic adult WOMAN with clearly female proportions (narrower shoulders, wider pelvis, natural female build), rendered in écorché style — skin removed, realistic deep-red striated muscle fibers, pearly white tendons, anatomically accurate muscle shapes; hair pulled back into a neat low bun. Plain opaque dark grey sports bra and dark grey compression shorts fully covering chest and hips. Black flat-soled training shoes (barefoot on a mat for floor stretches).
+
+Correct position (must be exact):
+- Lying on the back on the mat, head and shoulders resting on the mat.
+- Right ankle crossed over the left thigh just below the left knee, right foot flexed, right knee opened out to the side, forming a "4" shape.
+- Left foot lifted off the mat and the left thigh drawn toward the chest; both hands clasped behind the left thigh, the right arm reaching through the gap between the legs.
+- Pelvis and lower back resting on the mat, buttocks not lifted.
+Relaxed face and shoulders, calm breathing, no strain.
+
+The STRETCHED muscles are shown with a soft neon lime-green glow (#D4FA50) running along their length:
+- brightest: gluteal muscles;
+- all other muscles: no glow, natural deep red.
+
+Equipment: Yoga mat on the floor.
+Scene: pure charcoal-black background (#0B0B0C), soft top-left key light, subtle lime-green rim light from behind, soft contact shadow, no floor texture.
+Composition: square 1:1, the whole figure fully visible with generous empty margins, centered.
+
+Absolutely no text, letters, numbers, labels, arrows, logos, watermarks or UI. No extra limbs or fingers.
+```
+
+### 101. Kapalak (Butterfly Stretch) — cho‘zilgan holat — `butterfly`
+
+```
+Photorealistic anatomical render of a woman holding the butterfly stretch, captured at the held upright seated position. Camera: straight front view, camera slightly above the seated athlete (about 80 cm above the floor), 50mm lens.
+
+Body: an athletic adult WOMAN with clearly female proportions (narrower shoulders, wider pelvis, natural female build), rendered in écorché style — skin removed, realistic deep-red striated muscle fibers, pearly white tendons, anatomically accurate muscle shapes; hair pulled back into a neat low bun. Plain opaque dark grey sports bra and dark grey compression shorts fully covering chest and hips. Black flat-soled training shoes (barefoot on a mat for floor stretches).
+
+Correct position (must be exact):
+- Sitting upright on the mat, soles of the feet pressed together, heels drawn in toward the groin about a hand-width away.
+- Knees dropped open to the sides toward the floor, relaxed, not pushed down.
+- Both hands holding the feet, spine tall from the pelvis to the head, chest open, shoulders relaxed.
+Relaxed face and shoulders, calm breathing, no strain.
+
+The STRETCHED muscles are shown with a soft neon lime-green glow (#D4FA50) running along their length:
+- brightest: inner-thigh adductors;
+- all other muscles: no glow, natural deep red.
+
+Equipment: Yoga mat on the floor.
+Scene: pure charcoal-black background (#0B0B0C), soft top-left key light, subtle lime-green rim light from behind, soft contact shadow, no floor texture.
+Composition: square 1:1, the whole figure fully visible with generous empty margins, centered.
+
+Absolutely no text, letters, numbers, labels, arrows, logos, watermarks or UI. No extra limbs or fingers.
+```
+
+### 102. Son orqasini cho‘zish (chalqancha) (Supine Hamstring Stretch) — cho‘zilgan holat — `hamstring-stretch`
+
+```
+Photorealistic anatomical render of a woman holding the supine hamstring stretch, captured at the held position. Camera: side view from the athlete's right, camera low at about 40 cm above the floor, 50mm lens.
+
+Body: an athletic adult WOMAN with clearly female proportions (narrower shoulders, wider pelvis, natural female build), rendered in écorché style — skin removed, realistic deep-red striated muscle fibers, pearly white tendons, anatomically accurate muscle shapes; hair pulled back into a neat low bun. Plain opaque dark grey sports bra and dark grey compression shorts fully covering chest and hips. Black flat-soled training shoes (barefoot on a mat for floor stretches).
+
+Correct position (must be exact):
+- Lying on the back on the mat, head and shoulders relaxed on the mat.
+- Right leg raised straight up toward the ceiling, knee straight, foot flexed (toes toward the face), the leg about 80–90° from the floor.
+- A strap looped around the ball of the right foot, both hands holding its two ends with the elbows slightly bent, gently drawing the leg toward the body.
+- Left knee bent with the left foot flat on the mat; lower back and pelvis flat on the mat.
+Relaxed face and shoulders, calm breathing, no strain.
+
+The STRETCHED muscles are shown with a soft neon lime-green glow (#D4FA50) running along their length:
+- brightest: hamstrings;
+- faint: calves;
+- all other muscles: no glow, natural deep red.
+
+Equipment: Yoga mat on the floor and a fabric yoga strap looped around the raised foot.
+Scene: pure charcoal-black background (#0B0B0C), soft top-left key light, subtle lime-green rim light from behind, soft contact shadow, no floor texture.
+Composition: square 1:1, the whole figure fully visible with generous empty margins, centered.
+
+Absolutely no text, letters, numbers, labels, arrows, logos, watermarks or UI. No extra limbs or fingers.
+```
+
+### 103. Tik turib son oldini cho‘zish (Standing Quad Stretch) — cho‘zilgan holat — `quad-stretch`
+
+```
+Photorealistic anatomical render of a woman holding the standing quad stretch, captured at the held standing position. Camera: side view from the athlete's right at hip height, 50mm lens.
+
+Body: an athletic adult WOMAN with clearly female proportions (narrower shoulders, wider pelvis, natural female build), rendered in écorché style — skin removed, realistic deep-red striated muscle fibers, pearly white tendons, anatomically accurate muscle shapes; hair pulled back into a neat low bun. Plain opaque dark grey sports bra and dark grey compression shorts fully covering chest and hips. Black flat-soled training shoes (barefoot on a mat for floor stretches).
+
+Correct position (must be exact):
+- Standing tall facing a plain wall about an arm's length away, the left palm resting flat on the wall at shoulder height for balance.
+- Standing on the left leg with a soft knee; the right knee bent and the right hand holding the top of the right foot, heel drawn toward the buttock.
+- Both knees side by side, the right knee pointing straight down at the floor, the right thigh vertical or slightly behind the body.
+- Pelvis tucked under with the glutes squeezed, torso upright, lower back not arched.
+Relaxed face and shoulders, calm breathing, no strain.
+
+The STRETCHED muscles are shown with a soft neon lime-green glow (#D4FA50) running along their length:
+- brightest: front thigh and hip flexors (rectus femoris, iliopsoas);
+- all other muscles: no glow, natural deep red.
+
+Equipment: A plain wall.
+Scene: pure charcoal-black background (#0B0B0C), soft top-left key light, subtle lime-green rim light from behind, soft contact shadow, no floor texture.
+Composition: square 1:1, the whole figure fully visible with generous empty margins, centered.
+
+Absolutely no text, letters, numbers, labels, arrows, logos, watermarks or UI. No extra limbs or fingers.
+```
+
+### 104. Boldirni devorda cho‘zish (Wall Calf Stretch) — cho‘zilgan holat — `calf-stretch`
+
+```
+Photorealistic anatomical render of a woman holding the wall calf stretch, captured at the held lunge against the wall. Camera: side view from the athlete's right at hip height, 50mm lens.
+
+Body: an athletic adult WOMAN with clearly female proportions (narrower shoulders, wider pelvis, natural female build), rendered in écorché style — skin removed, realistic deep-red striated muscle fibers, pearly white tendons, anatomically accurate muscle shapes; hair pulled back into a neat low bun. Plain opaque dark grey sports bra and dark grey compression shorts fully covering chest and hips. Black flat-soled training shoes (barefoot on a mat for floor stretches).
+
+Correct position (must be exact):
+- Facing a plain wall, both palms flat on the wall at shoulder height, elbows slightly bent.
+- Right leg stepped back about one meter: right knee straight, right heel pressed flat on the floor, toes pointing straight forward.
+- Left foot forward, closer to the wall, with the left knee bent.
+- Body in one straight line from the right heel to the head, leaning toward the wall; hips not sagging.
+Relaxed face and shoulders, calm breathing, no strain.
+
+The STRETCHED muscles are shown with a soft neon lime-green glow (#D4FA50) running along their length:
+- brightest: calves;
+- all other muscles: no glow, natural deep red.
+
+Equipment: A plain wall.
+Scene: pure charcoal-black background (#0B0B0C), soft top-left key light, subtle lime-green rim light from behind, soft contact shadow, no floor texture.
+Composition: square 1:1, the whole figure fully visible with generous empty margins, centered.
+
+Absolutely no text, letters, numbers, labels, arrows, logos, watermarks or UI. No extra limbs or fingers.
+```
+
+### 105. Eshik romida ko‘krakni cho‘zish (Doorway Chest Stretch) — cho‘zilgan holat — `doorway-chest`
+
+```
+Photorealistic anatomical render of a woman holding the doorway chest stretch, captured at the held position stepped through the doorway. Camera: rear three-quarter view — 35° behind the athlete's right side, at shoulder height, 50mm lens — so the right forearm on the door frame and the open chest are both visible.
+
+Body: an athletic adult WOMAN with clearly female proportions (narrower shoulders, wider pelvis, natural female build), rendered in écorché style — skin removed, realistic deep-red striated muscle fibers, pearly white tendons, anatomically accurate muscle shapes; hair pulled back into a neat low bun. Plain opaque dark grey sports bra and dark grey compression shorts fully covering chest and hips. Black flat-soled training shoes (barefoot on a mat for floor stretches).
+
+Correct position (must be exact):
+- Standing in an open doorway; the right forearm and palm flat against the door frame, right elbow bent 90° at shoulder height, upper arm horizontal and out to the side.
+- Right foot a small step forward through the doorway, body leaning gently forward so the right arm stays slightly behind the chest.
+- Torso upright, shoulders down away from the ears, lower back neutral.
+- Left arm relaxed by the side.
+Relaxed face and shoulders, calm breathing, no strain.
+
+The STRETCHED muscles are shown with a soft neon lime-green glow (#D4FA50) running along their length:
+- brightest: pectoral muscles;
+- faint: front deltoids, biceps;
+- all other muscles: no glow, natural deep red.
+
+Equipment: A plain open doorway with a simple door frame.
+Scene: pure charcoal-black background (#0B0B0C), soft top-left key light, subtle lime-green rim light from behind, soft contact shadow, no floor texture.
+Composition: square 1:1, the whole figure fully visible with generous empty margins, centered.
+
+Absolutely no text, letters, numbers, labels, arrows, logos, watermarks or UI. No extra limbs or fingers.
+```
+
+### 106. Qo‘lni ko‘krak oldidan tortish (Cross-Body Shoulder Stretch) — cho‘zilgan holat — `cross-body-shoulder`
+
+```
+Photorealistic anatomical render of a woman holding the cross-body shoulder stretch, captured at the held position. Camera: front three-quarter view — 30° in front of the athlete's right side, at chest height, 50mm lens.
+
+Body: an athletic adult WOMAN with clearly female proportions (narrower shoulders, wider pelvis, natural female build), rendered in écorché style — skin removed, realistic deep-red striated muscle fibers, pearly white tendons, anatomically accurate muscle shapes; hair pulled back into a neat low bun. Plain opaque dark grey sports bra and dark grey compression shorts fully covering chest and hips. Black flat-soled training shoes (barefoot on a mat for floor stretches).
+
+Correct position (must be exact):
+- Standing tall, feet hip-width apart.
+- Right arm straight and drawn horizontally across the front of the chest toward the left side, at shoulder height.
+- Left hand holding the right arm just above the elbow, gently pulling it closer to the chest.
+- Right shoulder relaxed down away from the ear; torso facing forward, not rotated.
+Relaxed face and shoulders, calm breathing, no strain.
+
+The STRETCHED muscles are shown with a soft neon lime-green glow (#D4FA50) running along their length:
+- brightest: rear deltoids;
+- faint: rhomboids and mid back;
+- all other muscles: no glow, natural deep red.
+
+Equipment: No equipment, plain floor.
+Scene: pure charcoal-black background (#0B0B0C), soft top-left key light, subtle lime-green rim light from behind, soft contact shadow, no floor texture.
+Composition: square 1:1, the whole figure fully visible with generous empty margins, centered.
+
+Absolutely no text, letters, numbers, labels, arrows, logos, watermarks or UI. No extra limbs or fingers.
+```
+
+### 107. Bo‘yinni yonga cho‘zish (Neck Side Stretch) — cho‘zilgan holat — `neck-stretch`
+
+```
+Photorealistic anatomical render of a woman holding the neck side stretch, captured at the held side-bend position. Camera: straight front view at chest height, 50mm lens.
+
+Body: an athletic adult WOMAN with clearly female proportions (narrower shoulders, wider pelvis, natural female build), rendered in écorché style — skin removed, realistic deep-red striated muscle fibers, pearly white tendons, anatomically accurate muscle shapes; hair pulled back into a neat low bun. Plain opaque dark grey sports bra and dark grey compression shorts fully covering chest and hips. Black flat-soled training shoes (barefoot on a mat for floor stretches).
+
+Correct position (must be exact):
+- Standing tall, feet hip-width apart, shoulders relaxed.
+- Head tilted to the right, the right ear moving toward the right shoulder; face looking forward, not rotated.
+- Right hand resting lightly on the left side of the head above the ear, not pulling.
+- Left arm hanging down by the side with the left shoulder drawn down, lengthening the left side of the neck.
+Relaxed face and shoulders, calm breathing, no strain.
+
+The STRETCHED muscles are shown with a soft neon lime-green glow (#D4FA50) running along their length:
+- brightest: upper trapezius and side neck muscles;
+- all other muscles: no glow, natural deep red.
+
+Equipment: No equipment, plain floor.
+Scene: pure charcoal-black background (#0B0B0C), soft top-left key light, subtle lime-green rim light from behind, soft contact shadow, no floor texture.
+Composition: square 1:1, the whole figure fully visible with generous empty margins, centered.
+
+Absolutely no text, letters, numbers, labels, arrows, logos, watermarks or UI. No extra limbs or fingers.
+```
+
 ## Zal jihozlari
 
-### 64. Shtanga — `barbell`
+### 108. Shtanga — `barbell`
 
 ```
 Photorealistic studio product render of one piece of commercial gym equipment: an Olympic barbell lying on the floor, loaded with one large matte black bumper plate on each end, plus two smaller plates leaning against the bar.
@@ -1572,7 +2668,7 @@ Square 1:1, high detail, clean premium look. No people.
 Absolutely no text, letters, numbers, labels, arrows, logos, watermarks or UI. Weight plates and weight stacks have no numbers.
 ```
 
-### 65. Shtanga ramasi — `rack`
+### 109. Shtanga ramasi — `rack`
 
 ```
 Photorealistic studio product render of one piece of commercial gym equipment: a power rack (four-post squat cage) with J-hooks, horizontal safety bars at hip height and an empty Olympic barbell resting on the hooks at shoulder height.
@@ -1583,7 +2679,7 @@ Square 1:1, high detail, clean premium look. No people.
 Absolutely no text, letters, numbers, labels, arrows, logos, watermarks or UI. Weight plates and weight stacks have no numbers.
 ```
 
-### 66. Skameyka — `bench`
+### 110. Skameyka — `bench`
 
 ```
 Photorealistic studio product render of one piece of commercial gym equipment: a flat weight bench: one long horizontal padded top on a sturdy steel frame.
@@ -1594,7 +2690,7 @@ Square 1:1, high detail, clean premium look. No people.
 Absolutely no text, letters, numbers, labels, arrows, logos, watermarks or UI. Weight plates and weight stacks have no numbers.
 ```
 
-### 67. Qiya skameyka — `inclineBench`
+### 111. Qiya skameyka — `inclineBench`
 
 ```
 Photorealistic studio product render of one piece of commercial gym equipment: an adjustable weight bench with the backrest raised to about 30 degrees and a small seat pad.
@@ -1605,7 +2701,7 @@ Square 1:1, high detail, clean premium look. No people.
 Absolutely no text, letters, numbers, labels, arrows, logos, watermarks or UI. Weight plates and weight stacks have no numbers.
 ```
 
-### 68. Gantellar — `dumbbells`
+### 112. Gantellar — `dumbbells`
 
 ```
 Photorealistic studio product render of one piece of commercial gym equipment: a two-tier dumbbell rack holding a neat row of hexagonal rubber dumbbells, from small to large.
@@ -1616,7 +2712,7 @@ Square 1:1, high detail, clean premium look. No people.
 Absolutely no text, letters, numbers, labels, arrows, logos, watermarks or UI. Weight plates and weight stacks have no numbers.
 ```
 
-### 69. EZ-shtanga — `ezBar`
+### 113. EZ-shtanga — `ezBar`
 
 ```
 Photorealistic studio product render of one piece of commercial gym equipment: an EZ curl bar (short bar with a zig-zag cambered middle grip) lying on the floor, loaded with one small matte black plate on each end.
@@ -1627,7 +2723,7 @@ Square 1:1, high detail, clean premium look. No people.
 Absolutely no text, letters, numbers, labels, arrows, logos, watermarks or UI. Weight plates and weight stacks have no numbers.
 ```
 
-### 70. Girya — `kettlebell`
+### 114. Girya — `kettlebell`
 
 ```
 Photorealistic studio product render of one piece of commercial gym equipment: three cast-iron kettlebells of different sizes standing in a row, small to large.
@@ -1638,7 +2734,7 @@ Square 1:1, high detail, clean premium look. No people.
 Absolutely no text, letters, numbers, labels, arrows, logos, watermarks or UI. Weight plates and weight stacks have no numbers.
 ```
 
-### 71. Krossover (blok) — `cable`
+### 115. Krossover (blok) — `cable`
 
 ```
 Photorealistic studio product render of one piece of commercial gym equipment: a cable crossover station: two tall weight-stack towers on the left and right, joined by an overhead frame with a pull-up bar, adjustable pulleys with D-handles on both towers.
@@ -1649,7 +2745,7 @@ Square 1:1, high detail, clean premium look. No people.
 Absolutely no text, letters, numbers, labels, arrows, logos, watermarks or UI. Weight plates and weight stacks have no numbers.
 ```
 
-### 72. Yuqori blok — `latPulldown`
+### 116. Yuqori blok — `latPulldown`
 
 ```
 Photorealistic studio product render of one piece of commercial gym equipment: a lat pulldown machine: a long wide bar hanging from a high cable, a seat with thigh-pad rollers under the bar, and a weight stack behind.
@@ -1660,7 +2756,7 @@ Square 1:1, high detail, clean premium look. No people.
 Absolutely no text, letters, numbers, labels, arrows, logos, watermarks or UI. Weight plates and weight stacks have no numbers.
 ```
 
-### 73. Pastki blok — `seatedRow`
+### 117. Pastki blok — `seatedRow`
 
 ```
 Photorealistic studio product render of one piece of commercial gym equipment: a seated cable row machine: a long low bench seat, an angled foot platform, a low pulley with a V-handle, and a weight stack at the end.
@@ -1671,7 +2767,7 @@ Square 1:1, high detail, clean premium look. No people.
 Absolutely no text, letters, numbers, labels, arrows, logos, watermarks or UI. Weight plates and weight stacks have no numbers.
 ```
 
-### 74. Smit mashinasi — `smith`
+### 118. Smit mashinasi — `smith`
 
 ```
 Photorealistic studio product render of one piece of commercial gym equipment: a Smith machine: a barbell fixed inside two vertical steel guide rails in a tall frame, with a flat bench underneath.
@@ -1682,7 +2778,7 @@ Square 1:1, high detail, clean premium look. No people.
 Absolutely no text, letters, numbers, labels, arrows, logos, watermarks or UI. Weight plates and weight stacks have no numbers.
 ```
 
-### 75. Oyoq press — `legPress`
+### 119. Oyoq press — `legPress`
 
 ```
 Photorealistic studio product render of one piece of commercial gym equipment: a 45-degree plate-loaded leg press: a reclined padded seat, a large angled foot platform on a sled, weight plates loaded on the side posts.
@@ -1693,7 +2789,7 @@ Square 1:1, high detail, clean premium look. No people.
 Absolutely no text, letters, numbers, labels, arrows, logos, watermarks or UI. Weight plates and weight stacks have no numbers.
 ```
 
-### 76. Gakk-mashina — `hackSquat`
+### 120. Gakk-mashina — `hackSquat`
 
 ```
 Photorealistic studio product render of one piece of commercial gym equipment: a plate-loaded hack squat machine: an angled sled with a back pad and two shoulder pads, a large foot platform at the bottom.
@@ -1704,7 +2800,7 @@ Square 1:1, high detail, clean premium look. No people.
 Absolutely no text, letters, numbers, labels, arrows, logos, watermarks or UI. Weight plates and weight stacks have no numbers.
 ```
 
-### 77. Oyoq yozish — `legExtension`
+### 121. Oyoq yozish — `legExtension`
 
 ```
 Photorealistic studio product render of one piece of commercial gym equipment: a seated leg extension machine: a padded seat with an upright backrest, a padded shin roller in front of the seat at ankle height, and a weight stack.
@@ -1715,7 +2811,7 @@ Square 1:1, high detail, clean premium look. No people.
 Absolutely no text, letters, numbers, labels, arrows, logos, watermarks or UI. Weight plates and weight stacks have no numbers.
 ```
 
-### 78. Oyoq bukish — `legCurl`
+### 122. Oyoq bukish — `legCurl`
 
 ```
 Photorealistic studio product render of one piece of commercial gym equipment: a seated leg curl machine: a padded seat with an upright backrest, a thigh hold-down pad above the knees, a padded ankle roller in front, and a weight stack.
@@ -1726,7 +2822,7 @@ Square 1:1, high detail, clean premium look. No people.
 Absolutely no text, letters, numbers, labels, arrows, logos, watermarks or UI. Weight plates and weight stacks have no numbers.
 ```
 
-### 79. Ko‘krak press trenajyori — `chestPress`
+### 123. Ko‘krak press trenajyori — `chestPress`
 
 ```
 Photorealistic studio product render of one piece of commercial gym equipment: a seated chest press machine: an upright seat and backrest, two horizontal handles at chest height pointing forward, and a weight stack.
@@ -1737,7 +2833,7 @@ Square 1:1, high detail, clean premium look. No people.
 Absolutely no text, letters, numbers, labels, arrows, logos, watermarks or UI. Weight plates and weight stacks have no numbers.
 ```
 
-### 80. Batterflay — `pecDeck`
+### 124. Batterflay — `pecDeck`
 
 ```
 Photorealistic studio product render of one piece of commercial gym equipment: a pec deck (butterfly) machine: an upright seat and backrest with two padded vertical arms on either side that swing together in front of the chest, and a weight stack.
@@ -1748,7 +2844,7 @@ Square 1:1, high detail, clean premium look. No people.
 Absolutely no text, letters, numbers, labels, arrows, logos, watermarks or UI. Weight plates and weight stacks have no numbers.
 ```
 
-### 81. Yelka press trenajyori — `shoulderPress`
+### 125. Yelka press trenajyori — `shoulderPress`
 
 ```
 Photorealistic studio product render of one piece of commercial gym equipment: a seated shoulder press machine: an upright seat and backrest, two handles just above shoulder height pointing up, and a weight stack.
@@ -1759,7 +2855,7 @@ Square 1:1, high detail, clean premium look. No people.
 Absolutely no text, letters, numbers, labels, arrows, logos, watermarks or UI. Weight plates and weight stacks have no numbers.
 ```
 
-### 82. Giperekstenziya — `hyperext`
+### 126. Giperekstenziya — `hyperext`
 
 ```
 Photorealistic studio product render of one piece of commercial gym equipment: a 45-degree back extension (hyperextension) bench: an angled frame with a padded hip support and padded ankle rollers near the floor.
@@ -1770,7 +2866,7 @@ Square 1:1, high detail, clean premium look. No people.
 Absolutely no text, letters, numbers, labels, arrows, logos, watermarks or UI. Weight plates and weight stacks have no numbers.
 ```
 
-### 83. Turnik — `pullupBar`
+### 127. Turnik — `pullupBar`
 
 ```
 Photorealistic studio product render of one piece of commercial gym equipment: a free-standing pull-up bar: one straight horizontal steel bar about 2.3 m high between two upright steel posts on a wide base.
@@ -1781,7 +2877,7 @@ Square 1:1, high detail, clean premium look. No people.
 Absolutely no text, letters, numbers, labels, arrows, logos, watermarks or UI. Weight plates and weight stacks have no numbers.
 ```
 
-### 84. Brusya — `dipBars`
+### 128. Brusya — `dipBars`
 
 ```
 Photorealistic studio product render of one piece of commercial gym equipment: a free-standing dip station: two parallel horizontal bars with rubber grips at waist height on a sturdy steel base.
@@ -1792,7 +2888,7 @@ Square 1:1, high detail, clean premium look. No people.
 Absolutely no text, letters, numbers, labels, arrows, logos, watermarks or UI. Weight plates and weight stacks have no numbers.
 ```
 
-### 85. Rezina lentalar — `bands`
+### 129. Rezina lentalar — `bands`
 
 ```
 Photorealistic studio product render of one piece of commercial gym equipment: a set of four flat loop resistance bands of increasing thickness, neatly coiled and fanned out on the floor (black, dark grey, graphite and one lime-green).
@@ -1803,7 +2899,7 @@ Square 1:1, high detail, clean premium look. No people.
 Absolutely no text, letters, numbers, labels, arrows, logos, watermarks or UI. Weight plates and weight stacks have no numbers.
 ```
 
-### 86. Platforma — `box`
+### 130. Platforma — `box`
 
 ```
 Photorealistic studio product render of one piece of commercial gym equipment: a sturdy plyometric box (dark wood or dense foam) with a low aerobic step platform beside it.
@@ -1814,10 +2910,98 @@ Square 1:1, high detail, clean premium look. No people.
 Absolutely no text, letters, numbers, labels, arrows, logos, watermarks or UI. Weight plates and weight stacks have no numbers.
 ```
 
-### 87. Kardio — `cardio`
+### 131. Kardio — `cardio`
 
 ```
 Photorealistic studio product render of one piece of commercial gym equipment: a compact group of cardio machines: a treadmill in front, an upright exercise bike and a rowing machine slightly behind it.
+Camera: three-quarter front view from slightly above eye level, turned about 35° to the left, 50mm lens; the whole equipment fully in frame and centered with generous empty margins on all sides.
+Materials: matte black powder-coated steel, dark graphite upholstery, brushed-steel details, black rubber; one small neon lime-green (#D4FA50) accent detail.
+Scene: seamless charcoal-black background (#0B0B0C), soft top key light, thin lime-green rim light outlining the silhouette, soft contact shadow, no floor texture, no other objects.
+Square 1:1, high detail, clean premium look. No people.
+Absolutely no text, letters, numbers, labels, arrows, logos, watermarks or UI. Weight plates and weight stacks have no numbers.
+```
+
+### 132. Abduktor / adduktor — `hipAbAd`
+
+```
+Photorealistic studio product render of one piece of commercial gym equipment: a seated hip abductor / adductor machine: a reclined padded seat and backrest, two padded leg arms that hold the knees and open outward or close inward, foot pegs, and a weight stack behind the seat.
+Camera: three-quarter front view from slightly above eye level, turned about 35° to the left, 50mm lens; the whole equipment fully in frame and centered with generous empty margins on all sides.
+Materials: matte black powder-coated steel, dark graphite upholstery, brushed-steel details, black rubber; one small neon lime-green (#D4FA50) accent detail.
+Scene: seamless charcoal-black background (#0B0B0C), soft top key light, thin lime-green rim light outlining the silhouette, soft contact shadow, no floor texture, no other objects.
+Square 1:1, high detail, clean premium look. No people.
+Absolutely no text, letters, numbers, labels, arrows, logos, watermarks or UI. Weight plates and weight stacks have no numbers.
+```
+
+### 133. O‘tirib boldir trenajyori — `seatedCalf`
+
+```
+Photorealistic studio product render of one piece of commercial gym equipment: a seated calf raise machine: a low padded seat, a horizontal padded lever that rests on top of the thighs just above the knees, an angled foot platform for the balls of the feet, and a plate-loading peg.
+Camera: three-quarter front view from slightly above eye level, turned about 35° to the left, 50mm lens; the whole equipment fully in frame and centered with generous empty margins on all sides.
+Materials: matte black powder-coated steel, dark graphite upholstery, brushed-steel details, black rubber; one small neon lime-green (#D4FA50) accent detail.
+Scene: seamless charcoal-black background (#0B0B0C), soft top key light, thin lime-green rim light outlining the silhouette, soft contact shadow, no floor texture, no other objects.
+Square 1:1, high detail, clean premium look. No people.
+Absolutely no text, letters, numbers, labels, arrows, logos, watermarks or UI. Weight plates and weight stacks have no numbers.
+```
+
+### 134. Gravitron — `assistedPullup`
+
+```
+Photorealistic studio product render of one piece of commercial gym equipment: an assisted pull-up and dip machine (gravitron): a tall frame with high pull-up handles and parallel dip handles, a padded knee platform that moves up and down, and a weight stack.
+Camera: three-quarter front view from slightly above eye level, turned about 35° to the left, 50mm lens; the whole equipment fully in frame and centered with generous empty margins on all sides.
+Materials: matte black powder-coated steel, dark graphite upholstery, brushed-steel details, black rubber; one small neon lime-green (#D4FA50) accent detail.
+Scene: seamless charcoal-black background (#0B0B0C), soft top key light, thin lime-green rim light outlining the silhouette, soft contact shadow, no floor texture, no other objects.
+Square 1:1, high detail, clean premium look. No people.
+Absolutely no text, letters, numbers, labels, arrows, logos, watermarks or UI. Weight plates and weight stacks have no numbers.
+```
+
+### 135. Skott skameykasi — `preacher`
+
+```
+Photorealistic studio product render of one piece of commercial gym equipment: a preacher curl bench: a small seat and an angled padded arm rest at chest height, with a short EZ curl bar resting on the J-hooks in front.
+Camera: three-quarter front view from slightly above eye level, turned about 35° to the left, 50mm lens; the whole equipment fully in frame and centered with generous empty margins on all sides.
+Materials: matte black powder-coated steel, dark graphite upholstery, brushed-steel details, black rubber; one small neon lime-green (#D4FA50) accent detail.
+Scene: seamless charcoal-black background (#0B0B0C), soft top key light, thin lime-green rim light outlining the silhouette, soft contact shadow, no floor texture, no other objects.
+Square 1:1, high detail, clean premium look. No people.
+Absolutely no text, letters, numbers, labels, arrows, logos, watermarks or UI. Weight plates and weight stacks have no numbers.
+```
+
+### 136. T-shtanga — `tbar`
+
+```
+Photorealistic studio product render of one piece of commercial gym equipment: a chest-supported T-bar row machine: an angled chest pad, a foot platform, a lever arm with two pairs of handles (wide and neutral) and plate-loading pegs.
+Camera: three-quarter front view from slightly above eye level, turned about 35° to the left, 50mm lens; the whole equipment fully in frame and centered with generous empty margins on all sides.
+Materials: matte black powder-coated steel, dark graphite upholstery, brushed-steel details, black rubber; one small neon lime-green (#D4FA50) accent detail.
+Scene: seamless charcoal-black background (#0B0B0C), soft top key light, thin lime-green rim light outlining the silhouette, soft contact shadow, no floor texture, no other objects.
+Square 1:1, high detail, clean premium look. No people.
+Absolutely no text, letters, numbers, labels, arrows, logos, watermarks or UI. Weight plates and weight stacks have no numbers.
+```
+
+### 137. Press roligi — `abWheel`
+
+```
+Photorealistic studio product render of one piece of commercial gym equipment: an ab roller wheel: one wide rubber wheel with a steel axle and two foam handles on either side, lying on the floor next to a small kneeling pad.
+Camera: three-quarter front view from slightly above eye level, turned about 35° to the left, 50mm lens; the whole equipment fully in frame and centered with generous empty margins on all sides.
+Materials: matte black powder-coated steel, dark graphite upholstery, brushed-steel details, black rubber; one small neon lime-green (#D4FA50) accent detail.
+Scene: seamless charcoal-black background (#0B0B0C), soft top key light, thin lime-green rim light outlining the silhouette, soft contact shadow, no floor texture, no other objects.
+Square 1:1, high detail, clean premium look. No people.
+Absolutely no text, letters, numbers, labels, arrows, logos, watermarks or UI. Weight plates and weight stacks have no numbers.
+```
+
+### 138. Fitbol — `fitball`
+
+```
+Photorealistic studio product render of one piece of commercial gym equipment: a large stability (Swiss) exercise ball about 65 cm in diameter in matte graphite grey, resting on the floor.
+Camera: three-quarter front view from slightly above eye level, turned about 35° to the left, 50mm lens; the whole equipment fully in frame and centered with generous empty margins on all sides.
+Materials: matte black powder-coated steel, dark graphite upholstery, brushed-steel details, black rubber; one small neon lime-green (#D4FA50) accent detail.
+Scene: seamless charcoal-black background (#0B0B0C), soft top key light, thin lime-green rim light outlining the silhouette, soft contact shadow, no floor texture, no other objects.
+Square 1:1, high detail, clean premium look. No people.
+Absolutely no text, letters, numbers, labels, arrows, logos, watermarks or UI. Weight plates and weight stacks have no numbers.
+```
+
+### 139. Mini-lenta — `miniBand`
+
+```
+Photorealistic studio product render of one piece of commercial gym equipment: a set of three short fabric mini loop bands (hip circles) of increasing resistance, stacked and fanned out on the floor (black, graphite and one lime-green).
 Camera: three-quarter front view from slightly above eye level, turned about 35° to the left, 50mm lens; the whole equipment fully in frame and centered with generous empty margins on all sides.
 Materials: matte black powder-coated steel, dark graphite upholstery, brushed-steel details, black rubber; one small neon lime-green (#D4FA50) accent detail.
 Scene: seamless charcoal-black background (#0B0B0C), soft top key light, thin lime-green rim light outlining the silhouette, soft contact shadow, no floor texture, no other objects.

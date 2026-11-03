@@ -34,8 +34,10 @@ await page.waitForSelector('#ready');
 for (const j of jobs) {
   const frames = await page.evaluate((id) => window.__frames(id), j.id);
   // qisqarish 'pastda' bo'ladigan mashqlar (pastga bosish) — kerakli kadr 'squeeze'
-  const OVERRIDE = { pushdown: 'squeeze' };
-  let t = OVERRIDE[j.id] ? frames.find((f) => f.phase === OVERRIDE[j.id]).t : pickTime(frames, phaseOf(j.prompt));
+  const OVERRIDE = { pushdown: 'squeeze', 'dead-bug': 'squeeze' };
+  // cho'zilishlarda asosiy (cho'zilgan) poza — uchinchi kadr (stretches.ts dagi kelishuv)
+  const stretch = /STRETCHED muscles/.test(j.prompt);
+  let t = stretch ? frames[2].t : OVERRIDE[j.id] ? frames.find((f) => f.phase === OVERRIDE[j.id]).t : pickTime(frames, phaseOf(j.prompt));
   if (mode === 'alt') {
     // asosiy kadr boshlanish bo'lsa — harakatning eng uzoq nuqtasi, aks holda — boshlanish
     const top = frames.find((f) => f.phase === 'squeeze')?.t ?? frames.find((f, k) => k > 0 && frames[k - 1].phase === 'up')?.t ?? frames.find((f, k) => k > 0 && frames[k - 1].phase === 'down')?.t;

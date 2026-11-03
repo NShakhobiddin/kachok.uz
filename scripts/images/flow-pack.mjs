@@ -11,6 +11,8 @@ const arg = (n, d) => {
 const out = arg('out');
 const ids = (arg('ids') ?? '').split(',').filter(Boolean);
 const poses = arg('poses', null);
+// figura bu harakatni aniq chiza olmaydi (yon tomonga harakat va h.k.) — poza namunasi chalg'itadi, faqat matn
+const noPose = new Set((arg('nopose') ?? '').split(',').filter(Boolean));
 if (!out || !ids.length) throw new Error('--out va --ids kerak');
 
 const all = Object.fromEntries(JSON.parse(readFileSync('scripts/images/prompts.json', 'utf8')).map((j) => [`${j.kind}:${j.id}`, j]));
@@ -51,7 +53,7 @@ for (const id of ids) {
   mkdirSync(d, { recursive: true });
   const parts = [STYLE_EN];
   copyFileSync(job.kind === 'equipment' ? STYLE_EQ : STYLE_EX, `${d}/1-uslub.webp`);
-  const pose = poses && job.kind === 'exercise' ? `${poses}/${id}.png` : null;
+  const pose = poses && job.kind === 'exercise' && !noPose.has(id) ? `${poses}/${id}.png` : null;
   if (pose && existsSync(pose)) {
     copyFileSync(pose, `${d}/2-poza.png`);
     parts.push(POSE_EN);
