@@ -106,6 +106,7 @@ export const OLD_FIXES: OldFix[] = [
       change:
         'the pull-up bar: it runs from the athlete\'s left hand to the right hand, perpendicular to the direction the athlete faces — in this side view it is seen nearly end-on, pointing toward the camera, with both hands gripping it one behind the other',
     },
+    pair: { phaseUz: 'Pastki nuqta', change: 'the bottom: dead hang with straight arms and straight legs hanging down, the same grip on the same bar seen end-on' },
   },
   {
     id: 'dead-bug',

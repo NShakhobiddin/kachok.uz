@@ -12,7 +12,17 @@ import { EQUIPMENT } from '../../src/data/catalog';
 import { OLD_FIXES } from './fixesOld';
 import { NEW_PAIRS } from './pairsNew';
 
-const [out, posesA, posesB] = process.argv.slice(2).filter((a) => a !== '--');
+// qo'shimcha: --only id1,id2 (faqat shu ishlar), --skipA id (A qayta qilinmaydi, B hozirgi rasmdan), --skipB id
+const argv = process.argv.slice(2).filter((a) => a !== '--');
+const flag = (n: string) => {
+  const i = argv.indexOf(`--${n}`);
+  return i < 0 ? null : new Set(argv.splice(i, 2)[1].split(','));
+};
+const ONLY = flag('only');
+const SKIP_A = flag('skipA') ?? new Set<string>();
+const SKIP_B = flag('skipB') ?? new Set<string>();
+const want = (id: string) => !ONLY || ONLY.has(id);
+const [out, posesA, posesB] = argv;
 if (!out || !posesA || !posesB) throw new Error('chiqish va poza papkalari kerak');
 
 const prompts: Record<string, { id: string; kind: string; title: string; phase?: string; prompt: string }> = Object.fromEntries(
@@ -71,17 +81,30 @@ const dirOf = (group: string, id: string) => `${out}/${group}/${String(++n).padS
 md.push('## 1. Yangi mashqlar (ayol figurasi) — A va B', '');
 n = 0;
 for (const [id, pair] of Object.entries(NEW_PAIRS)) {
+  if (!want(id)) continue;
   const job = prompts[`exercise:${id}`];
   if (!job) throw new Error(`prompt yo'q: ${id}`);
   const d = dirOf('1_yangi', id);
   mkdirSync(d, { recursive: true });
+  const placed = ILLUSTRATIONS[id];
+  if (SKIP_A.has(id) && placed) {
+    // asosiy kadr ilovada bor — faqat ikkinchi kadr undan
+    copyFileSync(file(placed.src), `${d}/1-hozirgi.webp`);
+    const pB0 = !NO_POSE_B.has(id) && existsSync(`${posesB}/${id}.png`);
+    if (pB0) copyFileSync(`${posesB}/${id}.png`, `${d}/3-poza-B.png`);
+    writeFileSync(`${d}/B-prompt.txt`, pairText(true, pair.change, 'the finished illustration 1-hozirgi.webp', pB0));
+    writeFileSync(`${d}/job.json`, JSON.stringify({ id, group: 'new', main: { phaseUz: placed.phase }, pair: { phaseUz: pair.phaseUz } }, null, 1));
+    md.push(`${n}. \`${id}\` — ${job.title} → faqat B: ${pair.phaseUz.toLowerCase()}`);
+    continue;
+  }
+  if (placed) copyFileSync(file(placed.src), `${d}/0-hozirgi.webp`);
   copyFileSync(STYLE_EX, `${d}/1-uslub.webp`);
   const pA = !NO_POSE.has(id) && existsSync(`${posesA}/${id}.png`);
   const pB = !NO_POSE_B.has(id) && existsSync(`${posesB}/${id}.png`);
   if (pA) copyFileSync(`${posesA}/${id}.png`, `${d}/2-poza-A.png`);
   if (pB) copyFileSync(`${posesB}/${id}.png`, `${d}/3-poza-B.png`);
   writeFileSync(`${d}/A-prompt.txt`, [STYLE_EN, pA ? POSE_EN(2) : '', job.prompt].filter(Boolean).join('\n\n'));
-  writeFileSync(`${d}/B-prompt.txt`, pairText(true, pair.change, 'natija-A — the finished illustration you generated in step A', pB));
+  if (!SKIP_B.has(id)) writeFileSync(`${d}/B-prompt.txt`, pairText(true, pair.change, 'natija-A — the finished illustration you generated in step A', pB));
   writeFileSync(`${d}/job.json`, JSON.stringify({ id, group: 'new', main: { phaseUz: job.phase }, pair: { phaseUz: pair.phaseUz } }, null, 1));
   md.push(`${n}. \`${id}\` — ${job.title} → B: ${pair.phaseUz.toLowerCase()}`);
 }
@@ -89,7 +112,9 @@ for (const [id, pair] of Object.entries(NEW_PAIRS)) {
 /* ---------- 2. eski rasmlar ---------- */
 md.push('', '## 2. Eski rasmlar: xatolarni tuzatish va ikkinchi kadr', '', 'Ustuvorlik: **1** — noto‘g‘ri texnika, **2** — harakat yo‘q yoki noto‘g‘ri kadr, **3** — kosmetik.', '');
 n = 0;
-for (const f of [...OLD_FIXES].sort((a, b) => a.priority - b.priority)) {
+for (const f0 of [...OLD_FIXES].sort((a, b) => a.priority - b.priority)) {
+  if (!want(f0.id)) continue;
+  const f = { ...f0, main: SKIP_A.has(f0.id) ? undefined : f0.main, pair: SKIP_B.has(f0.id) ? undefined : f0.pair };
   const ill = ILLUSTRATIONS[f.id];
   const job = prompts[`exercise:${f.id}`];
   const d = dirOf('2_eski', f.id);
@@ -112,7 +137,7 @@ for (const f of [...OLD_FIXES].sort((a, b) => a.priority - b.priority)) {
 /* ---------- 3. jihozlar ---------- */
 md.push('', '## 3. Jihozlar (faqat A)', '');
 n = 0;
-for (const e of EQUIPMENT.filter((x) => !EQUIPMENT_WITH_IMG.includes(x.id))) {
+for (const e of EQUIPMENT.filter((x) => !EQUIPMENT_WITH_IMG.includes(x.id) && want(x.id))) {
   const job = prompts[`equipment:${e.id}`];
   const d = dirOf('3_jihoz', e.id);
   mkdirSync(d, { recursive: true });

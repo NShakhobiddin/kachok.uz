@@ -113,4 +113,38 @@ Har mashq uchun ikki rasm kerak: boshlang'ich va oxirgi nuqta. Ilova ularni alma
   - `illustrations.ts` ga yozuv va ikkinchi kadr qo'shiladi;
   - asosiy kadri almashgan eski mashqlar yorliqlarni qayta tekshirish uchun ro'yxatga chiqariladi.
 
+## Flow natijalari joylandi (2026-11-03)
+
+**Joylandi:**
+- **44 ta yangi mashq** (ayol figurasi): 40 tasi ikki kadrli harakat bilan. Bir kadrlilari:
+  - t-bar-row — pastki nuqta;
+  - knee-push-up — yuqori holat;
+  - side-plank va doorway-chest — B kadr mos kelmadi.
+- **8 ta jihoz.**
+- **Eski rasmlar, asosiy kadr:**
+  - chin-up — kaft o'ziga, old tomondan; yorliqlar qayta joylandi;
+  - front-squat — tirsaklar oldinga;
+  - hanging-leg-raise — turnik to'g'ri yo'nalishda;
+  - reverse-fly — qattiq tayoq o'rniga ingichka lenta;
+  - db-row — tayanch qo'l yoritilmaydi;
+  - step-up — orqa oyoq yoritilmaydi;
+  - glute-bridge — ortiqcha yoy chizig'i olib tashlandi.
+- **Eski rasmlar, ikkinchi kadr:** machine-shoulder-press, dips, db-fly, goblet-squat, hack-squat, hip-thrust, db-bench, cable-fly, inverted-row, back-extension, leg-extension, deadlift, db-rdl, bulgarian, ohp, front-squat.
+- **Ikkinchi kadri olib tashlanganlar:** chin-up va hanging-leg-raise — eski kadr yangi asosiy rasmga mos emas.
+
+**Qayta qilish kerak** (`flow-pack2.ts --only … --skipA … --skipB …`, Nano Banana Pro bilan). Nano Banana 2.1 bu tahrirlarni deyarli bajarmagan:
+- **Asosiy kadr:**
+  - pull-up — iyak turnikdan yuqori;
+  - ohp — lockout;
+  - incline-bench, close-grip-bench — shtanga ko'krakda;
+  - barbell-row — shtanga qoringa;
+  - lateral-raise — gantel dastasi;
+  - calf-raise — tovon baland;
+  - db-shrug — yelka baland;
+  - dead-bug — qarama-qarshi tomonlar;
+  - leg-curl — tizza ko'proq bukilgan;
+  - t-bar-row — yuqori nuqta;
+  - knee-push-up — pastki nuqta.
+- **Ikkinchi kadr:** push-up, chin-up, glute-bridge, machine-chest-press, reverse-fly, hanging-leg-raise, leg-press (yuk platforma bilan birga), calf-raise, db-shrug, side-plank, doorway-chest, t-bar-row, knee-push-up.
+
 Generatsiya tartibi: `scripts/images/README.md` va `scripts/images/regen.mjs`.

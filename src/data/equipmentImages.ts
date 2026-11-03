@@ -27,6 +27,14 @@ export const EQUIPMENT_WITH_IMG: EquipmentId[] = [
   'bands',
   'box',
   'cardio',
+  'hipAbAd',
+  'seatedCalf',
+  'assistedPullup',
+  'preacher',
+  'tbar',
+  'abWheel',
+  'fitball',
+  'miniBand',
 ];
 
 export const equipmentImg = (id: EquipmentId) => (EQUIPMENT_WITH_IMG.includes(id) ? `${import.meta.env.BASE_URL}illustrations/equipment/${id}.webp` : null);
