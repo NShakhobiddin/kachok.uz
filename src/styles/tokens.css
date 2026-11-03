@@ -4,6 +4,19 @@
   Qizil — faqat xavf va og'riq; amber — ehtiyotkorlik va rekord. Disk ranglari (--plate-*) faqat illyustratsiyalarda.
   Shrift: Archivo (kenglik o'qi bilan) — poster raqamlar 125% kenglikda, sarlavhalar 112%; matn — Manrope.
 */
+/*
+  O‘ va g‘ dagi tutuq (‘, U+2018) — hamma joyda Archivo shaklida ("6" ko'rinishidagi vergul).
+  Manrope'da bu belgi ingichka tik chiziq bo'lib chiqadi; unicode-range tufayli faqat shu belgi Archivo'dan olinadi.
+*/
+@font-face {
+  font-family: 'Uz Tutuq';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+  src: url('../../node_modules/@fontsource-variable/archivo/files/archivo-latin-wght-normal.woff2') format('woff2-variations');
+  unicode-range: U+2018, U+02BB;
+}
+
 :root {
   color-scheme: dark;
 
@@ -108,9 +121,9 @@
   --eq-mat-hi: #2c5288;
 
   /* tipografiya */
-  --font-display: 'Archivo Variable', 'Arial', sans-serif;
-  --font-body: 'Manrope Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
-  --font-mono: 'Archivo Variable', 'Arial', sans-serif;
+  --font-display: 'Uz Tutuq', 'Archivo Variable', 'Arial', sans-serif;
+  --font-body: 'Uz Tutuq', 'Manrope Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'Uz Tutuq', 'Archivo Variable', 'Arial', sans-serif;
 
   --r-sm: 12px;
   --r-md: 16px;

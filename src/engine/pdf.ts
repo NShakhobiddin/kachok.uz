@@ -9,17 +9,21 @@ import { rotateLinear, weeklyVolume } from './program';
 import { mesoPerWeek, mesoState } from './meso';
 import { blockWeek, METHOD_INFO } from './methods';
 
-/** Standart PDF shriftlari Latin-1 bilan ishlaydi — maxsus belgilarni almashtiramiz */
+/**
+ * Standart PDF shriftlari (WinAnsi) bilan ishlaydi — maxsus belgilarni almashtiramiz.
+ * O‘ va g‘ dagi tutuq (‘) va ’ WinAnsi'da bor, helvetica ularni to'g'ri chizadi — ilovadagidek qoldiriladi.
+ */
 export function pdfText(s: string): string {
   return s
-    .replace(/[‘’ʻʼ`]/g, "'")
+    .replace(/[ʻ`]/g, '‘')
+    .replace(/ʼ/g, '’')
     .replace(/[«»“”]/g, '"')
     .replace(/[–—]/g, '-')
     .replace(/×/g, 'x')
     .replace(/≈/g, '~')
     .replace(/…/g, '...')
     .replace(/•/g, '-')
-    .replace(/[^\x20-\x7E\xA0-\xFF\n]/g, '');
+    .replace(/[^\x20-\x7E\xA0-\xFF\n\u2018\u2019]/g, '');
 }
 
 const GOALS: Record<Profile['goal'], string> = {
