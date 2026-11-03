@@ -11,12 +11,12 @@ type Fp = FrontPose;
 
 /** O‘tirib sonni ochish: orqadan ko‘rinish — dumba ko‘rinib turadi, tizzalar tashqariga ochiladi */
 function hipAbduction(): AnimSpec {
-  const base = { hipY: 150, legFwd: 76, ua: 166, fa: 174 };
-  const closed: Fp = { ...base, th: 178, sh: 179 };
-  const open: Fp = { ...base, th: 146, sh: 170 };
+  const base = { hipY: 146, legFwd: 66, ua: 166, fa: 174 };
+  const closed: Fp = { ...base, th: 177, sh: 179 };
+  const open: Fp = { ...base, th: 144, sh: 172 };
   return {
     view: 'back',
-    props: [{ kind: 'seatFront', x: CX, y: 158, w: 50 }],
+    props: [{ kind: 'seatFront', x: CX, y: 154, w: 50 }],
     frames: con(closed, open, { move1: 1100, hold2: 600, move2: 1900 }),
     frame: { x: 18, y: 30, w: 204, h: 190 },
   };
@@ -24,12 +24,12 @@ function hipAbduction(): AnimSpec {
 
 /** O‘tirib sonni yopish: old ko‘rinish — son ichki qismi ko‘rinadi */
 function hipAdduction(): AnimSpec {
-  const base = { hipY: 150, legFwd: 76, ua: 166, fa: 174 };
-  const open: Fp = { ...base, th: 144, sh: 170 };
-  const closed: Fp = { ...base, th: 178, sh: 179 };
+  const base = { hipY: 146, legFwd: 66, ua: 166, fa: 174 };
+  const open: Fp = { ...base, th: 144, sh: 172 };
+  const closed: Fp = { ...base, th: 177, sh: 179 };
   return {
     view: 'front',
-    props: [{ kind: 'seatFront', x: CX, y: 158, w: 50 }],
+    props: [{ kind: 'seatFront', x: CX, y: 154, w: 50 }],
     frames: con(open, closed, { move1: 1100, hold2: 600, move2: 1900 }),
     frame: { x: 18, y: 30, w: 204, h: 190 },
   };
@@ -66,12 +66,12 @@ function cablePullThrough(): AnimSpec {
 
 /** O‘tirib boldir ko‘tarish: oyoq uchi platformada qotgan, tizza yostig‘i son ustida */
 function seatedCalfRaise(): AnimSpec {
-  const toe = { x: 150, y: 196 };
+  const toe = { x: 145, y: 200 };
   const pose = (ft: number): S => {
     const d = dir(ft);
     // oyoq uchi joyida qolishi uchun to‘piqni hisoblaymiz (footFrom teskarisi)
     const foot = add(add(toe, mul(d, -15)), mul(cw(d), -6));
-    return { torso: 6, head: 8, ua: 0, fa: 0, th: 90, sh: 180, ft, foot, hand: { x: foot.x - 14, y: foot.y - 52 } };
+    return { torso: 6, head: 8, ua: 0, fa: 0, th: 90, sh: 180, ft, foot, hand: { x: foot.x - 20, y: foot.y - 52 } };
   };
   return {
     view: 'side',
@@ -79,7 +79,7 @@ function seatedCalfRaise(): AnimSpec {
     footGear: { kind: 'kneePad' },
     props: [
       { kind: 'seat', x: 56, y: 158, w: 52, h: 8 },
-      { kind: 'box', x: 138, y: 196, w: 24, h: 18 },
+      { kind: 'box', x: 133, y: 200, w: 24, h: 14 },
     ],
     frames: ecc(pose(122), pose(72), { hold1: 500, move1: 1600, hold2: 1100, move2: 1100 }),
     frame: { x: 30, y: 50, w: 190, h: 170 },
@@ -88,16 +88,16 @@ function seatedCalfRaise(): AnimSpec {
 
 /** Gravitronda tortilish: tizzalar yostiqda, yostiq tanani pastdan itaradi */
 function assistedPullUp(): AnimSpec {
-  const base = { ua: 0, fa: 0, th: 180, sh: 268, ft: 245, hand: { x: 120, y: 32 } };
-  const bottom: S = { ...base, torso: -2, head: 0, at: { x: 112, y: 142 } };
-  const top: S = { ...base, torso: -8, head: -6, at: { x: 114, y: 98 } };
+  const base = { ua: 0, fa: 0, sh: 268, ft: 245, hand: { x: 124, y: 32 } };
+  const bottom: S = { ...base, torso: -2, head: 0, th: 180, at: { x: 114, y: 142 } };
+  const top: S = { ...base, torso: -16, head: -12, th: 172, at: { x: 112, y: 100 } };
   return {
     view: 'side',
     anchor: { joint: 'hip', x: 112, y: 142 },
     footGear: { kind: 'anklePad' },
     props: [
       { kind: 'cableTower', x: 30, y: 30 },
-      { kind: 'pullupBar', x: 120, y: 30, w: 28 },
+      { kind: 'pullupBar', x: 124, y: 30, w: 28 },
     ],
     frames: con(bottom, top, { hold1: 500, move1: 1300, hold2: 400, move2: 2000 }),
     frame: { x: 14, y: -6, w: 206, h: 226 },
@@ -106,7 +106,7 @@ function assistedPullUp(): AnimSpec {
 
 /** Skott skameykasida bitseps: qo‘lning yuqori qismi qiya yostiqda qotgan */
 function preacherCurl(): AnimSpec {
-  const base = { torso: 14, head: 22, ua: 138, th: 92, sh: 180, foot: { x: 128, y: AY } };
+  const base = { torso: 14, head: 22, ua: 138, th: 92, sh: 180, foot: { x: 122, y: AY } };
   const bottom: S = { ...base, fa: 160 };
   const top: S = { ...base, fa: 30 };
   return {
@@ -114,7 +114,7 @@ function preacherCurl(): AnimSpec {
     anchor: { joint: 'hip', x: 84, y: 148 },
     held: { kind: 'ezbar' },
     props: [
-      { kind: 'legPressFrame', x: 150, y: 212, w: 86, angle: 111 },
+      { kind: 'legPressFrame', x: 160, y: 212, w: 89, angle: 117 },
       { kind: 'seat', x: 60, y: 156, w: 46, h: 8 },
       { kind: 'pad', x: 94, y: 104, w: 36, h: 9, angle: 48 },
     ],
@@ -427,7 +427,7 @@ export const MACHINE_EXERCISES: Exercise[] = [
     caution: ['shoulder', 'elbow'],
     setup: [
       'Yordam og‘irligini tanlang: blokdagi kg sizni yuqoriga itaradi — qancha ko‘p bo‘lsa, mashq shuncha oson.',
-      'Zinapoyaga chiqib tutqichlarni ushlang, so‘ng tizzalarni birin-ketin yostiqqa qo‘ying (ba’zi trenajyorlarda oyoq bilan turiladi).',
+      'Pog‘onaga chiqib tutqichlarni ushlang, so‘ng tizzalarni birin-ketin yostiqqa qo‘ying (ba’zi trenajyorlarda oyoq bilan turiladi).',
       'Qo‘llar to‘liq cho‘zilguncha sekin pastga tushing.',
     ],
     steps: [

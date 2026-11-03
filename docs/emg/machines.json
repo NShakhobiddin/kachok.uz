@@ -1,7 +1,641 @@
 {
   "meta": {
-    "note": "EMG jadvali: machines"
+    "note": "EMG jadvali: machines",
+    "compiled": "2026-11-03",
+    "verification": "Sources were identified through web-search result text (abstracts and indexed summaries); direct page fetches were blocked by this session's network policy, so no table was read in full. DOIs are given only where a search result showed them. Sources copied from lower.json/pull.json keep their original citations.",
+    "estimateFlag": "Same convention as lower.json: estimate=false only when the number itself is reported for that exercise and muscle. None of the new machine exercises has a directly measured value retrieved here, so every value is an estimate anchored to the cited studies."
   },
-  "exercises": {},
-  "sources": {}
+  "exercises": {
+    "hip-abduction": {
+      "basis": "similar:side-lying hip abduction (DiStefano 2009), adjusted for the seated, hip-flexed position (Fujisawa 2014)",
+      "load": "estimated 10-15RM machine set; source data are bodyweight side-lying abduction (DiStefano 2009) and isometric abduction at 20-80% of maximum strength (Fujisawa 2014)",
+      "metric": "mean",
+      "muscles": {
+        "gluteMed": {
+          "mvic": 60,
+          "range": [
+            40,
+            85
+          ],
+          "src": [
+            "distefano2009",
+            "fujisawa2014"
+          ],
+          "estimate": true
+        },
+        "gluteMax": {
+          "mvic": 50,
+          "range": [
+            30,
+            85
+          ],
+          "src": [
+            "fujisawa2014",
+            "distefano2009"
+          ],
+          "estimate": true
+        }
+      },
+      "rom": "Gluteus medius is expected to work hardest near the widest (most abducted) position. With the hip flexed to 80 degrees, isometric abduction recruited the upper and lower gluteus maximus more and the tensor fasciae latae less than at smaller flexion angles, while gluteus medius activity did not change with hip flexion angle (Fujisawa 2014).",
+      "notes": "No peer-reviewed %MVIC study of the seated abduction machine was found (a preprint on hip-flexion angle during seated machine abduction exists but could not be accessed). DiStefano 2009 (21 active adults, bodyweight): side-lying hip abduction gave GMed 81 +/- 42 and GM 39 %MVIC. Fujisawa 2014: maximum upper GM 85.7 +/- 80.8 and lower GM 38.2 +/- 32.9 %MVC at 80 degrees of hip flexion, TFL maximum 71.0 %MVC at 40 degrees. Very large SDs. Values here are estimates for a moderately heavy machine set.",
+      "ranking": [
+        "gluteMed",
+        "gluteMax"
+      ]
+    },
+    "hip-adduction": {
+      "basis": "similar:high-intensity hip adduction exercises (Serner 2014); no seated-machine adduction %MVIC study was found",
+      "load": "estimated 10-15RM machine set",
+      "metric": "peak",
+      "muscles": {
+        "adductors": {
+          "mvic": 70,
+          "range": [
+            45,
+            100
+          ],
+          "src": [
+            "serner2014"
+          ],
+          "estimate": true
+        },
+        "medialHamstrings": {
+          "mvic": 15,
+          "range": [
+            5,
+            30
+          ],
+          "src": [],
+          "estimate": true
+        }
+      },
+      "rom": "Not measured. Adductor activity is expected to be highest as the pads come together; the muscles are most stretched at the wide start position (biomechanical inference).",
+      "notes": "Serner 2014 (40 male elite soccer players, surface EMG of adductor longus normalised to MVIC): peak nEMG ranged from 14% to 108% across eight hip adduction exercises; the Copenhagen adduction and the elastic-band adduction were identified as dynamic high-intensity exercises. The seated machine was not among the retrieved values, so the adductor number is a judgement for a 10-15RM machine set. The medial-hamstring entry (small adduction moment arm) has no data.",
+      "ranking": [
+        "adductors",
+        "medialHamstrings"
+      ]
+    },
+    "cable-kickback": {
+      "basis": "similar:quadruped hip extension (Selkowitz 2013); no standing cable kickback %MVIC study was found",
+      "load": "light-moderate cable load (estimate)",
+      "metric": "mean",
+      "muscles": {
+        "gluteMax": {
+          "mvic": 55,
+          "range": [
+            30,
+            85
+          ],
+          "src": [
+            "selkowitz2013"
+          ],
+          "estimate": true
+        },
+        "bicepsFemoris": {
+          "mvic": 40,
+          "range": [
+            20,
+            60
+          ],
+          "src": [],
+          "estimate": true
+        },
+        "medialHamstrings": {
+          "mvic": 35,
+          "range": [
+            20,
+            55
+          ],
+          "src": [],
+          "estimate": true
+        },
+        "gluteMed": {
+          "mvic": 30,
+          "range": [
+            15,
+            50
+          ],
+          "src": [
+            "selkowitz2013"
+          ],
+          "estimate": true
+        },
+        "erectors": {
+          "mvic": 25,
+          "range": [
+            10,
+            40
+          ],
+          "src": [],
+          "estimate": true
+        }
+      },
+      "rom": "Not measured. GM is expected to be most active as the thigh reaches the torso line (hip extension); the stance-leg gluteus medius stabilises the pelvis throughout (inference).",
+      "notes": "Selkowitz 2013 (fine-wire EMG): quadruped hip extension with the knee straight or flexed produced significantly greater gluteal than TFL activation (gluteal-to-TFL index about 50). Absolute %MVIC values were not retrieved, so all numbers are estimates. Hamstring and erector entries have no data.",
+      "ranking": [
+        "gluteMax",
+        "bicepsFemoris",
+        "medialHamstrings",
+        "gluteMed",
+        "erectors"
+      ]
+    },
+    "cable-pull-through": {
+      "basis": "similar:rdl (hip hinge; the cable pulls backward between the legs, so hip-extension torque persists at lockout)",
+      "load": "moderate cable load (estimate)",
+      "metric": "mean",
+      "muscles": {
+        "gluteMax": {
+          "mvic": 60,
+          "range": [
+            35,
+            85
+          ],
+          "src": [],
+          "estimate": true
+        },
+        "medialHamstrings": {
+          "mvic": 55,
+          "range": [
+            35,
+            80
+          ],
+          "src": [
+            "zebis2013"
+          ],
+          "estimate": true
+        },
+        "bicepsFemoris": {
+          "mvic": 50,
+          "range": [
+            30,
+            70
+          ],
+          "src": [
+            "zebis2013"
+          ],
+          "estimate": true
+        },
+        "erectors": {
+          "mvic": 35,
+          "range": [
+            20,
+            55
+          ],
+          "src": [],
+          "estimate": true
+        },
+        "forearmFlexors": {
+          "mvic": 25,
+          "range": [
+            10,
+            40
+          ],
+          "src": [],
+          "estimate": true
+        }
+      },
+      "rom": "Not measured. Unlike the RDL, where the load hangs vertically and hip torque falls to near zero at lockout, the backward cable pull keeps hip-extension torque at the top, so GM is expected to stay active through lockout (biomechanical inference).",
+      "notes": "No EMG study of the cable pull-through was found. Values are scaled from the RDL profile (Zebis 2013: semitendinosus about 20% above biceps femoris in hip-hinge exercises) for a lighter load. The erector value is set lower than for the RDL because the load is smaller and pulls from behind (judgement).",
+      "ranking": [
+        "gluteMax",
+        "medialHamstrings",
+        "bicepsFemoris",
+        "erectors",
+        "forearmFlexors"
+      ]
+    },
+    "seated-calf-raise": {
+      "basis": "similar:calf-raise (knee flexed about 90 degrees, which biases the soleus; Signorile 2002, Hébert-Losier 2012)",
+      "load": "estimated 10-15RM machine set",
+      "metric": "mean",
+      "muscles": {
+        "soleus": {
+          "mvic": 60,
+          "range": [
+            30,
+            85
+          ],
+          "src": [
+            "signorile2002",
+            "heberlosier2012",
+            "kinoshita2023"
+          ],
+          "estimate": true
+        },
+        "gastrocnemius": {
+          "mvic": 35,
+          "range": [
+            15,
+            60
+          ],
+          "src": [
+            "signorile2002",
+            "heberlosier2012",
+            "kinoshita2023"
+          ],
+          "estimate": true
+        }
+      },
+      "rom": "With the knee bent the two-joint gastrocnemius is slack, so the soleus does most of the work. Activity is highest at the top of the raise; the stretched bottom position matters for training effect.",
+      "notes": "Signorile 2002 (11 experienced subjects; knee at 90, 135 and 180 degrees): medial gastrocnemius activity was greatest with the knee straight, soleus activity was lower at 180 degrees than at the flexed angles, and the authors concluded the soleus is best targeted at 90 degrees of knee flexion. Hébert-Losier 2012: heel raises at 45 vs 0 degrees knee flexion raised soleus and lowered gastrocnemius activity. Kinoshita 2023 (12-week within-subject training): standing calf raises grew the lateral and medial gastrocnemius far more than seated raises (12.4 vs 1.7% and 9.2 vs 0.6%), while soleus growth was similar (2.1 vs 2.9%). Absolute %MVIC values are estimates.",
+      "ranking": [
+        "soleus",
+        "gastrocnemius"
+      ]
+    },
+    "assisted-pull-up": {
+      "basis": "similar:lat-pulldown (counterweight-assisted pull-up; the counterweight removes part of body mass)",
+      "load": "body mass minus counterweight (estimate)",
+      "metric": "mean",
+      "muscles": {
+        "lats": {
+          "mvic": 65,
+          "range": [
+            45,
+            90
+          ],
+          "src": [
+            "lusk2010",
+            "youdas2010"
+          ],
+          "estimate": true
+        },
+        "teresMajor": {
+          "mvic": 45,
+          "range": [
+            25,
+            65
+          ],
+          "src": [],
+          "estimate": true
+        },
+        "biceps": {
+          "mvic": 45,
+          "range": [
+            25,
+            70
+          ],
+          "src": [
+            "youdas2010"
+          ],
+          "estimate": true
+        },
+        "trapLower": {
+          "mvic": 40,
+          "range": [
+            20,
+            55
+          ],
+          "src": [
+            "youdas2010"
+          ],
+          "estimate": true
+        },
+        "infraspinatus": {
+          "mvic": 40,
+          "range": [
+            20,
+            60
+          ],
+          "src": [
+            "youdas2010"
+          ],
+          "estimate": true
+        },
+        "forearmFlexors": {
+          "mvic": 35,
+          "range": [
+            20,
+            50
+          ],
+          "src": [],
+          "estimate": true
+        },
+        "deltPost": {
+          "mvic": 30,
+          "range": [
+            15,
+            50
+          ],
+          "src": [],
+          "estimate": true
+        }
+      },
+      "rom": "Expected to follow the pull-up pattern: lower trapezius and pectoralis lead the start, biceps and latissimus dominate the finish (summary of Youdas 2010).",
+      "notes": "No peer-reviewed %MVIC study of the counterweight (gravitron) machine was found; a secondary web summary of a pull-up, pulldown and assisted-machine comparison could not be verified and is not used. Values sit between the lat pulldown (Lusk 2010: latissimus about 0.67 of MVIC at 70% 1RM) and the bodyweight pull-up (Youdas 2010: latissimus 117-130, biceps 78-96 %MVIC across variants), scaled down for the assistance. Activity should approach pull-up values as the counterweight is reduced.",
+      "ranking": [
+        "lats",
+        "teresMajor",
+        "biceps",
+        "trapLower",
+        "infraspinatus",
+        "forearmFlexors",
+        "deltPost"
+      ]
+    },
+    "preacher-curl": {
+      "basis": "direct",
+      "load": "Load not retrieved (Oliveira 2009).",
+      "metric": "mean",
+      "muscles": {
+        "biceps": {
+          "mvic": 85,
+          "range": [
+            60,
+            110
+          ],
+          "src": [
+            "oliveira2009"
+          ],
+          "estimate": true
+        },
+        "brachialis": {
+          "mvic": 70,
+          "range": [
+            45,
+            90
+          ],
+          "src": [],
+          "estimate": true
+        },
+        "brachioradialis": {
+          "mvic": 50,
+          "range": [
+            30,
+            70
+          ],
+          "src": [],
+          "estimate": true
+        },
+        "forearmFlexors": {
+          "mvic": 30,
+          "range": [
+            15,
+            45
+          ],
+          "src": [],
+          "estimate": true
+        }
+      },
+      "rom": "Oliveira 2009: the preacher curl kept biceps activity high only over a short range of elbow angles, whereas the standing and incline curls stayed high across the whole range. With the upper arm on a 45-degree pad, external torque is greatest in the lower part of the range and falls to almost zero as the forearm becomes vertical.",
+      "notes": "Oliveira 2009 measured the biceps long head; absolute %MVIC values were not retrieved, so all numbers are estimates anchored to the standing curls. Kassiano 2025 (63 young women, 8 weeks): preacher curls produced more distal and incline curls more proximal elbow-flexor growth (muscle thickness), and each group improved its own exercise's 3RM more.",
+      "ranking": [
+        "biceps",
+        "brachialis",
+        "brachioradialis",
+        "forearmFlexors"
+      ]
+    },
+    "t-bar-row": {
+      "basis": "similar:barbell-row (bent-over row with a bar fixed at one end and a close neutral V-grip)",
+      "load": "moderate-heavy (estimate)",
+      "metric": "peak",
+      "muscles": {
+        "lats": {
+          "mvic": 60,
+          "range": [
+            40,
+            80
+          ],
+          "src": [
+            "fenwick2009"
+          ],
+          "estimate": true
+        },
+        "trapMid": {
+          "mvic": 55,
+          "range": [
+            35,
+            75
+          ],
+          "src": [],
+          "estimate": true
+        },
+        "rhomboids": {
+          "mvic": 50,
+          "range": [
+            30,
+            70
+          ],
+          "src": [],
+          "estimate": true
+        },
+        "deltPost": {
+          "mvic": 50,
+          "range": [
+            30,
+            75
+          ],
+          "src": [],
+          "estimate": true
+        },
+        "erectors": {
+          "mvic": 45,
+          "range": [
+            30,
+            65
+          ],
+          "src": [
+            "fenwick2009"
+          ],
+          "estimate": true
+        },
+        "biceps": {
+          "mvic": 40,
+          "range": [
+            25,
+            60
+          ],
+          "src": [],
+          "estimate": true
+        },
+        "forearmFlexors": {
+          "mvic": 35,
+          "range": [
+            20,
+            55
+          ],
+          "src": [],
+          "estimate": true
+        },
+        "trapLower": {
+          "mvic": 35,
+          "range": [
+            20,
+            55
+          ],
+          "src": [],
+          "estimate": true
+        }
+      },
+      "rom": "As in the bent-over row, erector and hip-extensor work is isometric throughout; with the close neutral grip the elbows travel close to the torso.",
+      "notes": "No peer-reviewed %MVIC study of the T-bar or landmine row was found. Values follow the bent-over barbell row profile (Fenwick 2009: latissimus about 53 %MVC; the bent-over row had the highest lumbar compression of the rows tested). The erector value is a little lower than for the barbell row because the torso is usually more upright and the load closer to the body (judgement).",
+      "ranking": [
+        "lats",
+        "trapMid",
+        "rhomboids",
+        "deltPost",
+        "erectors",
+        "biceps",
+        "forearmFlexors",
+        "trapLower"
+      ]
+    },
+    "ab-wheel": {
+      "basis": "similar:roll-out exercises (Swiss-ball roll-out, Escamilla 2010; Power Wheel roll-out, Escamilla 2006; Ab-Slide, Youdas 2008)",
+      "load": "Bodyweight, kneeling.",
+      "metric": "mean",
+      "muscles": {
+        "rectusAbdominis": {
+          "mvic": 70,
+          "range": [
+            50,
+            100
+          ],
+          "src": [
+            "escamilla2010",
+            "escamilla2006",
+            "youdas2008"
+          ],
+          "estimate": true
+        },
+        "externalOblique": {
+          "mvic": 55,
+          "range": [
+            40,
+            85
+          ],
+          "src": [
+            "escamilla2010",
+            "escamilla2006"
+          ],
+          "estimate": true
+        },
+        "lats": {
+          "mvic": 30,
+          "range": [
+            15,
+            50
+          ],
+          "src": [
+            "escamilla2010"
+          ],
+          "estimate": true
+        },
+        "rectusFemoris": {
+          "mvic": 15,
+          "range": [
+            5,
+            30
+          ],
+          "src": [],
+          "estimate": true
+        },
+        "erectors": {
+          "mvic": 8,
+          "range": [
+            3,
+            15
+          ],
+          "src": [
+            "escamilla2010"
+          ],
+          "estimate": true
+        }
+      },
+      "rom": "The abdominals resist spinal extension hardest at the farthest point of the roll-out; lumbar paraspinals stay low throughout (Escamilla 2010).",
+      "notes": "Escamilla 2010 (Swiss-ball roll-out): upper rectus abdominis about 63%, lower about 53% and external oblique about 46% MVIC; the roll-out and pike were the most effective of the exercises tested for rectus abdominis, obliques and latissimus, and lumbar paraspinal activity stayed below 10% MVIC in all exercises. Escamilla 2006: Power Wheel variations (including the roll-out) were among the highest for rectus abdominis and external oblique. Youdas 2008: the Ab-Slide exceeded the crunch. The kneeling ab wheel has a longer lever than the Swiss-ball roll-out, so values are set somewhat higher (estimate). The rectus femoris entry has no data.",
+      "ranking": [
+        "rectusAbdominis",
+        "externalOblique",
+        "lats",
+        "rectusFemoris",
+        "erectors"
+      ]
+    }
+  },
+  "sources": {
+    "distefano2009": {
+      "cite": "DiStefano LJ, Blackburn JT, Marshall SW, Padua DA. Gluteal muscle activation during common therapeutic exercises. J Orthop Sports Phys Ther 39(7):532-540, 2009.",
+      "doi": "10.2519/jospt.2009.2796",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/19574661/"
+    },
+    "fujisawa2014": {
+      "cite": "Fujisawa H, Suzuki H, Yamaguchi E, Yoshiki H, Wada Y, Watanabe A. Hip muscle activity during isometric contraction of hip abduction. J Phys Ther Sci 26(2):187-190, 2014.",
+      "doi": "10.1589/jpts.26.187",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3944285/"
+    },
+    "serner2014": {
+      "cite": "Serner A, et al. EMG evaluation of hip adduction exercises for soccer players: implications for exercise selection in prevention and treatment of groin injuries. Br J Sports Med 48(14):1108-1114, 2014.",
+      "doi": "10.1136/bjsports-2012-091746",
+      "url": "https://bjsm.bmj.com/content/48/14/1108"
+    },
+    "selkowitz2013": {
+      "cite": "Selkowitz DM, Beneck GJ, Powers CM. Which exercises target the gluteal muscles while minimizing activation of the tensor fascia lata? Electromyographic assessment using fine-wire electrodes. J Orthop Sports Phys Ther 43(2):54-64, 2013.",
+      "doi": "10.2519/jospt.2013.4116",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/23160432/"
+    },
+    "zebis2013": {
+      "cite": "Zebis MK, et al. Kettlebell swing targets semitendinosus and supine leg curl targets biceps femoris: an EMG study with rehabilitation implications. Br J Sports Med 47(18):1192, 2013.",
+      "doi": "",
+      "url": "https://bjsm.bmj.com/content/47/18/1192"
+    },
+    "signorile2002": {
+      "cite": "Signorile JF, Applegate B, Duque M, Cole N, Zink A. Selective recruitment of the triceps surae muscles with changes in knee angle. J Strength Cond Res 16(3):433-439, 2002.",
+      "doi": "",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/12173959/"
+    },
+    "heberlosier2012": {
+      "cite": "Hébert-Losier K, et al. Influence of knee flexion angle and age on triceps surae muscle activity during heel raises. J Strength Cond Res 26(11), 2012.",
+      "doi": "",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/22190157/"
+    },
+    "kinoshita2023": {
+      "cite": "Kinoshita M, Maeo S, Kobayashi Y, Eihara Y, Ono M, Sato M, Sugiyama T, Kanehisa H, Isaka T. Triceps surae muscle hypertrophy is greater after standing versus seated calf-raise training. Front Physiol 14:1272106, 2023.",
+      "doi": "10.3389/fphys.2023.1272106",
+      "url": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC10753835/"
+    },
+    "lusk2010": {
+      "cite": "Lusk et al. Grip width and forearm orientation effects on muscle activity during the lat pull-down. J Strength Cond Res 24(7):1895-1900, 2010.",
+      "doi": "",
+      "url": "https://pure.psu.edu/en/publications/grip-width-and-forearm-orientation-effects-on-muscle-activity-dur/"
+    },
+    "youdas2010": {
+      "cite": "Youdas et al. Surface electromyographic activation patterns and elbow joint motion during a pull-up, chin-up, or Perfect-Pullup rotational exercise. J Strength Cond Res 24(12):3404-3414, 2010.",
+      "doi": "10.1519/JSC.0b013e3181f1598c",
+      "url": "https://www.ovid.com/jnls/nsca-jscr/abstract/10.1519/jsc.0b013e3181f1598c~surface-electromyographic-activation-patterns-and-elbow"
+    },
+    "oliveira2009": {
+      "cite": "Oliveira LF, Matta TT, Alves DS, Garcia MAC, Vieira TMM. Effect of the shoulder position on the biceps brachii EMG in different dumbbell curls. J Sports Sci Med 8(1):24-29, 2009.",
+      "doi": "",
+      "url": "https://www.jssm.org/jssm-08-24.xml-Fulltext"
+    },
+    "kassiano2025": {
+      "cite": "Kassiano W, Costa B, Kunevaliki G, et al. Distinct muscle growth and strength adaptations after preacher and incline biceps curls. Int J Sports Med 46(5):334-343, 2025.",
+      "doi": "10.1055/a-2517-0509",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/39809454/"
+    },
+    "fenwick2009": {
+      "cite": "Fenwick, Brown, McGill. Comparison of different rowing exercises: trunk muscle activation and lumbar spine motion, load, and stiffness. J Strength Cond Res 23(2):350-358, 2009 (also indexed as 23(5):1408-1417, DOI 10.1519/JSC.0b013e3181b07334).",
+      "doi": "10.1519/JSC.0b013e3181942019",
+      "url": "https://journals.lww.com/nsca-jscr/fulltext/2009/03000/comparison_of_different_rowing_exercises__trunk.2.aspx"
+    },
+    "escamilla2010": {
+      "cite": "Escamilla RF, Lewis C, Bell D, et al. Core muscle activation during Swiss ball and traditional abdominal exercises. J Orthop Sports Phys Ther 40(5):265-276, 2010.",
+      "doi": "",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/20436242/"
+    },
+    "escamilla2006": {
+      "cite": "Escamilla et al. Electromyographic analysis of traditional and nontraditional abdominal exercises: implications for rehabilitation and training. Phys Ther 86(5):656-671, 2006.",
+      "doi": "10.1093/ptj/86.5.656",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/16649890/"
+    },
+    "youdas2008": {
+      "cite": "Youdas, Guck, et al. An electromyographic analysis of the Ab-Slide exercise, abdominal crunch, supine double leg thrust, and side bridge in healthy young adults: implications for rehabilitation professionals. J Strength Cond Res 22(6):1939-1946, 2008.",
+      "doi": "",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/18978615/"
+    }
+  }
 }

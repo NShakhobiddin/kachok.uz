@@ -82,10 +82,10 @@ export const SAFETY_MACHINES: Record<string, ExerciseSafety> = {
       },
     ],
     check: [
-      'Yordam og‘irligini zinapoyada turgan holda tanlang — shtift blokka oxirigacha kirgan.',
+      'Yordam og‘irligini pog‘onada turgan holda tanlang — shtift blokka oxirigacha kirgan.',
       'Avval tutqichlarni ushlang, keyin tizzalarni birin-ketin yostiqqa qo‘ying.',
     ],
-    bail: 'Pastki nuqtaga qayting, bir oyoqni zinapoyaga qo‘yib, ikkinchisini yostiqdan oling — yostiqdan sakrab tushmang.',
+    bail: 'Pastki nuqtaga qayting, bir oyoqni pog‘onaga qo‘yib, ikkinchisini yostiqdan oling — yostiqdan sakrab tushmang.',
     stop: [S.shoulder, S.elbow, S.biceps],
   },
   't-bar-row': {

@@ -4935,6 +4935,477 @@ export const ACTIVATION: Record<string, ExerciseActivation> = {
     },
     "rom": "Tezroq bajarilganda va qo‘l-oyoq birga harakatlantirilganda qorin mushaklari faolligi oshadi.",
     "notes": "Qiymatlar baho."
+  },
+  "hip-abduction": {
+    "basis": "similar:yonboshlab yotib sonni ochish",
+    "load": "10–15RM (baho)",
+    "metric": "mean",
+    "muscles": {
+      "gluteMed": {
+        "mvic": 60,
+        "range": [
+          40,
+          85
+        ],
+        "est": true,
+        "src": [
+          "M.distefano2009",
+          "M.fujisawa2014"
+        ]
+      },
+      "gluteMax": {
+        "mvic": 50,
+        "range": [
+          30,
+          85
+        ],
+        "est": true,
+        "src": [
+          "M.fujisawa2014",
+          "M.distefano2009"
+        ]
+      }
+    },
+    "rom": "Dumbaning o‘rta mushagi eng keng ochilgan holatda eng faol. O‘tirganda (son bo‘g‘imi ~80° bukik) dumba katta mushagi tik holatdagidan ko‘proq, son fassiyasini taranglovchi mushak esa kamroq ishlaydi; dumbaning o‘rta mushagi faolligi o‘zgarmaydi.",
+    "notes": "Trenajyorning o‘zi bo‘yicha chop etilgan EMG tadqiqot topilmadi. Yonboshlab yotib sonni ochishda dumbaning o‘rta mushagi ~81%, katta mushagi ~39% MVIC; qiymatlar o‘rtacha og‘ir set uchun baho."
+  },
+  "hip-adduction": {
+    "basis": "similar:son yaqinlashtiruvchi og‘ir mashqlar (Kopengagen planka, rezina bilan)",
+    "load": "10–15RM (baho)",
+    "metric": "peak",
+    "muscles": {
+      "adductors": {
+        "mvic": 70,
+        "range": [
+          45,
+          100
+        ],
+        "est": true,
+        "src": [
+          "M.serner2014"
+        ]
+      },
+      "medialHamstrings": {
+        "mvic": 15,
+        "range": [
+          5,
+          30
+        ],
+        "est": true
+      }
+    },
+    "rom": "Yostiqlar yaqinlashganda son ichki mushaklari eng faol; keng boshlang‘ich holatda ular eng ko‘p cho‘ziladi.",
+    "notes": "Futbolchilarda sakkizta son yaqinlashtirish mashqida uzun yaqinlashtiruvchi mushak faolligi 14% dan 108% gacha bo‘lgan. Trenajyor uchun qiymat — baho."
+  },
+  "cable-kickback": {
+    "basis": "similar:to‘rt oyoqda turib sonni orqaga uzatish",
+    "load": "yengil–o‘rtacha (baho)",
+    "metric": "mean",
+    "muscles": {
+      "gluteMax": {
+        "mvic": 55,
+        "range": [
+          30,
+          85
+        ],
+        "est": true,
+        "src": [
+          "M.selkowitz2013"
+        ]
+      },
+      "bicepsFemoris": {
+        "mvic": 40,
+        "range": [
+          20,
+          60
+        ],
+        "est": true
+      },
+      "medialHamstrings": {
+        "mvic": 35,
+        "range": [
+          20,
+          55
+        ],
+        "est": true
+      },
+      "gluteMed": {
+        "mvic": 30,
+        "range": [
+          15,
+          50
+        ],
+        "est": true,
+        "src": [
+          "M.selkowitz2013"
+        ]
+      },
+      "erectors": {
+        "mvic": 25,
+        "range": [
+          10,
+          40
+        ],
+        "est": true
+      }
+    },
+    "rom": "Dumba katta mushagi oyoq gavda chizig‘iga yetganda eng faol; tayanch oyoqda dumbaning o‘rta mushagi tosni ushlab turadi.",
+    "notes": "Tik turib blokda bajarish bo‘yicha EMG tadqiqot topilmadi — to‘rt oyoqda sonni orqaga uzatish natijalari asosida baho. U mashqda dumba mushaklari son fassiyasini taranglovchi mushakdan ancha ko‘p ishlagan."
+  },
+  "cable-pull-through": {
+    "basis": "similar:rdl",
+    "load": "o‘rtacha (baho)",
+    "metric": "mean",
+    "muscles": {
+      "gluteMax": {
+        "mvic": 60,
+        "range": [
+          35,
+          85
+        ],
+        "est": true
+      },
+      "medialHamstrings": {
+        "mvic": 55,
+        "range": [
+          35,
+          80
+        ],
+        "est": true,
+        "src": [
+          "M.zebis2013"
+        ]
+      },
+      "bicepsFemoris": {
+        "mvic": 50,
+        "range": [
+          30,
+          70
+        ],
+        "est": true,
+        "src": [
+          "M.zebis2013"
+        ]
+      },
+      "erectors": {
+        "mvic": 35,
+        "range": [
+          20,
+          55
+        ],
+        "est": true
+      },
+      "forearmFlexors": {
+        "mvic": 25,
+        "range": [
+          10,
+          40
+        ],
+        "est": true
+      }
+    },
+    "rom": "Rumincha o‘lik tortishdan farqi: kabel orqaga tortgani uchun yuklama tik turgan holatda ham saqlanadi — dumba tepada ham ishlashda davom etadi (biomexanik xulosa).",
+    "notes": "Bu mashq bo‘yicha EMG tadqiqot topilmadi — rumincha o‘lik tortish natijalari yengilroq vazn uchun kamaytirilgan; bel mushaklari yuklamasi kamroq deb baholangan."
+  },
+  "seated-calf-raise": {
+    "basis": "similar:calf-raise",
+    "load": "10–15RM (baho)",
+    "metric": "mean",
+    "muscles": {
+      "soleus": {
+        "mvic": 60,
+        "range": [
+          30,
+          85
+        ],
+        "est": true,
+        "src": [
+          "M.signorile2002",
+          "M.heberlosier2012",
+          "M.kinoshita2023"
+        ]
+      },
+      "gastrocnemius": {
+        "mvic": 35,
+        "range": [
+          15,
+          60
+        ],
+        "est": true,
+        "src": [
+          "M.signorile2002",
+          "M.heberlosier2012",
+          "M.kinoshita2023"
+        ]
+      }
+    },
+    "rom": "Tizza 90° bukilganda boldirning ikki boshli mushagi bo‘shashadi — ishni asosan kambalasimon mushak bajaradi.",
+    "notes": "12 haftalik tadqiqotda tik turib boldir ko‘tarish ikki boshli mushakni o‘tirib ko‘tarishdan ancha ko‘p o‘stirgan, kambalasimon mushak esa ikkalasida bir xil o‘sgan. Shuning uchun bu mashq tik turib ko‘tarishning o‘rnini bosmaydi, uni to‘ldiradi. Qiymatlar baho."
+  },
+  "assisted-pull-up": {
+    "basis": "similar:lat-pulldown",
+    "load": "tana vazni − yordam (baho)",
+    "metric": "mean",
+    "muscles": {
+      "lats": {
+        "mvic": 65,
+        "range": [
+          45,
+          90
+        ],
+        "est": true,
+        "src": [
+          "M.lusk2010",
+          "M.youdas2010"
+        ]
+      },
+      "teresMajor": {
+        "mvic": 45,
+        "range": [
+          25,
+          65
+        ],
+        "est": true
+      },
+      "biceps": {
+        "mvic": 45,
+        "range": [
+          25,
+          70
+        ],
+        "est": true,
+        "src": [
+          "M.youdas2010"
+        ]
+      },
+      "trapLower": {
+        "mvic": 40,
+        "range": [
+          20,
+          55
+        ],
+        "est": true,
+        "src": [
+          "M.youdas2010"
+        ]
+      },
+      "infraspinatus": {
+        "mvic": 40,
+        "range": [
+          20,
+          60
+        ],
+        "est": true,
+        "src": [
+          "M.youdas2010"
+        ]
+      },
+      "forearmFlexors": {
+        "mvic": 35,
+        "range": [
+          20,
+          50
+        ],
+        "est": true
+      },
+      "deltPost": {
+        "mvic": 30,
+        "range": [
+          15,
+          50
+        ],
+        "est": true
+      }
+    },
+    "rom": "Turnikdagi tortilish kabi: harakatni pastki trapetsiya boshlaydi, tepada keng orqa mushagi va bitseps yakunlaydi.",
+    "notes": "Gravitron bo‘yicha EMG tadqiqot topilmadi — yuqori blokni tortish va turnikda tortilish oralig‘ida baho. Yordam kamaygan sari faollik turnikdagi tortilishga yaqinlashadi."
+  },
+  "preacher-curl": {
+    "basis": "direct",
+    "load": "o‘rtacha (baho)",
+    "metric": "mean",
+    "muscles": {
+      "biceps": {
+        "mvic": 85,
+        "range": [
+          60,
+          110
+        ],
+        "est": true,
+        "src": [
+          "M.oliveira2009"
+        ]
+      },
+      "brachialis": {
+        "mvic": 70,
+        "range": [
+          45,
+          90
+        ],
+        "est": true
+      },
+      "brachioradialis": {
+        "mvic": 50,
+        "range": [
+          30,
+          70
+        ],
+        "est": true
+      },
+      "forearmFlexors": {
+        "mvic": 30,
+        "range": [
+          15,
+          45
+        ],
+        "est": true
+      }
+    },
+    "rom": "Skott skameykasida bitseps faqat qisqa oraliqda — pastki qismida — eng yuqori ishlaydi; bilak tik holatga yaqinlashganda yuklama deyarli yo‘qoladi.",
+    "notes": "Qiymatlar baho. Yosh ayollarda 8 haftalik tadqiqotda Skott skameykasi tirsak bukuvchilarning pastki (tirsak yaqinidagi) qismini, qiya skameyka esa yuqori qismini ko‘proq o‘stirgan."
+  },
+  "t-bar-row": {
+    "basis": "similar:barbell-row",
+    "load": "o‘rtacha–og‘ir (baho)",
+    "metric": "peak",
+    "muscles": {
+      "lats": {
+        "mvic": 60,
+        "range": [
+          40,
+          80
+        ],
+        "est": true,
+        "src": [
+          "M.fenwick2009"
+        ]
+      },
+      "trapMid": {
+        "mvic": 55,
+        "range": [
+          35,
+          75
+        ],
+        "est": true
+      },
+      "rhomboids": {
+        "mvic": 50,
+        "range": [
+          30,
+          70
+        ],
+        "est": true
+      },
+      "deltPost": {
+        "mvic": 50,
+        "range": [
+          30,
+          75
+        ],
+        "est": true
+      },
+      "erectors": {
+        "mvic": 45,
+        "range": [
+          30,
+          65
+        ],
+        "est": true,
+        "src": [
+          "M.fenwick2009"
+        ]
+      },
+      "biceps": {
+        "mvic": 40,
+        "range": [
+          25,
+          60
+        ],
+        "est": true
+      },
+      "forearmFlexors": {
+        "mvic": 35,
+        "range": [
+          20,
+          55
+        ],
+        "est": true
+      },
+      "trapLower": {
+        "mvic": 35,
+        "range": [
+          20,
+          55
+        ],
+        "est": true
+      }
+    },
+    "rom": "Engashib tortishdagi kabi: bel va dumba butun set davomida statik ushlab turadi; tor neytral ushlashda tirsaklar tanaga yaqin yuradi.",
+    "notes": "T-shtanga bo‘yicha EMG tadqiqot topilmadi — engashib shtanga tortish natijalari asosida baho; gavda odatda tikroq bo‘lgani uchun bel qiymati biroz pastroq olingan."
+  },
+  "ab-wheel": {
+    "basis": "similar:fitbolda va g‘ildirakda yoyilish",
+    "load": "o‘z vazni",
+    "metric": "mean",
+    "muscles": {
+      "rectusAbdominis": {
+        "mvic": 70,
+        "range": [
+          50,
+          100
+        ],
+        "est": true,
+        "src": [
+          "M.escamilla2010",
+          "M.escamilla2006",
+          "M.youdas2008"
+        ]
+      },
+      "externalOblique": {
+        "mvic": 55,
+        "range": [
+          40,
+          85
+        ],
+        "est": true,
+        "src": [
+          "M.escamilla2010",
+          "M.escamilla2006"
+        ]
+      },
+      "lats": {
+        "mvic": 30,
+        "range": [
+          15,
+          50
+        ],
+        "est": true,
+        "src": [
+          "M.escamilla2010"
+        ]
+      },
+      "rectusFemoris": {
+        "mvic": 15,
+        "range": [
+          5,
+          30
+        ],
+        "est": true
+      },
+      "erectors": {
+        "mvic": 8,
+        "range": [
+          3,
+          15
+        ],
+        "est": true,
+        "src": [
+          "M.escamilla2010"
+        ]
+      }
+    },
+    "rom": "Eng uzoq nuqtada press tananing orqaga egilishiga qarshi eng ko‘p ishlaydi; bel mushaklari deyarli ishlamaydi (10% dan kam).",
+    "notes": "Fitbolda yoyilishda qorin to‘g‘ri mushagi ~63%, tashqi qiyshiq mushak ~46% MVIC. Press roligida richag uzunroq — qiymatlar biroz yuqoriroq baholangan."
   }
 };
 
@@ -5330,5 +5801,62 @@ export const EMG_SOURCES: Record<string, { cite: string; doi?: string }> = {
   "U.yun2017": {
     "cite": "Yun et al. Changes in muscle activity of the abdominal muscles according to exercise method and speed during dead bug exercise. Phys Ther Rehabil Sci 6(1), 2017.",
     "doi": "10.14474/ptrs.2017.6.1.1"
+  },
+  "M.distefano2009": {
+    "cite": "DiStefano LJ, Blackburn JT, Marshall SW, Padua DA. Gluteal muscle activation during common therapeutic exercises. J Orthop Sports Phys Ther 39(7):532-540, 2009.",
+    "doi": "10.2519/jospt.2009.2796"
+  },
+  "M.fujisawa2014": {
+    "cite": "Fujisawa H, Suzuki H, Yamaguchi E, Yoshiki H, Wada Y, Watanabe A. Hip muscle activity during isometric contraction of hip abduction. J Phys Ther Sci 26(2):187-190, 2014.",
+    "doi": "10.1589/jpts.26.187"
+  },
+  "M.serner2014": {
+    "cite": "Serner A, et al. EMG evaluation of hip adduction exercises for soccer players: implications for exercise selection in prevention and treatment of groin injuries. Br J Sports Med 48(14):1108-1114, 2014.",
+    "doi": "10.1136/bjsports-2012-091746"
+  },
+  "M.selkowitz2013": {
+    "cite": "Selkowitz DM, Beneck GJ, Powers CM. Which exercises target the gluteal muscles while minimizing activation of the tensor fascia lata? Electromyographic assessment using fine-wire electrodes. J Orthop Sports Phys Ther 43(2):54-64, 2013.",
+    "doi": "10.2519/jospt.2013.4116"
+  },
+  "M.zebis2013": {
+    "cite": "Zebis MK, et al. Kettlebell swing targets semitendinosus and supine leg curl targets biceps femoris: an EMG study with rehabilitation implications. Br J Sports Med 47(18):1192, 2013."
+  },
+  "M.signorile2002": {
+    "cite": "Signorile JF, Applegate B, Duque M, Cole N, Zink A. Selective recruitment of the triceps surae muscles with changes in knee angle. J Strength Cond Res 16(3):433-439, 2002."
+  },
+  "M.heberlosier2012": {
+    "cite": "Hébert-Losier K, et al. Influence of knee flexion angle and age on triceps surae muscle activity during heel raises. J Strength Cond Res 26(11), 2012."
+  },
+  "M.kinoshita2023": {
+    "cite": "Kinoshita M, Maeo S, Kobayashi Y, Eihara Y, Ono M, Sato M, Sugiyama T, Kanehisa H, Isaka T. Triceps surae muscle hypertrophy is greater after standing versus seated calf-raise training. Front Physiol 14:1272106, 2023.",
+    "doi": "10.3389/fphys.2023.1272106"
+  },
+  "M.lusk2010": {
+    "cite": "Lusk et al. Grip width and forearm orientation effects on muscle activity during the lat pull-down. J Strength Cond Res 24(7):1895-1900, 2010."
+  },
+  "M.youdas2010": {
+    "cite": "Youdas et al. Surface electromyographic activation patterns and elbow joint motion during a pull-up, chin-up, or Perfect-Pullup rotational exercise. J Strength Cond Res 24(12):3404-3414, 2010.",
+    "doi": "10.1519/JSC.0b013e3181f1598c"
+  },
+  "M.oliveira2009": {
+    "cite": "Oliveira LF, Matta TT, Alves DS, Garcia MAC, Vieira TMM. Effect of the shoulder position on the biceps brachii EMG in different dumbbell curls. J Sports Sci Med 8(1):24-29, 2009."
+  },
+  "M.kassiano2025": {
+    "cite": "Kassiano W, Costa B, Kunevaliki G, et al. Distinct muscle growth and strength adaptations after preacher and incline biceps curls. Int J Sports Med 46(5):334-343, 2025.",
+    "doi": "10.1055/a-2517-0509"
+  },
+  "M.fenwick2009": {
+    "cite": "Fenwick, Brown, McGill. Comparison of different rowing exercises: trunk muscle activation and lumbar spine motion, load, and stiffness. J Strength Cond Res 23(2):350-358, 2009 (also indexed as 23(5):1408-1417, DOI 10.1519/JSC.0b013e3181b07334).",
+    "doi": "10.1519/JSC.0b013e3181942019"
+  },
+  "M.escamilla2010": {
+    "cite": "Escamilla RF, Lewis C, Bell D, et al. Core muscle activation during Swiss ball and traditional abdominal exercises. J Orthop Sports Phys Ther 40(5):265-276, 2010."
+  },
+  "M.escamilla2006": {
+    "cite": "Escamilla et al. Electromyographic analysis of traditional and nontraditional abdominal exercises: implications for rehabilitation and training. Phys Ther 86(5):656-671, 2006.",
+    "doi": "10.1093/ptj/86.5.656"
+  },
+  "M.youdas2008": {
+    "cite": "Youdas, Guck, et al. An electromyographic analysis of the Ab-Slide exercise, abdominal crunch, supine double leg thrust, and side bridge in healthy young adults: implications for rehabilitation professionals. J Strength Cond Res 22(6):1939-1946, 2008."
   }
 };

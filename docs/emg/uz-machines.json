@@ -1,1 +1,55 @@
-{}
+{
+  "hip-abduction": {
+    "similar": "yonboshlab yotib sonni ochish",
+    "load": "10–15RM (baho)",
+    "rom": "Dumbaning o‘rta mushagi eng keng ochilgan holatda eng faol. O‘tirganda (son bo‘g‘imi ~80° bukik) dumba katta mushagi tik holatdagidan ko‘proq, son fassiyasini taranglovchi mushak esa kamroq ishlaydi; dumbaning o‘rta mushagi faolligi o‘zgarmaydi.",
+    "notes": "Trenajyorning o‘zi bo‘yicha chop etilgan EMG tadqiqot topilmadi. Yonboshlab yotib sonni ochishda dumbaning o‘rta mushagi ~81%, katta mushagi ~39% MVIC; qiymatlar o‘rtacha og‘ir set uchun baho."
+  },
+  "hip-adduction": {
+    "similar": "son yaqinlashtiruvchi og‘ir mashqlar (Kopengagen planka, rezina bilan)",
+    "load": "10–15RM (baho)",
+    "rom": "Yostiqlar yaqinlashganda son ichki mushaklari eng faol; keng boshlang‘ich holatda ular eng ko‘p cho‘ziladi.",
+    "notes": "Futbolchilarda sakkizta son yaqinlashtirish mashqida uzun yaqinlashtiruvchi mushak faolligi 14% dan 108% gacha bo‘lgan. Trenajyor uchun qiymat — baho."
+  },
+  "cable-kickback": {
+    "similar": "to‘rt oyoqda turib sonni orqaga uzatish",
+    "load": "yengil–o‘rtacha (baho)",
+    "rom": "Dumba katta mushagi oyoq gavda chizig‘iga yetganda eng faol; tayanch oyoqda dumbaning o‘rta mushagi tosni ushlab turadi.",
+    "notes": "Tik turib blokda bajarish bo‘yicha EMG tadqiqot topilmadi — to‘rt oyoqda sonni orqaga uzatish natijalari asosida baho. U mashqda dumba mushaklari son fassiyasini taranglovchi mushakdan ancha ko‘p ishlagan."
+  },
+  "cable-pull-through": {
+    "similar": "rdl",
+    "load": "o‘rtacha (baho)",
+    "rom": "Rumincha o‘lik tortishdan farqi: kabel orqaga tortgani uchun yuklama tik turgan holatda ham saqlanadi — dumba tepada ham ishlashda davom etadi (biomexanik xulosa).",
+    "notes": "Bu mashq bo‘yicha EMG tadqiqot topilmadi — rumincha o‘lik tortish natijalari yengilroq vazn uchun kamaytirilgan; bel mushaklari yuklamasi kamroq deb baholangan."
+  },
+  "seated-calf-raise": {
+    "similar": "calf-raise",
+    "load": "10–15RM (baho)",
+    "rom": "Tizza 90° bukilganda boldirning ikki boshli mushagi bo‘shashadi — ishni asosan kambalasimon mushak bajaradi.",
+    "notes": "12 haftalik tadqiqotda tik turib boldir ko‘tarish ikki boshli mushakni o‘tirib ko‘tarishdan ancha ko‘p o‘stirgan, kambalasimon mushak esa ikkalasida bir xil o‘sgan. Shuning uchun bu mashq tik turib ko‘tarishning o‘rnini bosmaydi, uni to‘ldiradi. Qiymatlar baho."
+  },
+  "assisted-pull-up": {
+    "similar": "lat-pulldown",
+    "load": "tana vazni − yordam (baho)",
+    "rom": "Turnikdagi tortilish kabi: harakatni pastki trapetsiya boshlaydi, tepada keng orqa mushagi va bitseps yakunlaydi.",
+    "notes": "Gravitron bo‘yicha EMG tadqiqot topilmadi — yuqori blokni tortish va turnikda tortilish oralig‘ida baho. Yordam kamaygan sari faollik turnikdagi tortilishga yaqinlashadi."
+  },
+  "preacher-curl": {
+    "load": "o‘rtacha (baho)",
+    "rom": "Skott skameykasida bitseps faqat qisqa oraliqda — pastki qismida — eng yuqori ishlaydi; bilak tik holatga yaqinlashganda yuklama deyarli yo‘qoladi.",
+    "notes": "Qiymatlar baho. Yosh ayollarda 8 haftalik tadqiqotda Skott skameykasi tirsak bukuvchilarning pastki (tirsak yaqinidagi) qismini, qiya skameyka esa yuqori qismini ko‘proq o‘stirgan."
+  },
+  "t-bar-row": {
+    "similar": "barbell-row",
+    "load": "o‘rtacha–og‘ir (baho)",
+    "rom": "Engashib tortishdagi kabi: bel va dumba butun set davomida statik ushlab turadi; tor neytral ushlashda tirsaklar tanaga yaqin yuradi.",
+    "notes": "T-shtanga bo‘yicha EMG tadqiqot topilmadi — engashib shtanga tortish natijalari asosida baho; gavda odatda tikroq bo‘lgani uchun bel qiymati biroz pastroq olingan."
+  },
+  "ab-wheel": {
+    "similar": "fitbolda va g‘ildirakda yoyilish",
+    "load": "o‘z vazni",
+    "rom": "Eng uzoq nuqtada press tananing orqaga egilishiga qarshi eng ko‘p ishlaydi; bel mushaklari deyarli ishlamaydi (10% dan kam).",
+    "notes": "Fitbolda yoyilishda qorin to‘g‘ri mushagi ~63%, tashqi qiyshiq mushak ~46% MVIC. Press roligida richag uzunroq — qiymatlar biroz yuqoriroq baholangan."
+  }
+}

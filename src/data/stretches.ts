@@ -30,7 +30,7 @@ function alternate<P>(a: P, b: P, hold = 900, move = 2100): KeyFrame<P>[] {
 
 const MAT = (x = 10, w = 210) => ({ kind: 'mat' as const, x, y: 0, w });
 /** devor yoki eshik romi: kadr tepasidan polgacha baland yassi ustun */
-const WALL = (x: number, w = 9) => ({ kind: 'box' as const, x, y: -120, w, h: F + 120 });
+const WALL = (x: number, w = 40) => ({ kind: 'box' as const, x, y: -120, w, h: F + 120 });
 
 /** To‘rt oyoqlab: tizza va kaftlar polda */
 const QUAD: S = { torso: 76, head: 94, ua: 180, fa: 180, th: 180, sh: 270, ft: 262, hand: { x: 140, y: 204 } };
@@ -48,8 +48,8 @@ export function catCow(): AnimSpec {
 }
 
 export function childsPose(): AnimSpec {
-  const a: S = { torso: 99, head: 117, ua: 100, fa: 98, th: 120, sh: 270, ft: 262, hand: { x: 160, y: 206.5 } };
-  const b: S = { ...a, torso: 101, head: 121, th: 113, hand: { x: 163, y: 206.5 } };
+  const a: S = { torso: 99, head: 110, curve: 0.25, ua: 100, fa: 98, th: 120, sh: 270, ft: 262, hand: { x: 160, y: 206.5 } };
+  const b: S = { ...a, torso: 101, head: 103, th: 113, hand: { x: 163, y: 206.5 } };
   return {
     view: 'side',
     anchor: { joint: 'knee', x: 92, y: 206 },
@@ -73,14 +73,14 @@ export function downDog(): AnimSpec {
 
 export function cobra(): AnimSpec {
   const legs = { th: 268, sh: 265, ft: 266 };
-  const a: S = { ...legs, torso: 62, head: 52, ua: 180, fa: 180, hand: { x: 128, y: 204 } };
-  const b: S = { ...a, torso: 50, head: 40 };
+  const a: S = { ...legs, torso: 62, head: 70, ua: 180, fa: 180, hand: { x: 146, y: 204 } };
+  const b: S = { ...a, torso: 50, head: 58 };
   return {
     view: 'side',
-    anchor: { joint: 'hip', x: 82, y: 201 },
-    props: [MAT(0, 200)],
+    anchor: { joint: 'hip', x: 100, y: 201 },
+    props: [MAT(-10, 200)],
     frames: deepen(a, b),
-    frame: { x: 0, y: 100, w: 200, h: 120 },
+    frame: { x: -20, y: 100, w: 210, h: 120 },
   };
 }
 
@@ -115,7 +115,7 @@ export function hipFlexorStretch(): AnimSpec {
 export function hamstringStretch(): AnimSpec {
   const base = { torso: 270, head: 272, ua: 0, fa: 0, foot2: { x: 152, y: AY }, ft2: 90 };
   const a: S = { ...base, th: 3, sh: 3, ft: 263, hand: { x: 88, y: 158 } };
-  const b: S = { ...base, th: 357, sh: 357, ft: 255, hand: { x: 84, y: 166 } };
+  const b: S = { ...base, th: -3, sh: -3, ft: 255, hand: { x: 84, y: 166 } };
   return {
     view: 'side',
     anchor: { joint: 'hip', x: 110, y: 202 },
@@ -152,7 +152,7 @@ export function figureFour(): AnimSpec {
 }
 
 export function quadStretch(): AnimSpec {
-  const base = { torso: 0, head: 0, th2: 180, sh2: 180, ft2: 90, hand2: { x: 146, y: 86 } };
+  const base = { torso: 0, head: 0, th2: 180, sh2: 180, ft2: 90, hand2: { x: 152, y: 86 } };
   const a: S = { ...base, th: 182, sh: 350, ft: 310, ua: 0, fa: 0, hand: { x: 92, y: 124 } };
   const b: S = { ...base, th: 190, sh: 356, ft: 316, ua: 0, fa: 0, hand: { x: 92, y: 124 } };
   return {
@@ -170,7 +170,7 @@ export function doorwayChest(): AnimSpec {
   return {
     view: 'side',
     anchor: { joint: 'ankle', x: 120, y: AY },
-    props: [WALL(85, 8)],
+    props: [WALL(84, 9)],
     frames: deepen(a, b),
   };
 }
@@ -198,14 +198,23 @@ export function neckStretch(): AnimSpec {
 }
 
 export function supineTwist(): AnimSpec {
+  // tizzalar kamera tomonga yonga tushadi: yon ko‘rinishda sonlar pastga, oyoq kaftlari tos yoniga siljiydi
   const base = { torso: 270, head: 272, ua: 92, fa: 90 };
-  const a: S = { ...base, th: 0, sh: 0, foot: { x: 150, y: AY }, ft: 90 };
-  const b: S = { ...base, th: 0, sh: 0, foot: { x: 112, y: 204 }, ft: 262 };
+  const a: S = { ...base, th: 38, sh: 164, ft: 90 };
+  const mid: S = { ...base, th: 34, sh: 200, ft: 90, th2: 32, sh2: 196, ft2: 90 };
+  const b: S = { ...base, th: 70, sh: 242, ft: 90, th2: 58, sh2: 226, ft2: 90 };
   return {
     view: 'side',
     anchor: { joint: 'hip', x: 110, y: 202 },
     props: [MAT(20, 180)],
-    frames: deepen(a, b),
+    frames: [
+      { pose: a, dur: 1200, phase: 'hold' },
+      { pose: a, dur: 1100, phase: 'down' },
+      { pose: mid, dur: 1600, phase: 'down' },
+      { pose: b, dur: 2600, phase: 'hold' },
+      { pose: b, dur: 1500, phase: 'down' },
+      { pose: mid, dur: 1000, phase: 'down' },
+    ],
     frame: { x: 20, y: 100, w: 200, h: 120 },
   };
 }
@@ -223,7 +232,8 @@ export function calfStretch(): AnimSpec {
 }
 
 export function threadNeedle(): AnimSpec {
-  const open: S = { ...QUAD, head: 40, ua: -5, fa: -5, hand: undefined, hand2: { x: 140, y: 204 } };
+  // qo‘l orqa tomondan aylanadi (oldinga burilsa — pol ichidan o‘tib ketardi)
+  const open: S = { ...QUAD, head: 40, ua: 355, fa: 355, hand: undefined, hand2: { x: 140, y: 204 } };
   const thread: S = { ...QUAD, torso: 112, head: 150, ua: 228, fa: 268, hand: undefined, hand2: { x: 140, y: 204 } };
   return {
     view: 'side',
