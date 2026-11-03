@@ -2,6 +2,7 @@
 // Asos: ACSM 2026 (har mushak haftasiga 2+ marta), Schoenfeld 2017 / Pelland 2026 (haftalik hajm),
 // Refalo 2023 (1–3 takror zaxira), Schoenfeld 2016 (murakkab mashqlarda uzunroq dam).
 import { EXERCISES, EXERCISE_MAP } from '../data/exercises';
+import { safetyFor } from '../data/safety';
 import { GROUP_ORDER, GROUPS, MUSCLES, WEEKLY_TARGET } from '../data/catalog';
 import type { EquipmentId, Exercise, Goal, Level, MuscleGroup, Pattern, PlannedExercise, Profile, Program, WorkoutDay } from '../types';
 import { blockWeek, METHOD_INFO, methodMeso, resolveMethod, type ConcreteMethod } from './methods';
@@ -276,8 +277,14 @@ function rank(ex: Exercise, role: Role, p: Profile, used: Map<string, number>, m
   return sc;
 }
 
+/** Sog'liq so'rovnomasida (PAR-Q) "ha" javobi bor — ehtiyotkor rejim */
+export const cautious = (p: Pick<Profile, 'healthFlags'>) => (p.healthFlags?.length ?? 0) > 0;
+
 export function candidates(pattern: Pattern, p: Profile): Exercise[] {
-  return EXERCISES.filter((e) => e.pattern === pattern && hasEquipment(e, p.equipment) && isSafe(e, p));
+  // ehtiyotkor rejimda murakkab (3-daraja) va yuqori xavfli (og'ir shtanga tana ustida) mashqlar tanlanmaydi
+  return EXERCISES.filter(
+    (e) => e.pattern === pattern && hasEquipment(e, p.equipment) && isSafe(e, p) && (!cautious(p) || (e.level < 3 && (safetyFor(e.id)?.risk ?? 1) < 3)),
+  );
 }
 
 function pick(slot: Slot, p: Profile, used: Map<string, number>, method: ConcreteMethod = 'hypertrophy'): Exercise | undefined {
@@ -471,13 +478,15 @@ export function generateProgram(p: Profile): Program {
 
   // chiziqli progressiya ataylab minimal: hajm qo'shilmaydi (vazn o'sishi muhim), faqat yuqori chegaradan oshgani kamaytiriladi
   balanceVolume(days, built, p.sessionMin, maxSets, bound, p.focus, method !== 'linear');
+  // ehtiyotkor rejim: har setda kamida 3 takror zaxira, foizli og'ir sxema yo'q
+  if (cautious(p)) for (const d of days) d.exercises = d.exercises.map((e) => ({ ...e, rir: Math.max(e.rir, 3), scheme: undefined }));
   days.forEach((d) => (d.estMin = estimateMinutes(d.exercises)));
 
   return {
     id: `p${Date.now().toString(36)}`,
     name: split.name,
     split: split.name,
-    splitWhy: `${METHOD_INFO[method].name}. ${split.why}`,
+    splitWhy: `${METHOD_INFO[method].name}. ${split.why}${cautious(p) ? ' Ehtiyotkor rejim (sog‘liq so‘rovnomasi): murakkab va yuqori xavfli mashqlarsiz, har setda kamida 3 takror zaxira.' : ''}`,
     createdAt: new Date().toISOString(),
     days,
     mesoWeeks,

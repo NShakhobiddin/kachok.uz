@@ -60,8 +60,10 @@ export function workoutEdits(a: ActiveWorkout, program: Program | null): Workout
     map.set(origin, to);
   }
   const has = (id: string) => day.exercises.some((p) => p.exerciseId === id);
-  const swaps = [...map].filter(([from, to]) => from !== to && has(from) && !has(to)).map(([from, to]) => ({ from, to }));
-  const added = a.plan.filter((p) => addedIds.has(p.exerciseId) && !has(p.exerciseId) && !swaps.some((s) => s.to === p.exerciseId));
+  // kamida bitta set bajarilgan mashqlar — tasodifan qo'shilgan/almashtirilgan, lekin bajarilmagan mashq dasturga yozilmaydi
+  const done = new Set(a.log.exercises.filter((e) => e.sets.some((s) => s.done)).map((e) => e.exerciseId));
+  const swaps = [...map].filter(([from, to]) => from !== to && has(from) && !has(to) && done.has(to)).map(([from, to]) => ({ from, to }));
+  const added = a.plan.filter((p) => addedIds.has(p.exerciseId) && done.has(p.exerciseId) && !has(p.exerciseId) && !swaps.some((s) => s.to === p.exerciseId));
   const uniqAdded = [...new Map(added.map((p) => [p.exerciseId, p])).values()];
   return swaps.length || uniqAdded.length ? { swaps, added: uniqAdded } : null;
 }
@@ -272,8 +274,9 @@ export const useStore = create<State>()(
             set({ program: { ...program, days: program.days.map((d) => ({ ...d, weekday: days[order.indexOf(d.id)] })) } });
           }
         }
-        const today = isoDate();
-        if (!get().body.some((b) => b.date === today)) set({ body: [...get().body, { date: today, weightKg: p.weightKg }] });
+        // vazn o'lchovi faqat yangi qiymat bo'lsa (har saqlashda eski vazn bugungi o'lchov sifatida yozilmasin)
+        const lastW = [...get().body].reverse().find((b) => b.weightKg)?.weightKg;
+        if (lastW !== p.weightKg) get().addBody({ date: isoDate(), weightKg: p.weightKg });
       },
       updateProfile: (patch) => {
         const p = get().profile;
@@ -301,7 +304,11 @@ export const useStore = create<State>()(
         const program = get().program;
         const moving = program?.days.find((d) => d.id === dayId);
         if (!program || !moving || moving.weekday === weekday) return;
-        set({ program: { ...program, days: program.days.map((d) => (d.id === dayId ? { ...d, weekday } : d.weekday === weekday ? { ...d, weekday: moving.weekday } : d)) } });
+        const days = program.days.map((d) => (d.id === dayId ? { ...d, weekday } : d.weekday === weekday ? { ...d, weekday: moving.weekday } : d));
+        set({ program: { ...program, days } });
+        // profildagi jadval ham shu kunlar bo'lsin (aks holda dastur qayta tuzilganda kunlar eski joyiga qaytadi)
+        const p = get().profile;
+        if (p && !program.coach && days.length === p.trainingDays.length) set({ profile: { ...p, trainingDays: days.map((d) => d.weekday).sort((a, b) => a - b) } });
       },
       addDay: (weekday, title) => {
         const program = get().program;
@@ -347,7 +354,7 @@ export const useStore = create<State>()(
         const exercises = a.log.exercises.map((e, i) => {
           if (i !== exIdx) return e;
           const last = e.sets[e.sets.length - 1];
-          return { ...e, sets: [...e.sets, { kg: last?.kg ?? 0, reps: last?.reps ?? 0, done: false, ...s }] };
+          return { ...e, sets: [...e.sets, { kg: last?.kg ?? 0, reps: last?.reps ?? 0, done: false, ...(last?.kgSet ? { kgSet: true } : {}), ...s }] };
         });
         set({ active: { ...a, log: { ...a.log, exercises } } });
       },

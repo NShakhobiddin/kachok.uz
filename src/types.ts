@@ -376,6 +376,8 @@ export interface SetLog {
   warmup?: boolean;
   /** maxsus set turi: drop-set yoki chegaragacha (failure) */
   kind?: 'drop' | 'failure';
+  /** vazn qo'lda kiritilgan (0 ham) — tavsiya bilan almashtirilmaydi */
+  kgSet?: boolean;
 }
 
 export interface ExerciseLog {

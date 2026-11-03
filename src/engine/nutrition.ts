@@ -400,7 +400,12 @@ export function mealPlan(plan: NutritionPlan, prefs: Profile['dietPrefs']): Meal
     ...m,
     items: m.items.flatMap((i): MealItem[] => {
       let food = i.food;
-      if (prefs.vegetarian && SWAPS_VEG[food]) food = SWAPS_VEG[food];
+      // vegetarian: go'sht o'rniga dukkakli + tvorog (laktozasizda tuxum) — dukkaklining o'zida oqsil kam, maqsadga yetmaydi
+      if (prefs.vegetarian && SWAPS_VEG[food])
+        return [
+          { ...i, food: SWAPS_VEG[food], g: Math.round(i.g * 0.8) },
+          { food: prefs.lactoseFree ? 'egg' : 'tvorog', g: 120, role: 'P' },
+        ];
       if (prefs.lactoseFree && food in SWAPS_LACTOSE) {
         const sw = SWAPS_LACTOSE[food];
         if (!sw) return [];

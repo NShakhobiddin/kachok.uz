@@ -1,6 +1,6 @@
 // Statistika: haftalik tahlil, rekordlar, mushak tiklanishi, tushunchalar (insights).
 import { EXERCISE_MAP } from '../data/exercises';
-import { GROUPS, GROUP_ORDER, MUSCLES, WEEKLY_TARGET } from '../data/catalog';
+import { GROUPS, GROUP_ORDER, MUSCLES, VOLUME_LANDMARKS, WEEKLY_TARGET } from '../data/catalog';
 import { addDays, fmtDuration, startOfWeek } from '../lib/date';
 import type { MuscleGroup, MuscleId, Profile, WorkoutLog } from '../types';
 import { addVolume } from './program';
@@ -134,7 +134,8 @@ export function exerciseSeries(exId: string, logs: WorkoutLog[]) {
       if (!sets.length) return null;
       return {
         date: l.startedAt,
-        e1rm: Math.round(Math.max(...sets.map((s) => (s.rir !== undefined ? e1rmFromSet(s.kg, s.reps, s.rir) : e1rm(s.kg, s.reps)))) * 10) / 10,
+        // bitta formula (tarix oynasi va avtoregulyatsiya bilan bir xil): zaxira yozilmagan bo'lsa — RIR 1 deb olinadi
+        e1rm: Math.round(Math.max(...sets.map((s) => e1rmFromSet(s.kg, s.reps, s.rir))) * 10) / 10,
         topKg: Math.max(...sets.map((s) => s.kg)),
         reps: Math.max(...sets.map((s) => s.reps)),
         volume: sets.reduce((a, s) => a + s.kg * s.reps, 0),
@@ -213,7 +214,8 @@ export function weeklyInsights(logs: WorkoutLog[], profile: Profile, now = new D
 
   // Mushak guruhlari bo‘yicha hajm (oxirgi to‘liq hafta yoki joriy)
   const ref = cur.workouts >= Math.max(1, planned - 1) ? cur : prev;
-  const low = GROUP_ORDER.filter((g) => ref.groups[g] > 0 && ref.groups[g] < WEEKLY_TARGET[g][0] * 0.7);
+  // 'kam' chegarasi — MEV (Natija sahifasidagi hajm chiziqlari bilan bir xil)
+  const low = GROUP_ORDER.filter((g) => ref.groups[g] > 0 && ref.groups[g] < VOLUME_LANDMARKS[g].mev);
   const none = GROUP_ORDER.filter((g) => ref.groups[g] === 0 && g !== 'calves' && g !== 'core');
   const high = GROUP_ORDER.filter((g) => ref.groups[g] > WEEKLY_TARGET[g][1] * 1.2);
   if (none.length && ref.workouts > 0)

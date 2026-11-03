@@ -11,6 +11,8 @@ import { DEFAULT_DAYS, estimateMinutes, generateProgram, LEVEL_MAX_SETS, rotateL
 import { roundLoad, startingWeight, suggest, warmupSets, workingWeight } from '../progression';
 import { e1rmFromSet, pct1rm } from '../rpe';
 import { allPRs, detectPRs } from '../stats';
+import { resizeSplit } from '../split';
+import { safetyFor } from '../../data/safety';
 
 const base: Profile = {
   name: 'T',
@@ -547,5 +549,34 @@ describe('Darslar dvigatel bilan mos', () => {
       expect(sp(l)).toBeGreaterThanOrEqual(0.045);
       expect(sp(l)).toBeLessThanOrEqual(0.125);
     }
+  });
+});
+
+describe('2026-11 auditi', () => {
+  it('kunlar kamaysa, olib tashlangan kundagi mushak guruhlari qolgan kunlarga o‘tadi', () => {
+    const r = resizeSplit([['chest', 'biceps', 'triceps'], ['shoulders', 'back'], ['quads', 'hamstrings', 'glutes', 'calves']], 2);
+    expect(r).toHaveLength(2);
+    for (const g of ['quads', 'hamstrings', 'glutes', 'calves'] as MuscleGroup[]) expect(r.flat()).toContain(g);
+  });
+
+  it('sog‘liq so‘rovnomasida belgi bo‘lsa — ehtiyotkor rejim: murakkab/yuqori xavfli mashqlarsiz, RIR ≥ 3', () => {
+    const prog = generateProgram(prof({ healthFlags: ['0'] }));
+    for (const pe of prog.days.flatMap((d) => d.exercises)) {
+      const ex = EXERCISE_MAP[pe.exerciseId];
+      expect(ex.level, pe.exerciseId).toBeLessThan(3);
+      expect(safetyFor(ex.id)?.risk ?? 1, pe.exerciseId).toBeLessThan(3);
+      expect(pe.rir, pe.exerciseId).toBeGreaterThanOrEqual(3);
+      expect(pe.scheme).toBeUndefined();
+    }
+  });
+
+  it('vegetarian reja oqsil maqsadining kamida 90% ini beradi (sut mahsulotlari bilan)', () => {
+    for (const sex of ['male', 'female'] as const)
+      for (const goal of ['fatLoss', 'muscle'] as Goal[]) {
+        const p = prof({ sex, goal, weightKg: sex === 'male' ? 80 : 62, dietPrefs: { noPork: false, lactoseFree: false, vegetarian: true } });
+        const np = nutritionPlan(p);
+        const prot = mealPlan(np, p.dietPrefs).reduce((a, m) => a + m.p, 0);
+        expect(prot / np.protein, `${sex} ${goal}`).toBeGreaterThanOrEqual(0.9);
+      }
   });
 });

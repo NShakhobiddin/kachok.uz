@@ -213,13 +213,14 @@ export default function Workout() {
       st.updateSet(idx, j, { done: false });
       return;
     }
-    const kg = s.kg || sug?.kg || 0;
+    // qo'lda kiritilgan 0 kg (yuksiz tortilish) — tavsiya bilan almashtirilmaydi
+    const kg = s.kgSet ? s.kg : s.kg || sug?.kg || 0;
     const reps = s.reps || sug?.reps || pe?.repMin || 0;
     st.updateSet(idx, j, { kg, reps, done: true });
     setLastDone({ ex: idx, set: j });
     if (settings.vibrate) haptic('tick');
     // rekordni darhol aniqlash
-    if (kg > 0 && ex.loadType !== 'bodyweight') {
+    if (kg > 0 && ex.loadType !== 'bodyweight' && !ex.assisted) {
       const hist = exerciseHistory(ex.id, logs);
       if (hist.length) {
         const best = Math.max(...hist.flatMap((h) => h.sets.map((x) => e1rm(x.kg, x.reps))));
@@ -406,7 +407,7 @@ export default function Workout() {
                   <button
                     className="small faint num stack prev-cell"
                     disabled={!prev || s.done}
-                    onClick={() => prev && st.updateSet(idx, j, { kg: prev.kg ?? 0, reps: prev.reps })}
+                    onClick={() => prev && st.updateSet(idx, j, { kg: prev.kg ?? 0, reps: prev.reps, kgSet: true })}
                     aria-label={prev ? `O‘tgan safargi ${fmtKg(prev.kg ?? 0)}×${prev.reps} ni ko‘chirish` : 'O‘tgan natija yo‘q'}
                   >
                     <span>{prev ? `${fmtKg(prev.kg ?? 0)}×${prev.reps}${prev.rir !== undefined ? ` @${prev.rir}` : ''}` : '—'}</span>
@@ -418,7 +419,7 @@ export default function Workout() {
                       s.done && s.rir !== undefined && <span className="rir-badge">RIR {s.rir >= 4 ? '4+' : s.rir}</span>
                     )}
                   </button>
-                  <NumCell decimal label={`${j + 1}-set vazn`} placeholder={sug?.kg ? fmtKg(sug.kg) : '0'} value={s.kg} onValue={(kg) => st.updateSet(idx, j, { kg })} />
+                  <NumCell decimal label={`${j + 1}-set vazn`} placeholder={sug?.kg ? fmtKg(sug.kg) : '0'} value={s.kg} zero={s.kgSet} onValue={(kg, typed) => st.updateSet(idx, j, { kg, kgSet: typed })} />
                   <NumCell label={`${j + 1}-set takror`} placeholder={String(sug?.reps ?? pe?.repMin ?? '')} value={s.reps} onValue={(reps) => st.updateSet(idx, j, { reps })} />
                   <button className={`set-check ${s.done ? 'on' : ''}`} onClick={() => completeSet(j)} aria-label={s.done ? 'Bekor qilish' : 'Set bajarildi'} aria-pressed={s.done}>
                     <Icon name="check" size={18} stroke={3} />
@@ -643,7 +644,8 @@ export default function Workout() {
  * Set katagi: yozilgan matn (masalan "22." yoki "17,5") maydonda saqlanadi, to'g'ri son bo'lsa darhol yoziladi.
  * Tashqaridan qiymat o'zgarsa (o'tgan natijani ko'chirish, "Qo'llash") — o'sha ko'rsatiladi.
  */
-function NumCell({ value, onValue, decimal, label, placeholder }: { value: number; onValue: (v: number) => void; decimal?: boolean; label: string; placeholder: string }) {
+/** zero — qiymat 0 bo'lsa ham ko'rsatiladi (qo'lda kiritilgan); onValue ning ikkinchi argumenti — maydon bo'sh emas */
+function NumCell({ value, onValue, decimal, label, placeholder, zero }: { value: number; onValue: (v: number, typed: boolean) => void; decimal?: boolean; label: string; placeholder: string; zero?: boolean }) {
   const [draft, setDraft] = useState<string | null>(null);
   const parse = (raw: string) => {
     if (!raw.trim()) return 0;
@@ -652,7 +654,7 @@ function NumCell({ value, onValue, decimal, label, placeholder }: { value: numbe
     if (!Number.isFinite(v) || v < 0) return NaN;
     return decimal ? Math.round(v * 100) / 100 : Math.round(v);
   };
-  const shown = draft !== null && parse(draft) === value ? draft : value ? String(value) : '';
+  const shown = draft !== null && parse(draft) === value ? draft : value || zero ? String(value) : '';
   return (
     <input
       className="set-input"
@@ -665,7 +667,8 @@ function NumCell({ value, onValue, decimal, label, placeholder }: { value: numbe
         const v = parse(raw);
         if (!Number.isFinite(v)) return; // harf va h.k. — e'tiborsiz
         setDraft(raw);
-        if (v !== value) onValue(v);
+        const typed = raw.trim() !== '';
+        if (v !== value || typed !== !!zero) onValue(v, typed);
       }}
       onBlur={() => setDraft(null)}
       onKeyDown={(e) => e.key === 'Enter' && e.currentTarget.blur()}

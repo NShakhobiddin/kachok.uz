@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { EXERCISES, EXERCISE_MAP } from '../data/exercises';
+import { normalize } from '../data/foods';
 import { GROUPS, GROUP_ORDER, MUSCLES } from '../data/catalog';
 import { alternatives, hasEquipment } from '../engine/program';
 import type { Exercise, MuscleGroup, PlannedExercise, Profile, WorkoutDay } from '../types';
@@ -181,7 +182,7 @@ export function ExercisePicker({
   const multi = !!onPickMany;
   const items = list.filter(
     (e) =>
-      (!q || (e.name + ' ' + e.en).toLowerCase().includes(q.toLowerCase())) &&
+      (!q || normalize(e.name + ' ' + e.en).includes(normalize(q))) &&
       (!group || MUSCLES[e.primary[0]].group === group) &&
       (!search || !equipment || !onlyMine || hasEquipment(e, equipment)),
   );

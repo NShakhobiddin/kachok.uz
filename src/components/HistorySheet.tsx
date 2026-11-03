@@ -13,7 +13,7 @@ export function HistorySheet({ ex }: { ex: Exercise }) {
   const logs = useStore((s) => s.logs);
   const hist = useMemo(() => exerciseHistory(ex.id, logs), [ex.id, logs]);
   const series = useMemo(() => exerciseSeries(ex.id, logs), [ex.id, logs]);
-  const loaded = ex.loadType !== 'bodyweight' && ex.loadType !== 'band';
+  const loaded = ex.loadType !== 'bodyweight' && ex.loadType !== 'band' && !ex.assisted;
   const all = hist.flatMap((h) => h.sets.map((s) => ({ ...s, date: h.date })));
   const bestE1 = loaded && all.length ? Math.max(...all.map((s) => e1rmFromSet(s.kg, s.reps, s.rir))) : 0;
   const heaviest = all.length ? all.reduce((a, b) => (b.kg > a.kg || (b.kg === a.kg && b.reps > a.reps) ? b : a)) : null;

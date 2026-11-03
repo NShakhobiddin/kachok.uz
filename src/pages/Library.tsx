@@ -8,6 +8,7 @@ import { Icon } from '../components/ui/Icon';
 import { Segmented, Toggle } from '../components/ui/controls';
 import { MUSCLES } from '../data/catalog';
 import { EXERCISES, STRETCHES } from '../data/exercises';
+import { normalize } from '../data/foods';
 import { LESSONS } from '../data/lessons';
 import { isHomeExercise } from '../data/routines';
 import { safetyFor } from '../data/safety';
@@ -74,7 +75,8 @@ function Exercises() {
     const filterM = picked.length ? picked : areaM;
     const base = cat === 'stretch' ? STRETCHES : EXERCISES.filter((e) => (cat === 'home' ? isHomeExercise(e) : cat === 'gym' ? !isHomeExercise(e) : true));
     return base.filter((e) => {
-      if (q && !(e.name + ' ' + e.en).toLowerCase().includes(q.toLowerCase())) return false;
+      // telefon klaviaturasidagi har xil apostrof (o', oʻ, o`) ham topilsin
+      if (q && !normalize(e.name + ' ' + e.en).includes(normalize(q))) return false;
       if (filterM.length && !e.primary.some((m) => filterM.includes(m))) return false;
       if (mine && profile && cat !== 'stretch' && !hasEquipment(e, profile.equipment)) return false;
       if (safeOnly && personalSafety(e, injuries).avoid.length) return false;

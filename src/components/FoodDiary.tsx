@@ -1,10 +1,11 @@
 // Ovqat kundaligi: kun bo'yicha yozuvlar, maqsadga nisbatan qoldiq, mahalliy taomlar bazasidan tez qo'shish
 // va kundalik + vazn asosidagi moslashuvchan sarf (adaptive TDEE).
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FOOD_CATS, FOOD_DB, FOOD_MAP, portion, searchFoods, type FoodCat, type FoodItem } from '../data/foods';
 import type { NutritionPlan, TdeeEstimate } from '../engine/nutrition';
 import { fmtDate, isoDate } from '../lib/date';
+import { useDateKey } from '../lib/useToday';
 import { useStore } from '../store/useStore';
 import type { FoodEntry } from '../types';
 import { MACRO_COLORS } from './charts';
@@ -36,9 +37,20 @@ export function sumEntries(list: Pick<FoodEntry, 'kcal' | 'p' | 'f' | 'c'>[]) {
 export function FoodDiary({ np }: { np: NutritionPlan }) {
   const food = useStore((s) => s.food);
   const removeFood = useStore((s) => s.removeFood);
-  const [date, setDate] = useState(isoDate());
+  const addFood = useStore((s) => s.addFood);
+  // oxirgi o'chirilgan yozuv — bir bosishda qaytarish uchun
+  const [undo, setUndo] = useState<FoodEntry | null>(null);
+  useEffect(() => {
+    if (!undo) return;
+    const t = setTimeout(() => setUndo(null), 6000);
+    return () => clearTimeout(t);
+  }, [undo]);
+  // "bugun" yarim tunda yangilanadi; tanlangan o'tgan kun bo'lmasa — doim bugungi kun
+  const today = useDateKey();
+  const [picked, setPicked] = useState<string | null>(null);
+  const date = picked && picked < today ? picked : today;
+  const setDate = (d: string) => setPicked(d >= today ? null : d);
   const [adding, setAdding] = useState<Meal | null>(null);
-  const today = isoDate();
   const list = useMemo(() => food.filter((e) => e.date === date), [food, date]);
   const tot = sumEntries(list);
   const left = np.kcal - Math.round(tot.kcal);
@@ -103,7 +115,15 @@ export function FoodDiary({ np }: { np: NutritionPlan }) {
                   <span className="tiny faint num">{entryMeta(e)}</span>
                 </span>
                 <b className="num">{Math.round(e.kcal)}</b>
-                <button className="icon-btn" style={{ width: 34, height: 34 }} onClick={() => removeFood(e.id)} aria-label={`${e.name} — o‘chirish`}>
+                <button
+                  className="icon-btn"
+                  style={{ width: 34, height: 34 }}
+                  onClick={() => {
+                    removeFood(e.id);
+                    setUndo(e);
+                  }}
+                  aria-label={`${e.name} — o‘chirish`}
+                >
                   <Icon name="x" size={16} />
                 </button>
               </div>
@@ -111,6 +131,23 @@ export function FoodDiary({ np }: { np: NutritionPlan }) {
           </div>
         );
       })}
+
+      {undo && (
+        <div className="notice info row between gap-8" role="status">
+          <span className="grow" style={{ minWidth: 0 }}>
+            «{undo.name}» o‘chirildi
+          </span>
+          <button
+            className="btn btn-secondary btn-xs"
+            onClick={() => {
+              addFood(undo);
+              setUndo(null);
+            }}
+          >
+            Qaytarish
+          </button>
+        </div>
+      )}
 
       <AddFoodSheet open={adding !== null} meal={adding ?? 0} date={date} onClose={() => setAdding(null)} />
     </div>

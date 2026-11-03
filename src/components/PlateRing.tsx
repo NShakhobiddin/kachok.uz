@@ -3,8 +3,10 @@ export function PlateRing({ remaining, total, size = 220 }: { remaining: number;
   const r = 92;
   const c = 2 * Math.PI * r;
   const frac = total > 0 ? Math.max(0, Math.min(1, remaining / total)) : 0;
-  const m = Math.floor(Math.max(0, remaining) / 60);
-  const s = Math.max(0, Math.ceil(remaining)) % 60;
+  // avval yaxlitlanadi, keyin daqiqa va soniyaga bo'linadi (179.5 s → 3:00, 59.5 s → 1:00)
+  const t = Math.max(0, Math.ceil(remaining));
+  const m = Math.floor(t / 60);
+  const s = t % 60;
   const label = remaining <= 0 ? 'Tayyor' : `${m}:${String(s).padStart(2, '0')}`;
   return (
     <svg viewBox="0 0 220 220" width={size} height={size} role="timer" aria-label={`Dam olish: ${label}`}>

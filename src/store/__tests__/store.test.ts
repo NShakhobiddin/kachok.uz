@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import { EQUIPMENT_PRESETS } from '../../data/catalog';
-import { EXERCISE_MAP } from '../../data/exercises';
+import { EXERCISES, EXERCISE_MAP } from '../../data/exercises';
 import { clampKcalAdjust } from '../../engine/nutrition';
 import { alternatives, DEFAULT_DAYS } from '../../engine/program';
 import type { Profile } from '../../types';
@@ -132,8 +132,12 @@ describe('mashg‘ulotdan dasturga saqlash', () => {
     S().startWorkout(day, day.exercises);
     const alt = altFor(ids[0]);
     S().swapActive(0, alt);
-    const extra = Object.keys(EXERCISE_MAP).find((id) => !ids.includes(id) && id !== alt)!;
+    const extra = EXERCISES.find((e) => !ids.includes(e.id) && e.id !== alt)!.id;
     S().addActiveExercise(extra);
+    // ikkalasidan ham bittadan set bajarildi — faqat shunda dasturga yoziladi
+    const at = (id: string) => S().active!.log.exercises.findIndex((e) => e.exerciseId === id);
+    S().updateSet(at(alt), 0, { kg: 20, reps: 10, done: true });
+    S().updateSet(at(extra), 0, { kg: 10, reps: 10, done: true });
     S().removePlanned(day.id, ids.length - 1); // dasturda alohida tahrir
     const edits = workoutEdits(S().active!, S().program)!;
     expect(edits.swaps).toEqual([{ from: ids[0], to: alt }]);
@@ -145,6 +149,16 @@ describe('mashg‘ulotdan dasturga saqlash', () => {
     expect(after).toEqual([alt, ...ids.slice(1, -1), extra]);
   });
 
+  it('qo‘shilgan yoki almashtirilgan, lekin bajarilmagan mashq dasturga yozilmaydi', () => {
+    const day = S().program!.days[0];
+    const ids = day.exercises.map((p) => p.exerciseId);
+    S().startWorkout(day, day.exercises);
+    S().updateSet(0, 0, { kg: 60, reps: 8, done: true });
+    S().swapActive(1, altFor(ids[1]));
+    S().addActiveExercise(EXERCISES.find((e) => !ids.includes(e.id))!.id);
+    expect(workoutEdits(S().active!, S().program)).toBeNull();
+  });
+
   it('dastur qayta tuzilsa (d1..dN id lar qaytadan) eski reja yangi dasturga yozilmaydi', async () => {
     const day = S().program!.days[0];
     S().startWorkout(day, day.exercises);
@@ -153,6 +167,23 @@ describe('mashg‘ulotdan dasturga saqlash', () => {
     S().regenerate();
     expect(S().program!.days[0].id).toBe(day.id);
     expect(workoutEdits(S().active!, S().program)).toBeNull();
+  });
+});
+
+describe('profil va jadval', () => {
+  it('profil saqlanganda vazn o‘zgarmagan bo‘lsa — yangi o‘lchov yozilmaydi', () => {
+    const n = S().body.length;
+    S().setProfile({ ...S().profile!, activity: 'moderate' }, false);
+    expect(S().body.length).toBe(n);
+    S().setProfile({ ...S().profile!, weightKg: 78 }, false);
+    expect(S().body.at(-1)!.weightKg).toBe(78);
+  });
+
+  it('kun ko‘chirilsa — profildagi hafta kunlari ham yangilanadi', () => {
+    const day = S().program!.days[0];
+    const free = [0, 1, 2, 3, 4, 5, 6].find((w) => !S().program!.days.some((d) => d.weekday === w))!;
+    S().moveDay(day.id, free);
+    expect(S().profile!.trainingDays).toEqual(S().program!.days.map((d) => d.weekday).sort((a, b) => a - b));
   });
 });
 

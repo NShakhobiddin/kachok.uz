@@ -45,7 +45,7 @@ export default function Progress() {
     const count = new Map<string, number>();
     finished(logs).forEach((l) => l.exercises.forEach((e) => count.set(e.exerciseId, (count.get(e.exerciseId) ?? 0) + 1)));
     return [...count.entries()]
-      .filter(([id]) => EXERCISE_MAP[id] && EXERCISE_MAP[id].loadType !== 'bodyweight')
+      .filter(([id]) => EXERCISE_MAP[id] && EXERCISE_MAP[id].loadType !== 'bodyweight' && !EXERCISE_MAP[id].assisted)
       .sort((a, b) => b[1] - a[1])
       .map(([id]) => id);
   }, [logs]);

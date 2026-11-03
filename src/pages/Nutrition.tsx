@@ -56,6 +56,7 @@ export default function Nutrition() {
   const [w, setW] = useState(profile.weightKg);
   const [openMeal, setOpenMeal] = useState<number | null>(0);
   const mealKcal = meals.reduce((a, m) => a + m.kcal, 0);
+  const mealProtein = Math.round(meals.reduce((a, m) => a + m.p, 0));
 
   const weightSection = (
     <section className="section">
@@ -236,6 +237,14 @@ export default function Nutrition() {
                 ))}
               </div>
             </ProGate>
+            {mealProtein < np.protein * 0.9 && (
+              <div className="notice warn mt-8">
+                <Icon name="info" />
+                <span>
+                  Bu cheklovlar bilan rejadagi oqsil {mealProtein} g — maqsaddan ({np.protein} g) kam. Tofu, soya yoki o‘simlik oqsili kukuni qo‘shing yoki tuxumni ko‘paytiring.
+                </span>
+              </div>
+            )}
             <Note className="mt-4">
               Miqdorlar maqsadingizga moslab hisoblandi (USDA ma’lumotlari asosida, taxminiy). Mahsulotlarni teng qiymatlilariga almashtirish mumkin: tovuq ↔ baliq ↔ mol go‘shti, guruch ↔ grechka ↔
               kartoshka.

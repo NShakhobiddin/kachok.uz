@@ -51,10 +51,20 @@ export function customSplitOf(p: Pick<Profile, 'split' | 'daysPerWeek'>): DaySpl
   return sp;
 }
 
-/** Kunlar sonini o'zgartirganda taqsimot: mavjud kunlar saqlanadi, yetishmagani birinchi tayyor variantdan */
+/**
+ * Kunlar sonini o'zgartirganda taqsimot: mavjud kunlar saqlanadi, yetishmagani birinchi tayyor variantdan.
+ * Kunlar kamaysa, olib tashlangan kunlardagi guruhlar qolgan kunlarga (eng kam guruhlisiga) qo'shiladi — mushak tushib qolmaydi.
+ */
 export function resizeSplit(split: DaySplit | undefined, days: number): DaySplit {
-  const preset = SPLIT_PRESETS[clampDays(days)][0].days;
-  return Array.from({ length: clampDays(days) }, (_, i) => [...(split?.[i] ?? preset[i])]);
+  const n = clampDays(days);
+  const preset = SPLIT_PRESETS[n][0].days;
+  const out = Array.from({ length: n }, (_, i) => [...(split?.[i] ?? preset[i])]);
+  for (const g of (split ?? []).slice(n).flat()) {
+    if (out.some((d) => d.includes(g))) continue;
+    const target = out.reduce((a, d) => (d.length < a.length ? d : a), out[0]);
+    target.push(g);
+  }
+  return out;
 }
 
 /** Kun nomi: oyoq guruhlari — "Oyoqlar", bitseps + triseps — "Qo‘llar", deyarli hammasi — "Butun tana" */
