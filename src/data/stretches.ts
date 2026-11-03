@@ -32,6 +32,9 @@ const MAT = (x = 10, w = 210) => ({ kind: 'mat' as const, x, y: 0, w });
 /** devor yoki eshik romi: kadr tepasidan polgacha baland yassi ustun */
 const WALL = (x: number, w = 40) => ({ kind: 'box' as const, x, y: -120, w, h: F + 120 });
 
+/** tik turgan figura: yaqin oyoq to‘pig‘i polda */
+const ankle0 = () => ({ joint: 'ankle' as const, x: 110, y: AY });
+
 /** To‘rt oyoqlab: tizza va kaftlar polda */
 const QUAD: S = { torso: 76, head: 94, ua: 180, fa: 180, th: 180, sh: 270, ft: 262, hand: { x: 140, y: 204 } };
 
@@ -152,13 +155,13 @@ export function figureFour(): AnimSpec {
 }
 
 export function quadStretch(): AnimSpec {
-  const base = { torso: 0, head: 0, th2: 180, sh2: 180, ft2: 90, hand2: { x: 152, y: 86 } };
+  const base = { torso: 0, head: 0, th2: 180, sh2: 180, ft2: 90, hand2: { x: 150, y: 86 } };
   const a: S = { ...base, th: 182, sh: 350, ft: 310, ua: 0, fa: 0, hand: { x: 92, y: 124 } };
   const b: S = { ...base, th: 190, sh: 356, ft: 316, ua: 0, fa: 0, hand: { x: 92, y: 124 } };
   return {
     view: 'side',
     anchor: { joint: 'hip', x: 100, y: 120 },
-    props: [WALL(158)],
+    props: [WALL(155)],
     frames: deepen(a, b),
   };
 }
@@ -187,9 +190,10 @@ export function crossBodyShoulder(): AnimSpec {
 }
 
 export function neckStretch(): AnimSpec {
-  const base = { th: 180, sh: 180, ft: 90, ua: 0, fa: 0, ua2: 182, fa2: 182 };
-  const a: S = { ...base, torso: 0, head: 6, hand: { x: 112, y: 37 } };
-  const b: S = { ...base, torso: 0, head: 18, hand: { x: 116, y: 39 } };
+  // uzoq qo‘l boshning ustida (bosh uzoq yelka tomonga egiladi), yaqin yelka pastga tushirilgan — cho‘ziladigan tomon kameraga qaragan
+  const base = { th: 180, sh: 180, ft: 90, ua: 184, fa: 182, ua2: 0, fa2: 0 };
+  const a: S = { ...base, torso: 0, head: 6, hand2: { x: 112, y: 36 } };
+  const b: S = { ...base, torso: 0, head: 16, hand2: { x: 116, y: 38 } };
   return {
     view: 'side',
     anchor: ankle0(),
@@ -207,13 +211,14 @@ export function supineTwist(): AnimSpec {
     view: 'side',
     anchor: { joint: 'hip', x: 110, y: 202 },
     props: [MAT(20, 180)],
+    // kadrlar[2] — asosiy (cho‘zilgan) holat: kichik rasm shu kadrdan olinadi
     frames: [
-      { pose: a, dur: 1200, phase: 'hold' },
       { pose: a, dur: 1100, phase: 'down' },
       { pose: mid, dur: 1600, phase: 'down' },
       { pose: b, dur: 2600, phase: 'hold' },
       { pose: b, dur: 1500, phase: 'down' },
       { pose: mid, dur: 1000, phase: 'down' },
+      { pose: a, dur: 1200, phase: 'hold' },
     ],
     frame: { x: 20, y: 100, w: 200, h: 120 },
   };
@@ -241,22 +246,18 @@ export function threadNeedle(): AnimSpec {
     view: 'side',
     anchor: { joint: 'knee', x: 86, y: 206 },
     props: [MAT(20, 180)],
+    // kadrlar[2] — pastki (ip o‘tkazilgan) holat: kichik rasm shu kadrdan olinadi
     frames: [
-      { pose: open, dur: 900, phase: 'hold' },
       { pose: open, dur: 1300, phase: 'down' },
       { pose: mid, dur: 1100, phase: 'down' },
       { pose: thread, dur: 1100, phase: 'hold' },
       { pose: thread, dur: 1100, phase: 'down' },
       { pose: mid, dur: 1300, phase: 'down' },
+      { pose: open, dur: 900, phase: 'hold' },
     ],
     frame: { x: 10, y: 50, w: 200, h: 170 },
   };
 }
-
-function ankle0() {
-  return { joint: 'ankle' as const, x: 110, y: AY };
-}
-
 
 /* ===================== MASHQLAR ===================== */
 
@@ -285,8 +286,8 @@ export const STRETCHES: Exercise[] = [
     ],
     steps: [
       '«Sigir»: nafas olib, qorinni pastga tushiring, ko‘krakni oldinga cho‘zing va biroz oldinga qarang.',
-      '«Mushuk»: nafas chiqarib, orqani shiftga qarab dumaloqlang, iyakni ko‘krakka yaqinlashtiring, tosni ostiga buring.',
-      'Ikki holat orasida sekin, nafas bilan birga almashing — har biriga 3–5 soniya.',
+      '«Mushuk»: nafas chiqarib, orqani shift tomonga dumaloqlang, iyakni ko‘krakka yaqinlashtiring, tosni ostiga buring.',
+      'Ikki holatni sekin, nafas bilan birga almashtirib boring — har biriga 3–5 soniya.',
       '45–60 soniya (8–10 marta) davom ettiring.',
     ],
     cues: [
@@ -331,7 +332,7 @@ export const STRETCHES: Exercise[] = [
       'Dumbani tovonlar tomon tushirib, gavdani sonlar ustiga oldinga engashtiring.',
       'Qo‘llarni oldinga cho‘zib, kaftlarni polga qo‘ying; peshonani polga yoki yostiqqa qo‘ying.',
       'Har nafas chiqarishda dumbani tovonga, kaftlarni esa oldinga biroz uzoqroq cho‘zing.',
-      '30 soniya ushlang, so‘ng sekin, umurtqani pastdan yuqoriga «o‘rab» o‘tiring.',
+      '30 soniya ushlang, so‘ng qo‘llarga tayanib sekin o‘tiring.',
     ],
     cues: [
       'Yelka va bo‘yinni butunlay bo‘shashtiring',
@@ -389,7 +390,7 @@ export const STRETCHES: Exercise[] = [
       { title: 'Tovonni zo‘rlab bosish', why: 'Boldir va Axill payi keskin tortiladi.', fix: 'Yoqimli taranglik (10 dan taxminan 4–6) yetarli — tovonlarni asta tushiring.' },
     ],
     benefits: [
-      { id: 'joints', text: 'Son orqasi, boldir va yelka harakat amplitudasini birvarakayiga oshiradi.' },
+      { id: 'joints', text: 'Son orqasi, boldir va yelka harakat amplitudasini bir vaqtda oshiradi.' },
       { id: 'posture', text: 'Qo‘llar bosh ustida — kun bo‘yi oldinga yig‘ilgan yelka va ko‘krak uchun teskari harakat.' },
     ],
     anim: downDog(),
@@ -553,7 +554,7 @@ export const STRETCHES: Exercise[] = [
       '30 soniya ushlang, so‘ng oyoqlarni almashtiring.',
     ],
     cues: [
-      'Cho‘zilish son va qorin pastining old qismida (yonbosh-bel mushagi — iliopsoas) sezilsin, belda emas',
+      'Cho‘zilish orqa oyoq sonining yuqori old qismida va chovda (yonbosh-bel mushagi — iliopsoas) sezilsin, belda emas',
       'Tosni oldinga surishdan ko‘ra dumbani qisish muhimroq',
       'Oldingi tizza oyoq uchidan uzoq chiqib ketmasin',
     ],
@@ -724,7 +725,7 @@ export const STRETCHES: Exercise[] = [
       'Ikkinchi oyoq tizzadan bukik, kafti polda — bel uchun eng qulay holat.',
     ],
     steps: [
-      'Lentali oyoqni tizzasini to‘g‘ri saqlab yuqoriga ko‘taring — son orqasida yoqimli taranglik sezilguncha.',
+      'Lentali oyoqni, tizzasini to‘g‘ri saqlagan holda, yuqoriga ko‘taring — son orqasida yoqimli taranglik sezilguncha.',
       'Oyoq panjasini o‘zingizga torting; lentani qo‘llar bilan yengil tortib, oyoqni asta yaqinlashtiring.',
       'Bel va tos polda, yelka va bo‘yin bo‘sh.',
       '30 soniya ushlang, so‘ng oyoqni almashtiring.',
@@ -807,7 +808,7 @@ export const STRETCHES: Exercise[] = [
     perSide: true,
     setup: ['Devorga yuzma-yuz turing, kaftlarni yelka sathida devorga qo‘ying.'],
     steps: [
-      'Bir oyoqni orqaga katta qadam qo‘ying: tizza to‘g‘ri, tovon polga bosilgan, oyoq uchi oldinga qaragan.',
+      'Bir oyoq bilan orqaga katta qadam tashlang: tizza to‘g‘ri, tovon polga bosilgan, oyoq uchi oldinga qaragan.',
       'Oldingi tizzani bukib, tos va gavdani devorga tomon suring — orqa oyoq boldirida taranglik paydo bo‘ladi.',
       'Tovon poldan uzilmasin; boshdan orqa tovongacha bir tekis chiziq.',
       '30 soniya ushlang, so‘ng oyoqni almashtiring.',
@@ -857,7 +858,7 @@ export const STRETCHES: Exercise[] = [
     ],
     cues: [
       'Tirsak yelka sathida yoki biroz pastroq — balandroq ko‘tarmang',
-      'Qo‘lda uvishish yoki chimchilash sezilsa — tirsakni pastroq tushiring',
+      'Qo‘lda uvishish yoki yelkada qisilish sezilsa — tirsakni pastroq tushiring',
       'Bel egilmasin — qorin yengil tarang',
     ],
     breathing: BREATH_STRETCH,

@@ -46,7 +46,7 @@ function stretchPrompt(id: string): string | null {
   const main = ex.primary.map((m) => MUSCLE_EN[m] ?? MUSCLES[m].name).join(', ');
   const also = ex.secondary.map((m) => MUSCLE_EN[m] ?? MUSCLES[m].name).join(', ');
   return [
-    `Photorealistic anatomical render of a woman holding the ${ex.en.toLowerCase()} stretch, captured at ${s.phase}. Camera: ${s.camera}.`,
+    `Photorealistic anatomical render of a woman holding the ${ex.en.toLowerCase().replace(/ stretch$/, '')} stretch, captured at ${s.phase}. Camera: ${s.camera}.`,
     '',
     BODY_FEMALE,
     '',

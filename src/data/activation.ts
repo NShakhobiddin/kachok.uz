@@ -4936,6 +4936,983 @@ export const ACTIVATION: Record<string, ExerciseActivation> = {
     "rom": "Tezroq bajarilganda va qo‘l-oyoq birga harakatlantirilganda qorin mushaklari faolligi oshadi.",
     "notes": "Qiymatlar baho."
   },
+  "sumo-squat": {
+    "basis": "similar:goblet-squat",
+    "load": "bitta gantel yoki girya oyoqlar orasida",
+    "metric": "mean",
+    "muscles": {
+      "vastusLateralis": {
+        "mvic": 60,
+        "range": [
+          35,
+          90
+        ],
+        "est": true,
+        "src": [
+          "H.mccaw1999"
+        ]
+      },
+      "vastusMedialis": {
+        "mvic": 60,
+        "range": [
+          35,
+          90
+        ],
+        "est": true
+      },
+      "gluteMax": {
+        "mvic": 40,
+        "range": [
+          20,
+          60
+        ],
+        "est": true,
+        "src": [
+          "H.mccaw1999",
+          "H.paoli2009"
+        ]
+      },
+      "adductors": {
+        "mvic": 40,
+        "range": [
+          20,
+          65
+        ],
+        "est": true,
+        "src": [
+          "H.mccaw1999"
+        ]
+      },
+      "erectors": {
+        "mvic": 25,
+        "range": [
+          10,
+          40
+        ],
+        "est": true
+      },
+      "rectusFemoris": {
+        "mvic": 25,
+        "range": [
+          10,
+          40
+        ],
+        "est": true
+      }
+    },
+    "rom": "Son oldi va dumba pastki nuqtadan ko‘tarilishda eng faol. Keng turish katta dumba va son ichki mushaklari faolligini oshiradi (McCaw 1999; Paoli 2009).",
+    "notes": "Gantel bilan sumo o‘tirish bo‘yicha EMG tadqiqot topilmadi: qiymatlar kubok o‘tirishdan olingan, dumba va son ichki mushaklari keng turish tadqiqotlariga (shtanga bilan) ko‘ra oshirilgan."
+  },
+  "reverse-lunge": {
+    "basis": "similar:bw-split-squat",
+    "load": "o‘z vazni",
+    "metric": "mean",
+    "muscles": {
+      "vastusLateralis": {
+        "mvic": 50,
+        "range": [
+          30,
+          70
+        ],
+        "est": true
+      },
+      "vastusMedialis": {
+        "mvic": 50,
+        "range": [
+          30,
+          70
+        ],
+        "est": true
+      },
+      "gluteMax": {
+        "mvic": 35,
+        "range": [
+          15,
+          55
+        ],
+        "est": true,
+        "src": [
+          "H.ekstrom2007"
+        ]
+      },
+      "gluteMed": {
+        "mvic": 30,
+        "range": [
+          15,
+          50
+        ],
+        "est": true,
+        "src": [
+          "H.distefano2009"
+        ]
+      },
+      "bicepsFemoris": {
+        "mvic": 20,
+        "range": [
+          10,
+          35
+        ],
+        "est": true
+      },
+      "adductors": {
+        "mvic": 20,
+        "range": [
+          10,
+          35
+        ],
+        "est": true
+      }
+    },
+    "rom": "Old oyoqda son oldi va katta dumba pastki nuqtada eng faol; gavdani biroz oldinga engashtirish dumbaga ko‘proq yuk beradi.",
+    "notes": "Qiymatlar baho: o‘z vazni bilan split-o‘tirishdan olingan. Hamla turlarida dumba o‘rta mushagi ~48% MVIC gacha (DiStefano 2009)."
+  },
+  "curtsy-lunge": {
+    "basis": "similar:reverse-lunge",
+    "load": "o‘z vazni",
+    "metric": "mean",
+    "muscles": {
+      "vastusLateralis": {
+        "mvic": 45,
+        "range": [
+          25,
+          65
+        ],
+        "est": true
+      },
+      "vastusMedialis": {
+        "mvic": 45,
+        "range": [
+          25,
+          65
+        ],
+        "est": true
+      },
+      "gluteMed": {
+        "mvic": 38,
+        "range": [
+          20,
+          60
+        ],
+        "est": true,
+        "src": [
+          "H.distefano2009"
+        ]
+      },
+      "gluteMax": {
+        "mvic": 32,
+        "range": [
+          15,
+          50
+        ],
+        "est": true
+      },
+      "adductors": {
+        "mvic": 25,
+        "range": [
+          10,
+          40
+        ],
+        "est": true
+      },
+      "bicepsFemoris": {
+        "mvic": 15,
+        "range": [
+          8,
+          30
+        ],
+        "est": true
+      }
+    },
+    "rom": "Kesishgan turishda old oyoqdagi dumba o‘rta mushagi tizza va tosning ichkariga qulashini ushlab turadi.",
+    "notes": "Reverans hamla bo‘yicha EMG tadqiqot topilmadi — qiymatlar orqaga hamladan baho, dumba o‘rta mushagi biroz oshirilgan."
+  },
+  "glute-kickback": {
+    "basis": "similar:bird-dog",
+    "load": "o‘z vazni",
+    "metric": "mean",
+    "muscles": {
+      "gluteMax": {
+        "mvic": 55,
+        "range": [
+          35,
+          75
+        ],
+        "est": true,
+        "src": [
+          "H.ekstrom2007",
+          "H.selkowitz2013"
+        ]
+      },
+      "gluteMed": {
+        "mvic": 35,
+        "range": [
+          20,
+          50
+        ],
+        "est": true,
+        "src": [
+          "H.ekstrom2007"
+        ]
+      },
+      "bicepsFemoris": {
+        "mvic": 30,
+        "range": [
+          15,
+          45
+        ],
+        "est": true
+      },
+      "erectors": {
+        "mvic": 30,
+        "range": [
+          15,
+          45
+        ],
+        "est": true
+      },
+      "medialHamstrings": {
+        "mvic": 25,
+        "range": [
+          10,
+          40
+        ],
+        "est": true
+      }
+    },
+    "rom": "Katta dumba son gavda bilan bir chiziqqa kelganda eng faol; undan baland ko‘tarish ishni belga o‘tkazadi.",
+    "notes": "To‘rt oyoqlab qo‘l va oyoq ko‘tarishda katta dumba ~56%, o‘rta dumba ~42% MVIC (Ekstrom 2007). Tizza bukik bo‘lgani uchun son orqasi kamroq ishlaydi. Qiymatlar baho."
+  },
+  "fire-hydrant": {
+    "basis": "similar:clamshell",
+    "load": "o‘z vazni",
+    "metric": "mean",
+    "muscles": {
+      "gluteMed": {
+        "mvic": 45,
+        "range": [
+          25,
+          70
+        ],
+        "est": true,
+        "src": [
+          "H.distefano2009",
+          "H.boren2011"
+        ]
+      },
+      "gluteMax": {
+        "mvic": 35,
+        "range": [
+          20,
+          55
+        ],
+        "est": true,
+        "src": [
+          "H.distefano2009"
+        ]
+      },
+      "externalOblique": {
+        "mvic": 20,
+        "range": [
+          10,
+          35
+        ],
+        "est": true
+      },
+      "erectors": {
+        "mvic": 20,
+        "range": [
+          10,
+          35
+        ],
+        "est": true
+      }
+    },
+    "rom": "Faollik ko‘tarishning yuqori qismida eng katta; tana mushaklari tosning qiyshayishiga qarshi ishlaydi.",
+    "notes": "«Gidrant» bo‘yicha EMG tadqiqot topilmadi. Qiymatlar «chig‘anoq» (o‘rta dumba 38–40%) va yonboshlab oyoq ko‘tarish (81%) oralig‘ida baho (DiStefano 2009)."
+  },
+  "clamshell": {
+    "basis": "direct",
+    "load": "o‘z vazni, sonlar 30° yoki 60° bukik",
+    "metric": "mean",
+    "muscles": {
+      "gluteMed": {
+        "mvic": 40,
+        "range": [
+          38,
+          40
+        ],
+        "src": [
+          "H.distefano2009",
+          "H.boren2011"
+        ]
+      },
+      "gluteMax": {
+        "mvic": 34,
+        "range": [
+          34,
+          39
+        ],
+        "src": [
+          "H.distefano2009"
+        ]
+      }
+    },
+    "rom": "Sonlar 30° yoki 60° bukik bo‘lishi deyarli farq qilmagan: o‘rta dumba 40 va 38%, katta dumba 34 va 39% MVIC.",
+    "notes": "Dumba mushaklarini son fassiyasini taranglovchi mushakka (TFL) nisbatan eng ko‘p ishlatgan mashq (Selkowitz 2013). Qiyinroq variantlarda o‘rta dumba ~77% MVIC gacha (Boren 2011)."
+  },
+  "side-leg-raise": {
+    "basis": "direct",
+    "load": "o‘z vazni",
+    "metric": "mean",
+    "muscles": {
+      "gluteMed": {
+        "mvic": 81,
+        "range": [
+          40,
+          100
+        ],
+        "src": [
+          "H.distefano2009",
+          "H.ekstrom2007"
+        ]
+      },
+      "gluteMax": {
+        "mvic": 39,
+        "range": [
+          20,
+          45
+        ],
+        "src": [
+          "H.distefano2009"
+        ]
+      }
+    },
+    "rom": "Ko‘tarishning yuqori qismida eng faol. Oyoq oldinga ketsa, ishni son bukuvchilari va TFL oladi.",
+    "notes": "DiStefano 2009 da o‘rta dumba uchun 12 mashq ichida eng yuqori natija (81 ± 42% MVIC), katta dumba 39%. Boshqa tadqiqotda (Ekstrom 2007) ancha past qiymat olingan — oraliq keng."
+  },
+  "banded-lateral-walk": {
+    "basis": "direct",
+    "load": "rezina lenta, o‘z vazni",
+    "metric": "mean",
+    "muscles": {
+      "gluteMed": {
+        "mvic": 61,
+        "range": [
+          40,
+          95
+        ],
+        "src": [
+          "H.distefano2009",
+          "H.berry2015",
+          "H.cambridge2012"
+        ]
+      },
+      "gluteMax": {
+        "mvic": 27,
+        "range": [
+          15,
+          45
+        ],
+        "src": [
+          "H.distefano2009",
+          "H.berry2015"
+        ]
+      },
+      "vastusLateralis": {
+        "mvic": 20,
+        "range": [
+          10,
+          35
+        ],
+        "est": true
+      }
+    },
+    "rom": "Yarim o‘tirish holatida yurish dumba mushaklarini tik turishdan ko‘ra ko‘proq ishlatgan (Berry 2015). Lenta tizzadan to‘piqqa, so‘ng oyoq kaftiga tushirilgani sari faollik oshgan (Cambridge 2012).",
+    "notes": "O‘rta dumba 61 ± 34% MVIC — eng yuqorilardan, katta dumba esa past (27%) (DiStefano 2009). Son oldi qiymati baho."
+  },
+  "single-leg-bridge": {
+    "basis": "direct",
+    "load": "o‘z vazni",
+    "metric": "mean",
+    "muscles": {
+      "gluteMed": {
+        "mvic": 47,
+        "range": [
+          47,
+          57
+        ],
+        "src": [
+          "H.ekstrom2007"
+        ]
+      },
+      "gluteMax": {
+        "mvic": 40,
+        "range": [
+          40,
+          51
+        ],
+        "src": [
+          "H.ekstrom2007",
+          "H.selkowitz2013"
+        ]
+      },
+      "erectors": {
+        "mvic": 35,
+        "range": [
+          20,
+          50
+        ],
+        "est": true,
+        "src": [
+          "H.ekstrom2007"
+        ]
+      },
+      "bicepsFemoris": {
+        "mvic": 30,
+        "range": [
+          15,
+          50
+        ],
+        "est": true
+      },
+      "medialHamstrings": {
+        "mvic": 25,
+        "range": [
+          10,
+          40
+        ],
+        "est": true
+      }
+    },
+    "rom": "Dumba tepada eng faol; tosni bir oyoqda tekis ushlash o‘rta dumbani ham ishlatadi.",
+    "notes": "O‘rta dumba ~47%, katta dumba ~40% MVIC (Ekstrom 2007); boshqa tadqiqotlarda 47–57% va 40–51%. Bel va son orqasi qiymatlari baho."
+  },
+  "wall-sit": {
+    "basis": "similar:bw-squat",
+    "load": "o‘z vazni, 30–60 soniya",
+    "metric": "mean",
+    "muscles": {
+      "vastusLateralis": {
+        "mvic": 45,
+        "range": [
+          25,
+          65
+        ],
+        "est": true
+      },
+      "vastusMedialis": {
+        "mvic": 45,
+        "range": [
+          25,
+          65
+        ],
+        "est": true
+      },
+      "rectusFemoris": {
+        "mvic": 20,
+        "range": [
+          10,
+          35
+        ],
+        "est": true
+      },
+      "gluteMax": {
+        "mvic": 12,
+        "range": [
+          5,
+          25
+        ],
+        "est": true
+      },
+      "bicepsFemoris": {
+        "mvic": 8,
+        "range": [
+          3,
+          15
+        ],
+        "est": true
+      }
+    },
+    "rom": "Izometrik. Tizza qanchalik ko‘p bukilsa, son oldiga yuk shunchalik katta: 90° da ushlash 45–60° dan qiyinroq.",
+    "notes": "Devorga suyanib o‘tirish bo‘yicha EMG ma’lumot topilmadi — o‘z vazni bilan o‘tirishning pastki nuqtasidan baho. Orqa devorga tiralgani uchun dumba va bel kam ishlaydi."
+  },
+  "knee-push-up": {
+    "basis": "similar:push-up",
+    "load": "o‘z vazni, tizzada",
+    "metric": "peak",
+    "muscles": {
+      "pecMid": {
+        "mvic": 58,
+        "range": [
+          40,
+          80
+        ],
+        "est": true,
+        "src": [
+          "H.youdas2010",
+          "H.suprak2011"
+        ]
+      },
+      "serratus": {
+        "mvic": 55,
+        "range": [
+          40,
+          70
+        ],
+        "est": true,
+        "src": [
+          "H.youdas2010"
+        ]
+      },
+      "tricepsLateral": {
+        "mvic": 55,
+        "range": [
+          30,
+          80
+        ],
+        "est": true,
+        "src": [
+          "H.youdas2010"
+        ]
+      },
+      "deltAnt": {
+        "mvic": 45,
+        "range": [
+          30,
+          60
+        ],
+        "est": true
+      },
+      "rectusAbdominis": {
+        "mvic": 12,
+        "range": [
+          5,
+          25
+        ],
+        "est": true
+      }
+    },
+    "rom": "Ko‘krak va triseps pastki nuqtada va itarish boshida eng faol.",
+    "notes": "Cho‘qqi qiymatlar. Tizzada otjimaniyada qo‘llarga tana vaznining ~54–62% i tushadi, oddiy otjimaniyada ~69–75% (Suprak 2011) — qiymatlar shunga ko‘ra kamaytirilgan."
+  },
+  "superman": {
+    "basis": "similar:back-extension",
+    "load": "o‘z vazni",
+    "metric": "mean",
+    "muscles": {
+      "erectors": {
+        "mvic": 45,
+        "range": [
+          25,
+          70
+        ],
+        "est": true,
+        "src": [
+          "H.callaghan1998"
+        ]
+      },
+      "gluteMax": {
+        "mvic": 30,
+        "range": [
+          15,
+          50
+        ],
+        "est": true
+      },
+      "trapMid": {
+        "mvic": 25,
+        "range": [
+          10,
+          40
+        ],
+        "est": true
+      },
+      "bicepsFemoris": {
+        "mvic": 20,
+        "range": [
+          10,
+          35
+        ],
+        "est": true
+      }
+    },
+    "rom": "Tepada ushlab turishda eng faol. Qorinda yotib gavda va oyoqlarni ko‘tarish bel mushaklarini eng ko‘p ishlatgan, lekin umurtqaga yuklama ham eng katta bo‘lgan (Callaghan 1998).",
+    "notes": "Qiymatlar baho: 45° giperekstenziyadan kamaytirilgan."
+  },
+  "bird-dog": {
+    "basis": "direct",
+    "load": "o‘z vazni",
+    "metric": "mean",
+    "muscles": {
+      "gluteMax": {
+        "mvic": 56,
+        "range": [
+          40,
+          70
+        ],
+        "src": [
+          "H.ekstrom2007"
+        ]
+      },
+      "gluteMed": {
+        "mvic": 42,
+        "range": [
+          25,
+          55
+        ],
+        "src": [
+          "H.ekstrom2007"
+        ]
+      },
+      "erectors": {
+        "mvic": 40,
+        "range": [
+          25,
+          55
+        ],
+        "est": true,
+        "src": [
+          "H.ekstrom2007",
+          "H.callaghan1998"
+        ]
+      },
+      "deltAnt": {
+        "mvic": 25,
+        "range": [
+          10,
+          40
+        ],
+        "est": true
+      },
+      "externalOblique": {
+        "mvic": 20,
+        "range": [
+          10,
+          35
+        ],
+        "est": true
+      }
+    },
+    "rom": "Qo‘l va qarama-qarshi oyoq to‘liq cho‘zilganda eng faol. Umurtqaga yuklama qorinda yotib ko‘tarilishdan ancha kam (Callaghan 1998).",
+    "notes": "Katta dumba ~56%, o‘rta dumba ~42% MVIC (Ekstrom 2007). Bel, yelka va qiyshiq mushak qiymatlari baho."
+  },
+  "side-plank": {
+    "basis": "direct",
+    "load": "o‘z vazni, tirsakda",
+    "metric": "mean",
+    "muscles": {
+      "gluteMed": {
+        "mvic": 74,
+        "range": [
+          69,
+          89
+        ],
+        "src": [
+          "H.ekstrom2007",
+          "H.youdas2014"
+        ]
+      },
+      "externalOblique": {
+        "mvic": 69,
+        "range": [
+          45,
+          90
+        ],
+        "est": true,
+        "src": [
+          "H.ekstrom2007",
+          "H.youdas2014"
+        ]
+      },
+      "rectusAbdominis": {
+        "mvic": 35,
+        "range": [
+          20,
+          50
+        ],
+        "est": true,
+        "src": [
+          "H.youdas2014"
+        ]
+      },
+      "erectors": {
+        "mvic": 35,
+        "range": [
+          20,
+          50
+        ],
+        "est": true,
+        "src": [
+          "H.youdas2014"
+        ]
+      },
+      "gluteMax": {
+        "mvic": 20,
+        "range": [
+          10,
+          30
+        ],
+        "est": true,
+        "src": [
+          "H.ekstrom2007"
+        ]
+      }
+    },
+    "rom": "Izometrik. Ustki oyoqni ko‘tarish yoki gavdani burish qiyinlashtiradi.",
+    "notes": "9 mashq ichida o‘rta dumba uchun eng yuqori (~74% MVIC), qiyshiq mushaklar ham yuqori, katta dumba past (Ekstrom 2007). Ustki oyoq yonga ko‘tarilsa o‘rta dumba ~89–103% gacha (Boren 2011). Qiyshiq va to‘g‘ri qorin, bel qiymatlari baho."
+  },
+  "reverse-crunch": {
+    "basis": "similar:crunch",
+    "load": "o‘z vazni, polda",
+    "metric": "mean",
+    "muscles": {
+      "rectusAbdominis": {
+        "mvic": 50,
+        "range": [
+          30,
+          80
+        ],
+        "est": true,
+        "src": [
+          "H.escamilla2006"
+        ]
+      },
+      "externalOblique": {
+        "mvic": 35,
+        "range": [
+          20,
+          60
+        ],
+        "est": true,
+        "src": [
+          "H.escamilla2006"
+        ]
+      },
+      "rectusFemoris": {
+        "mvic": 20,
+        "range": [
+          10,
+          40
+        ],
+        "est": true,
+        "src": [
+          "H.escamilla2006"
+        ]
+      },
+      "iliopsoas": {
+        "mvic": 20,
+        "range": [
+          10,
+          40
+        ],
+        "est": true
+      }
+    },
+    "rom": "Tos poldan uzilayotganda qorin eng faol; oyoqlarni silkitish ishni son bukuvchilariga o‘tkazadi.",
+    "notes": "Qiya (30°) taxtada teskari qisqarish qorin mushaklarini eng samarali ishlatgan mashqlardan (Escamilla 2006). Polda bajarish yengilroq — qiymatlar baho."
+  },
+  "bicycle-crunch": {
+    "basis": "similar:crunch",
+    "load": "o‘z vazni",
+    "metric": "mean",
+    "muscles": {
+      "rectusAbdominis": {
+        "mvic": 55,
+        "range": [
+          30,
+          80
+        ],
+        "est": true
+      },
+      "externalOblique": {
+        "mvic": 50,
+        "range": [
+          30,
+          80
+        ],
+        "est": true
+      },
+      "iliopsoas": {
+        "mvic": 25,
+        "range": [
+          10,
+          40
+        ],
+        "est": true
+      },
+      "rectusFemoris": {
+        "mvic": 20,
+        "range": [
+          10,
+          35
+        ],
+        "est": true
+      }
+    },
+    "rom": "Qiyshiq mushaklar har burilish oxirida eng faol; cho‘zilgan oyoq pastroq bo‘lsa — qiyinroq.",
+    "notes": "Ilmiy EMG tadqiqot topilmadi — qisqarish natijalaridan baho, burilish uchun qiyshiq mushaklar oshirilgan."
+  },
+  "mountain-climber": {
+    "basis": "similar:plank",
+    "load": "o‘z vazni, 20–40 soniya",
+    "metric": "mean",
+    "muscles": {
+      "rectusAbdominis": {
+        "mvic": 40,
+        "range": [
+          20,
+          65
+        ],
+        "est": true
+      },
+      "externalOblique": {
+        "mvic": 40,
+        "range": [
+          20,
+          65
+        ],
+        "est": true
+      },
+      "iliopsoas": {
+        "mvic": 30,
+        "range": [
+          15,
+          50
+        ],
+        "est": true
+      },
+      "rectusFemoris": {
+        "mvic": 30,
+        "range": [
+          15,
+          50
+        ],
+        "est": true
+      },
+      "deltAnt": {
+        "mvic": 30,
+        "range": [
+          15,
+          45
+        ],
+        "est": true
+      }
+    },
+    "rom": "Tana butun set davomida planka holatini ushlaydi; har tizza tortilishi son bukuvchilarini qo‘shadi.",
+    "notes": "EMG ma’lumot topilmadi — planka natijalaridan baho; tezlik qiymatlarni sezilarli o‘zgartiradi."
+  },
+  "band-row": {
+    "basis": "similar:cable-row",
+    "load": "rezina lenta, o‘rtacha kuch",
+    "metric": "mean",
+    "muscles": {
+      "lats": {
+        "mvic": 45,
+        "range": [
+          25,
+          65
+        ],
+        "est": true,
+        "src": [
+          "H.andersen2010"
+        ]
+      },
+      "trapMid": {
+        "mvic": 40,
+        "range": [
+          25,
+          55
+        ],
+        "est": true,
+        "src": [
+          "H.andersen2010"
+        ]
+      },
+      "rhomboids": {
+        "mvic": 40,
+        "range": [
+          25,
+          55
+        ],
+        "est": true
+      },
+      "deltPost": {
+        "mvic": 40,
+        "range": [
+          25,
+          60
+        ],
+        "est": true
+      },
+      "biceps": {
+        "mvic": 30,
+        "range": [
+          15,
+          45
+        ],
+        "est": true
+      },
+      "erectors": {
+        "mvic": 20,
+        "range": [
+          10,
+          35
+        ],
+        "est": true
+      }
+    },
+    "rom": "Lenta cho‘zilgan sari qarshilik oshadi — tortish oxirida (tirsaklar orqada) eng og‘ir.",
+    "notes": "Blokda tortishdan kamaytirilgan baho. Bir xil nisbiy yuklamada rezina va gantel mushaklarni bir xil darajada ishlatgan (Andersen 2010)."
+  },
+  "ball-leg-curl": {
+    "basis": "similar:leg-curl",
+    "load": "o‘z vazni, fitbol",
+    "metric": "mean",
+    "muscles": {
+      "medialHamstrings": {
+        "mvic": 60,
+        "range": [
+          35,
+          85
+        ],
+        "est": true
+      },
+      "bicepsFemoris": {
+        "mvic": 55,
+        "range": [
+          35,
+          80
+        ],
+        "est": true
+      },
+      "gluteMax": {
+        "mvic": 30,
+        "range": [
+          15,
+          50
+        ],
+        "est": true
+      },
+      "gastrocnemius": {
+        "mvic": 25,
+        "range": [
+          10,
+          40
+        ],
+        "est": true
+      },
+      "erectors": {
+        "mvic": 20,
+        "range": [
+          10,
+          35
+        ],
+        "est": true
+      }
+    },
+    "rom": "Son orqasi tos yuqorida turgan holda tizza bukilganda eng faol; dumba va bel tosni ushlab turadi.",
+    "notes": "Fitbolda oyoq bukish bo‘yicha EMG ma’lumot topilmadi — trenajyorda oyoq bukishdan kamaytirilgan baho."
+  },
   "hip-abduction": {
     "basis": "similar:yonboshlab yotib sonni ochish",
     "load": "10–15RM (baho)",
@@ -5801,6 +6778,52 @@ export const EMG_SOURCES: Record<string, { cite: string; doi?: string }> = {
   "U.yun2017": {
     "cite": "Yun et al. Changes in muscle activity of the abdominal muscles according to exercise method and speed during dead bug exercise. Phys Ther Rehabil Sci 6(1), 2017.",
     "doi": "10.14474/ptrs.2017.6.1.1"
+  },
+  "H.distefano2009": {
+    "cite": "DiStefano LJ, Blackburn JT, Marshall SW, Padua DA. Gluteal muscle activation during common therapeutic exercises. J Orthop Sports Phys Ther 39(7):532-540, 2009.",
+    "doi": "10.2519/jospt.2009.2796"
+  },
+  "H.boren2011": {
+    "cite": "Boren K, Conrey C, Le Coguic J, Paprocki L, Voight M, Robinson TK. Electromyographic analysis of gluteus medius and gluteus maximus during rehabilitation exercises. Int J Sports Phys Ther 6(3):206-223, 2011."
+  },
+  "H.ekstrom2007": {
+    "cite": "Ekstrom RA, Donatelli RA, Carp KC. Electromyographic analysis of core trunk, hip, and thigh muscles during 9 rehabilitation exercises. J Orthop Sports Phys Ther 37(12):754-762, 2007.",
+    "doi": "10.2519/jospt.2007.2471"
+  },
+  "H.selkowitz2013": {
+    "cite": "Selkowitz DM, Beneck GJ, Powers CM. Which exercises target the gluteal muscles while minimizing activation of the tensor fascia lata? Electromyographic assessment using fine-wire electrodes. J Orthop Sports Phys Ther 43(2):54-64, 2013."
+  },
+  "H.cambridge2012": {
+    "cite": "Cambridge EDJ, Sidorkewicz N, Ikeda DM, McGill SM. Progressive hip rehabilitation: the effects of resistance band placement on gluteal activation during two common exercises. Clin Biomech 27(7):719-724, 2012."
+  },
+  "H.berry2015": {
+    "cite": "Berry JW, Lee TS, Foley HD, Lewis CL. Resisted side stepping: the effect of posture on hip abductor muscle activation. J Orthop Sports Phys Ther 45(9):675-682, 2015."
+  },
+  "H.mccaw1999": {
+    "cite": "McCaw ST, Melrose DR. Stance width and bar load effects on leg muscle activity during the parallel squat. Med Sci Sports Exerc 31(3):428-436, 1999."
+  },
+  "H.paoli2009": {
+    "cite": "Paoli A, Marcolin G, Petrone N. The effect of stance width on the electromyographical activity of eight superficial thigh muscles during back squat with different bar loads. J Strength Cond Res 23(1):246-250, 2009."
+  },
+  "H.suprak2011": {
+    "cite": "Suprak DN, Dawes J, Stephenson MD. The effect of position on the percentage of body mass supported during traditional and modified push-up variants. J Strength Cond Res 25(2):497-503, 2011."
+  },
+  "H.youdas2010": {
+    "cite": "Youdas JW, et al. Comparison of muscle-activation patterns during the conventional push-up and Perfect Pushup exercises. J Strength Cond Res 24(12):3352-3362, 2010."
+  },
+  "H.callaghan1998": {
+    "cite": "Callaghan JP, Gunning JL, McGill SM. The relationship between lumbar spine load and muscle activity during extensor exercises. Phys Ther 78(1):8-18, 1998.",
+    "doi": "10.1093/ptj/78.1.8"
+  },
+  "H.youdas2014": {
+    "cite": "Youdas JW, Boor MMP, Darfler AL, Koenig MK, Mills KM, Hollman JH. Surface electromyographic analysis of core trunk and hip muscles during selected rehabilitation exercises in the side-bridge to neutral spine position. Sports Health, 2014."
+  },
+  "H.escamilla2006": {
+    "cite": "Escamilla RF, et al. Electromyographic analysis of traditional and nontraditional abdominal exercises: implications for rehabilitation and training. Phys Ther 86(5):656-671, 2006.",
+    "doi": "10.1093/ptj/86.5.656"
+  },
+  "H.andersen2010": {
+    "cite": "Andersen LL, et al. Muscle activation and perceived loading during rehabilitation exercises: comparison of dumbbells and elastic resistance. Phys Ther 90(4):538-549, 2010."
   },
   "M.distefano2009": {
     "cite": "DiStefano LJ, Blackburn JT, Marshall SW, Padua DA. Gluteal muscle activation during common therapeutic exercises. J Orthop Sports Phys Ther 39(7):532-540, 2009.",

@@ -1,1 +1,110 @@
-{}
+{
+ "sumo-squat": {
+  "similar": "goblet-squat",
+  "load": "bitta gantel yoki girya oyoqlar orasida",
+  "rom": "Son oldi va dumba pastki nuqtadan ko‘tarilishda eng faol. Keng turish katta dumba va son ichki mushaklari faolligini oshiradi (McCaw 1999; Paoli 2009).",
+  "notes": "Gantel bilan sumo o‘tirish bo‘yicha EMG tadqiqot topilmadi: qiymatlar kubok o‘tirishdan olingan, dumba va son ichki mushaklari keng turish tadqiqotlariga (shtanga bilan) ko‘ra oshirilgan."
+ },
+ "reverse-lunge": {
+  "similar": "bw-split-squat",
+  "load": "o‘z vazni",
+  "rom": "Old oyoqda son oldi va katta dumba pastki nuqtada eng faol; gavdani biroz oldinga engashtirish dumbaga ko‘proq yuk beradi.",
+  "notes": "Qiymatlar baho: o‘z vazni bilan split-o‘tirishdan olingan. Hamla turlarida dumba o‘rta mushagi ~48% MVIC gacha (DiStefano 2009)."
+ },
+ "curtsy-lunge": {
+  "similar": "reverse-lunge",
+  "load": "o‘z vazni",
+  "rom": "Kesishgan turishda old oyoqdagi dumba o‘rta mushagi tizza va tosning ichkariga qulashini ushlab turadi.",
+  "notes": "Reverans hamla bo‘yicha EMG tadqiqot topilmadi — qiymatlar orqaga hamladan baho, dumba o‘rta mushagi biroz oshirilgan."
+ },
+ "glute-kickback": {
+  "similar": "bird-dog",
+  "load": "o‘z vazni",
+  "rom": "Katta dumba son gavda bilan bir chiziqqa kelganda eng faol; undan baland ko‘tarish ishni belga o‘tkazadi.",
+  "notes": "To‘rt oyoqlab qo‘l va oyoq ko‘tarishda katta dumba ~56%, o‘rta dumba ~42% MVIC (Ekstrom 2007). Tizza bukik bo‘lgani uchun son orqasi kamroq ishlaydi. Qiymatlar baho."
+ },
+ "fire-hydrant": {
+  "similar": "clamshell",
+  "load": "o‘z vazni",
+  "rom": "Faollik ko‘tarishning yuqori qismida eng katta; tana mushaklari tosning qiyshayishiga qarshi ishlaydi.",
+  "notes": "«Gidrant» bo‘yicha EMG tadqiqot topilmadi. Qiymatlar «chig‘anoq» (o‘rta dumba 38–40%) va yonboshlab oyoq ko‘tarish (81%) oralig‘ida baho (DiStefano 2009)."
+ },
+ "clamshell": {
+  "load": "o‘z vazni, sonlar 30° yoki 60° bukik",
+  "rom": "Sonlar 30° yoki 60° bukik bo‘lishi deyarli farq qilmagan: o‘rta dumba 40 va 38%, katta dumba 34 va 39% MVIC.",
+  "notes": "Dumba mushaklarini son fassiyasini taranglovchi mushakka (TFL) nisbatan eng ko‘p ishlatgan mashq (Selkowitz 2013). Qiyinroq variantlarda o‘rta dumba ~77% MVIC gacha (Boren 2011)."
+ },
+ "side-leg-raise": {
+  "load": "o‘z vazni",
+  "rom": "Ko‘tarishning yuqori qismida eng faol. Oyoq oldinga ketsa, ishni son bukuvchilari va TFL oladi.",
+  "notes": "DiStefano 2009 da o‘rta dumba uchun 12 mashq ichida eng yuqori natija (81 ± 42% MVIC), katta dumba 39%. Boshqa tadqiqotda (Ekstrom 2007) ancha past qiymat olingan — oraliq keng."
+ },
+ "banded-lateral-walk": {
+  "load": "rezina lenta, o‘z vazni",
+  "rom": "Yarim o‘tirish holatida yurish dumba mushaklarini tik turishdan ko‘ra ko‘proq ishlatgan (Berry 2015). Lenta tizzadan to‘piqqa, so‘ng oyoq kaftiga tushirilgani sari faollik oshgan (Cambridge 2012).",
+  "notes": "O‘rta dumba 61 ± 34% MVIC — eng yuqorilardan, katta dumba esa past (27%) (DiStefano 2009). Son oldi qiymati baho."
+ },
+ "single-leg-bridge": {
+  "load": "o‘z vazni",
+  "rom": "Dumba tepada eng faol; tosni bir oyoqda tekis ushlash o‘rta dumbani ham ishlatadi.",
+  "notes": "O‘rta dumba ~47%, katta dumba ~40% MVIC (Ekstrom 2007); boshqa tadqiqotlarda 47–57% va 40–51%. Bel va son orqasi qiymatlari baho."
+ },
+ "wall-sit": {
+  "similar": "bw-squat",
+  "load": "o‘z vazni, 30–60 soniya",
+  "rom": "Izometrik. Tizza qanchalik ko‘p bukilsa, son oldiga yuk shunchalik katta: 90° da ushlash 45–60° dan qiyinroq.",
+  "notes": "Devorga suyanib o‘tirish bo‘yicha EMG ma’lumot topilmadi — o‘z vazni bilan o‘tirishning pastki nuqtasidan baho. Orqa devorga tiralgani uchun dumba va bel kam ishlaydi."
+ },
+ "knee-push-up": {
+  "similar": "push-up",
+  "load": "o‘z vazni, tizzada",
+  "rom": "Ko‘krak va triseps pastki nuqtada va itarish boshida eng faol.",
+  "notes": "Cho‘qqi qiymatlar. Tizzada otjimaniyada qo‘llarga tana vaznining ~54–62% i tushadi, oddiy otjimaniyada ~69–75% (Suprak 2011) — qiymatlar shunga ko‘ra kamaytirilgan."
+ },
+ "superman": {
+  "similar": "back-extension",
+  "load": "o‘z vazni",
+  "rom": "Tepada ushlab turishda eng faol. Qorinda yotib gavda va oyoqlarni ko‘tarish bel mushaklarini eng ko‘p ishlatgan, lekin umurtqaga yuklama ham eng katta bo‘lgan (Callaghan 1998).",
+  "notes": "Qiymatlar baho: 45° giperekstenziyadan kamaytirilgan."
+ },
+ "bird-dog": {
+  "load": "o‘z vazni",
+  "rom": "Qo‘l va qarama-qarshi oyoq to‘liq cho‘zilganda eng faol. Umurtqaga yuklama qorinda yotib ko‘tarilishdan ancha kam (Callaghan 1998).",
+  "notes": "Katta dumba ~56%, o‘rta dumba ~42% MVIC (Ekstrom 2007). Bel, yelka va qiyshiq mushak qiymatlari baho."
+ },
+ "side-plank": {
+  "load": "o‘z vazni, tirsakda",
+  "rom": "Izometrik. Ustki oyoqni ko‘tarish yoki gavdani burish qiyinlashtiradi.",
+  "notes": "9 mashq ichida o‘rta dumba uchun eng yuqori (~74% MVIC), qiyshiq mushaklar ham yuqori, katta dumba past (Ekstrom 2007). Ustki oyoq yonga ko‘tarilsa o‘rta dumba ~89–103% gacha (Boren 2011). Qiyshiq va to‘g‘ri qorin, bel qiymatlari baho."
+ },
+ "reverse-crunch": {
+  "similar": "crunch",
+  "load": "o‘z vazni, polda",
+  "rom": "Tos poldan uzilayotganda qorin eng faol; oyoqlarni silkitish ishni son bukuvchilariga o‘tkazadi.",
+  "notes": "Qiya (30°) taxtada teskari qisqarish qorin mushaklarini eng samarali ishlatgan mashqlardan (Escamilla 2006). Polda bajarish yengilroq — qiymatlar baho."
+ },
+ "bicycle-crunch": {
+  "similar": "crunch",
+  "load": "o‘z vazni",
+  "rom": "Qiyshiq mushaklar har burilish oxirida eng faol; cho‘zilgan oyoq pastroq bo‘lsa — qiyinroq.",
+  "notes": "Ilmiy EMG tadqiqot topilmadi — qisqarish natijalaridan baho, burilish uchun qiyshiq mushaklar oshirilgan."
+ },
+ "mountain-climber": {
+  "similar": "plank",
+  "load": "o‘z vazni, 20–40 soniya",
+  "rom": "Tana butun set davomida planka holatini ushlaydi; har tizza tortilishi son bukuvchilarini qo‘shadi.",
+  "notes": "EMG ma’lumot topilmadi — planka natijalaridan baho; tezlik qiymatlarni sezilarli o‘zgartiradi."
+ },
+ "band-row": {
+  "similar": "cable-row",
+  "load": "rezina lenta, o‘rtacha kuch",
+  "rom": "Lenta cho‘zilgan sari qarshilik oshadi — tortish oxirida (tirsaklar orqada) eng og‘ir.",
+  "notes": "Blokda tortishdan kamaytirilgan baho. Bir xil nisbiy yuklamada rezina va gantel mushaklarni bir xil darajada ishlatgan (Andersen 2010)."
+ },
+ "ball-leg-curl": {
+  "similar": "leg-curl",
+  "load": "o‘z vazni, fitbol",
+  "rom": "Son orqasi tos yuqorida turgan holda tizza bukilganda eng faol; dumba va bel tosni ushlab turadi.",
+  "notes": "Fitbolda oyoq bukish bo‘yicha EMG ma’lumot topilmadi — trenajyorda oyoq bukishdan kamaytirilgan baho."
+ }
+}

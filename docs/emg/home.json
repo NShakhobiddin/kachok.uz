@@ -1,7 +1,1224 @@
 {
   "meta": {
-    "note": "EMG jadvali: home"
+    "compiled": "2026-11-03",
+    "scope": "Home exercises (src/data/exercisesHome.ts): glutes, legs, core and posture with little or no equipment.",
+    "verification": "Values marked estimate=false are figures reported for that exercise in the cited study (checked against abstracts and review tables found by web search; journal pages could not be opened from this environment). DOIs are given only where they were confirmed; others are left out rather than guessed.",
+    "estimateFlag": "estimate=true covers anything interpolated from a similar exercise, scaled for load or judged. For estimates, the range is a judgement band anchored to the cited sources.",
+    "normalisationCaveat": "%MVIC is not directly comparable across labs or muscles; use the values as relative intensity indicators. The knee push-up is peak-normalized like the push-up entry.",
+    "ranking": "Each exercise's 'ranking' array lists muscle keys sorted by the mvic values in this file."
   },
-  "exercises": {},
-  "sources": {}
+  "exercises": {
+    "sumo-squat": {
+      "basis": "similar:goblet-squat (wide stance with the bell hanging between the legs; McCaw & Melrose 1999 and Paoli 2009 found more gluteus maximus activity with a wide stance, McCaw also more adductor longus)",
+      "load": "one dumbbell or kettlebell held between the legs (typical home load)",
+      "metric": "mean",
+      "muscles": {
+        "vastusLateralis": {
+          "mvic": 60,
+          "range": [
+            35,
+            90
+          ],
+          "src": [
+            "mccaw1999"
+          ],
+          "estimate": true
+        },
+        "vastusMedialis": {
+          "mvic": 60,
+          "range": [
+            35,
+            90
+          ],
+          "src": [],
+          "estimate": true
+        },
+        "gluteMax": {
+          "mvic": 40,
+          "range": [
+            20,
+            60
+          ],
+          "src": [
+            "mccaw1999",
+            "paoli2009"
+          ],
+          "estimate": true
+        },
+        "adductors": {
+          "mvic": 40,
+          "range": [
+            20,
+            65
+          ],
+          "src": [
+            "mccaw1999"
+          ],
+          "estimate": true
+        },
+        "erectors": {
+          "mvic": 25,
+          "range": [
+            10,
+            40
+          ],
+          "src": [],
+          "estimate": true
+        },
+        "rectusFemoris": {
+          "mvic": 25,
+          "range": [
+            10,
+            40
+          ],
+          "src": [],
+          "estimate": true
+        }
+      },
+      "ranking": [
+        "vastusLateralis",
+        "vastusMedialis",
+        "gluteMax",
+        "adductors",
+        "erectors",
+        "rectusFemoris"
+      ],
+      "rom": "Quadriceps and gluteus maximus are highest coming out of the bottom. A wider stance raises gluteus maximus and adductor activity (McCaw 1999; Paoli 2009, effect largest with heavier loads).",
+      "notes": "No sumo-squat %MVIC study with a dumbbell or kettlebell was found. Values are the goblet-squat profile with gluteus maximus and adductors raised to reflect the stance-width studies, which used a barbell back squat. Paoli 2009 found gluteus maximus was the only muscle that changed significantly with stance width."
+    },
+    "reverse-lunge": {
+      "basis": "similar:bw-split-squat (backward step into the same split-stance bottom position)",
+      "load": "bodyweight",
+      "metric": "mean",
+      "muscles": {
+        "vastusLateralis": {
+          "mvic": 50,
+          "range": [
+            30,
+            70
+          ],
+          "src": [],
+          "estimate": true
+        },
+        "vastusMedialis": {
+          "mvic": 50,
+          "range": [
+            30,
+            70
+          ],
+          "src": [],
+          "estimate": true
+        },
+        "gluteMax": {
+          "mvic": 35,
+          "range": [
+            15,
+            55
+          ],
+          "src": [
+            "ekstrom2007"
+          ],
+          "estimate": true
+        },
+        "gluteMed": {
+          "mvic": 30,
+          "range": [
+            15,
+            50
+          ],
+          "src": [
+            "distefano2009"
+          ],
+          "estimate": true
+        },
+        "bicepsFemoris": {
+          "mvic": 20,
+          "range": [
+            10,
+            35
+          ],
+          "src": [],
+          "estimate": true
+        },
+        "adductors": {
+          "mvic": 20,
+          "range": [
+            10,
+            35
+          ],
+          "src": [],
+          "estimate": true
+        }
+      },
+      "ranking": [
+        "vastusLateralis",
+        "vastusMedialis",
+        "gluteMax",
+        "gluteMed",
+        "bicepsFemoris",
+        "adductors"
+      ],
+      "rom": "Front-leg quadriceps and gluteus maximus are highest at the bottom. A slight forward trunk lean shifts work toward the gluteus maximus.",
+      "notes": "No reverse-lunge %MVIC values were retrieved. Values are the bodyweight split-squat profile with gluteus maximus slightly raised. DiStefano 2009 reported gluteus medius up to about 48% MVIC in its lunge variations; Ekstrom 2007 measured a standing lunge with moderate gluteal activity."
+    },
+    "curtsy-lunge": {
+      "basis": "similar:reverse-lunge (the rear leg crosses diagonally behind, adding frontal-plane hip control)",
+      "load": "bodyweight",
+      "metric": "mean",
+      "muscles": {
+        "vastusLateralis": {
+          "mvic": 45,
+          "range": [
+            25,
+            65
+          ],
+          "src": [],
+          "estimate": true
+        },
+        "vastusMedialis": {
+          "mvic": 45,
+          "range": [
+            25,
+            65
+          ],
+          "src": [],
+          "estimate": true
+        },
+        "gluteMed": {
+          "mvic": 38,
+          "range": [
+            20,
+            60
+          ],
+          "src": [
+            "distefano2009"
+          ],
+          "estimate": true
+        },
+        "gluteMax": {
+          "mvic": 32,
+          "range": [
+            15,
+            50
+          ],
+          "src": [],
+          "estimate": true
+        },
+        "adductors": {
+          "mvic": 25,
+          "range": [
+            10,
+            40
+          ],
+          "src": [],
+          "estimate": true
+        },
+        "bicepsFemoris": {
+          "mvic": 15,
+          "range": [
+            8,
+            30
+          ],
+          "src": [],
+          "estimate": true
+        }
+      },
+      "ranking": [
+        "vastusLateralis",
+        "vastusMedialis",
+        "gluteMed",
+        "gluteMax",
+        "adductors",
+        "bicepsFemoris"
+      ],
+      "rom": "As in other lunges, the front-leg quadriceps and gluteals are highest at the bottom; the crossed stance asks the front-leg gluteus medius to stop the knee and pelvis from collapsing inward.",
+      "notes": "No curtsy-lunge %MVIC study was found. Estimates from the reverse lunge, with gluteus medius raised toward the lunge values in DiStefano 2009 (about 48% MVIC at most) because of the crossed, frontal-plane stance."
+    },
+    "glute-kickback": {
+      "basis": "similar:bird-dog (quadruped hip extension without the arm lift, knee bent)",
+      "load": "bodyweight",
+      "metric": "mean",
+      "muscles": {
+        "gluteMax": {
+          "mvic": 55,
+          "range": [
+            35,
+            75
+          ],
+          "src": [
+            "ekstrom2007",
+            "selkowitz2013"
+          ],
+          "estimate": true
+        },
+        "gluteMed": {
+          "mvic": 35,
+          "range": [
+            20,
+            50
+          ],
+          "src": [
+            "ekstrom2007"
+          ],
+          "estimate": true
+        },
+        "bicepsFemoris": {
+          "mvic": 30,
+          "range": [
+            15,
+            45
+          ],
+          "src": [],
+          "estimate": true
+        },
+        "erectors": {
+          "mvic": 30,
+          "range": [
+            15,
+            45
+          ],
+          "src": [],
+          "estimate": true
+        },
+        "medialHamstrings": {
+          "mvic": 25,
+          "range": [
+            10,
+            40
+          ],
+          "src": [],
+          "estimate": true
+        }
+      },
+      "ranking": [
+        "gluteMax",
+        "gluteMed",
+        "bicepsFemoris",
+        "erectors",
+        "medialHamstrings"
+      ],
+      "rom": "Gluteus maximus is highest near full hip extension (thigh in line with the trunk). Lifting the thigh higher brings in the lumbar extensors rather than the glutes.",
+      "notes": "Ekstrom 2007 reported about 56% MVIC gluteus maximus and 42% gluteus medius for the quadruped arm and leg lift. Selkowitz 2013 (fine-wire EMG) ranked quadruped hip extension among the exercises with the highest gluteal activity relative to the tensor fasciae latae. With the knee bent the hamstrings contribute less. All values are estimates."
+    },
+    "fire-hydrant": {
+      "basis": "similar:clamshell (quadruped hip abduction with external rotation: the same muscles, lifting the thigh against gravity)",
+      "load": "bodyweight",
+      "metric": "mean",
+      "muscles": {
+        "gluteMed": {
+          "mvic": 45,
+          "range": [
+            25,
+            70
+          ],
+          "src": [
+            "distefano2009",
+            "boren2011"
+          ],
+          "estimate": true
+        },
+        "gluteMax": {
+          "mvic": 35,
+          "range": [
+            20,
+            55
+          ],
+          "src": [
+            "distefano2009"
+          ],
+          "estimate": true
+        },
+        "externalOblique": {
+          "mvic": 20,
+          "range": [
+            10,
+            35
+          ],
+          "src": [],
+          "estimate": true
+        },
+        "erectors": {
+          "mvic": 20,
+          "range": [
+            10,
+            35
+          ],
+          "src": [],
+          "estimate": true
+        }
+      },
+      "ranking": [
+        "gluteMed",
+        "gluteMax",
+        "externalOblique",
+        "erectors"
+      ],
+      "rom": "Activity rises toward the top of the lift; the trunk muscles work to stop the pelvis from tilting toward the lifted leg.",
+      "notes": "No fire-hydrant %MVIC study was found. Values are estimated between the clam (DiStefano 2009: gluteus medius 38-40%, gluteus maximus 34-39% MVIC) and side-lying abduction (gluteus medius 81%, gluteus maximus 39% MVIC)."
+    },
+    "clamshell": {
+      "basis": "direct",
+      "load": "bodyweight, hips flexed 30 or 60 degrees (DiStefano 2009)",
+      "metric": "mean",
+      "muscles": {
+        "gluteMed": {
+          "mvic": 40,
+          "range": [
+            38,
+            40
+          ],
+          "src": [
+            "distefano2009",
+            "boren2011"
+          ],
+          "estimate": false
+        },
+        "gluteMax": {
+          "mvic": 34,
+          "range": [
+            34,
+            39
+          ],
+          "src": [
+            "distefano2009"
+          ],
+          "estimate": false
+        }
+      },
+      "ranking": [
+        "gluteMed",
+        "gluteMax"
+      ],
+      "rom": "DiStefano 2009: hips flexed 30 vs 60 degrees gave similar values (gluteus medius 40 vs 38%, gluteus maximus 34 vs 39% MVIC).",
+      "notes": "Selkowitz 2013 (fine-wire EMG) found the clam had the highest gluteal-to-tensor fasciae latae activation index (115) of the exercises tested. Boren 2011: harder clam progressions reached about 77% MVIC gluteus medius."
+    },
+    "side-leg-raise": {
+      "basis": "direct",
+      "load": "bodyweight",
+      "metric": "mean",
+      "muscles": {
+        "gluteMed": {
+          "mvic": 81,
+          "range": [
+            40,
+            100
+          ],
+          "src": [
+            "distefano2009",
+            "ekstrom2007"
+          ],
+          "estimate": false
+        },
+        "gluteMax": {
+          "mvic": 39,
+          "range": [
+            20,
+            45
+          ],
+          "src": [
+            "distefano2009"
+          ],
+          "estimate": false
+        }
+      },
+      "ranking": [
+        "gluteMed",
+        "gluteMax"
+      ],
+      "rom": "Highest near the top of the arc. If the leg drifts forward, the hip flexors and tensor fasciae latae take over.",
+      "notes": "DiStefano 2009: the highest gluteus medius value of the 12 exercises tested (81 +/- 42% MVIC), with gluteus maximus at 39%. Ekstrom 2007 reported a clearly lower gluteus medius value for side-lying abduction, so the range is wide."
+    },
+    "banded-lateral-walk": {
+      "basis": "direct",
+      "load": "elastic band, bodyweight (DiStefano 2009)",
+      "metric": "mean",
+      "muscles": {
+        "gluteMed": {
+          "mvic": 61,
+          "range": [
+            40,
+            95
+          ],
+          "src": [
+            "distefano2009",
+            "berry2015",
+            "cambridge2012"
+          ],
+          "estimate": false
+        },
+        "gluteMax": {
+          "mvic": 27,
+          "range": [
+            15,
+            45
+          ],
+          "src": [
+            "distefano2009",
+            "berry2015"
+          ],
+          "estimate": false
+        },
+        "vastusLateralis": {
+          "mvic": 20,
+          "range": [
+            10,
+            35
+          ],
+          "src": [],
+          "estimate": true
+        }
+      },
+      "ranking": [
+        "gluteMed",
+        "gluteMax",
+        "vastusLateralis"
+      ],
+      "rom": "Berry 2015: side stepping in a squat (hip-flexed) posture increased gluteus medius and gluteus maximus activity compared with upright stepping. Cambridge 2012: moving the band from the knees to the ankles and then to the feet progressively increased gluteal activation.",
+      "notes": "DiStefano 2009: gluteus medius 61 +/- 34% MVIC, among the highest of the exercises tested, with low gluteus maximus (27 +/- 16%). The vastus lateralis value is an estimate for the half-squat stance."
+    },
+    "single-leg-bridge": {
+      "basis": "direct",
+      "load": "bodyweight (Ekstrom 2007)",
+      "metric": "mean",
+      "muscles": {
+        "gluteMed": {
+          "mvic": 47,
+          "range": [
+            47,
+            57
+          ],
+          "src": [
+            "ekstrom2007"
+          ],
+          "estimate": false
+        },
+        "gluteMax": {
+          "mvic": 40,
+          "range": [
+            40,
+            51
+          ],
+          "src": [
+            "ekstrom2007",
+            "selkowitz2013"
+          ],
+          "estimate": false
+        },
+        "erectors": {
+          "mvic": 35,
+          "range": [
+            20,
+            50
+          ],
+          "src": [
+            "ekstrom2007"
+          ],
+          "estimate": true
+        },
+        "bicepsFemoris": {
+          "mvic": 30,
+          "range": [
+            15,
+            50
+          ],
+          "src": [],
+          "estimate": true
+        },
+        "medialHamstrings": {
+          "mvic": 25,
+          "range": [
+            10,
+            40
+          ],
+          "src": [],
+          "estimate": true
+        }
+      },
+      "ranking": [
+        "gluteMed",
+        "gluteMax",
+        "erectors",
+        "bicepsFemoris",
+        "medialHamstrings"
+      ],
+      "rom": "As in the two-leg bridge, the glutes are highest at the top; the pelvis must also be held level on one leg, which brings in the gluteus medius.",
+      "notes": "Ekstrom 2007: gluteus medius about 47% and gluteus maximus about 40% MVIC; other studies of the same exercise reported 47-57% and 40-51%. Selkowitz 2013 ranked the unilateral bridge third for gluteal activation relative to the tensor fasciae latae (index 59). Back-extensor and hamstring values are estimates."
+    },
+    "wall-sit": {
+      "basis": "similar:bw-squat (isometric hold at about 90 degrees of knee flexion with the back supported)",
+      "load": "bodyweight, about 30-60 s",
+      "metric": "mean",
+      "muscles": {
+        "vastusLateralis": {
+          "mvic": 45,
+          "range": [
+            25,
+            65
+          ],
+          "src": [],
+          "estimate": true
+        },
+        "vastusMedialis": {
+          "mvic": 45,
+          "range": [
+            25,
+            65
+          ],
+          "src": [],
+          "estimate": true
+        },
+        "rectusFemoris": {
+          "mvic": 20,
+          "range": [
+            10,
+            35
+          ],
+          "src": [],
+          "estimate": true
+        },
+        "gluteMax": {
+          "mvic": 12,
+          "range": [
+            5,
+            25
+          ],
+          "src": [],
+          "estimate": true
+        },
+        "bicepsFemoris": {
+          "mvic": 8,
+          "range": [
+            3,
+            15
+          ],
+          "src": [],
+          "estimate": true
+        }
+      },
+      "ranking": [
+        "vastusLateralis",
+        "vastusMedialis",
+        "rectusFemoris",
+        "gluteMax",
+        "bicepsFemoris"
+      ],
+      "rom": "Isometric. Quadriceps demand rises with knee flexion: a 90-degree hold is harder than a 45-60 degree hold.",
+      "notes": "No wall-sit %MVIC study was retrieved. Values are the bodyweight squat profile at the bottom position; with the back supported by the wall, trunk and gluteal activity are low."
+    },
+    "knee-push-up": {
+      "basis": "similar:push-up (kneeling version supports less body mass: about 54% vs 69% at the top, Suprak 2011)",
+      "load": "bodyweight, kneeling",
+      "metric": "peak",
+      "muscles": {
+        "pecMid": {
+          "mvic": 58,
+          "range": [
+            40,
+            80
+          ],
+          "src": [
+            "youdas2010",
+            "suprak2011"
+          ],
+          "estimate": true
+        },
+        "serratus": {
+          "mvic": 55,
+          "range": [
+            40,
+            70
+          ],
+          "src": [
+            "youdas2010"
+          ],
+          "estimate": true
+        },
+        "tricepsLateral": {
+          "mvic": 55,
+          "range": [
+            30,
+            80
+          ],
+          "src": [
+            "youdas2010"
+          ],
+          "estimate": true
+        },
+        "deltAnt": {
+          "mvic": 45,
+          "range": [
+            30,
+            60
+          ],
+          "src": [],
+          "estimate": true
+        },
+        "rectusAbdominis": {
+          "mvic": 12,
+          "range": [
+            5,
+            25
+          ],
+          "src": [],
+          "estimate": true
+        }
+      },
+      "ranking": [
+        "pecMid",
+        "serratus",
+        "tricepsLateral",
+        "deltAnt",
+        "rectusAbdominis"
+      ],
+      "rom": "Chest and triceps are highest at the bottom and early in the press. Hands placed closer raise triceps activity, as in the standard push-up.",
+      "notes": "Peak-normalized values (like the push-up entry), not comparable with mean values. Standard push-up values (Youdas 2010) scaled by the lower supported load: Suprak 2011 measured about 54% (top) to 62% (bottom) of body mass on the hands for the knee push-up, versus 69% to 75% for the standard push-up."
+    },
+    "superman": {
+      "basis": "similar:back-extension (prone, bodyweight, small range of motion)",
+      "load": "bodyweight",
+      "metric": "mean",
+      "muscles": {
+        "erectors": {
+          "mvic": 45,
+          "range": [
+            25,
+            70
+          ],
+          "src": [
+            "callaghan1998"
+          ],
+          "estimate": true
+        },
+        "gluteMax": {
+          "mvic": 30,
+          "range": [
+            15,
+            50
+          ],
+          "src": [],
+          "estimate": true
+        },
+        "trapMid": {
+          "mvic": 25,
+          "range": [
+            10,
+            40
+          ],
+          "src": [],
+          "estimate": true
+        },
+        "bicepsFemoris": {
+          "mvic": 20,
+          "range": [
+            10,
+            35
+          ],
+          "src": [],
+          "estimate": true
+        }
+      },
+      "ranking": [
+        "erectors",
+        "gluteMax",
+        "trapMid",
+        "bicepsFemoris"
+      ],
+      "rom": "Activity is highest at the top hold. Callaghan 1998: prone trunk-extension exercises produced the highest back-extensor activity and lumbar compression of the extensor exercises tested; quadruped single-limb lifts loaded the spine much less.",
+      "notes": "No superman %MVIC values were retrieved. Numbers are estimates scaled down from the 45-degree back extension; the arms lifted overhead add middle-trapezius work."
+    },
+    "bird-dog": {
+      "basis": "direct",
+      "load": "bodyweight (Ekstrom 2007: quadruped arm and lower-extremity lift)",
+      "metric": "mean",
+      "muscles": {
+        "gluteMax": {
+          "mvic": 56,
+          "range": [
+            40,
+            70
+          ],
+          "src": [
+            "ekstrom2007"
+          ],
+          "estimate": false
+        },
+        "gluteMed": {
+          "mvic": 42,
+          "range": [
+            25,
+            55
+          ],
+          "src": [
+            "ekstrom2007"
+          ],
+          "estimate": false
+        },
+        "erectors": {
+          "mvic": 40,
+          "range": [
+            25,
+            55
+          ],
+          "src": [
+            "ekstrom2007",
+            "callaghan1998"
+          ],
+          "estimate": true
+        },
+        "deltAnt": {
+          "mvic": 25,
+          "range": [
+            10,
+            40
+          ],
+          "src": [],
+          "estimate": true
+        },
+        "externalOblique": {
+          "mvic": 20,
+          "range": [
+            10,
+            35
+          ],
+          "src": [],
+          "estimate": true
+        }
+      },
+      "ranking": [
+        "gluteMax",
+        "gluteMed",
+        "erectors",
+        "deltAnt",
+        "externalOblique"
+      ],
+      "rom": "Activity is highest with the arm and opposite leg fully extended. Callaghan 1998: the opposite arm-and-leg raise loads the spine more than a single-leg raise but much less than prone trunk extension.",
+      "notes": "Ekstrom 2007: gluteus maximus about 56% and gluteus medius about 42% MVIC. Back-extensor, anterior-deltoid and oblique values were not retrieved and are estimates."
+    },
+    "side-plank": {
+      "basis": "direct",
+      "load": "bodyweight, forearm side bridge (Ekstrom 2007; Youdas 2014)",
+      "metric": "mean",
+      "muscles": {
+        "gluteMed": {
+          "mvic": 74,
+          "range": [
+            69,
+            89
+          ],
+          "src": [
+            "ekstrom2007",
+            "youdas2014"
+          ],
+          "estimate": false
+        },
+        "externalOblique": {
+          "mvic": 69,
+          "range": [
+            45,
+            90
+          ],
+          "src": [
+            "ekstrom2007",
+            "youdas2014"
+          ],
+          "estimate": true
+        },
+        "rectusAbdominis": {
+          "mvic": 35,
+          "range": [
+            20,
+            50
+          ],
+          "src": [
+            "youdas2014"
+          ],
+          "estimate": true
+        },
+        "erectors": {
+          "mvic": 35,
+          "range": [
+            20,
+            50
+          ],
+          "src": [
+            "youdas2014"
+          ],
+          "estimate": true
+        },
+        "gluteMax": {
+          "mvic": 20,
+          "range": [
+            10,
+            30
+          ],
+          "src": [
+            "ekstrom2007"
+          ],
+          "estimate": true
+        }
+      },
+      "ranking": [
+        "gluteMed",
+        "externalOblique",
+        "rectusAbdominis",
+        "erectors",
+        "gluteMax"
+      ],
+      "rom": "Isometric. Lifting the top leg or adding trunk rotation makes it harder (Boren 2011; Youdas 2014).",
+      "notes": "Ekstrom 2007: of 9 exercises, the side bridge gave the highest gluteus medius (about 74% MVIC) and high external oblique activity, with low gluteus maximus. Youdas 2014: gluteus medius exceeded 69% MVIC in side-bridge variations; the rotational side bridge reached about 63% external oblique and 44% rectus abdominis. Boren 2011: adding hip abduction in the side plank raised gluteus medius to about 89-103% MVIC. The external oblique, rectus abdominis and back-extensor values are estimates."
+    },
+    "reverse-crunch": {
+      "basis": "similar:crunch (Escamilla 2006 measured a reverse crunch on a 30-degree incline)",
+      "load": "bodyweight, on the floor",
+      "metric": "mean",
+      "muscles": {
+        "rectusAbdominis": {
+          "mvic": 50,
+          "range": [
+            30,
+            80
+          ],
+          "src": [
+            "escamilla2006"
+          ],
+          "estimate": true
+        },
+        "externalOblique": {
+          "mvic": 35,
+          "range": [
+            20,
+            60
+          ],
+          "src": [
+            "escamilla2006"
+          ],
+          "estimate": true
+        },
+        "rectusFemoris": {
+          "mvic": 20,
+          "range": [
+            10,
+            40
+          ],
+          "src": [
+            "escamilla2006"
+          ],
+          "estimate": true
+        },
+        "iliopsoas": {
+          "mvic": 20,
+          "range": [
+            10,
+            40
+          ],
+          "src": [],
+          "estimate": true
+        }
+      },
+      "ranking": [
+        "rectusAbdominis",
+        "externalOblique",
+        "rectusFemoris",
+        "iliopsoas"
+      ],
+      "rom": "Abdominal activity is highest as the pelvis curls off the floor; swinging the legs shifts work to the hip flexors.",
+      "notes": "Escamilla 2006 found the inclined reverse crunch, the hanging knee-up with straps and the Power Wheel the most effective of the exercises tested at activating the abdominals; rectus femoris activity was also high in the inclined reverse crunch. %MVIC values were not retrieved and the floor version is easier, so all values are estimates."
+    },
+    "bicycle-crunch": {
+      "basis": "similar:crunch (adds trunk rotation and alternating hip flexion)",
+      "load": "bodyweight",
+      "metric": "mean",
+      "muscles": {
+        "rectusAbdominis": {
+          "mvic": 55,
+          "range": [
+            30,
+            80
+          ],
+          "src": [],
+          "estimate": true
+        },
+        "externalOblique": {
+          "mvic": 50,
+          "range": [
+            30,
+            80
+          ],
+          "src": [],
+          "estimate": true
+        },
+        "iliopsoas": {
+          "mvic": 25,
+          "range": [
+            10,
+            40
+          ],
+          "src": [],
+          "estimate": true
+        },
+        "rectusFemoris": {
+          "mvic": 20,
+          "range": [
+            10,
+            35
+          ],
+          "src": [],
+          "estimate": true
+        }
+      },
+      "ranking": [
+        "rectusAbdominis",
+        "externalOblique",
+        "iliopsoas",
+        "rectusFemoris"
+      ],
+      "rom": "The obliques are most active at the end of each rotation; lowering the straight leg raises the demand on the abdominals and hip flexors.",
+      "notes": "No peer-reviewed %MVIC study of the bicycle crunch was retrieved. Values are the crunch profile with external oblique raised for the trunk rotation; all are estimates."
+    },
+    "mountain-climber": {
+      "basis": "similar:plank (dynamic high plank with alternating knee drives)",
+      "load": "bodyweight, about 20-40 s",
+      "metric": "mean",
+      "muscles": {
+        "rectusAbdominis": {
+          "mvic": 40,
+          "range": [
+            20,
+            65
+          ],
+          "src": [],
+          "estimate": true
+        },
+        "externalOblique": {
+          "mvic": 40,
+          "range": [
+            20,
+            65
+          ],
+          "src": [],
+          "estimate": true
+        },
+        "iliopsoas": {
+          "mvic": 30,
+          "range": [
+            15,
+            50
+          ],
+          "src": [],
+          "estimate": true
+        },
+        "rectusFemoris": {
+          "mvic": 30,
+          "range": [
+            15,
+            50
+          ],
+          "src": [],
+          "estimate": true
+        },
+        "deltAnt": {
+          "mvic": 30,
+          "range": [
+            15,
+            45
+          ],
+          "src": [],
+          "estimate": true
+        }
+      },
+      "ranking": [
+        "rectusAbdominis",
+        "externalOblique",
+        "iliopsoas",
+        "rectusFemoris",
+        "deltAnt"
+      ],
+      "rom": "The trunk works throughout to hold the plank; each knee drive adds hip-flexor work and a brief rotational challenge.",
+      "notes": "No mountain-climber %MVIC values were retrieved. Estimates from the plank profile plus the hip flexors for the knee drive; speed changes the values considerably."
+    },
+    "band-row": {
+      "basis": "similar:cable-row (seated row with a long elastic band anchored under the feet)",
+      "load": "elastic band, moderate effort",
+      "metric": "mean",
+      "muscles": {
+        "lats": {
+          "mvic": 45,
+          "range": [
+            25,
+            65
+          ],
+          "src": [
+            "andersen2010"
+          ],
+          "estimate": true
+        },
+        "trapMid": {
+          "mvic": 40,
+          "range": [
+            25,
+            55
+          ],
+          "src": [
+            "andersen2010"
+          ],
+          "estimate": true
+        },
+        "rhomboids": {
+          "mvic": 40,
+          "range": [
+            25,
+            55
+          ],
+          "src": [],
+          "estimate": true
+        },
+        "deltPost": {
+          "mvic": 40,
+          "range": [
+            25,
+            60
+          ],
+          "src": [],
+          "estimate": true
+        },
+        "biceps": {
+          "mvic": 30,
+          "range": [
+            15,
+            45
+          ],
+          "src": [],
+          "estimate": true
+        },
+        "erectors": {
+          "mvic": 20,
+          "range": [
+            10,
+            35
+          ],
+          "src": [],
+          "estimate": true
+        }
+      },
+      "ranking": [
+        "lats",
+        "trapMid",
+        "rhomboids",
+        "deltPost",
+        "biceps",
+        "erectors"
+      ],
+      "rom": "Elastic tension rises as the band stretches, so resistance is highest at the end of the pull with the elbows back.",
+      "notes": "Values are the seated cable-row profile scaled down for a typical home band. Andersen 2010: at comparable relative loads, elastic tubing and dumbbells produced similar EMG amplitude (shoulder and wrist exercises), so effort, not the type of resistance, sets activation."
+    },
+    "ball-leg-curl": {
+      "basis": "similar:leg-curl (bodyweight curl on an unstable ball with the hips held up)",
+      "load": "bodyweight, stability ball",
+      "metric": "mean",
+      "muscles": {
+        "medialHamstrings": {
+          "mvic": 60,
+          "range": [
+            35,
+            85
+          ],
+          "src": [],
+          "estimate": true
+        },
+        "bicepsFemoris": {
+          "mvic": 55,
+          "range": [
+            35,
+            80
+          ],
+          "src": [],
+          "estimate": true
+        },
+        "gluteMax": {
+          "mvic": 30,
+          "range": [
+            15,
+            50
+          ],
+          "src": [],
+          "estimate": true
+        },
+        "gastrocnemius": {
+          "mvic": 25,
+          "range": [
+            10,
+            40
+          ],
+          "src": [],
+          "estimate": true
+        },
+        "erectors": {
+          "mvic": 20,
+          "range": [
+            10,
+            35
+          ],
+          "src": [],
+          "estimate": true
+        }
+      },
+      "ranking": [
+        "medialHamstrings",
+        "bicepsFemoris",
+        "gluteMax",
+        "gastrocnemius",
+        "erectors"
+      ],
+      "rom": "Hamstrings are highest as the knees bend with the hips held up; gluteus maximus and the back extensors hold the hips in extension throughout.",
+      "notes": "No %MVIC study of the stability-ball leg curl was retrieved. Estimates from the machine leg curl, reduced for the lighter bodyweight load."
+    }
+  },
+  "sources": {
+    "distefano2009": {
+      "cite": "DiStefano LJ, Blackburn JT, Marshall SW, Padua DA. Gluteal muscle activation during common therapeutic exercises. J Orthop Sports Phys Ther 39(7):532-540, 2009.",
+      "doi": "10.2519/jospt.2009.2796"
+    },
+    "boren2011": {
+      "cite": "Boren K, Conrey C, Le Coguic J, Paprocki L, Voight M, Robinson TK. Electromyographic analysis of gluteus medius and gluteus maximus during rehabilitation exercises. Int J Sports Phys Ther 6(3):206-223, 2011."
+    },
+    "ekstrom2007": {
+      "cite": "Ekstrom RA, Donatelli RA, Carp KC. Electromyographic analysis of core trunk, hip, and thigh muscles during 9 rehabilitation exercises. J Orthop Sports Phys Ther 37(12):754-762, 2007.",
+      "doi": "10.2519/jospt.2007.2471"
+    },
+    "selkowitz2013": {
+      "cite": "Selkowitz DM, Beneck GJ, Powers CM. Which exercises target the gluteal muscles while minimizing activation of the tensor fascia lata? Electromyographic assessment using fine-wire electrodes. J Orthop Sports Phys Ther 43(2):54-64, 2013."
+    },
+    "cambridge2012": {
+      "cite": "Cambridge EDJ, Sidorkewicz N, Ikeda DM, McGill SM. Progressive hip rehabilitation: the effects of resistance band placement on gluteal activation during two common exercises. Clin Biomech 27(7):719-724, 2012."
+    },
+    "berry2015": {
+      "cite": "Berry JW, Lee TS, Foley HD, Lewis CL. Resisted side stepping: the effect of posture on hip abductor muscle activation. J Orthop Sports Phys Ther 45(9):675-682, 2015."
+    },
+    "mccaw1999": {
+      "cite": "McCaw ST, Melrose DR. Stance width and bar load effects on leg muscle activity during the parallel squat. Med Sci Sports Exerc 31(3):428-436, 1999."
+    },
+    "paoli2009": {
+      "cite": "Paoli A, Marcolin G, Petrone N. The effect of stance width on the electromyographical activity of eight superficial thigh muscles during back squat with different bar loads. J Strength Cond Res 23(1):246-250, 2009."
+    },
+    "suprak2011": {
+      "cite": "Suprak DN, Dawes J, Stephenson MD. The effect of position on the percentage of body mass supported during traditional and modified push-up variants. J Strength Cond Res 25(2):497-503, 2011."
+    },
+    "youdas2010": {
+      "cite": "Youdas JW, et al. Comparison of muscle-activation patterns during the conventional push-up and Perfect Pushup exercises. J Strength Cond Res 24(12):3352-3362, 2010."
+    },
+    "callaghan1998": {
+      "cite": "Callaghan JP, Gunning JL, McGill SM. The relationship between lumbar spine load and muscle activity during extensor exercises. Phys Ther 78(1):8-18, 1998.",
+      "doi": "10.1093/ptj/78.1.8"
+    },
+    "youdas2014": {
+      "cite": "Youdas JW, Boor MMP, Darfler AL, Koenig MK, Mills KM, Hollman JH. Surface electromyographic analysis of core trunk and hip muscles during selected rehabilitation exercises in the side-bridge to neutral spine position. Sports Health, 2014."
+    },
+    "escamilla2006": {
+      "cite": "Escamilla RF, et al. Electromyographic analysis of traditional and nontraditional abdominal exercises: implications for rehabilitation and training. Phys Ther 86(5):656-671, 2006.",
+      "doi": "10.1093/ptj/86.5.656"
+    },
+    "andersen2010": {
+      "cite": "Andersen LL, et al. Muscle activation and perceived loading during rehabilitation exercises: comparison of dumbbells and elastic resistance. Phys Ther 90(4):538-549, 2010."
+    }
+  }
 }
