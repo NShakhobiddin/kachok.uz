@@ -135,6 +135,8 @@ interface State {
   /** ovqat kundaligi */
   food: FoodEntry[];
   water: Record<string, number>;
+  /** cho'zilish: kun (YYYY-MM-DD) → daqiqa */
+  stretchLog: Record<string, number>;
   readiness: Record<string, number>;
   lessonsDone: string[];
   kcalAdjust: number;
@@ -167,7 +169,8 @@ interface State {
   addDay: (weekday: number, title: string) => string | null;
   removeDay: (dayId: string) => void;
 
-  startWorkout: (day: WorkoutDay | null, plan: PlannedExercise[], readiness?: number, initial?: ExerciseLog[]) => void;
+  /** title — dasturdan tashqari mashg'ulot nomi (masalan, uydagi tayyor mashg'ulot) */
+  startWorkout: (day: WorkoutDay | null, plan: PlannedExercise[], readiness?: number, initial?: ExerciseLog[], title?: string) => void;
   setActiveIndex: (i: number) => void;
   updateSet: (exIdx: number, setIdx: number, patch: Partial<SetLog>) => void;
   addSet: (exIdx: number, set?: Partial<SetLog>) => void;
@@ -187,6 +190,8 @@ interface State {
   addFood: (e: FoodEntry) => void;
   removeFood: (id: string) => void;
   addWater: (ml: number) => void;
+  /** cho'zilish mashg'uloti tugadi — bugungi daqiqalarga qo'shiladi */
+  addStretch: (min: number) => void;
   setReadiness: (score: number) => void;
   completeLesson: (id: string) => void;
   setKcalAdjust: (n: number) => void;
@@ -212,6 +217,7 @@ const initial = {
   body: [] as BodyEntry[],
   food: [] as FoodEntry[],
   water: {} as Record<string, number>,
+  stretchLog: {} as Record<string, number>,
   readiness: {} as Record<string, number>,
   lessonsDone: [] as string[],
   kcalAdjust: 0,
@@ -309,11 +315,11 @@ export const useStore = create<State>()(
         if (program && program.days.length > 1) set({ program: { ...program, days: program.days.filter((d) => d.id !== dayId) } });
       },
 
-      startWorkout: (day, plan, readiness, initialEx) => {
+      startWorkout: (day, plan, readiness, initialEx, title) => {
         const exercises: ExerciseLog[] = initialEx ?? plan.map((pe) => ({ exerciseId: pe.exerciseId, sets: Array.from({ length: pe.sets }, () => ({ kg: 0, reps: 0, done: false })) }));
         set({
           active: {
-            log: { id: uid(), dayId: day?.id, title: day?.title ?? 'Erkin mashg‘ulot', startedAt: new Date().toISOString(), durationMin: 0, exercises, readiness },
+            log: { id: uid(), dayId: day?.id, title: day?.title ?? title ?? 'Erkin mashg‘ulot', startedAt: new Date().toISOString(), durationMin: 0, exercises, readiness },
             index: 0,
             restEndsAt: null,
             restTotal: 0,
@@ -469,6 +475,10 @@ export const useStore = create<State>()(
         const d = isoDate();
         set({ water: { ...get().water, [d]: Math.max(0, (get().water[d] ?? 0) + ml) } });
       },
+      addStretch: (min) => {
+        const d = isoDate();
+        set({ stretchLog: { ...get().stretchLog, [d]: Math.round(((get().stretchLog[d] ?? 0) + Math.max(0, min)) * 10) / 10 } });
+      },
       setReadiness: (score) => set({ readiness: { ...get().readiness, [isoDate()]: score } }),
       completeLesson: (id) => {
         if (!get().lessonsDone.includes(id)) set({ lessonsDone: [...get().lessonsDone, id] });
@@ -573,6 +583,7 @@ export function exportData(): string {
     body: s.body,
     food: s.food,
     water: s.water,
+    stretchLog: s.stretchLog,
     readiness: s.readiness,
     lessonsDone: s.lessonsDone,
     kcalAdjust: s.kcalAdjust,

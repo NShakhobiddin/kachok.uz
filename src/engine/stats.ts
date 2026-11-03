@@ -10,7 +10,8 @@ import { e1rmFromSet } from './rpe';
 export const finished = (logs: WorkoutLog[]) => logs.filter((l) => l.finishedAt);
 
 export function logVolume(l: WorkoutLog): number {
-  return l.exercises.reduce((a, e) => a + e.sets.filter((s) => s.done && !s.warmup).reduce((b, s) => b + s.kg * s.reps, 0), 0);
+  // yordamchi trenajyorda kg — yordam, ko'tarilgan yuk emas
+  return l.exercises.reduce((a, e) => (EXERCISE_MAP[e.exerciseId]?.assisted ? a : a + e.sets.filter((s) => s.done && !s.warmup).reduce((b, s) => b + s.kg * s.reps, 0)), 0);
 }
 
 export function logSets(l: WorkoutLog): number {
@@ -94,7 +95,7 @@ export function detectPRs(log: WorkoutLog, previous: WorkoutLog[]): PR[] {
   const ids = [...new Set(log.exercises.map((e) => e.exerciseId))];
   for (const id of ids) {
     const ex = EXERCISE_MAP[id];
-    if (!ex || ex.loadType === 'bodyweight' || ex.loadType === 'band') continue;
+    if (!ex || ex.loadType === 'bodyweight' || ex.loadType === 'band' || ex.assisted) continue;
     const prevSets = prev.flatMap((l) => l.exercises.filter((x) => x.exerciseId === id).flatMap((x) => x.sets.filter((s) => s.done && !s.warmup && s.kg > 0)));
     if (!prevSets.length) continue; // birinchi marta — rekord emas, boshlang‘ich nuqta
     const bestE = Math.max(...prevSets.map((s) => e1rm(s.kg, s.reps)));
@@ -124,6 +125,7 @@ export function allPRs(logs: WorkoutLog[]): PR[] {
 }
 
 export function exerciseSeries(exId: string, logs: WorkoutLog[]) {
+  if (EXERCISE_MAP[exId]?.assisted) return [];
   return finished(logs)
     .sort((a, b) => a.startedAt.localeCompare(b.startedAt))
     .map((l) => {

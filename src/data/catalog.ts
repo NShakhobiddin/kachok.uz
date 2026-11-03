@@ -110,6 +110,14 @@ export const EQUIPMENT: EquipmentInfo[] = [
   { id: 'bands', name: 'Rezina lentalar', hint: 'Qarshilik lentalari' },
   { id: 'box', name: 'Platforma', hint: 'Step yoki mustahkam quti' },
   { id: 'cardio', name: 'Kardio', hint: "Yugurish yo‘lakchasi, velotrenajyor, eshkak" },
+  { id: 'hipAbAd', name: 'Abduktor / adduktor', hint: "O‘tirib sonlarni ochish va yopish trenajyori" },
+  { id: 'seatedCalf', name: "O‘tirib boldir trenajyori", hint: 'Tizza ustidagi yostiq bilan boldir ko‘tarish' },
+  { id: 'assistedPullup', name: 'Gravitron', hint: 'Tortilish va brusda yordam beradigan trenajyor' },
+  { id: 'preacher', name: 'Skott skameykasi', hint: 'Qo‘l yostiqqa tayanib bitseps bukish' },
+  { id: 'tbar', name: 'T-shtanga', hint: 'Bir uchi qotirilgan shtanga yoki T-tortish trenajyori' },
+  { id: 'abWheel', name: 'Press roligi', hint: 'Tutqichli g‘ildirak' },
+  { id: 'fitball', name: 'Fitbol', hint: 'Katta gimnastik to‘p (55–75 sm)' },
+  { id: 'miniBand', name: 'Mini-lenta', hint: 'Oyoqqa kiyiladigan halqa lenta' },
 ];
 
 export const EQUIPMENT_PRESETS: { id: string; name: string; desc: string; items: EquipmentId[] }[] = [
@@ -123,13 +131,13 @@ export const EQUIPMENT_PRESETS: { id: string; name: string; desc: string; items:
     id: 'basic',
     name: 'Oddiy zal',
     desc: 'Shtanga, gantellar, asosiy trenajyorlar',
-    items: ['barbell', 'rack', 'bench', 'inclineBench', 'dumbbells', 'ezBar', 'cable', 'latPulldown', 'seatedRow', 'legPress', 'legCurl', 'legExtension', 'pullupBar', 'dipBars', 'cardio'],
+    items: ['barbell', 'rack', 'bench', 'inclineBench', 'dumbbells', 'ezBar', 'cable', 'latPulldown', 'seatedRow', 'legPress', 'legCurl', 'legExtension', 'hipAbAd', 'pullupBar', 'dipBars', 'cardio'],
   },
   {
     id: 'home',
     name: 'Uy sharoiti',
-    desc: 'Gantellar, skameyka, turnik, lentalar',
-    items: ['dumbbells', 'bench', 'inclineBench', 'pullupBar', 'bands'],
+    desc: 'Gantellar, skameyka, turnik, lentalar, fitbol',
+    items: ['dumbbells', 'bench', 'inclineBench', 'pullupBar', 'bands', 'miniBand', 'fitball'],
   },
   {
     id: 'bodyweight',

@@ -387,7 +387,7 @@ export default function Workout() {
             <div className="set-grid set-head">
               <span>SET</span>
               <span>OLDINGI</span>
-              <span>{ex.loadType === 'bodyweight' && !sug?.kg ? '+KG' : 'KG'}</span>
+              <span>{ex.assisted ? 'YORDAM KG' : ex.loadType === 'bodyweight' && !sug?.kg ? '+KG' : 'KG'}</span>
               <span>{ex.timed ? 'SONIYA' : 'TAKROR'}</span>
               <span />
             </div>

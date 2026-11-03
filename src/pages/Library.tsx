@@ -7,8 +7,9 @@ import { RiskTag } from '../components/Safety';
 import { Icon } from '../components/ui/Icon';
 import { Segmented, Toggle } from '../components/ui/controls';
 import { MUSCLES } from '../data/catalog';
-import { EXERCISES } from '../data/exercises';
+import { EXERCISES, STRETCHES } from '../data/exercises';
 import { LESSONS } from '../data/lessons';
+import { isHomeExercise } from '../data/routines';
 import { safetyFor } from '../data/safety';
 import { hasEquipment } from '../engine/program';
 import { personalSafety } from '../engine/safety';
@@ -48,8 +49,19 @@ export default function Library() {
   );
 }
 
+const CATS = [
+  { value: 'all', label: 'Hammasi' },
+  { value: 'gym', label: 'Zal' },
+  { value: 'home', label: 'Uyda' },
+  { value: 'stretch', label: 'Cho‘zilish' },
+] as const;
+type Cat = (typeof CATS)[number]['value'];
+
 function Exercises() {
   const profile = useStore((s) => s.profile);
+  const [params, setParams] = useSearchParams();
+  const cat: Cat = CATS.some((c) => c.value === params.get('cat')) ? (params.get('cat') as Cat) : 'all';
+  const setCat = (c: Cat) => setParams(c === 'all' ? {} : { cat: c }, { replace: true });
   const [q, setQ] = useState('');
   const [area, setArea] = useState('all');
   const [picked, setPicked] = useState<MuscleId[]>([]);
@@ -60,17 +72,30 @@ function Exercises() {
   const list = useMemo(() => {
     const areaM = AREAS.find((a) => a.k === area)?.muscles ?? [];
     const filterM = picked.length ? picked : areaM;
-    return EXERCISES.filter((e) => {
+    const base = cat === 'stretch' ? STRETCHES : EXERCISES.filter((e) => (cat === 'home' ? isHomeExercise(e) : cat === 'gym' ? !isHomeExercise(e) : true));
+    return base.filter((e) => {
       if (q && !(e.name + ' ' + e.en).toLowerCase().includes(q.toLowerCase())) return false;
       if (filterM.length && !e.primary.some((m) => filterM.includes(m))) return false;
-      if (mine && profile && !hasEquipment(e, profile.equipment)) return false;
+      if (mine && profile && cat !== 'stretch' && !hasEquipment(e, profile.equipment)) return false;
       if (safeOnly && personalSafety(e, injuries).avoid.length) return false;
       return true;
     }).sort((a, b) => b.score - a.score);
-  }, [q, area, picked, mine, profile, safeOnly, injuries]);
+  }, [q, area, picked, mine, profile, safeOnly, injuries, cat]);
 
   return (
     <div className="stack gap-12">
+      <Link to="/routines" className="card tight row gap-12" style={{ color: 'inherit' }}>
+        <span className="lib-safety-ico" style={{ background: 'var(--accent-soft)', color: 'var(--accent)' }}>
+          <Icon name="home" />
+        </span>
+        <span className="grow" style={{ minWidth: 0 }}>
+          <b className="small" style={{ display: 'block' }}>
+            Uyda mashq va cho‘zilish
+          </b>
+          <span className="tiny muted">Tayyor mashg‘ulotlar: dumba, qorin, qomat · taymerli cho‘zilish</span>
+        </span>
+        <Icon name="right" size={18} style={{ color: 'var(--text-3)' }} />
+      </Link>
       <Link to="/safety" className="card tight row gap-12" style={{ color: 'inherit' }}>
         <span className="lib-safety-ico">
           <Icon name="shield" />
@@ -133,7 +158,9 @@ function Exercises() {
         ))}
       </div>
 
-      {profile && (
+      <Segmented label="Mashq turi" value={cat} onChange={setCat} options={[...CATS]} />
+
+      {profile && cat !== 'stretch' && (
         <label className="row between small" style={{ padding: '4px 2px' }}>
           <span className="muted">Faqat zalimdagi jihozlar bilan</span>
           <Toggle on={mine} onChange={setMine} label="Faqat zalimdagi jihozlar" />
@@ -146,7 +173,9 @@ function Exercises() {
         </label>
       )}
 
-      <div className="tiny faint">{list.length} ta mashq</div>
+      <div className="tiny faint">
+        {list.length} ta {cat === 'stretch' ? 'cho‘zilish' : 'mashq'}
+      </div>
       <div className="stack gap-8">
         {list.map((e) => (
           <Link key={e.id} to={`/exercise/${e.id}`} className="card tight row gap-12" style={{ color: 'inherit' }}>
@@ -163,7 +192,13 @@ function Exercises() {
                     {MUSCLES[m].name}
                   </span>
                 ))}
-                <span className="tag">{['', 'Oson', 'O‘rta', 'Murakkab'][e.level]}</span>
+                {e.kind === 'stretch' ? (
+                  <span className="tag">
+                    {e.hold ?? 30} s{e.perSide ? ' · har tomonga' : ''}
+                  </span>
+                ) : (
+                  <span className="tag">{['', 'Oson', 'O‘rta', 'Murakkab'][e.level]}</span>
+                )}
                 <SafetyTag id={e.id} level={personalSafety(e, injuries).level} />
               </div>
             </div>

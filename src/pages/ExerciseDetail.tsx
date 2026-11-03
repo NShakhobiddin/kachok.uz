@@ -18,7 +18,8 @@ import { liftByExercise } from '../engine/standards';
 import { Fold, Note } from '../components/ui/Fold';
 import { Icon } from '../components/ui/Icon';
 import { EQUIPMENT, MUSCLES } from '../data/catalog';
-import { exById } from '../data/exercises';
+import { STRETCHES, exById } from '../data/exercises';
+import { ROUTINES, routineMinutes } from '../data/routines';
 import { alternatives } from '../engine/program';
 import { exerciseSeries } from '../engine/stats';
 import { fmtDate } from '../lib/date';
@@ -51,7 +52,8 @@ function ExerciseStage({ ex }: { ex: Exercise }) {
   const [guides, setGuides] = useState(false);
   const tempo = useTempo(ex.anim);
   const canGuide = ex.anim.view === 'side' && !!ex.anim.held && GUIDE_HELD.includes(ex.anim.held.kind);
-  const ph = PHASE[phase];
+  const stretch = ex.kind === 'stretch';
+  const ph = stretch ? { label: 'Cho‘zilish', hint: 'sekin nafas, bo‘shashing', color: 'var(--accent)' } : PHASE[phase];
   return (
     <div className="mt-16">
       <div className="stage" style={{ aspectRatio: '1 / 1' }}>
@@ -81,7 +83,13 @@ function ExerciseStage({ ex }: { ex: Exercise }) {
       </div>
       <div className="row gap-12" style={{ alignItems: 'flex-start' }}>
         <div className="grow" style={{ minWidth: 0 }}>
-          <TempoBar spec={ex.anim} head={tempo.head} />
+          {stretch ? (
+            <p className="small muted" style={{ marginTop: 14 }}>
+              {ex.hold ?? 30} soniya ushlang{ex.perSide ? ', keyin ikkinchi tomon' : ''}.
+            </p>
+          ) : (
+            <TempoBar spec={ex.anim} head={tempo.head} />
+          )}
         </div>
         <div className="row gap-6" style={{ marginTop: 8 }}>
           <button className="chip sm" onClick={() => setSpeed((s) => (s === 1 ? 0.5 : 1))} aria-label="Tezlik">
@@ -101,7 +109,9 @@ function IllustratedStage({ ex }: { ex: Exercise }) {
   const ill = ILLUSTRATIONS[ex.id]!;
   // ikki kadrli harakat bo'lsa — u birinchi; bo'lmasa — mushaklar va texnika rasmlari
   const tabs = (
-    ill.pair
+    ex.kind === 'stretch'
+      ? [['form', 'Texnika']]
+      : ill.pair
       ? [
           ['motion', 'Harakat'],
           ['muscles', 'Mushaklar'],
@@ -156,11 +166,13 @@ export default function ExerciseDetail() {
 
   const injuries = profile?.injuries ?? [];
   const safety = safetyFor(ex.id);
+  const stretch = ex.kind === 'stretch';
+  const inRoutines = ROUTINES.filter((r) => r.items.some((i) => i.id === ex.id));
   const eqNames = [
     ...ex.equipment.map((e) => EQUIPMENT.find((x) => x.id === e)?.name),
     ex.equipmentAny ? ex.equipmentAny.map((e) => EQUIPMENT.find((x) => x.id === e)?.name).join(' yoki ') : null,
   ].filter(Boolean);
-  const alts = profile ? alternatives(ex.id, profile).slice(0, 6) : [];
+  const alts = stretch ? STRETCHES.filter((s) => s.id !== ex.id && s.primary.some((m) => ex.primary.includes(m))).slice(0, 6) : profile ? alternatives(ex.id, profile).slice(0, 6) : [];
   const lift = liftByExercise(ex.id);
   const best = series.length ? series.reduce((a, b) => (b.e1rm > a.e1rm ? b : a)) : null;
 
@@ -194,33 +206,38 @@ export default function ExerciseDetail() {
         )}
       </div>
 
-      <AddToProgram ex={ex} />
+      {!stretch && <AddToProgram ex={ex} />}
 
       <PersonalSafetyNotice ex={ex} injuries={injuries} />
 
-      <section className="section">
-        <div className="section-head">
-          <h2>Mushaklar 3D</h2>
-          <span className="small muted">qaysi mushak necha % ishlaydi</span>
-        </div>
-        <MuscleActivation ex={ex} />
-      </section>
+      {!stretch && (
+        <section className="section">
+          <div className="section-head">
+            <h2>Mushaklar 3D</h2>
+            <span className="small muted">qaysi mushak necha % ishlaydi</span>
+          </div>
+          <MuscleActivation ex={ex} />
+        </section>
+      )}
 
       <section className="section">
         <div className="card row gap-16" style={{ alignItems: 'center' }}>
           <BodyMap primary={ex.primary} secondary={ex.secondary} height={170} />
           <div className="stack gap-8 small">
+            {stretch && <div className="eyebrow" style={{ color: 'var(--accent)' }}>Cho‘ziladigan mushaklar</div>}
             <div>
               <div className="eyebrow">Jihoz</div>
-              <div className="strong mt-4">{eqNames.length ? eqNames.join(', ') : 'O‘z vazni'}</div>
+              <div className="strong mt-4">{eqNames.length ? eqNames.join(', ') : stretch ? 'Gilamcha yoki pol' : 'O‘z vazni'}</div>
             </div>
             <div>
               <div className="eyebrow">Daraja</div>
               <div className="strong mt-4">{['', 'Oson', 'O‘rta', 'Murakkab'][ex.level]}</div>
             </div>
             <div>
-              <div className="eyebrow">Turi</div>
-              <div className="strong mt-4">{ex.mechanics === 'compound' ? 'Ko‘p bo‘g‘imli' : 'Izolyatsiya'}</div>
+              <div className="eyebrow">{stretch ? 'Ushlash' : 'Turi'}</div>
+              <div className="strong mt-4">
+                {stretch ? `${ex.hold ?? 30} s${ex.perSide ? ' · har tomonga' : ''}` : ex.mechanics === 'compound' ? 'Ko‘p bo‘g‘imli' : 'Izolyatsiya'}
+              </div>
             </div>
           </div>
         </div>
@@ -299,10 +316,30 @@ export default function ExerciseDetail() {
         </section>
       )}
 
+      {inRoutines.length > 0 && (
+        <section className="section">
+          <div className="section-head">
+            <h2>Tayyor mashg‘ulotlarda</h2>
+          </div>
+          <div className="stack gap-8">
+            {inRoutines.map((r) => (
+              <Link key={r.id} to={`/routine/${r.id}`} className="card tight row gap-12" style={{ color: 'inherit' }}>
+                <Icon name={r.kind === 'stretch' ? 'spine' : 'home'} size={20} style={{ color: 'var(--accent)', flex: 'none' }} />
+                <span className="grow small strong" style={{ minWidth: 0 }}>
+                  {r.title}
+                </span>
+                <span className="tiny muted num">{routineMinutes(r)} daq</span>
+                <Icon name="right" size={16} style={{ color: 'var(--text-3)' }} />
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
+
       {alts.length > 0 && (
         <section className="section">
           <div className="section-head">
-            <h2>Muqobil mashqlar</h2>
+            <h2>{stretch ? 'O‘xshash cho‘zilishlar' : 'Muqobil mashqlar'}</h2>
           </div>
           <div className="hscroll">
             {alts.map((a) => (

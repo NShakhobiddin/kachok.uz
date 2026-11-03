@@ -1,12 +1,13 @@
 // Mashqlar kutubxonasi. Har bir mashq: mushaklar, jihoz, texnika, xatolar, sog‘liq foydasi va animatsiya.
 import type { Exercise } from '../types';
 import * as A from './anims';
+import { BREATH_BRACE, BREATH_PRESS, BREATH_PULL } from './exerciseText';
+import { HOME_EXERCISES } from './exercisesHome';
+import { MACHINE_EXERCISES } from './exercisesMachines';
+import { STRETCHES } from './stretches';
 
-const BREATH_PRESS = "Og‘irlikni tushirayotganda nafas oling, kuch bilan itarayotganda chiqaring.";
-const BREATH_PULL = "Tortayotganda nafas chiqaring, nazorat bilan qaytarayotganda nafas oling.";
-const BREATH_BRACE = "Pastga tushishdan oldin chuqur nafas olib qorinni qotiring, eng qiyin nuqtadan o‘tgach chiqaring.";
 
-export const EXERCISES: Exercise[] = [
+const BASE: Exercise[] = [
   /* ===================== OYOQLAR: O‘TIRISH ===================== */
   {
     id: 'back-squat',
@@ -1822,5 +1823,11 @@ export const EXERCISES: Exercise[] = [
   },
 ];
 
-export const EXERCISE_MAP: Record<string, Exercise> = Object.fromEntries(EXERCISES.map((e) => [e.id, e]));
+/** kuch mashqlari: dastur, mashg'ulot va statistika shu ro'yxatdan */
+export const EXERCISES: Exercise[] = [...BASE, ...HOME_EXERCISES, ...MACHINE_EXERCISES];
+
+export { STRETCHES };
+
+/** barcha mashqlar, cho'zilishlar ham (mashq sahifasi uchun) */
+export const EXERCISE_MAP: Record<string, Exercise> = Object.fromEntries([...EXERCISES, ...STRETCHES].map((e) => [e.id, e]));
 export const exById = (id: string): Exercise | undefined => EXERCISE_MAP[id];

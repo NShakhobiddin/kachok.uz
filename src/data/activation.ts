@@ -1,5 +1,5 @@
 // Mashqlarda mushaklarning EMG faolligi (% MVIC). AVTOMATIK YARATILGAN — qo'lda tahrirlamang:
-// manba jadvallar docs/emg/{lower,push,pull}.json, o'zbekcha izohlar docs/emg/uz.json, skript scripts/build-activation.mjs.
+// manba jadvallar docs/emg/{lower,push,pull,home,machines}.json, o'zbekcha izohlar docs/emg/uz*.json, skript scripts/build-activation.mjs.
 // est: true — qiymat to'g'ridan-to'g'ri o'lchanmagan (o'xshash mashq, tadqiqotdagi nisbiy farq yoki oraliq asosida baho).
 import type { M3 } from './muscles3d';
 

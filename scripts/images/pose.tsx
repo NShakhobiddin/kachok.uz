@@ -3,13 +3,13 @@
 import { createRoot } from 'react-dom/client';
 import '../../src/styles/global.css';
 import { Figure } from '../../src/components/figure/Figure';
-import { EXERCISES } from '../../src/data/exercises';
+import { EXERCISE_MAP } from '../../src/data/exercises';
 
 const q = new URLSearchParams(location.search);
-const ex = EXERCISES.find((e) => e.id === q.get('id'));
+const ex = EXERCISE_MAP[q.get('id') ?? ''];
 
 (window as unknown as { __frames: (id: string) => { t: number; phase: string }[] }).__frames = (id) => {
-  const e = EXERCISES.find((x) => x.id === id)!;
+  const e = EXERCISE_MAP[id];
   let t = 0;
   return e.anim.frames.map((f) => {
     const r = { t, phase: f.phase };

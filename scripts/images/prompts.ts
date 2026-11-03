@@ -2,9 +2,25 @@
 // Ishlatish: npx vite-node scripts/images/prompts.ts → scripts/images/prompts.json va docs/image-prompts.md
 import { writeFileSync } from 'node:fs';
 import { EQUIPMENT } from '../../src/data/catalog';
-import { EXERCISES } from '../../src/data/exercises';
+import { EXERCISES, STRETCHES } from '../../src/data/exercises';
+import { MUSCLES } from '../../src/data/catalog';
 import { activationFor } from '../../src/engine/activation';
-import { EQUIPMENT_SPECS, EXERCISE_SPECS, M3_EN } from './specs';
+import { EQUIPMENT_SPECS, EXERCISE_SPECS as BASE_SPECS, M3_EN, type ExerciseSpec } from './specs';
+import { HOME_SPECS } from './specsHome';
+import { MACHINES_SPECS } from './specsMachines';
+import { STRETCH_SPECS } from './specsStretch';
+
+// yangi bo'limlar (uyda, cho'zilish, yangi trenajyorlar) — figura ayol
+const NEW_SPECS: Record<string, ExerciseSpec> = { ...HOME_SPECS, ...MACHINES_SPECS, ...STRETCH_SPECS };
+const EXERCISE_SPECS: Record<string, ExerciseSpec> = { ...BASE_SPECS, ...NEW_SPECS };
+const female = (id: string) => id in NEW_SPECS;
+
+// cho'zilishda yorug'lik — cho'ziladigan mushak (EMG emas)
+const MUSCLE_EN: Record<string, string> = {
+  chest: 'pectoral muscles', frontDelts: 'front deltoids', sideDelts: 'side deltoids', rearDelts: 'rear deltoids', biceps: 'biceps', triceps: 'triceps',
+  forearms: 'forearm muscles', traps: 'upper trapezius and side neck muscles', lats: 'latissimus dorsi', upperBack: 'rhomboids and mid back', lowerBack: 'lower-back erector spinae',
+  abs: 'abdominal wall', obliques: 'obliques', glutes: 'gluteal muscles', quads: 'front thigh and hip flexors (rectus femoris, iliopsoas)', hamstrings: 'hamstrings', adductors: 'inner-thigh adductors', calves: 'calves',
+};
 
 export interface PromptJob {
   id: string;
@@ -18,6 +34,38 @@ export interface PromptJob {
 }
 
 const NO_TEXT = 'Absolutely no text, letters, numbers, labels, arrows, logos, watermarks or UI.';
+
+const BODY_MALE = 'Body: écorché style — skin removed, realistic deep-red striated muscle fibers, pearly white tendons, anatomically accurate muscle shapes. Plain opaque dark grey compression shorts fully covering the hips. Black flat-soled training shoes.';
+const BODY_FEMALE =
+  'Body: an athletic adult WOMAN with clearly female proportions (narrower shoulders, wider pelvis, natural female build), rendered in écorché style — skin removed, realistic deep-red striated muscle fibers, pearly white tendons, anatomically accurate muscle shapes; hair pulled back into a neat low bun. Plain opaque dark grey sports bra and dark grey compression shorts fully covering chest and hips. Black flat-soled training shoes (barefoot on a mat for floor stretches).';
+
+function stretchPrompt(id: string): string | null {
+  const ex = STRETCHES.find((e) => e.id === id)!;
+  const s = EXERCISE_SPECS[id];
+  if (!s) return null;
+  const main = ex.primary.map((m) => MUSCLE_EN[m] ?? MUSCLES[m].name).join(', ');
+  const also = ex.secondary.map((m) => MUSCLE_EN[m] ?? MUSCLES[m].name).join(', ');
+  return [
+    `Photorealistic anatomical render of a woman holding the ${ex.en.toLowerCase()} stretch, captured at ${s.phase}. Camera: ${s.camera}.`,
+    '',
+    BODY_FEMALE,
+    '',
+    'Correct position (must be exact):',
+    ...s.technique.map((t) => `- ${t}`),
+    'Relaxed face and shoulders, calm breathing, no strain.',
+    '',
+    'The STRETCHED muscles are shown with a soft neon lime-green glow (#D4FA50) running along their length:',
+    `- brightest: ${main};`,
+    ...(also ? [`- faint: ${also};`] : []),
+    '- all other muscles: no glow, natural deep red.',
+    '',
+    `Equipment: ${s.equipment}`,
+    'Scene: pure charcoal-black background (#0B0B0C), soft top-left key light, subtle lime-green rim light from behind, soft contact shadow, no floor texture.',
+    'Composition: square 1:1, the whole figure fully visible with generous empty margins, centered.',
+    '',
+    `${NO_TEXT} No extra limbs or fingers.`,
+  ].join('\n');
+}
 
 function exercisePrompt(id: string): string | null {
   const ex = EXERCISES.find((e) => e.id === id)!;
@@ -34,9 +82,9 @@ function exercisePrompt(id: string): string | null {
   const mid = tier(0.45, 0.8);
   const low = tier(0.2, 0.45);
   return [
-    `Photorealistic anatomical render of a muscular male athlete performing the ${ex.en.toLowerCase()}, captured at ${s.phase}. Camera: ${s.camera}.`,
+    `Photorealistic anatomical render of ${female(id) ? 'an athletic woman' : 'a muscular male athlete'} performing the ${ex.en.toLowerCase()}, captured at ${s.phase}. Camera: ${s.camera}.`,
     '',
-    'Body: écorché style — skin removed, realistic deep-red striated muscle fibers, pearly white tendons, anatomically accurate muscle shapes. Plain opaque dark grey compression shorts fully covering the hips. Black flat-soled training shoes.',
+    female(id) ? BODY_FEMALE : BODY_MALE,
     '',
     'Correct technique (must be exact):',
     ...s.technique.map((t) => `- ${t}`),
@@ -62,8 +110,8 @@ Square 1:1, high detail, clean premium look. No people.
 ${NO_TEXT} Weight plates and weight stacks have no numbers.`;
 
 const jobs: PromptJob[] = [];
-for (const ex of EXERCISES) {
-  const p = exercisePrompt(ex.id);
+for (const ex of [...EXERCISES, ...STRETCHES]) {
+  const p = ex.kind === 'stretch' ? stretchPrompt(ex.id) : exercisePrompt(ex.id);
   if (!p) throw new Error(`specs.ts: ${ex.id} uchun tavsif yo'q`);
   jobs.push({
     id: ex.id,

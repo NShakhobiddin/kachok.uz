@@ -21,6 +21,7 @@ export const BACKUP_KEYS = [
   'body',
   'food',
   'water',
+  'stretchLog',
   'readiness',
   'lessonsDone',
   'kcalAdjust',
@@ -181,6 +182,7 @@ export interface BackupData {
   body: BodyEntry[];
   food: FoodEntry[];
   water: Record<string, number>;
+  stretchLog: Record<string, number>;
   readiness: Record<string, number>;
   lessonsDone: string[];
   kcalAdjust: number;
@@ -241,6 +243,7 @@ export function sanitizeData(d: unknown, strict = true): { data: BackupData; dro
       body: uniq(list('body', sanitizeBody), (b) => b.date).sort((a, b) => a.date.localeCompare(b.date)),
       food: uniq(list('food', sanitizeFood), (f) => f.id),
       water: rec('water', numRecord, {}),
+      stretchLog: rec('stretchLog', numRecord, {}),
       readiness: rec('readiness', numRecord, {}),
       lessonsDone: list('lessonsDone', (x) => (isStr(x) ? x : null)),
       kcalAdjust: isNum(d.kcalAdjust) ? clampKcalAdjust(d.kcalAdjust) : 0,

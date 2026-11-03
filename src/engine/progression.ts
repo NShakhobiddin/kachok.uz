@@ -342,7 +342,8 @@ export function suggest(ex: Exercise, pe: PlannedExercise, logs: WorkoutLog[], c
   // tortilish, brusya kabi mashqlar: qo'shimcha yuk (kamar bilan) faqat foydalanuvchi o'zi yozgan bo'lsa hisoblanadi —
   // aks holda takror progressiyasi (aks holda "+2.5 kg" tavsiyasi yuksiz setga ham yozilib qolardi)
   const noAdded = !last || last.sets.every((s) => !s.kg);
-  const bodyweight = (ex.loadType === 'bodyweight' && (ex.increment === 0 || noAdded)) || unloaded;
+  // yordamchi trenajyorda vazn — yordam: progressiya takror bilan, keyin yordam kamaytiriladi
+  const bodyweight = (ex.loadType === 'bodyweight' && (ex.increment === 0 || noAdded)) || unloaded || !!ex.assisted;
   const unit = ex.timed ? 'soniya' : 'takror';
 
   if (pe.scheme === 'block' && !bodyweight && ex.loadType !== 'band') return suggestBlock(ex, pe, hist, ctx, out);
@@ -354,7 +355,9 @@ export function suggest(ex: Exercise, pe: PlannedExercise, logs: WorkoutLog[], c
     out.estimated = est !== null;
     out.reps = pe.repMin;
     out.kind = bodyweight ? 'bodyweight' : 'first';
-    out.reason = bodyweight
+    out.reason = ex.assisted
+      ? `Birinchi marta: yordam og‘irligini shunday tanlangki, ${pe.repMin}–${pe.repMax} takror toza chiqsin. Keyin uni asta kamaytirasiz.`
+      : bodyweight
       ? `Birinchi marta: ${pe.repMin}–${pe.repMax} ${unit}. Texnikaga e’tibor bering.`
       : est
         ? 'Taxminiy boshlang‘ich vazn. Birinchi setdan so‘ng moslang: yana 2–3 marta bemalol qila olsangiz — to‘g‘ri tanlov.'
@@ -369,7 +372,20 @@ export function suggest(ex: Exercise, pe: PlannedExercise, logs: WorkoutLog[], c
     const prevMiss = hist[1]?.sets.some((s) => s.kg === w && s.reps < pe.repMin);
     const minReps = Math.min(...work.map((s) => s.reps));
 
-    if (bodyweight || ex.loadType === 'band') {
+    if (ex.assisted) {
+      // yordam kamaysa — mashq og'irlashadi
+      if (allTop && w > 0) {
+        out.kg = Math.max(0, w - ex.increment) || null;
+        out.reps = pe.repMin;
+        out.kind = 'up';
+        out.reason = `Barcha setlarda ${pe.repMax} takror — yordam og‘irligini ${fmtKg(ex.increment)} kg kamaytiring.`;
+      } else {
+        out.kg = w || null;
+        out.reps = Math.min(pe.repMax, minReps + 1);
+        out.kind = 'reps';
+        out.reason = `Yordam o‘sha (${fmtKg(w)} kg) — har setda +1 takror (maqsad ${pe.repMax}).`;
+      }
+    } else if (bodyweight || ex.loadType === 'band') {
       out.kg = null;
       const stepR = ex.timed ? 5 : 1;
       if (allTop) {

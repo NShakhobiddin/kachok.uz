@@ -57,7 +57,15 @@ export type EquipmentId =
   | 'dipBars'
   | 'bands'
   | 'box'
-  | 'cardio';
+  | 'cardio'
+  | 'hipAbAd'
+  | 'seatedCalf'
+  | 'assistedPullup'
+  | 'preacher'
+  | 'tbar'
+  | 'abWheel'
+  | 'fitball'
+  | 'miniBand';
 
 export type Injury = 'knee' | 'lowerBack' | 'shoulder' | 'wrist' | 'elbow' | 'neck' | 'hip';
 
@@ -80,7 +88,11 @@ export type Pattern =
   | 'biceps'
   | 'triceps'
   | 'core'
-  | 'traps';
+  | 'traps'
+  /** son ichki mushaklari (trenajyor) — dastur avtomatik tanlamaydi, faqat qo'lda */
+  | 'adduction'
+  /** cho'zilish va harakatchanlik */
+  | 'mobility';
 
 export type Goal = 'fatLoss' | 'muscle' | 'strength' | 'recomp' | 'health';
 /** Dastur uslubi (metodika) */
@@ -276,6 +288,14 @@ export interface Exercise {
   tempo?: string;
   /** vaqtga asoslangan (planka) */
   timed?: boolean;
+  /** yordamchi trenajyor (gravitron): yozilgan kg — yordam, ko'paysa mashq osonlashadi */
+  assisted?: boolean;
+  /** cho'zilish: kuch mashqi emas — dastur va hajm hisobiga kirmaydi, primary — cho'ziladigan mushaklar */
+  kind?: 'stretch';
+  /** cho'zilishda bir marta ushlash (soniya; perSide bo'lsa — har tomonga) */
+  hold?: number;
+  /** har tomonga alohida (o'ng va chap) */
+  perSide?: boolean;
 }
 
 /* ---------- Foydalanuvchi va dastur ---------- */

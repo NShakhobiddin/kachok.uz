@@ -752,4 +752,12 @@ export const EQUIPMENT_SPECS: EquipmentSpec[] = [
   { id: 'bands', desc: 'a set of four flat loop resistance bands of increasing thickness, neatly coiled and fanned out on the floor (black, dark grey, graphite and one lime-green)' },
   { id: 'box', desc: 'a sturdy plyometric box (dark wood or dense foam) with a low aerobic step platform beside it' },
   { id: 'cardio', desc: 'a compact group of cardio machines: a treadmill in front, an upright exercise bike and a rowing machine slightly behind it' },
+  { id: 'hipAbAd', desc: 'a seated hip abductor / adductor machine: a reclined padded seat and backrest, two padded leg arms that hold the knees and open outward or close inward, foot pegs, and a weight stack behind the seat' },
+  { id: 'seatedCalf', desc: 'a seated calf raise machine: a low padded seat, a horizontal padded lever that rests on top of the thighs just above the knees, an angled foot platform for the balls of the feet, and a plate-loading peg' },
+  { id: 'assistedPullup', desc: 'an assisted pull-up and dip machine (gravitron): a tall frame with high pull-up handles and parallel dip handles, a padded knee platform that moves up and down, and a weight stack' },
+  { id: 'preacher', desc: 'a preacher curl bench: a small seat and an angled padded arm rest at chest height, with a short EZ curl bar resting on the J-hooks in front' },
+  { id: 'tbar', desc: 'a chest-supported T-bar row machine: an angled chest pad, a foot platform, a lever arm with two pairs of handles (wide and neutral) and plate-loading pegs' },
+  { id: 'abWheel', desc: 'an ab roller wheel: one wide rubber wheel with a steel axle and two foam handles on either side, lying on the floor next to a small kneeling pad' },
+  { id: 'fitball', desc: 'a large stability (Swiss) exercise ball about 65 cm in diameter in matte graphite grey, resting on the floor' },
+  { id: 'miniBand', desc: 'a set of three short fabric mini loop bands (hip circles) of increasing resistance, stacked and fanned out on the floor (black, graphite and one lime-green)' },
 ];

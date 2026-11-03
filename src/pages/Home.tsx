@@ -10,6 +10,7 @@ import { Sheet } from '../components/ui/Sheet';
 import { MUSCLES } from '../data/catalog';
 import { EXERCISE_MAP, EXERCISES } from '../data/exercises';
 import { LESSONS } from '../data/lessons';
+import { ROUTINES, ROUTINE_MAP, routineMinutes } from '../data/routines';
 import { FACTS, dailyPick } from '../data/motivation';
 import { sourceById } from '../data/sources';
 import { fatigueLoad, loadGroups, planLoad } from '../engine/bodyLoad';
@@ -47,6 +48,15 @@ export default function Home() {
   const weekMinutes = t.weekLogs.reduce((a, l) => a + l.durationMin, 0);
   const fact = dailyPick(FACTS, 3);
   const lessonsDone = useStore((s) => s.lessonsDone);
+  const stretchLog = useStore((s) => s.stretchLog);
+  const stretchWeek = useMemo(() => {
+    const from = new Date(now);
+    from.setDate(from.getDate() - 6);
+    const f = isoDate(from);
+    return Math.round(Object.entries(stretchLog).reduce((a, [d, m]) => (d >= f ? a + m : a), 0));
+  }, [stretchLog]);
+  const homeCount = ROUTINES.filter((r) => r.kind === 'home').length;
+  const stretchCount = ROUTINES.length - homeCount;
   const lesson = LESSONS.find((l) => !lessonsDone.includes(l.id)) ?? dailyPick(LESSONS);
 
   const begin = () => {
@@ -226,7 +236,10 @@ export default function Home() {
           <p className="small muted" style={{ padding: '0 4px' }}>
             {t.doneToday ? 'Mushak hozir — dam olayotganda o‘sadi: oqsil, suv va 7–9 soat uyqu.' : 'Mushaklar dam olishda o‘sadi. Bugun 7–10 ming qadam va 5 daqiqa cho‘zilish yetarli.'}
           </p>
-          <button className="btn btn-secondary btn-block" onClick={() => setPickDay(true)}>
+          <Link to={`/stretch/${t.doneToday ? 'stretch-evening' : 'stretch-morning'}`} className="btn btn-secondary btn-block">
+            <Icon name="spine" size={18} /> {t.doneToday ? 'Uyqudan oldin cho‘zilish' : 'Cho‘zilish'} · ~{routineMinutes(ROUTINE_MAP[t.doneToday ? 'stretch-evening' : 'stretch-morning'])} daq
+          </Link>
+          <button className="btn btn-ghost btn-block" onClick={() => setPickDay(true)}>
             Baribir mashq qilaman
           </button>
         </div>
@@ -306,6 +319,26 @@ export default function Home() {
             <b className="poster">{finished.length}</b>
             <span>mashg‘ulot jami</span>
           </div>
+        </div>
+      </section>
+
+      {/* Uyda va cho'zilish */}
+      <section className="section">
+        <div className="section-head">
+          <h2>Uyda va cho‘zilish</h2>
+          <Link to="/routines">Barchasi</Link>
+        </div>
+        <div className="grid-2">
+          <Link to="/routines" className="card tight stack gap-4" style={{ color: 'inherit' }}>
+            <Icon name="home" size={20} style={{ color: 'var(--accent)' }} />
+            <b className="mt-4">Uyda mashq</b>
+            <span className="tiny muted">Dumba, son, qorin va qomat · {homeCount} ta tayyor mashg‘ulot</span>
+          </Link>
+          <Link to="/routines?tab=stretch" className="card tight stack gap-4" style={{ color: 'inherit' }}>
+            <Icon name="spine" size={20} style={{ color: 'var(--accent)' }} />
+            <b className="mt-4">Cho‘zilish</b>
+            <span className="tiny muted">{stretchWeek > 0 ? `Shu hafta ${stretchWeek} daqiqa` : `Taymer bilan · ${stretchCount} ta mashg‘ulot`}</span>
+          </Link>
         </div>
       </section>
 

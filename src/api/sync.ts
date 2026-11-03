@@ -27,7 +27,7 @@ const key = (kind: string, id: string) => `${kind}:${id}`;
 const SINGLETONS: Kind[] = ['profile', 'program', 'meta'];
 
 /** meta:state hujjatidagi kalitlar */
-export const META_KEYS = ['water', 'readiness', 'lessonsDone', 'kcalAdjust', 'kcalAdjustAt', 'setDelta', 'setDeltaMeso', 'seenAchievements', 'settings', 'exNotes'] as const;
+export const META_KEYS = ['water', 'stretchLog', 'readiness', 'lessonsDone', 'kcalAdjust', 'kcalAdjustAt', 'setDelta', 'setDeltaMeso', 'seenAchievements', 'settings', 'exNotes'] as const;
 type MetaKey = (typeof META_KEYS)[number];
 
 /** Tez xesh (FNV-1a) — hujjat o'zgarganini aniqlash uchun */
@@ -96,8 +96,8 @@ function merge3(k: string, r: unknown, l: unknown, b: unknown, localWins: boolea
       let v: unknown;
       if (same(lv, rv) || same(rv, bv)) v = lv;
       else if (same(lv, bv)) v = rv;
-      else if (k === 'water' && typeof rv === 'number' && typeof lv === 'number')
-        // suv — hisoblagich: ikkala qurilmada qo'shilgani jamlanadi
+      else if ((k === 'water' || k === 'stretchLog') && typeof rv === 'number' && typeof lv === 'number')
+        // suv va cho'zilish — hisoblagich: ikkala qurilmada qo'shilgani jamlanadi
         v = typeof bv === 'number' ? Math.max(0, rv + lv - bv) : Math.max(rv, lv);
       else v = localWins ? lv : rv;
       if (v !== undefined) out[s] = v;

@@ -1,4 +1,4 @@
-// docs/emg/*.json (tadqiqot jadvallari) + docs/emg/uz.json (o'zbekcha izohlar) -> src/data/activation.ts
+// docs/emg/*.json (tadqiqot jadvallari) + docs/emg/uz*.json (o'zbekcha izohlar) -> src/data/activation.ts
 // Ishga tushirish: node scripts/build-activation.mjs
 import { readFileSync, writeFileSync } from 'node:fs';
 
@@ -9,10 +9,16 @@ const parts = [
   ['L', 'docs/emg/lower.json'],
   ['P', 'docs/emg/push.json'],
   ['U', 'docs/emg/pull.json'],
+  ['H', 'docs/emg/home.json'],
+  ['M', 'docs/emg/machines.json'],
 ].map(([ns, p]) => ({ ns, ...read(p) }));
-const uz = read('docs/emg/uz.json');
-const exercisesTs = readFileSync(new URL('src/data/exercises.ts', root), 'utf8');
-const ids = new Set([...exercisesTs.matchAll(/\n {4}id: '([^']+)'/g)].map((m) => m[1]));
+const uz = { ...read('docs/emg/uz.json'), ...read('docs/emg/uz-home.json'), ...read('docs/emg/uz-machines.json') };
+// kuch mashqlari (cho'zilishlarda EMG yo'q — ular faollik emas, cho'zilish)
+const ids = new Set(
+  ['exercises.ts', 'exercisesHome.ts', 'exercisesMachines.ts'].flatMap((f) =>
+    [...readFileSync(new URL(`src/data/${f}`, root), 'utf8').matchAll(/\n {4}id: '([^']+)'/g)].map((m) => m[1]),
+  ),
+);
 
 const KEYS = new Set([
   'pecUpper', 'pecMid', 'pecLower', 'deltAnt', 'deltLat', 'deltPost', 'trapUpper', 'trapMid', 'trapLower', 'rhomboids', 'lats', 'teresMajor',
@@ -64,7 +70,7 @@ if (problems.length) {
 }
 
 const header = `// Mashqlarda mushaklarning EMG faolligi (% MVIC). AVTOMATIK YARATILGAN — qo'lda tahrirlamang:
-// manba jadvallar docs/emg/{lower,push,pull}.json, o'zbekcha izohlar docs/emg/uz.json, skript scripts/build-activation.mjs.
+// manba jadvallar docs/emg/{lower,push,pull,home,machines}.json, o'zbekcha izohlar docs/emg/uz*.json, skript scripts/build-activation.mjs.
 // est: true — qiymat to'g'ridan-to'g'ri o'lchanmagan (o'xshash mashq, tadqiqotdagi nisbiy farq yoki oraliq asosida baho).
 import type { M3 } from './muscles3d';
 

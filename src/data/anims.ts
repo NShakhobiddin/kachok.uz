@@ -675,3 +675,6 @@ export function deadBug(): AnimSpec {
     frame: { x: 20, y: 70, w: 200, h: 150 },
   };
 }
+
+// yangi mashqlar fayllari uchun (exercisesHome.ts, exercisesMachines.ts, stretches.ts)
+export { F, AY, CX, ecc, con, ankle };

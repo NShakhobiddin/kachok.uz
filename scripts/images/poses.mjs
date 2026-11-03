@@ -8,7 +8,7 @@ const [, , outDir, onlyArg, mode] = process.argv;
 // mode 'alt' — harakatning ikkinchi cheti (rasmdagi holatning teskarisi): ikki kadrli harakat uchun
 const only = onlyArg ? onlyArg.split(',') : null;
 const BASE = process.env.BASE ?? 'http://localhost:5173';
-const jobs = JSON.parse(readFileSync('scripts/images/prompts.json', 'utf8')).filter((j) => j.kind === 'exercise' && (!only || only.includes(j.id)));
+const jobs = JSON.parse(readFileSync(process.env.JOBS ?? 'scripts/images/prompts.json', 'utf8')).filter((j) => j.kind === 'exercise' && (!only || only.includes(j.id)));
 const phaseOf = (prompt) => prompt.match(/captured at (.+?)\. Camera/)?.[1] ?? '';
 
 // spec'dagi holat matni bo'yicha kadr: boshlanish, pastki (tushish tugashi), yuqori (ko'tarilish tugashi) yoki o'rta
