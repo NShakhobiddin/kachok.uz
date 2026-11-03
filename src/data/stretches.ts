@@ -202,7 +202,7 @@ export function supineTwist(): AnimSpec {
   const base = { torso: 270, head: 272, ua: 92, fa: 90 };
   const a: S = { ...base, th: 38, sh: 164, ft: 90 };
   const mid: S = { ...base, th: 34, sh: 200, ft: 90, th2: 32, sh2: 196, ft2: 90 };
-  const b: S = { ...base, th: 70, sh: 242, ft: 90, th2: 58, sh2: 226, ft2: 90 };
+  const b: S = { ...base, th: 78, sh: 252, ft: 90, th2: 66, sh2: 236, ft2: 90 };
   return {
     view: 'side',
     anchor: { joint: 'hip', x: 110, y: 202 },
@@ -232,14 +232,23 @@ export function calfStretch(): AnimSpec {
 }
 
 export function threadNeedle(): AnimSpec {
-  // qo‘l orqa tomondan aylanadi (oldinga burilsa — pol ichidan o‘tib ketardi)
-  const open: S = { ...QUAD, head: 40, ua: 355, fa: 355, hand: undefined, hand2: { x: 140, y: 204 } };
-  const thread: S = { ...QUAD, torso: 112, head: 150, ua: 228, fa: 268, hand: undefined, hand2: { x: 140, y: 204 } };
+  const support = { hand: undefined, hand2: { x: 140, y: 204 } };
+  const open: S = { ...QUAD, ...support, head: 40, ua: -5, fa: -5 };
+  // oraliq: qo‘l ko‘krak oldidan pastga tushib, tayanch qo‘l yonidan o‘tadi (pol ichidan o‘tmasligi uchun tirsak bukik)
+  const mid: S = { ...QUAD, ...support, torso: 90, head: 110, ua: 160, fa: 250 };
+  const thread: S = { ...QUAD, ...support, torso: 112, head: 150, ua: 228, fa: 268 };
   return {
     view: 'side',
     anchor: { joint: 'knee', x: 86, y: 206 },
     props: [MAT(20, 180)],
-    frames: alternate(open, thread, 900, 2300),
+    frames: [
+      { pose: open, dur: 900, phase: 'hold' },
+      { pose: open, dur: 1300, phase: 'down' },
+      { pose: mid, dur: 1100, phase: 'down' },
+      { pose: thread, dur: 1100, phase: 'hold' },
+      { pose: thread, dur: 1100, phase: 'down' },
+      { pose: mid, dur: 1300, phase: 'down' },
+    ],
     frame: { x: 10, y: 50, w: 200, h: 170 },
   };
 }
