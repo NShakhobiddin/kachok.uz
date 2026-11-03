@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import { EQUIPMENT_PRESETS } from '../../data/catalog';
-import { EXERCISES, EXERCISE_MAP } from '../../data/exercises';
+import { EXERCISES } from '../../data/exercises';
 import { clampKcalAdjust } from '../../engine/nutrition';
 import { alternatives, DEFAULT_DAYS } from '../../engine/program';
 import type { Profile } from '../../types';
