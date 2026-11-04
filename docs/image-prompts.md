@@ -2180,16 +2180,16 @@ Photorealistic anatomical render of an athletic woman performing the t-bar row, 
 Body: an athletic adult WOMAN with clearly female proportions (narrower shoulders, wider pelvis, natural female build), rendered in écorché style — skin removed, realistic deep-red striated muscle fibers, pearly white tendons, anatomically accurate muscle shapes; hair pulled back into a neat low bun. Plain opaque dark grey sports bra and dark grey compression shorts fully covering chest and hips. Black flat-soled training shoes (barefoot on a mat for floor stretches).
 
 Correct technique (must be exact):
-- Standing astride an Olympic bar whose far end is anchored in a floor landmine pivot behind the athlete; plates are loaded on the free end in front of the feet.
-- A close-grip V-handle hooked under the bar right next to the plates, neutral grip (palms facing each other).
-- Hip hinge with the torso at about 45° to the floor, knees bent, back flat; the bar pulled to the upper abdomen, elbows close to the body pointing back, shoulder blades squeezed, neck neutral.
+- Standing astride ONE straight Olympic bar: its back end is anchored in a landmine pivot on the floor BEHIND the athlete, the bar runs forward between the feet, and its FRONT end, loaded with plates, is under the chest.
+- Both hands grip the bar itself just behind the plates, one hand in front of the other, palms facing each other — no handle attachment.
+- Hip hinge with the torso at about 45° to the floor, knees bent, back flat; the bar pulled up until the hands touch the upper abdomen, elbows close to the body pointing back, shoulder blades squeezed, neck neutral.
 
 Muscle activation shown as a neon lime-green glow (#D4FA50) from within the muscles, brightness proportional to effort:
 - brightest (100%): latissimus dorsi, middle trapezius, rhomboids, rear deltoid;
 - clearly dimmer, about half as bright: erector spinae (lower back), biceps, forearm flexors, lower trapezius;
 - all other muscles: no glow, natural deep red.
 
-Equipment: Landmine T-bar row setup: an Olympic barbell with one end in a floor landmine pivot, medium matte black plates on the other end, and a double-D V-handle under the bar; the bar clearly runs from the pivot on the floor through the athlete’s legs to the plates.
+Equipment: Landmine T-bar row setup: ONE straight rigid Olympic barbell — the back end in a floor landmine pivot, two medium matte black plates on the front end. The bar is one straight line from the pivot on the floor, between the athlete’s legs, through the hands to the plates; the plates are always ON the bar, never on the floor.
 Scene: pure charcoal-black background (#0B0B0C), soft top-left key light, subtle lime-green rim light from behind, soft contact shadow, no floor texture.
 Composition: square 1:1, the whole figure and equipment fully visible with generous empty margins on the left and right, centered.
 

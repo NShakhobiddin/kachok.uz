@@ -38,7 +38,7 @@ export const NEW_PAIRS: Record<string, PairSpec> = {
   'seated-calf-raise': { phaseUz: START, change: 'the bottom: heels lowered below the edge of the foot plate (ankles flexed, calves stretched), the padded lever lower on the thighs accordingly' },
   'assisted-pull-up': { phaseUz: START, change: 'the bottom: arms fully extended overhead holding the same handles, kneeling on the same assist platform, which has moved up with the body; shoulders still down away from the ears' },
   'preacher-curl': { phaseUz: START, change: 'the start: arms extended almost straight down the angled pad (elbows slightly bent), the EZ bar lowered near the bottom of the pad, upper arms still flat on the pad' },
-  't-bar-row': { phaseUz: START, change: 'the bottom: arms fully straight, the plates hanging below the chest near the shins, torso hinged at the same angle with a flat back' },
+  't-bar-row': { phaseUz: START, change: 'the bottom: arms fully straight, the plates lowered close to the floor in front of the shins, both hands still gripping the bar just behind the plates; the bar is still ONE straight line from the same floor pivot through the hands to the plates; torso angle, legs and feet unchanged' },
   'ab-wheel': { phaseUz: START, change: 'the start: kneeling with the wheel on the floor directly under the shoulders, hips back above the knees, arms straight, back neutral' },
   /* ---------- cho'zilish ---------- */
   'cat-cow': { phaseUz: '«Sigir» holati', change: 'the COW position: the spine arched the other way — belly lowered toward the mat, chest pushed forward, tailbone and head lifted, gaze slightly forward; hands and knees in the same place' },

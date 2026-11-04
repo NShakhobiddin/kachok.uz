@@ -63,12 +63,12 @@ const md: string[] = [
   '',
   '## Qanday bajariladi',
   '',
-  '1. labs.google/flow → yangi loyiha → rasm yaratish (Nano Banana / Imagen).',
+  '1. labs.google/flow → yangi loyiha → rasm yaratish. Model: **Nano Banana Pro** (2.1 tahrirlarni deyarli bajarmadi).',
   '2. **A-prompt.txt** (bo‘lsa): papkadagi `1-…` va `2-…` rasmlarini namuna sifatida yuklang, matnni to‘liq qo‘ying, 2–4 variant yarating. Texnikasi eng to‘g‘ri chiqqanini shu papkaga `natija-A.png` deb saqlang.',
   '3. **B-prompt.txt**: 1-rasm sifatida **natija-A** ni (A bo‘lmasa — `1-hozirgi.webp` ni), bo‘lsa `3-poza-B.png` ni 2-rasm sifatida yuklang. Kamera, odam va jihoz o‘zgarmasligi kerak — faqat poza. Eng yaxshisini `natija-B.png` deb saqlang.',
+  '4. Hammasini bitta zip qilib chatga yuboring — tekshirib, ilovaga joylayman (yorliqlar va harakat avtomatik).',
   '',
   '`0-` bilan boshlanadigan fayllar (`0-hozirgi…`) — faqat solishtirish uchun hozirgi rasm, Flow\'ga yuklanmaydi.',
-  '4. Hammasini bitta zip qilib chatga yuboring — tekshirib, ilovaga joylayman (yorliqlar va harakat avtomatik).',
   '',
   'Tekshirish: qo‘l-oyoq soni, ushlash, tizza yo‘nalishi, jihoz to‘g‘riligi; B kadrida kamera va odam A bilan bir xil.',
   '',
@@ -135,9 +135,10 @@ for (const f0 of [...OLD_FIXES].sort((a, b) => a.priority - b.priority)) {
 }
 
 /* ---------- 3. jihozlar ---------- */
-md.push('', '## 3. Jihozlar (faqat A)', '');
+const eqTodo = EQUIPMENT.filter((x) => !EQUIPMENT_WITH_IMG.includes(x.id) && want(x.id));
+if (eqTodo.length) md.push('', '## 3. Jihozlar (faqat A)', '');
 n = 0;
-for (const e of EQUIPMENT.filter((x) => !EQUIPMENT_WITH_IMG.includes(x.id) && want(x.id))) {
+for (const e of eqTodo) {
   const job = prompts[`equipment:${e.id}`];
   const d = dirOf('3_jihoz', e.id);
   mkdirSync(d, { recursive: true });

@@ -16,19 +16,31 @@ export const OLD_FIXES: OldFix[] = [
   {
     id: 'chin-up',
     priority: 1,
-    problem: 'Ushlash pull-up bilan bir xil: kaft oldinga, yelkadan keng. Chin-up — kaft o‘ziga, yelka kengligida.',
+    problem: 'Ushlash pull-up bilan bir xil: kaft oldinga, yelkadan keng. Chin-up — kaft o‘ziga, yelka kengligida. (Asosiy kadr tuzatildi; ikkinchi kadr kerak.)',
     main: {
       mode: 'new',
       change:
         'Camera: FRONT three-quarter view, 30° to the athlete\'s right, at chest height, so the palms are clearly visible. UNDERHAND (supinated) grip: palms facing the athlete\'s own face, hands exactly shoulder-width apart, thumbs wrapped around the bar. The chin clearly ABOVE the bar at the top, elbows pulled down beside the ribs.',
     },
-    pair: { phaseUz: 'Pastki nuqta', change: 'dead hang with straight arms, the SAME underhand shoulder-width grip, legs still together' },
+    pair: {
+      phaseUz: 'Pastki nuqta',
+      change:
+        'dead hang: arms fully straight overhead with the SAME underhand (palms toward the face) shoulder-width grip on the SAME bar. The bar stays EXACTLY where it is in image 1 (same position, same angle, same length) and the camera does NOT move or zoom out, so the athlete keeps exactly the same size; the body simply hangs lower by the length of the arms — it is fine if the lower legs and feet are cut off by the bottom edge of the image',
+    },
   },
   {
     id: 'pull-up',
     priority: 1,
-    problem: 'Yuqori nuqtada iyak turnik sathida, undan yuqori emas.',
-    main: { mode: 'edit', change: 'the height of the body: pull the athlete about 8 cm higher so the CHIN is clearly ABOVE the bar, elbows pulled down beside the ribs; the grip and hands stay exactly where they are' },
+    problem: 'Yuqori nuqtada iyak turnik sathida; orqadan iyak ko‘rinmaydi va tahrir ikki marta ishlamadi — kamera yon-orqaga olinib, yangidan.',
+    main: {
+      mode: 'new',
+      change:
+        'Camera: from BEHIND the athlete and about 40° to the athlete\'s right, at bar height, so the bar, both hands, the side of the head and the CHIN are clearly visible. Framing: the bar in the upper fifth of the image and about a quarter of empty space below the feet, because the second frame shows the body hanging lower. TOP of the pull-up: overhand grip slightly wider than the shoulders; the CHIN is clearly ABOVE the bar — the bar is level with the collarbones; elbows pulled down and back beside the ribs; legs straight and together.',
+    },
+    pair: {
+      phaseUz: 'Pastki nuqta',
+      change: 'dead hang: arms fully straight overhead with the SAME overhand grip on the SAME bar (the bar does not move), shoulders slightly engaged, the body straight and lower by the length of the arms; the camera does NOT move or zoom out, the athlete stays the same size',
+    },
   },
   {
     id: 'front-squat',
@@ -58,37 +70,60 @@ export const OLD_FIXES: OldFix[] = [
   {
     id: 'lateral-raise',
     priority: 1,
-    problem: 'Yuqori kadrda gantel dastasi bilak bo‘ylab — ushlab bo‘lmaydigan holat.',
-    main: { mode: 'edit', change: 'the dumbbells: each dumbbell handle runs ACROSS the palm, perpendicular to the forearm (seen end-on from the front), knuckles up, pinky side slightly higher; arms and everything else unchanged' },
+    problem: 'Gantel dastasi bilak bo‘ylab — ushlab bo‘lmaydigan holat; tahrir ikki marta ishlamadi — yangidan.',
+    main: {
+      mode: 'new',
+      change:
+        'Each dumbbell is held correctly: the handle lies ACROSS the palm, gripped by the fist, and points straight FORWARD toward the camera, perpendicular to the arm. Seen from the front, each dumbbell is END-ON: one weight head in front of the fist, the other hidden behind it. The two heads of a dumbbell must NEVER sit on the left and right of the hand along the line of the arm. Arms raised out to the sides exactly to shoulder height, elbows slightly bent, knuckles up.',
+    },
+    pair: { phaseUz: 'Boshlang‘ich holat', change: 'the start: arms hanging down at the sides, the dumbbells beside the thighs with the handles pointing forward, palms facing the thighs, shoulders relaxed' },
   },
   {
     id: 'incline-bench',
     priority: 1,
-    problem: 'Pastki nuqtada shtanga ko‘krakka tushmagan.',
-    main: { mode: 'edit', change: 'the bar position: lower the barbell so it TOUCHES the upper chest just below the collarbones, forearms vertical under the bar, elbows about 60° from the torso' },
+    problem: 'Pastki nuqtada shtanga ko‘krakka tushmagan; yondan disk ko‘krakni to‘sadi va tahrir ishlamadi — kamera old-yonga olinib, yangidan.',
+    main: {
+      mode: 'new',
+      change:
+        'Camera: three-quarter view from the athlete\'s front-right (about 45° from the side), slightly above bench height (about 20° down), so the bar touching the chest is clearly visible and NOT hidden behind the weight plates. BOTTOM of the rep: the barbell RESTS ON the upper chest just below the collarbones (bar and chest in contact, no gap); grip slightly wider than the shoulders, forearms vertical under the bar, elbows about 60° from the torso; shoulder blades back; feet flat on the floor.',
+    },
+    pair: { phaseUz: 'Yuqori nuqta', change: 'the top: arms fully extended, the barbell straight above the upper chest and shoulders, the same grip; the bench and the feet stay exactly in place' },
   },
   {
     id: 'close-grip-bench',
     priority: 1,
-    problem: 'Pastki nuqtada shtanga ko‘krakdan ~15 sm yuqorida (to‘liq bo‘lmagan harakat).',
-    main: { mode: 'edit', change: 'the bar position: lower the barbell so it TOUCHES the lower chest, elbows tucked about 20–30° from the torso, forearms vertical under the bar' },
+    problem: 'Pastki nuqtada shtanga ko‘krakdan ~15 sm yuqorida; tahrir ishlamadi — kamera old-yonga olinib, yangidan.',
+    main: {
+      mode: 'new',
+      change:
+        'Camera: three-quarter view from the athlete\'s front-right (about 45° from the side), slightly above bench height (about 20° down), so the bar touching the chest is clearly visible and NOT hidden behind the weight plates. BOTTOM of the rep: the barbell RESTS ON the lower chest (bar and chest in contact, no gap); hands exactly shoulder-width apart — clearly narrower than a normal bench press; elbows tucked 20–30° from the torso; forearms vertical under the bar; feet flat on the floor.',
+    },
+    pair: { phaseUz: 'Yuqori nuqta', change: 'the top: arms fully extended, the barbell straight above the lower chest, the same close grip; the bench and the feet stay exactly in place' },
   },
   {
     id: 'barbell-row',
     priority: 1,
-    problem: 'Yuqori nuqtada shtanga son yuqorisida — qorin pastiga tegmaydi, bilak tik.',
-    main: { mode: 'edit', change: 'the bar position: pull the barbell up so it TOUCHES the lower abdomen just below the navel, elbows driven back past the torso, forearms angled; torso angle unchanged' },
+    problem: 'Yuqori nuqtada shtanga qoringa tegmaydi; yondan disk qo‘lni to‘sadi va tahrir ishlamadi — kamera old-yonga olinib, yangidan.',
+    main: {
+      mode: 'new',
+      change:
+        'Camera: three-quarter view from the athlete\'s front-right (about 40° from the side) at hip height, so the bar, both hands and the abdomen are clearly visible and NOT hidden behind the weight plates. TOP of the row: torso hinged forward about 45° with a flat back, knees slightly bent; overhand grip slightly wider than the shoulders; the barbell pulled up until it TOUCHES the lower abdomen just below the navel (no gap); elbows driven back behind the torso; shoulder blades squeezed.',
+    },
+    pair: { phaseUz: 'Pastki nuqta', change: 'the bottom: arms hanging fully straight, the barbell just below the knees in front of the shins, the same grip; torso angle, back and feet unchanged' },
   },
   {
     id: 'reverse-fly',
     priority: 1,
-    problem: 'Rezina lenta beldagi qattiq lime tayoq bo‘lib chizilgan; ikkinchi kadr yo‘q.',
+    problem: 'Asosiy kadr tuzatildi (ingichka lenta); ikkinchi kadr kerak.',
     main: {
       mode: 'edit',
       change:
         'the band: remove the rigid lime-green rod. The athlete holds a thin DARK-GREY elastic resistance band; it runs IN FRONT of the chest between the two hands and stretches as the arms open to the sides at shoulder height',
     },
-    pair: { phaseUz: 'Boshlang‘ich holat', change: 'the start: both arms reaching straight FORWARD in front of the chest at shoulder height, the dark-grey band slack between the hands' },
+    pair: {
+      phaseUz: 'Boshlang‘ich holat',
+      change: 'the start: both arms reaching straight FORWARD in front of the chest at shoulder height (seen from behind, mostly hidden by the torso, the hands just visible at the sides), the same thin dark-grey band slack between the hands; the camera does NOT move',
+    },
   },
   {
     id: 'calf-raise',
@@ -111,11 +146,12 @@ export const OLD_FIXES: OldFix[] = [
   {
     id: 'dead-bug',
     priority: 1,
-    problem: 'Cho‘zilgan qo‘l va oyoq bir tomonda — to‘g‘risi qarama-qarshi tomonlar (hozir rasm yashirilgan).',
+    problem: 'Cho‘zilgan holat yo‘q: Flow qo‘lni bosh orqasiga cho‘zmadi. Hozir ilovada faqat boshlang‘ich holat — cho‘zilgan holat undan, o‘sha kamerada.',
     main: { mode: 'new', change: 'The extended arm and the extended leg are on OPPOSITE sides of the body (right arm + left leg) — never arm and leg of the same side.' },
     pair: {
-      phaseUz: 'Boshlang‘ich holat',
-      change: 'the start: BOTH arms pointing straight up to the ceiling, BOTH knees bent 90° directly above the hips (thighs vertical, shins horizontal), lower back flat on the floor',
+      phaseUz: 'Cho‘zilgan holat',
+      change:
+        'the extended position, arm and leg of OPPOSITE sides: the arm NEARER the camera (the right arm) reaches straight back OVERHEAD beyond the top of the head, parallel to the floor and just above it, clearly visible past the head; the leg FARTHER from the camera (the left leg) extends straight out just above the floor; the other arm keeps pointing straight up at the ceiling and the other leg stays bent 90° with the knee above the hip; lower back pressed flat to the floor',
     },
   },
 
@@ -141,8 +177,28 @@ export const OLD_FIXES: OldFix[] = [
   { id: 'inverted-row', priority: 2, problem: 'Ikkinchi kadr yo‘q.', pair: { phaseUz: 'Pastki nuqta', change: 'the bottom: arms fully straight, hanging under the bar, body still one straight line, heels on the floor, same grip' } },
   { id: 'back-extension', priority: 2, problem: 'Pastki kadrda gavda yetarli tushmagan.', pair: { phaseUz: 'Pastki nuqta', change: 'the bottom: torso bent forward over the hip pad until it points DOWN toward the floor (about 70–90° to the legs), back flat, arms crossed on the chest' } },
   { id: 'leg-extension', priority: 2, problem: 'Boshlang‘ich holatda tizza yetarli bukilmagan.', pair: { phaseUz: 'Boshlang‘ich holat', change: 'the start: knees bent about 90° with the shins vertical under the seat; the lever arm rotated DOWN and the roller still on the front of the lower shins' } },
-  { id: 'leg-curl', priority: 2, problem: 'Qisqargan holatda tizza yetarli bukilmagan.', main: { mode: 'edit', change: 'the knees: bend them further to about 100–110° so the heels come under the seat; the roller and lever arm move with the lower legs' } },
-  { id: 'leg-press', priority: 2, problem: 'Platforma harakatlanadi, yuk joyida qoladi; yozilgan holat kerak.', pair: { phaseUz: 'Yozilgan holat', change: 'legs pushed out almost straight (knees slightly bent, not locked); the footplate AND the weight horns with the plates move together as one sled along the rails' } },
+  {
+    id: 'leg-curl',
+    priority: 2,
+    problem: 'Qisqargan holatda tizza yetarli bukilmagan; tahrir ishlamadi — yangidan.',
+    main: {
+      mode: 'new',
+      change:
+        'Seated leg curl machine: the athlete sits upright with the back on the backrest, the thigh pad locked down on the lower thighs just above the knees, hands on the side handles. CONTRACTED position: the knees bent to about 110° — the heels pulled back UNDER the front edge of the seat; the shin roller behind the lower calves has rotated down and back together with the lower legs. Camera: three-quarter view from the athlete\'s front-right at seat height.',
+    },
+    pair: { phaseUz: 'Boshlang‘ich holat', change: 'the start: legs extended forward almost straight (knees slightly bent), the shin roller behind the lower calves just above the ankles raised up together with the legs; the thigh pad, seat and backrest unchanged' },
+  },
+  {
+    id: 'leg-press',
+    priority: 2,
+    problem: 'Plastinalar ramada turibdi, chana bo‘sh — yuk platforma bilan harakatlanmaydi; ikkala kadr yangidan.',
+    main: {
+      mode: 'new',
+      change:
+        'The weight plates are loaded ONLY on the two weight horns fixed to the MOVING SLED (the carriage that carries the footplate and slides up the 45° rails). There are NO plates on the frame base or anywhere else. BOTTOM position: knees bent to about 90°, thighs toward the chest, lower back and hips flat on the seat pad, feet flat on the footplate shoulder-width apart, hands on the side handles. Framing: the sled at the lower end of the rails with free rail length visible above it, because the second frame shows the sled pushed up.',
+    },
+    pair: { phaseUz: 'Yozilgan holat', change: 'legs pushed out almost straight (knees slightly bent, not locked); the footplate, the sled AND the plates on its horns have moved together up the rails as one piece; the seat, frame and rails stay exactly in place' },
+  },
   { id: 'deadlift', priority: 2, problem: 'Ikkinchi kadr masshtabi va kamerasi boshqa.', pair: { phaseUz: 'Yuqori nuqta', change: 'standing tall at lockout, the barbell hanging in straight arms against the thighs. Keep the SAME camera, framing and SCALE as image 1' } },
   { id: 'db-rdl', priority: 2, problem: 'Kadrlar orasida gantel ushlashi o‘zgaradi.', pair: { phaseUz: 'Yuqori nuqta', change: 'standing tall at the top, the dumbbells hanging in straight arms IN FRONT OF THE THIGHS with the SAME overhand grip as image 1' } },
   { id: 'bulgarian', priority: 2, problem: 'Ikki kadr orasida pol chizig‘i miltillaydi.', pair: { phaseUz: 'Yuqori nuqta', change: 'the top: front leg extended, the rear foot still on the bench, dumbbells at the sides; the floor and bench in EXACTLY the same place as image 1' } },

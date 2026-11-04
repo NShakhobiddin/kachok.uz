@@ -154,20 +154,29 @@ Har mashq uchun ikki rasm kerak: boshlang'ich va oxirgi nuqta. Ilova ularni alma
 - chin-up B — figura A dan ~1,6 baravar kichik, ushlash torroq, tekislab bo'lmaydi;
 - leg-press B — chanada plastina paydo bo'ladi, A kadrida esa u yo'q.
 
-**Qayta qilish kerak** (`flow-pack2.ts --only … --skipA … --skipB …`, Nano Banana Pro bilan):
+**Qayta qilish kerak** — Flow-4 to'plami tayyorlandi (2026-11-04):
+
+```
+npx vite-node scripts/images/flow-pack2.ts -- <chiqish> <poza-A> <poza-B> \
+  --only pull-up,incline-bench,close-grip-bench,barbell-row,lateral-raise,dead-bug,leg-curl,leg-press,chin-up,reverse-fly,t-bar-row \
+  --skipA chin-up,reverse-fly,dead-bug
+```
+
+Tahrir ikki marta ishlamagani uchun asosiy kadrlar yangidan chiziladi (`fixesOld.ts`, `mode: 'new'`), xato ko'rinadigan kamera bilan. B kadr natija-A dan olinadi.
+t-bar-row spetsifikatsiyasi soddalashtirildi: V-dasta yo'q, ikki qo'l shtangada, plastinalar doim shtanga uchida.
+Ro'yxat:
 - **Asosiy kadr:**
   - pull-up — iyak turnikdan yuqori;
   - incline-bench, close-grip-bench — shtanga ko'krakda;
   - barbell-row — shtanga qoringa;
   - lateral-raise — dasta kaftda ko'ndalang, oldidan bitta disk ko'rinadi;
-  - dead-bug — qarama-qarshi qo'l (bosh orqasiga) va oyoq cho'zilgan;
   - leg-curl — tizza ko'proq bukilgan;
   - t-bar-row — yuk shtanga uchida, ikkala kadr bir kamerada;
   - leg-press — ikkala kadrda yuk chanada.
 - **Ikkinchi kadr:**
   - chin-up — A bilan bir xil masshtab va ushlash;
   - reverse-fly;
-  - dead-bug — asosiy kadr tayyor bo'lgach.
+  - dead-bug — cho'zilgan holat (qarama-qarshi qo'l bosh orqasiga va oyoq), hozirgi boshlang'ich holatdan.
 
 **Kamera siljigan B kadrni tekislash:**
 `python3 -I scripts/images/align_frames.py <A> <B> <chiqish.png> "x0,y0,x1,y1;…"`.

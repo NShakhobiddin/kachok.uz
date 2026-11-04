@@ -468,7 +468,7 @@ export const MACHINE_EXERCISES: Exercise[] = [
     avoid: ['lowerBack'],
     setup: [
       'Grifning bir uchi burchakka yoki tayanchga (landmine) qotirilgan; disklarni ikkinchi uchiga taqib, qisqich bilan mahkamlang.',
-      'Grifni oyoqlar orasiga olib turing (T-tortish trenajyorida — platformaga chiqing), V-tutqichni disklar yonida grif ostiga ilib ushlang.',
+      'Grifni oyoqlar orasiga olib turing (T-tortish trenajyorida — platformaga chiqing), grifni disklar ortidan ikki qo‘l bilan ushlang (yoki V-tutqichni disklar yonida grif ostiga iling).',
       'Tosni orqaga surib engashing: gavda polga nisbatan taxminan 45°, tizzalar bukik, bel tekis.',
     ],
     steps: [

@@ -93,11 +93,12 @@ export const MACHINES_SPECS: Record<string, ExerciseSpec> = {
     phaseUz: 'Yuqori nuqta',
     camera: SIDE,
     technique: [
-      'Standing astride an Olympic bar whose far end is anchored in a floor landmine pivot behind the athlete; plates are loaded on the free end in front of the feet.',
-      'A close-grip V-handle hooked under the bar right next to the plates, neutral grip (palms facing each other).',
-      'Hip hinge with the torso at about 45° to the floor, knees bent, back flat; the bar pulled to the upper abdomen, elbows close to the body pointing back, shoulder blades squeezed, neck neutral.',
+      'Standing astride ONE straight Olympic bar: its back end is anchored in a landmine pivot on the floor BEHIND the athlete, the bar runs forward between the feet, and its FRONT end, loaded with plates, is under the chest.',
+      'Both hands grip the bar itself just behind the plates, one hand in front of the other, palms facing each other — no handle attachment.',
+      'Hip hinge with the torso at about 45° to the floor, knees bent, back flat; the bar pulled up until the hands touch the upper abdomen, elbows close to the body pointing back, shoulder blades squeezed, neck neutral.',
     ],
-    equipment: 'Landmine T-bar row setup: an Olympic barbell with one end in a floor landmine pivot, medium matte black plates on the other end, and a double-D V-handle under the bar; the bar clearly runs from the pivot on the floor through the athlete’s legs to the plates.',
+    equipment:
+      'Landmine T-bar row setup: ONE straight rigid Olympic barbell — the back end in a floor landmine pivot, two medium matte black plates on the front end. The bar is one straight line from the pivot on the floor, between the athlete’s legs, through the hands to the plates; the plates are always ON the bar, never on the floor.',
   },
   'ab-wheel': {
     phase: 'the extended position',
