@@ -132,19 +132,47 @@ Har mashq uchun ikki rasm kerak: boshlang'ich va oxirgi nuqta. Ilova ularni alma
 - **Eski rasmlar, ikkinchi kadr:** machine-shoulder-press, dips, db-fly, goblet-squat, hack-squat, hip-thrust, db-bench, cable-fly, inverted-row, back-extension, leg-extension, deadlift, db-rdl, bulgarian, ohp, front-squat.
 - **Ikkinchi kadri olib tashlanganlar:** chin-up va hanging-leg-raise — eski kadr yangi asosiy rasmga mos emas.
 
-**Qayta qilish kerak** (`flow-pack2.ts --only … --skipA … --skipB …`, Nano Banana Pro bilan). Nano Banana 2.1 bu tahrirlarni deyarli bajarmagan:
+## Flow-3 natijalari joylandi (2026-11-04)
+
+**Joylandi:**
+- **Asosiy kadr:**
+  - ohp — to'liq lockout; eski ikkinchi kadr yangi kameraga moslab qayta saqlandi;
+  - calf-raise — tovon baland, ikkinchi kadr bilan; yorliqlar qayta joylandi;
+  - db-shrug — yelka baland, ikkinchi kadr bilan;
+  - knee-push-up — pastki nuqta, ikkinchi kadr bilan;
+  - dead-bug — faqat boshlang'ich holat, bitta kadr. Endi ilovada ko'rinadi.
+- **Ikkinchi kadr:**
+  - hanging-leg-raise, machine-chest-press, doorway-chest;
+  - push-up, glute-bridge, side-plank — Flow kamerasi siljigan edi, kadr A ga tekislandi (`align_frames.py`).
+
+**Rad etildi** (hozirgisi qoldi):
+- pull-up, incline-bench, close-grip-bench — o'zgarish yo'q;
+- barbell-row — shtanga pastroq tushgan, qo'l ko'rinmaydi;
+- lateral-raise — gantel dastasi hamon bilak bo'ylab;
+- dead-bug A — boshdan orqaga cho'zilgan qo'l yo'q;
+- t-bar-row A/B — plastinalar shtangaga ulanmagan;
+- chin-up B — figura A dan ~1,6 baravar kichik, ushlash torroq, tekislab bo'lmaydi;
+- leg-press B — chanada plastina paydo bo'ladi, A kadrida esa u yo'q.
+
+**Qayta qilish kerak** (`flow-pack2.ts --only … --skipA … --skipB …`, Nano Banana Pro bilan):
 - **Asosiy kadr:**
   - pull-up — iyak turnikdan yuqori;
-  - ohp — lockout;
   - incline-bench, close-grip-bench — shtanga ko'krakda;
   - barbell-row — shtanga qoringa;
-  - lateral-raise — gantel dastasi;
-  - calf-raise — tovon baland;
-  - db-shrug — yelka baland;
-  - dead-bug — qarama-qarshi tomonlar;
+  - lateral-raise — dasta kaftda ko'ndalang, oldidan bitta disk ko'rinadi;
+  - dead-bug — qarama-qarshi qo'l (bosh orqasiga) va oyoq cho'zilgan;
   - leg-curl — tizza ko'proq bukilgan;
-  - t-bar-row — yuqori nuqta;
-  - knee-push-up — pastki nuqta.
-- **Ikkinchi kadr:** push-up, chin-up, glute-bridge, machine-chest-press, reverse-fly, hanging-leg-raise, leg-press (yuk platforma bilan birga), calf-raise, db-shrug, side-plank, doorway-chest, t-bar-row, knee-push-up.
+  - t-bar-row — yuk shtanga uchida, ikkala kadr bir kamerada;
+  - leg-press — ikkala kadrda yuk chanada.
+- **Ikkinchi kadr:**
+  - chin-up — A bilan bir xil masshtab va ushlash;
+  - reverse-fly;
+  - dead-bug — asosiy kadr tayyor bo'lgach.
+
+**Kamera siljigan B kadrni tekislash:**
+`python3 -I scripts/images/align_frames.py <A> <B> <chiqish.png> "x0,y0,x1,y1;…"`.
+ROI — ikki kadrda ham qimirlamaydigan joylar (oyoq uchi, kaft, jihoz), rasm ulushida.
+Masshtab, burilish, siljish va ixtiyoriy gorizontal cho'zish (`--k=0.1`) topiladi; bo'sh chetlar fon bilan to'ldiriladi.
+Natijani A bilan aralashtirib tekshiring.
 
 Generatsiya tartibi: `scripts/images/README.md` va `scripts/images/regen.mjs`.

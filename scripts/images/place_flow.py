@@ -111,6 +111,12 @@ for d in sorted(os.listdir(res_dir)):
             alt = f"{name}, {phase.lower()}: to‘g‘ri texnika; ishlayotgan mushaklar lime rangda yonmoqda"
             pair = f", pair: {{ src: img('alt/{eid}.webp'), phase: '{job['pair']['phaseUz']}' }}" if has_b else ''
             auto_body += f"  '{eid}': {{ src: img('{eid}.webp'), phase: '{phase}', alt: '{alt}'{pair} }},\n"
+        else:
+            # <auto> blokidagi yozuvga faqat ikkinchi kadr qo'shiladi
+            m = re.search(r"^  '?" + re.escape(eid) + r"'?: \{[^\n]*\},\n", auto_body, re.M)
+            if m and 'pair:' not in m.group(0):
+                line = m.group(0)
+                auto_body = auto_body.replace(line, line[:-4] + f", pair: {{ src: img('alt/{eid}.webp'), phase: '{job['pair']['phaseUz']}' }} }},\n")
 
 open(ill_path, 'w', encoding='utf-8').write(head + '// <auto>' + auto_first + '\n' + auto_body + '  // </auto>' + tail)
 order = [m for m in re.findall(r"\{ id: '([a-zA-Z]+)'", open('src/data/catalog.ts', encoding='utf-8').read()) if m in eq_ids]
