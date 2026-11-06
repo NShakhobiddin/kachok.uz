@@ -1088,7 +1088,7 @@ export const ACTIVATION: Record<string, ExerciseActivation> = {
       }
     },
     "rom": "Tana gorizontaldan o‘tayotganda yuklama eng katta; umurtqani bukish o‘rniga tosdan bukilsangiz ish son orqasi va dumbaga o‘tadi.",
-    "notes": "Son orqasi rumin o‘lik tortishiga nisbatan 71–174% ko‘proq ishlagan; bel mushaklari uchala mashqda bir xil."
+    "notes": "Bir tadqiqotda sonning ikki boshli mushagi 45° giperekstenziyada rumincha o‘lik tortishdagidan 71–174% faolroq bo‘lgan; katta dumba va bel mushaklari farq qilmagan. Mutlaq foizlar topilmagan — bu yerdagi qiymatlar baho."
   },
   "split-squat": {
     "basis": "direct",
@@ -3299,7 +3299,7 @@ export const ACTIVATION: Record<string, ExerciseActivation> = {
         ]
       },
       "pecUpper": {
-        "mvic": 65,
+        "mvic": 75,
         "range": [
           25,
           95
@@ -4448,7 +4448,7 @@ export const ACTIVATION: Record<string, ExerciseActivation> = {
       }
     },
     "rom": "Tik turib bukishda bitseps butun amplituda davomida yuqori ishlaydi; to‘g‘ri grifda yelka-bilak mushagi gantelga nisbatan faolroq.",
-    "notes": "To‘g‘ri va EZ-grif deyarli farq qilmaydi, ikkalasi ham gantel bilan bukishdan yuqori."
+    "notes": "To‘g‘ri va EZ-grif deyarli farq qilmaydi; bir xil yuklamada ikkalasi ham gantel bilan bukishdan yuqori. Bu yerdagi foiz yengilroq yuklama (65% 1RM) uchun, shu sababli gantel sahifasidagi (80% 1RM) qiymatdan past."
   },
   "db-curl": {
     "basis": "direct",
@@ -4514,10 +4514,10 @@ export const ACTIVATION: Record<string, ExerciseActivation> = {
     "metric": "mean",
     "muscles": {
       "biceps": {
-        "mvic": 80,
+        "mvic": 99,
         "range": [
-          60,
-          100
+          75,
+          120
         ],
         "est": true,
         "src": [
@@ -4533,10 +4533,10 @@ export const ACTIVATION: Record<string, ExerciseActivation> = {
         "est": true
       },
       "brachioradialis": {
-        "mvic": 60,
+        "mvic": 47,
         "range": [
-          40,
-          80
+          33,
+          70
         ],
         "est": true,
         "src": [
@@ -4552,10 +4552,10 @@ export const ACTIVATION: Record<string, ExerciseActivation> = {
         "est": true
       },
       "deltAnt": {
-        "mvic": 25,
+        "mvic": 16,
         "range": [
-          10,
-          40
+          8,
+          30
         ],
         "est": true,
         "src": [

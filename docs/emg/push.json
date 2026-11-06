@@ -1582,7 +1582,7 @@
           "estimate": true
         },
         "pecUpper": {
-          "mvic": 65,
+          "mvic": 75,
           "range": [
             25,
             95

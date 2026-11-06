@@ -496,7 +496,7 @@ export const NATIONAL_DISHES: { name: string; portion: string; kcal: number; p: 
   { name: 'Sho‘rva', portion: '1 kosa, ~400 g', kcal: 320, p: 20, tip: 'Go‘shtli sho‘rva oqsilga boy; yog‘ini olib tashlang.' },
   { name: 'Manti', portion: '5 dona, ~250 g', kcal: 550, p: 25, tip: 'Qatiq bilan yeng — oqsil qo‘shiladi.' },
   { name: 'Chuchvara', portion: '1 kosa, ~350 g', kcal: 450, p: 20, tip: 'Suyuq (sho‘rvali) variant qovurilganidan ancha yengil.' },
-  { name: 'Non', portion: '1 dona, ~250 g', kcal: 660, p: 22, tip: "Bir mahalda chorak non (~60 g) — 160 kkal. Butun nonni 'bilmasdan' yeb qo‘yish oson." },
+  { name: 'Non', portion: '1 dona, ~250 g', kcal: 660, p: 22, tip: "Bir mahalda chorak non (~60 g) — 160 kkal. Butun nonni «bilmasdan» yeb qo‘yish oson." },
   { name: 'Moshxo‘rda', portion: '1 kosa, ~400 g', kcal: 380, p: 16, tip: 'Mosh — o‘simlik oqsili va tolaga boy.' },
   { name: 'Qozon kabob', portion: '1 porsiya, ~300 g', kcal: 650, p: 30, tip: 'Kartoshkasi yog‘da qovurilgan — salat bilan muvozanatlang.' },
 ];
@@ -523,7 +523,7 @@ export const SUPPLEMENTS: { name: string; grade: 'A' | 'B' | 'C' | 'X'; dose: st
     name: 'BCAA, "yog‘ yoqardilar", testosteron kuchaytirgichlar',
     grade: 'X',
     dose: '—',
-    text: "Yetarli oqsil iste’mol qilganda BCAA foyda bermaydi. Yog‘ yoqish va gormon 'kuchaytiruvchi' vositalar ishonchli dalilga ega emas, ba’zilari xavfli.",
+    text: "Yetarli oqsil iste’mol qilganda BCAA foyda bermaydi. Yog‘ yoqish va gormon «kuchaytiruvchi» vositalar ishonchli dalilga ega emas, ba’zilari xavfli.",
   },
 ];
 

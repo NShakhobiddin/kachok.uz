@@ -185,3 +185,34 @@ Masshtab, burilish, siljish va ixtiyoriy gorizontal cho'zish (`--k=0.1`) topilad
 Natijani A bilan aralashtirib tekshiring.
 
 Generatsiya tartibi: `scripts/images/README.md` va `scripts/images/regen.mjs`.
+
+## 2026-11-06 auditi
+
+**Tuzatildi:**
+- **db-bench, cable-fly:** asosiy kadr ham `alt/` faylga ko'rsatardi. Flow-2 ikkinchi kadri uni ustidan yozgani uchun ikkala kadr bir xil edi, yorliqlar bo'sh joyga tushardi. Asosiy rasmlar git tarixidan tiklandi. `place_flow.py` endi bunday yozuvda asosiy kadrni `<id>.webp` ga ko'chiradi.
+- **Bitta kadr qoldi** (ikkinchi kadr noto'g'ri yoki harakatsiz):
+  - bird-dog — cho'zilgan holatda qo'l va oyoq **bir tomonda** edi. Hozir boshlang'ich holat ko'rsatiladi.
+  - hip-adduction — "yopilgan" kadrda tizzalar ochiq edi. Hozir boshlang'ich holat (tizzalar keng).
+  - mountain-climber, bicycle-crunch — ikkinchi kadrda oyoq yoki tomon almashmagan.
+  - hip-abduction, seated-calf-raise — ikki kadr deyarli bir xil.
+
+**Flow-5 to'plami** (shu oltitasi):
+
+```
+npx vite-node scripts/images/flow-pack2.ts -- <chiqish> <poza-A> <poza-B> \
+  --only bird-dog,hip-abduction,hip-adduction,seated-calf-raise,mountain-climber,bicycle-crunch \
+  --skipA mountain-climber,bicycle-crunch
+```
+
+Tavsiflar aniqlashtirildi:
+- bird-dog: kameraga yaqin qo'l va uzoq oyoq cho'zilgan.
+- hip-abduction: old tomondan.
+- hip-adduction: tizzalar orasi kaft kengligicha.
+- seated-calf-raise: tovon plastinkadan aniq yuqori.
+- mountain-climber va bicycle-crunch: oyoqlar almashadi.
+
+**Kichik kamchiliklar** (qayta chizish shart emas):
+- step-up — boshlang'ich kadrda dumba yoritilmagan.
+- db-row — trapetsiya o'rtasi va orqa delta yoritilmagan.
+- banded-lateral-walk — ikki kadr orasidagi farq kichik.
+

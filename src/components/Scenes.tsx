@@ -613,7 +613,7 @@ function Grades() {
     ['A', 'Kreatin', 'var(--green)'],
     ['A', 'Kofein', 'var(--green)'],
     ['B', 'Oqsil kukuni', 'var(--blue)'],
-    ['X', "BCAA, 'yog‘ yoqardi'", 'var(--red)'],
+    ['X', "BCAA, «yog‘ yoqardi»", 'var(--red)'],
   ];
   return (
     <Svg label="Qo‘shimchalar dalil darajasi">

@@ -166,7 +166,7 @@
   "barbell-curl": {
     "load": "65% 1RM",
     "rom": "Tik turib bukishda bitseps butun amplituda davomida yuqori ishlaydi; to‘g‘ri grifda yelka-bilak mushagi gantelga nisbatan faolroq.",
-    "notes": "To‘g‘ri va EZ-grif deyarli farq qilmaydi, ikkalasi ham gantel bilan bukishdan yuqori."
+    "notes": "To‘g‘ri va EZ-grif deyarli farq qilmaydi; bir xil yuklamada ikkalasi ham gantel bilan bukishdan yuqori. Bu yerdagi foiz yengilroq yuklama (65% 1RM) uchun, shu sababli gantel sahifasidagi (80% 1RM) qiymatdan past."
   },
   "db-curl": {
     "load": "80% 1RM",
@@ -277,7 +277,7 @@
   "back-extension": {
     "load": "6RM, 45°",
     "rom": "Tana gorizontaldan o‘tayotganda yuklama eng katta; umurtqani bukish o‘rniga tosdan bukilsangiz ish son orqasi va dumbaga o‘tadi.",
-    "notes": "Son orqasi rumin o‘lik tortishiga nisbatan 71–174% ko‘proq ishlagan; bel mushaklari uchala mashqda bir xil."
+    "notes": "Bir tadqiqotda sonning ikki boshli mushagi 45° giperekstenziyada rumincha o‘lik tortishdagidan 71–174% faolroq bo‘lgan; katta dumba va bel mushaklari farq qilmagan. Mutlaq foizlar topilmagan — bu yerdagi qiymatlar baho."
   },
   "split-squat": {
     "load": "6–8RM",

@@ -839,7 +839,7 @@ export const STRETCHES: Exercise[] = [
     pattern: 'mobility',
     mechanics: 'isolation',
     primary: ['chest'],
-    secondary: ['frontDelts', 'biceps'],
+    secondary: ['frontDelts'],
     equipment: [],
     level: 1,
     score: 8,

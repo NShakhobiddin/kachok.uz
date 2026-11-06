@@ -188,7 +188,7 @@ export const BENEFITS: Record<BenefitId, { name: string; icon: string; x: number
     icon: 'spine',
     x: 50,
     y: 52,
-    text: "Kuraklarni orqaga tortuvchi mushaklar kuchaysa, yelkalar oldinga egilmaydi — telefon va kompyuter ortidagi 'bukchayish' kamayadi.",
+    text: "Kuraklarni orqaga tortuvchi mushaklar kuchaysa, yelkalar oldinga egilmaydi — telefon va kompyuter ortidagi «bukchayish» kamayadi.",
     source: 'westcott2012',
   },
   backHealth: {

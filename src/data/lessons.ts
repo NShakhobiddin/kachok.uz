@@ -83,7 +83,7 @@ export const LESSONS: Lesson[] = [
         source: 'garthe2011',
       },
       {
-        title: "Qorindan 'nuqtali' ozish yo‘q",
+        title: "Qorindan «nuqtali» ozish yo‘q",
         text: "6 hafta har kuni press mashqi qorin yog‘ini kamaytirmagan. Yog‘ butun tanadan bir vaqtda ketadi — qayerdan birinchi ketishini genetika belgilaydi, mashq emas.",
         scene: 'spot',
         source: 'vispute2011',
@@ -117,13 +117,13 @@ export const LESSONS: Lesson[] = [
     slides: [
       {
         title: 'Signal: mexanik taranglik',
-        text: "Og‘ir set oxirida mushak tolalari maksimal taranglikda ishlaydi. Bu tanaga signal: 'Bu yuk takrorlanadi — kuchliroq bo‘l'. Yengil vazn ham ishlaydi, faqat set charchoqqa yaqin bo‘lishi kerak.",
+        text: "Og‘ir set oxirida mushak tolalari maksimal taranglikda ishlaydi. Bu tanaga signal: «Bu yuk takrorlanadi — kuchliroq bo‘l». Yengil vazn ham ishlaydi, faqat set charchoqqa yaqin bo‘lishi kerak.",
         scene: 'fiber',
         source: 'schoenfeld2017load',
       },
       {
         title: "Qurilish mashg‘ulotdan keyin",
-        text: "Mashqdan keyin 24–48 soat davomida mushak oqsil sintezi ko‘tariladi. Aynan shu oynada oqsil va uyqu 'g‘isht' vazifasini bajaradi. Shuning uchun har mushakni haftasiga 2 marta ishlatish samaraliroq.",
+        text: "Mashqdan keyin 24–48 soat davomida mushak oqsil sintezi ko‘tariladi. Aynan shu oynada oqsil va uyqu «g‘isht» vazifasini bajaradi. Shuning uchun har mushakni haftasiga 2 marta ishlatish samaraliroq.",
         scene: 'mps',
         source: 'schoenfeld2016freq',
       },
@@ -140,7 +140,7 @@ export const LESSONS: Lesson[] = [
         source: 'pelland2026',
       },
       {
-        title: "Massa: ozgina ortiqcha, 'iflos massa' emas",
+        title: "Massa: ozgina ortiqcha, «iflos massa» emas",
         text: "Me’yordan 5–12% ko‘p kaloriya (boshlovchiga ko‘proq, tajribaliga kamroq) va haftasiga vaznning 0.25–0.5% ortishi — mushak uchun yetarli. Ko‘prog‘i asosan yog‘ bo‘ladi.",
         scene: 'balance-surplus',
         source: 'iraki2019',
@@ -187,7 +187,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         title: 'Yengillashtirish (deload) haftasi',
-        text: "Har 5–6 haftada bir hafta kamroq set va yengilroq vazn. Charchoq ketadi, kuch esa 'yashirin' holatdan chiqib keyingi blokda o‘sadi.",
+        text: "Har 5–6 haftada bir hafta kamroq set va yengilroq vazn. Charchoq ketadi, kuch esa «yashirin» holatdan chiqib keyingi blokda o‘sadi.",
         scene: 'deload',
       },
     ],
@@ -309,7 +309,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         title: 'Qachon?',
-        text: "Bir mahalda hammasini emas: kamida 4 mahalga ~0.4 g/kg dan (75 kg uchun ~30 g). Mashqdan keyingi '30 daqiqalik oyna' — mif emas, lekin kunlik jami muhimroq.",
+        text: "Bir mahalda hammasini emas: kamida 4 mahalga ~0.4 g/kg dan (75 kg uchun ~30 g). Mashqdan keyingi «30 daqiqalik oyna» — mif emas, lekin kunlik jami muhimroq.",
         scene: 'protein-day',
         source: 'schoenfeld2018meal',
       },
@@ -354,12 +354,12 @@ export const LESSONS: Lesson[] = [
       },
       {
         title: 'Osh mumkinmi?',
-        text: "Ha. 1 likopcha osh ~800 kkal. Guruchni kamroq, go‘sht va achchiq-chuchukni ko‘proq oling — va kunning qolgan qismini yengilroq qiling. Hech qaysi taom 'taqiqlangan' emas, faqat miqdor muhim.",
+        text: "Ha. 1 likopcha osh ~800 kkal. Guruchni kamroq, go‘sht va achchiq-chuchukni ko‘proq oling — va kunning qolgan qismini yengilroq qiling. Hech qaysi taom «taqiqlangan» emas, faqat miqdor muhim.",
         scene: 'balance-deficit',
       },
       {
         title: "Non — ko‘rinmas kaloriya",
-        text: "Bitta non ~660 kkal. Choy bilan 'bilmasdan' yarim non — 330 kkal. Bir mahalda chorak non yetarli.",
+        text: "Bitta non ~660 kkal. Choy bilan «bilmasdan» yarim non — 330 kkal. Bir mahalda chorak non yetarli.",
         scene: 'trend',
       },
     ],
@@ -447,7 +447,7 @@ export const LESSONS: Lesson[] = [
         source: 'behm2016',
       },
       {
-        title: "Nafas va 'korset'",
+        title: "Nafas va «korset»",
         text: "Og‘ir setdan oldin chuqur nafas olib, qorinni 360° tarang qiling — bu umurtqani ichidan ushlab turadi. Eng qiyin nuqtadan o‘tgach nafas chiqaring.",
         scene: 'brace',
       },
@@ -597,7 +597,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         title: 'Dam olish kunlari',
-        text: "Bir mushak guruhini qayta og‘ir ishlatishdan oldin ~48 soat. GYMbos 'Mushaklar tiklanishi' xaritasida buni ko‘rsatadi.",
+        text: "Bir mushak guruhini qayta og‘ir ishlatishdan oldin ~48 soat. GYMbos «Mushaklar tiklanishi» xaritasida buni ko‘rsatadi.",
         scene: 'mps',
       },
     ],
@@ -626,7 +626,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         title: 'Pul isrofi',
-        text: "Yetarli oqsil iste’mol qilganda BCAA foyda bermaydi. 'Yog‘ yoqardilar' va 'testosteron kuchaytirgichlar' ishonchli dalilga ega emas — ba’zilarida taqiqlangan moddalar topilgan.",
+        text: "Yetarli oqsil iste’mol qilganda BCAA foyda bermaydi. «Yog‘ yoqardilar» va «testosteron kuchaytirgichlar» ishonchli dalilga ega emas — ba’zilarida taqiqlangan moddalar topilgan.",
         scene: 'grades',
       },
     ],

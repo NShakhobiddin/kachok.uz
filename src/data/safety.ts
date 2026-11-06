@@ -595,7 +595,7 @@ const BASE: Record<string, ExerciseSafety> = {
         mod: 'Neytral ushlash, tirsaklar biroz oldinda (kurak tekisligida), pastda gantel quloq sathida to‘xtasin.',
       },
     ],
-    check: ['Spinkali o‘rindiq (80–90°) — belga tayanch.', 'Gantellarni sonlarga qo‘yib, tizza bilan yelka sathiga uzating.'],
+    check: ['Suyanchig‘i tik (80–90°) o‘rindiq — belga tayanch.', 'Gantellarni sonlarga qo‘yib, tizza bilan yelka sathiga uzating.'],
     bail: 'Gantellarni yelkaga tushiring va yonga, sonlarga qo‘ying — boshdan yuqorida tashlab yubormang.',
     stop: [S.shoulder],
   },
@@ -665,7 +665,7 @@ const BASE: Record<string, ExerciseSafety> = {
   },
   'reverse-fly': {
     risk: 1,
-    why: 'Rezina yoki blok bilan yengil yuklama — xavf past.',
+    why: 'Rezina lenta bilan yengil yuklama — xavf past.',
     joints: [],
     check: [C.band],
     stop: [S.shoulder],

@@ -226,11 +226,11 @@
       "load": "8RM load, non-exhaustive 6-rep sets, competitive bodybuilders (Coratella 2023, neutral-grip curl).",
       "metric": "mean",
       "muscles": {
-        "biceps": { "mvic": 80, "range": [60, 100], "src": ["coratella2023"], "estimate": true },
+        "biceps": { "mvic": 99, "range": [75, 120], "src": ["coratella2023"], "estimate": true },
         "brachialis": { "mvic": 75, "range": [55, 95], "src": [], "estimate": true },
-        "brachioradialis": { "mvic": 60, "range": [40, 80], "src": ["coratella2023"], "estimate": true },
+        "brachioradialis": { "mvic": 47, "range": [33, 70], "src": ["coratella2023"], "estimate": true },
         "forearmExtensors": { "mvic": 30, "range": [15, 45], "src": [], "estimate": true },
-        "deltAnt": { "mvic": 25, "range": [10, 40], "src": ["coratella2023"], "estimate": true },
+        "deltAnt": { "mvic": 16, "range": [8, 30], "src": ["coratella2023"], "estimate": true },
         "forearmFlexors": { "mvic": 25, "range": [10, 40], "src": [], "estimate": true }
       },
       "rom": "Coratella 2023: grip differences appeared in the ascending (concentric) phase. In the descending phase only anterior deltoid differed.",
