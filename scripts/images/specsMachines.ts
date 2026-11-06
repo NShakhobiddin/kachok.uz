@@ -9,7 +9,7 @@ export const MACHINES_SPECS: Record<string, ExerciseSpec> = {
   'hip-abduction': {
     phase: 'the open position, knees pushed fully apart',
     phaseUz: 'Ochilgan holat',
-    camera: `${REAR34} — so the outer hips and the glutes on the seat are clearly visible`,
+    camera: 'straight FRONT view at hip height, 50mm lens — so the distance between the knees and the outward movement of the thighs are clearly visible',
     technique: [
       'Seated upright with the back against the backrest, feet on the two foot bars, thighs roughly parallel to the floor.',
       'The two thigh pads press on the OUTSIDE of the thighs just above the knees; the knees are pushed outward against them to about 40–45° of hip abduction on each side.',
@@ -24,7 +24,7 @@ export const MACHINES_SPECS: Record<string, ExerciseSpec> = {
     camera: `${FRONT34} — so the inner thighs are clearly visible`,
     technique: [
       'Seated upright with the back against the backrest, feet on the two foot bars, thighs roughly parallel to the floor.',
-      'The two thigh pads press on the INSIDE of the thighs just above the knees; the knees are squeezed together until the pads almost touch.',
+      'The two thigh pads press on the INSIDE of the thighs just above the knees; the knees are squeezed together until the pads almost touch — the knees are only a hand-width apart, the thighs nearly parallel to each other.',
       'Hands grip the side handles beside the seat, hips stay down on the seat, torso upright.',
     ],
     equipment:
@@ -59,11 +59,11 @@ export const MACHINES_SPECS: Record<string, ExerciseSpec> = {
     camera: SIDE,
     technique: [
       'Seated with knees bent at 90°, thighs horizontal, the padded lever resting across the lower thighs just above the knees.',
-      'The balls of both feet on the edge of the foot plate, heels free; ankles fully extended so the heels are lifted as high as possible.',
+      'Only the balls of both feet on the FRONT EDGE of a small horizontal foot plate, the heels hanging free in the air behind the plate; ankles fully extended so the heels are lifted clearly ABOVE the plate (a visible gap of about 8 cm under each heel).',
       'Torso upright, hands holding the lever handles on top of the knee pad.',
     ],
     equipment:
-      'Plate-loaded seated calf raise machine: a low seat, a horizontal padded knee lever above the thighs with a safety catch handle and a weight-plate horn at its front end, and a small angled foot plate in front of the seat.',
+      'Plate-loaded seated calf raise machine: a low seat, a horizontal padded knee lever above the thighs with a safety catch handle and a weight-plate horn at its front end, and a small HORIZONTAL foot plate (a narrow step) in front of the seat, its front edge under the balls of the feet.',
   },
   'assisted-pull-up': {
     phase: 'the top position, chin above the handles',

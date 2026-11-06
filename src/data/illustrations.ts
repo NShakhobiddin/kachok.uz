@@ -481,7 +481,7 @@ export const ILLUSTRATIONS: Partial<Record<string, Illustration>> = {
     ],
   },
   'db-bench': {
-    src: img('alt/db-bench.webp'),
+    src: img('db-bench.webp'),
     phase: 'Yuqori nuqta',
     pair: { src: img('alt/db-bench.webp'), phase: 'Pastki nuqta' },
     alt: 'Gantel bilan yotib jim, yuqori nuqta: qo‘llar yozilgan, gantellar ko‘krak ustida; ishlayotgan mushaklar lime rangda yonmoqda',
@@ -558,7 +558,7 @@ export const ILLUSTRATIONS: Partial<Record<string, Illustration>> = {
     ],
   },
   'cable-fly': {
-    src: img('alt/cable-fly.webp'),
+    src: img('cable-fly.webp'),
     phase: 'Boshlang‘ich holat',
     pair: { src: img('alt/cable-fly.webp'), phase: 'Qisqargan holat' },
     alt: 'Krossoverda qo‘l birlashtirish, boshlang‘ich holat: qo‘llar keng ochilgan, tirsak biroz bukilgan; ishlayotgan mushaklar lime rangda yonmoqda',
@@ -1047,13 +1047,11 @@ export const ILLUSTRATIONS: Partial<Record<string, Illustration>> = {
     src: img('bicycle-crunch.webp'),
     phase: 'Qisqargan holat',
     alt: '«Velosiped», qisqargan holat: to‘g‘ri texnika; ishlayotgan mushaklar lime rangda yonmoqda',
-    pair: { src: img('alt/bicycle-crunch.webp'), phase: 'Ikkinchi tomon' },
   },
   'bird-dog': {
     src: img('bird-dog.webp'),
-    phase: 'Cho‘zilgan holat',
-    alt: '«Qush-it», cho‘zilgan holat: to‘g‘ri texnika; ishlayotgan mushaklar lime rangda yonmoqda',
-    pair: { src: img('alt/bird-dog.webp'), phase: 'Boshlang‘ich holat' },
+    phase: 'Boshlang‘ich holat',
+    alt: '«Qush-it», boshlang‘ich holat: to‘rt oyoqda, kaftlar yelka ostida, tizzalar tos ostida, bel tekis; ishlayotgan mushaklar lime rangda yonmoqda',
   },
   butterfly: {
     src: img('butterfly.webp'),
@@ -1155,13 +1153,11 @@ export const ILLUSTRATIONS: Partial<Record<string, Illustration>> = {
     src: img('hip-abduction.webp'),
     phase: 'Ochilgan holat',
     alt: 'Trenajyorda sonni ochish, ochilgan holat: to‘g‘ri texnika; ishlayotgan mushaklar lime rangda yonmoqda',
-    pair: { src: img('alt/hip-abduction.webp'), phase: 'Boshlang‘ich holat' },
   },
   'hip-adduction': {
     src: img('hip-adduction.webp'),
-    phase: 'Yopilgan holat',
-    alt: 'Trenajyorda sonni yopish, yopilgan holat: to‘g‘ri texnika; ishlayotgan mushaklar lime rangda yonmoqda',
-    pair: { src: img('alt/hip-adduction.webp'), phase: 'Boshlang‘ich holat' },
+    phase: 'Boshlang‘ich holat',
+    alt: 'Trenajyorda sonni yopish, boshlang‘ich holat: tizzalar keng ochilgan, yostiqlar sonning ichki tomonida; ishlayotgan mushaklar lime rangda yonmoqda',
   },
   'hip-flexor-stretch': {
     src: img('hip-flexor-stretch.webp'),
@@ -1173,7 +1169,6 @@ export const ILLUSTRATIONS: Partial<Record<string, Illustration>> = {
     src: img('mountain-climber.webp'),
     phase: 'Qisqargan holat',
     alt: '«Alpinist», qisqargan holat: to‘g‘ri texnika; ishlayotgan mushaklar lime rangda yonmoqda',
-    pair: { src: img('alt/mountain-climber.webp'), phase: 'Ikkinchi oyoq' },
   },
   'neck-stretch': {
     src: img('neck-stretch.webp'),
@@ -1213,9 +1208,8 @@ export const ILLUSTRATIONS: Partial<Record<string, Illustration>> = {
   },
   'seated-calf-raise': {
     src: img('seated-calf-raise.webp'),
-    phase: 'Yuqori nuqta',
-    alt: 'O‘tirib boldir ko‘tarish, yuqori nuqta: to‘g‘ri texnika; ishlayotgan mushaklar lime rangda yonmoqda',
-    pair: { src: img('alt/seated-calf-raise.webp'), phase: 'Boshlang‘ich holat' },
+    phase: 'Tayyor holat',
+    alt: 'O‘tirib boldir ko‘tarish, tayyor holat: oyoq uchlari platformada, yostiq son ustida; ishlayotgan mushaklar lime rangda yonmoqda',
   },
   'side-leg-raise': {
     src: img('side-leg-raise.webp'),

@@ -174,7 +174,7 @@ export const HOME_SPECS: Record<string, ExerciseSpec> = {
     camera: SIDE,
     technique: [
       'On all fours: one hand flat under the shoulder, the opposite knee under the hip.',
-      'The other arm extended straight forward at shoulder height, thumb up; the opposite leg extended straight back at hip height, toes pointing down.',
+      'OPPOSITE arm and leg: the arm NEARER the camera is extended straight forward at shoulder height, thumb up, and the leg FARTHER from the camera is extended straight back at hip height, toes pointing down; the far hand and the near knee stay on the mat. Never the arm and the leg of the same side.',
       'Back flat like a table, hips and shoulders level and square to the floor, neck neutral.',
     ],
     equipment: MAT,

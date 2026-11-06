@@ -86,6 +86,12 @@ for d in sorted(os.listdir(res_dir)):
             eq_ids.add(eid)
             placed.append(eid)
             continue
+        blk0 = entry_block(head, eid)
+        if has_b and blk0 and f"src: img('alt/{eid}.webp')" in head[blk0[0]:blk0[1]].split('pair:')[0]:
+            # asosiy kadr alt/ da turibdi — ikkinchi kadr uning ustiga yozilmasin: asosiy kadr <id>.webp ga ko'chiriladi
+            os.replace(f'public/illustrations/alt/{eid}.webp', f'public/illustrations/{eid}.webp')
+            s0, e0 = blk0
+            head = head[:s0] + head[s0:e0].replace(f"src: img('alt/{eid}.webp')", f"src: img('{eid}.webp')", 1) + head[e0:]
         if has_a:
             _thumb(save(a, f'public/illustrations/{eid}.webp', 1024), eid)
         if has_b:

@@ -110,7 +110,8 @@ for (const [id, pair] of Object.entries(NEW_PAIRS)) {
 }
 
 /* ---------- 2. eski rasmlar ---------- */
-md.push('', '## 2. Eski rasmlar: xatolarni tuzatish va ikkinchi kadr', '', 'Ustuvorlik: **1** — noto‘g‘ri texnika, **2** — harakat yo‘q yoki noto‘g‘ri kadr, **3** — kosmetik.', '');
+if (OLD_FIXES.some((f) => want(f.id)))
+  md.push('', '## 2. Eski rasmlar: xatolarni tuzatish va ikkinchi kadr', '', 'Ustuvorlik: **1** — noto‘g‘ri texnika, **2** — harakat yo‘q yoki noto‘g‘ri kadr, **3** — kosmetik.', '');
 n = 0;
 for (const f0 of [...OLD_FIXES].sort((a, b) => a.priority - b.priority)) {
   if (!want(f0.id)) continue;
