@@ -1912,7 +1912,7 @@ Body: an athletic adult WOMAN with clearly female proportions (narrower shoulder
 
 Correct technique (must be exact):
 - On all fours: one hand flat under the shoulder, the opposite knee under the hip.
-- The other arm extended straight forward at shoulder height, thumb up; the opposite leg extended straight back at hip height, toes pointing down.
+- OPPOSITE arm and leg: the arm NEARER the camera is extended straight forward at shoulder height, thumb up, and the leg FARTHER from the camera is extended straight back at hip height, toes pointing down; the far hand and the near knee stay on the mat. Never the arm and the leg of the same side.
 - Back flat like a table, hips and shoulders level and square to the floor, neck neutral.
 
 Muscle activation shown as a neon lime-green glow (#D4FA50) from within the muscles, brightness proportional to effort:
@@ -2030,7 +2030,7 @@ Absolutely no text, letters, numbers, labels, arrows, logos, watermarks or UI. N
 ### 83. Trenajyorda sonni ochish (Machine Hip Abduction) — ochilgan holat — `hip-abduction`
 
 ```
-Photorealistic anatomical render of an athletic woman performing the machine hip abduction, captured at the open position, knees pushed fully apart. Camera: rear three-quarter view — 30° behind the athlete's right side, at hip height, 50mm lens — so the outer hips and the glutes on the seat are clearly visible.
+Photorealistic anatomical render of an athletic woman performing the machine hip abduction, captured at the open position, knees pushed fully apart. Camera: straight FRONT view at hip height, 50mm lens — so the distance between the knees and the outward movement of the thighs are clearly visible.
 
 Body: an athletic adult WOMAN with clearly female proportions (narrower shoulders, wider pelvis, natural female build), rendered in écorché style — skin removed, realistic deep-red striated muscle fibers, pearly white tendons, anatomically accurate muscle shapes; hair pulled back into a neat low bun. Plain opaque dark grey sports bra and dark grey compression shorts fully covering chest and hips. Black flat-soled training shoes (barefoot on a mat for floor stretches).
 
@@ -2059,7 +2059,7 @@ Body: an athletic adult WOMAN with clearly female proportions (narrower shoulder
 
 Correct technique (must be exact):
 - Seated upright with the back against the backrest, feet on the two foot bars, thighs roughly parallel to the floor.
-- The two thigh pads press on the INSIDE of the thighs just above the knees; the knees are squeezed together until the pads almost touch.
+- The two thigh pads press on the INSIDE of the thighs just above the knees; the knees are squeezed together until the pads almost touch — the knees are only a hand-width apart, the thighs nearly parallel to each other.
 - Hands grip the side handles beside the seat, hips stay down on the seat, torso upright.
 
 Muscle activation shown as a neon lime-green glow (#D4FA50) from within the muscles, brightness proportional to effort:
@@ -2133,7 +2133,7 @@ Body: an athletic adult WOMAN with clearly female proportions (narrower shoulder
 
 Correct technique (must be exact):
 - Seated with knees bent at 90°, thighs horizontal, the padded lever resting across the lower thighs just above the knees.
-- The balls of both feet on the edge of the foot plate, heels free; ankles fully extended so the heels are lifted as high as possible.
+- Only the balls of both feet on the FRONT EDGE of a small horizontal foot plate, the heels hanging free in the air behind the plate; ankles fully extended so the heels are lifted clearly ABOVE the plate (a visible gap of about 8 cm under each heel).
 - Torso upright, hands holding the lever handles on top of the knee pad.
 
 Muscle activation shown as a neon lime-green glow (#D4FA50) from within the muscles, brightness proportional to effort:
@@ -2141,7 +2141,7 @@ Muscle activation shown as a neon lime-green glow (#D4FA50) from within the musc
 - clearly dimmer, about half as bright: gastrocnemius (calf);
 - all other muscles: no glow, natural deep red.
 
-Equipment: Plate-loaded seated calf raise machine: a low seat, a horizontal padded knee lever above the thighs with a safety catch handle and a weight-plate horn at its front end, and a small angled foot plate in front of the seat.
+Equipment: Plate-loaded seated calf raise machine: a low seat, a horizontal padded knee lever above the thighs with a safety catch handle and a weight-plate horn at its front end, and a small HORIZONTAL foot plate (a narrow step) in front of the seat, its front edge under the balls of the feet.
 Scene: pure charcoal-black background (#0B0B0C), soft top-left key light, subtle lime-green rim light from behind, soft contact shadow, no floor texture.
 Composition: square 1:1, the whole figure and equipment fully visible with generous empty margins on the left and right, centered.
 
