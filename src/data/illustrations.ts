@@ -1048,11 +1048,6 @@ export const ILLUSTRATIONS: Partial<Record<string, Illustration>> = {
     phase: 'Qisqargan holat',
     alt: '«Velosiped», qisqargan holat: to‘g‘ri texnika; ishlayotgan mushaklar lime rangda yonmoqda',
   },
-  'bird-dog': {
-    src: img('bird-dog.webp'),
-    phase: 'Boshlang‘ich holat',
-    alt: '«Qush-it», boshlang‘ich holat: to‘rt oyoqda, kaftlar yelka ostida, tizzalar tos ostida, bel tekis; ishlayotgan mushaklar lime rangda yonmoqda',
-  },
   butterfly: {
     src: img('butterfly.webp'),
     phase: 'Cho‘zilgan holat',
@@ -1149,16 +1144,6 @@ export const ILLUSTRATIONS: Partial<Record<string, Illustration>> = {
     alt: 'Son orqasini cho‘zish, cho‘zilgan holat: to‘g‘ri texnika; cho‘ziladigan mushaklar lime rangda',
     pair: { src: img('alt/hamstring-stretch.webp'), phase: 'Boshlang‘ich holat' },
   },
-  'hip-abduction': {
-    src: img('hip-abduction.webp'),
-    phase: 'Ochilgan holat',
-    alt: 'Trenajyorda sonni ochish, ochilgan holat: to‘g‘ri texnika; ishlayotgan mushaklar lime rangda yonmoqda',
-  },
-  'hip-adduction': {
-    src: img('hip-adduction.webp'),
-    phase: 'Boshlang‘ich holat',
-    alt: 'Trenajyorda sonni yopish, boshlang‘ich holat: tizzalar keng ochilgan, yostiqlar sonning ichki tomonida; ishlayotgan mushaklar lime rangda yonmoqda',
-  },
   'hip-flexor-stretch': {
     src: img('hip-flexor-stretch.webp'),
     phase: 'Cho‘zilgan holat',
@@ -1205,11 +1190,6 @@ export const ILLUSTRATIONS: Partial<Record<string, Illustration>> = {
     phase: 'Pastki nuqta',
     alt: 'Orqaga hamla, pastki nuqta: to‘g‘ri texnika; ishlayotgan mushaklar lime rangda yonmoqda',
     pair: { src: img('alt/reverse-lunge.webp'), phase: 'Boshlang‘ich holat' },
-  },
-  'seated-calf-raise': {
-    src: img('seated-calf-raise.webp'),
-    phase: 'Tayyor holat',
-    alt: 'O‘tirib boldir ko‘tarish, tayyor holat: oyoq uchlari platformada, yostiq son ustida; ishlayotgan mushaklar lime rangda yonmoqda',
   },
   'side-leg-raise': {
     src: img('side-leg-raise.webp'),
@@ -1267,5 +1247,19 @@ export const ILLUSTRATIONS: Partial<Record<string, Illustration>> = {
     pair: { src: img('alt/knee-push-up.webp'), phase: 'Boshlang‘ich holat' },
   },
   'dead-bug': { src: img('dead-bug.webp'), phase: 'Boshlang‘ich holat', alt: '«O‘lik qo‘ng‘iz», boshlang‘ich holat: to‘g‘ri texnika; ishlayotgan mushaklar lime rangda yonmoqda' },
+  'bird-dog': {
+    src: img('bird-dog.webp'),
+    phase: 'Cho‘zilgan holat',
+    alt: '«Qush-it», cho‘zilgan holat: to‘g‘ri texnika; ishlayotgan mushaklar lime rangda yonmoqda',
+    pair: { src: img('alt/bird-dog.webp'), phase: 'Boshlang‘ich holat' },
+  },
+  'hip-abduction': { src: img('hip-abduction.webp'), phase: 'Ochilgan holat', alt: 'Trenajyorda sonni ochish, ochilgan holat: to‘g‘ri texnika; ishlayotgan mushaklar lime rangda yonmoqda' },
+  'hip-adduction': {
+    src: img('hip-adduction.webp'),
+    phase: 'Yopilgan holat',
+    alt: 'Trenajyorda sonni yopish, yopilgan holat: to‘g‘ri texnika; ishlayotgan mushaklar lime rangda yonmoqda',
+    pair: { src: img('alt/hip-adduction.webp'), phase: 'Boshlang‘ich holat' },
+  },
+  'seated-calf-raise': { src: img('seated-calf-raise.webp'), phase: 'Yuqori nuqta', alt: 'O‘tirib boldir ko‘tarish, yuqori nuqta: to‘g‘ri texnika; ishlayotgan mushaklar lime rangda yonmoqda' },
   // </auto>
 };

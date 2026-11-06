@@ -216,3 +216,22 @@ Tavsiflar aniqlashtirildi:
 - db-row — trapetsiya o'rtasi va orqa delta yoritilmagan.
 - banded-lateral-walk — ikki kadr orasidagi farq kichik.
 
+## Flow-5 natijalari joylandi (2026-11-06)
+
+**Joylandi:**
+- bird-dog — A (qarama-qarshi qo'l va oyoq) va B (to'rt oyoqda), ikki kadrli harakat.
+- hip-adduction — A (tizzalar yaqin) va B (tizzalar keng), ikki kadrli harakat.
+- hip-abduction — faqat A (old tomondan, tizzalar keng ochilgan).
+- seated-calf-raise — faqat A (tovon plastinkadan aniq yuqori).
+
+**Rad etildi:**
+- hip-abduction B — trenajyor boshqacha chizilgan: yostiqlar tizzalardan uzoqda, oyoq tayanchlari ham boshqa. Animatsiyada trenajyor almashib ko'rinardi.
+- seated-calf-raise B — oyoq plastinkasi tovon bilan birga pastga egilgan va ko'tarilgan. To'g'risi: plastinka joyida qoladi, faqat tovon pastga tushadi.
+- mountain-climber B — oyoqlar almashmagan: yaqin oyoq yana oldinda bukilgan, faqat nur ko'chgan.
+- bicycle-crunch B — oyoqlar almashgan, lekin gilamcha, kamera va gavda burilishi boshqacha. Tekislaganda ham ikki gilamcha ko'rinadi.
+
+**Qolganlari:**
+- hip-abduction B — A dan, tizzalar yaqin, trenajyor o'zgarmasin.
+- seated-calf-raise B — plastinka joyida, tovon chetidan pastda.
+- mountain-climber B, bicycle-crunch B.
+
