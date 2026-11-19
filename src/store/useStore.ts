@@ -2,7 +2,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { exById } from '../data/exercises';
-import { estimateMinutes, generateProgram, manualPlanned, swapPlanned, weeklyVolume } from '../engine/program';
+import { estimateMinutes, generateProgram, manualPlanned, suggestExtra, swapPlanned, weeklyVolume } from '../engine/program';
 import { mesoPerWeek, mesoState, setChange, type MuscleFeedback } from '../engine/meso';
 import { clampKcalAdjust } from '../engine/nutrition';
 import { detectPRs } from '../engine/stats';
@@ -166,6 +166,8 @@ interface State {
   updatePlanned: (dayId: string, index: number, patch: Partial<PlannedExercise>) => void;
   removePlanned: (dayId: string, index: number) => void;
   addPlanned: (dayId: string, exId: string) => void;
+  /** kunga mos yana bitta mashqni dastur o'zi tanlab qo'shadi; qo'shilgan mashq id si (topilmasa null) */
+  addAutoPlanned: (dayId: string) => string | null;
   moveDay: (dayId: string, weekday: number) => void;
   /** qo'lda yangi kun: bo'sh, mashqlari keyin tanlanadi; id qaytaradi */
   addDay: (weekday: number, title: string) => string | null;
@@ -298,6 +300,15 @@ export const useStore = create<State>()(
         if (!ex) return;
         const pe = manualPlanned(ex, get().profile);
         set({ program: mapDay(get().program, dayId, (d) => ({ ...d, exercises: [...d.exercises, pe] })) });
+      },
+      addAutoPlanned: (dayId) => {
+        const { program, profile } = get();
+        const day = program?.days.find((d) => d.id === dayId);
+        if (!program || !profile || !day) return null;
+        const pe = suggestExtra(day, program, profile);
+        if (!pe) return null;
+        set({ program: mapDay(program, dayId, (d) => ({ ...d, exercises: [...d.exercises, pe] })) });
+        return pe.exerciseId;
       },
       // shu hafta kunida boshqa kun bo'lsa — o'rin almashadi (ikki kun bitta kunga tushmasin)
       moveDay: (dayId, weekday) => {

@@ -25,6 +25,7 @@ export default function Profile() {
   const nav = useNavigate();
   const loc = useLocation();
   const profile = useStore((s) => s.profile)!;
+  const program = useStore((s) => s.program);
   const setProfile = useStore((s) => s.setProfile);
   const settings = useStore((s) => s.settings);
   const setSettings = useStore((s) => s.setSettings);
@@ -109,6 +110,7 @@ export default function Profile() {
           <Item icon="scale" label="Tana ko‘rsatkichlari" value={`${profile.weightKg} kg`} onClick={() => open('body')} />
           <Item icon="target" label="Maqsad va daraja" value={GOALS.find((g) => g.id === profile.goal)?.title.split(' (')[0] ?? ''} onClick={() => open('goal')} />
           <Item icon="calendar" label="Jadval" value={`${profile.daysPerWeek} kun · ${profile.sessionMin} daq`} onClick={() => open('schedule')} />
+          <Item icon="list" label="Haftalik reja" value={program?.split ?? ''} onClick={() => nav('/program')} />
           <Item icon="dumbbell" label="Zal jihozlari" value={`${profile.equipment.length} ta`} onClick={() => open('equipment')} />
           <Item icon="alert" label="Cheklovlar va ustuvorlik" value={profile.injuries.length ? `${profile.injuries.length} ta` : 'Yo‘q'} onClick={() => open('limits')} />
           <Item icon="bolt" label="Kundalik faollik" value={ACTIVITY[profile.activity].name} onClick={() => open('activity')} />
@@ -359,7 +361,7 @@ export default function Profile() {
               {/* kunlar soni o'zgarsa eski dastur yangi jadvalga mos kelmaydi — faqat qayta tuzish */}
               {panel === 'schedule' && profile && draft.daysPerWeek !== profile.daysPerWeek ? (
                 <p className="tiny faint" style={{ textAlign: 'center' }}>
-                  Kunlar soni o‘zgargani uchun dastur yangi jadvalga qayta tuziladi{customSplitOf(profile) ? '; o‘zingiz tanlagan mushaklar taqsimoti ham moslanadi («Dastur» → «Kunlar taqsimoti»)' : ''}.
+                  Kunlar soni o‘zgargani uchun dastur yangi jadvalga qayta tuziladi{customSplitOf(profile) ? '; o‘zingiz tanlagan mushaklar taqsimoti ham moslanadi («Haftalik reja» → «Kunlar taqsimoti»)' : ''}.
                 </p>
               ) : (
                 <button className="btn btn-ghost btn-block" onClick={() => save(false)}>

@@ -687,7 +687,7 @@ p {
   border-radius: 26px;
   box-shadow: 0 18px 40px -16px rgba(0, 0, 0, 0.9);
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   z-index: 40;
 }
 .tabbar a {
@@ -2808,4 +2808,185 @@ ol.steps li::before {
   height: 100%;
   background: var(--accent);
   transition: width 0.3s;
+}
+
+/* ---------- Bugun: hafta + tanlangan kun (bitta oynada) ---------- */
+.h-sm {
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+.wk2-strip {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 5px;
+}
+.wk2 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 8px 0 9px;
+  border-radius: 16px;
+  border: 1.5px solid transparent;
+  color: var(--text-3);
+  min-height: 72px;
+  transition: background 0.15s, border-color 0.15s;
+}
+.wk2-d {
+  font-size: 11.5px;
+  font-weight: 700;
+}
+.wk2-n {
+  font-family: var(--font-display);
+  font-stretch: 112%;
+  font-weight: 800;
+  font-size: 17px;
+  color: var(--text-2);
+}
+.wk2 i {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  margin-top: 2px;
+  color: var(--accent-ink);
+}
+.wk2.planned i {
+  border: 2px solid var(--accent);
+}
+.wk2.missed i {
+  border: 2px dashed var(--yellow);
+}
+.wk2.done i {
+  background: var(--accent);
+}
+.wk2.rest i {
+  width: 6px;
+  height: 6px;
+  background: var(--line-2);
+  margin: 8px 0 6px;
+}
+.wk2.today .wk2-d,
+.wk2.today .wk2-n {
+  color: var(--accent);
+}
+.wk2.sel {
+  background: var(--surface-2);
+  border-color: var(--line-2);
+}
+.wk2.sel .wk2-n {
+  color: var(--text);
+}
+.wk2.today.sel .wk2-n {
+  color: var(--accent);
+}
+.active-card {
+  border-color: var(--accent-line);
+}
+.count-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 12px 12px 16px;
+  border-radius: 20px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+}
+.count-step {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--surface-2);
+  border-radius: 16px;
+  padding: 4px;
+}
+.count-step button {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  color: var(--text);
+  background: var(--surface-3, rgba(255, 255, 255, 0.06));
+}
+.count-step button:last-child {
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+.count-step button:disabled {
+  opacity: 0.35;
+}
+.count-step span {
+  min-width: 30px;
+  text-align: center;
+  font-family: var(--font-display);
+  font-stretch: 112%;
+  font-weight: 800;
+  font-size: 20px;
+}
+.ex-row2 {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 6px 8px 8px;
+  border-radius: 20px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+}
+.ex-row2-main {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  min-width: 0;
+  color: inherit;
+}
+.ex-row2 .icon-btn {
+  flex: none;
+  width: 44px;
+  height: 44px;
+  color: var(--text-2);
+}
+.done-tag {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--accent);
+  border-color: var(--accent-line);
+}
+.cta-sub {
+  font-size: 13px;
+  font-weight: 700;
+  opacity: 0.65;
+  margin-left: 4px;
+}
+.undo-bar {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: calc(var(--tabbar-h) + var(--safe-b) + 84px);
+  width: calc(100% - 32px);
+  max-width: 520px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: 16px;
+  background: #26262a;
+  border: 1px solid var(--line-2);
+  box-shadow: 0 14px 30px -12px rgba(0, 0, 0, 0.9);
+  z-index: 45;
+}
+.preset-mini {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 6px 4px 14px;
+  border-radius: 18px;
+  background: var(--surface);
+  border: 1px solid var(--line);
 }

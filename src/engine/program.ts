@@ -713,3 +713,70 @@ export function groupFrequency(program: Pick<Program, 'days'>): Record<MuscleGro
   for (const g of GROUP_ORDER) out[g] = Math.max(2, out[g]);
   return out;
 }
+
+/** Mushak guruhini ishlatadigan harakat turlari: qo'shimcha mashq tanlashda (avval yakkalovchi, so'ng ko'p bo'g'imli) */
+const GROUP_PATTERNS: Record<MuscleGroup, Pattern[]> = {
+  chest: ['fly', 'iPush', 'hPush'],
+  back: ['hPull', 'vPull'],
+  shoulders: ['lateral', 'rearDelt', 'vPush'],
+  biceps: ['biceps'],
+  triceps: ['triceps'],
+  quads: ['quadIso', 'lunge', 'squat'],
+  hamstrings: ['hamIso', 'hinge'],
+  glutes: ['glute', 'lunge', 'hinge'],
+  calves: ['calf'],
+  core: ['core'],
+};
+
+/**
+ * Kunga yana bitta mashq: shu kun ishlatadigan mushaklardan haftalik hajmi eng kam (maqsadga nisbatan) bo'lganiga,
+ * jihoz, jarohat va sog'liq cheklovlari bo'yicha mos, kunda hali yo'q mashq. Kun bo'sh bo'lsa — butun hafta bo'yicha.
+ * Set/takror dastur uslubi va maqsadga ko'ra (yordamchi yoki ikkinchi darajali rol).
+ */
+export function suggestExtra(day: Pick<WorkoutDay, 'exercises'>, program: Pick<Program, 'days' | 'method' | 'mesoWeeks'>, p: Profile): PlannedExercise | null {
+  const method = program.method ?? resolveMethod(p);
+  const inDay = new Set(day.exercises.map((e) => e.exerciseId));
+  const dayPatterns = new Set(day.exercises.map((e) => EX_BY_ID[e.exerciseId]?.pattern));
+  const vol = weeklyVolume(program);
+  const used = new Map<string, number>();
+  for (const d of program.days) for (const e of d.exercises) used.set(e.exerciseId, (used.get(e.exerciseId) ?? 0) + 1);
+  // maqsadga nisbatan hajm: kichigi — ko'proq kerak; ustuvor mushaklar oldinroq
+  // kunda shu guruhga mashq qancha ko'p bo'lsa — navbat keyinroq (bir mushakka ketma-ket qo'shilmasin)
+  const inDayCount = (g: MuscleGroup) => day.exercises.filter((e) => EX_BY_ID[e.exerciseId] && MUSCLES[EX_BY_ID[e.exerciseId].primary[0]].group === g).length;
+  const need = (g: MuscleGroup) => (vol[g] / WEEKLY_TARGET[g][0]) * (p.focus.includes(g) ? 0.8 : 1) * (1 + 0.35 * inDayCount(g));
+  const dayGroups = [...new Set(day.exercises.flatMap((e) => EX_BY_ID[e.exerciseId]?.primary.map((m) => MUSCLES[m].group) ?? []))];
+  const order = [...dayGroups.sort((a, b) => need(a) - need(b)), ...GROUP_ORDER.filter((g) => !dayGroups.includes(g)).sort((a, b) => need(a) - need(b))];
+  for (const g of order) {
+    let best: { ex: Exercise; sc: number } | null = null;
+    GROUP_PATTERNS[g].forEach((pat, pi) => {
+      for (const ex of candidates(pat, p)) {
+        if (inDay.has(ex.id) || MUSCLES[ex.primary[0]].group !== g) continue;
+        const role: Role = ex.mechanics === 'compound' ? 'secondary' : 'accessory';
+        const sc = rank(ex, role, p, used, method) - pi * 1.5 - (dayPatterns.has(ex.pattern) ? 3 : 0);
+        if (!best || sc > best.sc) best = { ex, sc };
+      }
+    });
+    if (best) {
+      const ex = (best as { ex: Exercise }).ex;
+      const pe: PlannedExercise = { exerciseId: ex.id, ...methodPrescription(method, p.goal, p.level, ex.mechanics === 'compound' ? 'secondary' : 'accessory', ex, undefined, program.mesoWeeks) };
+      return cautious(p) ? { ...pe, rir: Math.max(pe.rir, 3), scheme: undefined } : pe;
+    }
+  }
+  return null;
+}
+
+/** Mashqlar sonini kamaytirishda olib tashlanadigani: oxirgi yordamchi mashq (asosiy, %1RM yoki chiziqli sxemadagilar oxirgi navbatda) */
+export function removableIndex(day: Pick<WorkoutDay, 'exercises'>): number {
+  for (let i = day.exercises.length - 1; i >= 0; i--) if (!day.exercises[i].scheme) return i;
+  return day.exercises.length - 1;
+}
+
+/** Shu hafta kunda ko'rsatilayotgan mashqlar qaysi saqlangan kundan olingan (chiziqli A/B navbatida — boshqa kun); tahrir o'sha kunga yoziladi */
+export function rotationSource(program: Pick<Program, 'method' | 'days'>, dayId: string, absWeek: number): string {
+  const day = program.days.find((d) => d.id === dayId);
+  if (!day) return dayId;
+  const shown = rotateLinear(program, day, absWeek);
+  if (shown === day) return dayId;
+  const at = program.days.findIndex((d) => d.id === dayId);
+  return program.days[at === 1 ? 0 : 1].id;
+}

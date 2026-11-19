@@ -31,7 +31,6 @@ const StretchPlayer = lazy(() => import('./pages/StretchPlayer'));
 
 const TABS = [
   { to: '/', icon: 'home', label: 'Bugun' },
-  { to: '/program', icon: 'calendar', label: 'Dastur' },
   { to: '/library', icon: 'dumbbell', label: 'Mashqlar' },
   { to: '/nutrition', icon: 'food', label: 'Ovqat' },
   { to: '/progress', icon: 'chart', label: 'Natija' },

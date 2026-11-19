@@ -207,9 +207,27 @@ export function PreSetCheck({ ex, injuries, onDone }: { ex: Exercise; injuries: 
   const s = safetyFor(ex.id);
   const [ticked, setTicked] = useState<number[]>([]);
   const [bail, setBail] = useState(false);
-  if (!s) return null;
   const ps = personalSafety(ex, injuries);
+  // shaxsiy cheklov bo'lsa — ochiq; aks holda bitta qator (setlar jadvali ekranda ko'rinib tursin)
+  const [open, setOpen] = useState(ps.joints.length > 0 || ps.avoid.length > 0);
+  if (!s) return null;
   const toggle = (i: number) => setTicked((t) => (t.includes(i) ? t.filter((x) => x !== i) : [...t, i]));
+  if (!open)
+    return (
+      <div className="preset-mini">
+        <button className="row gap-8 grow" style={{ minHeight: 44, textAlign: 'left' }} onClick={() => setOpen(true)} aria-expanded={false}>
+          <Icon name="shield" size={18} style={{ color: RISK_INFO[s.risk].color, flex: 'none' }} />
+          <span className="small grow">
+            <b>Setdan oldin</b> · {s.check.length} ta tekshiruv
+          </span>
+          <RiskTag risk={s.risk} />
+          <Icon name="down" size={16} style={{ color: 'var(--text-3)', flex: 'none' }} />
+        </button>
+        <button className="icon-btn" style={{ width: 36, height: 36, flex: 'none' }} onClick={onDone} aria-label="Yopish">
+          <Icon name="x" size={16} />
+        </button>
+      </div>
+    );
   return (
     <div className="card tight stack gap-10 preset-card" role="region" aria-label="Setdan oldin xavfsizlik">
       <div className="row between gap-8">

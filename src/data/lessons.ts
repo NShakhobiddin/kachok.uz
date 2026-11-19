@@ -282,7 +282,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         title: 'Eng yaxshi uslub — bajariladigani',
-        text: "Farqlar o‘rtacha kichik; muntazamlik esa hamma narsani hal qiladi. Maqsad «mushak» bo‘lsa — gipertrofiya, «kuch» va tajriba bo‘lsa — kuch bloki, endi boshlagan bo‘lsangiz — chiziqli. «Dastur» bo‘limida istalgan payt almashtirasiz.",
+        text: "Farqlar o‘rtacha kichik; muntazamlik esa hamma narsani hal qiladi. Maqsad «mushak» bo‘lsa — gipertrofiya, «kuch» va tajriba bo‘lsa — kuch bloki, endi boshlagan bo‘lsangiz — chiziqli. «Bugun» sahifasidagi ⚙ «Haftalik reja»da istalgan payt almashtirasiz.",
         scene: 'grades',
       },
     ],

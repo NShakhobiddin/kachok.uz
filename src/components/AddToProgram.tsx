@@ -75,8 +75,8 @@ export function AddToProgram({ ex }: { ex: Exercise }) {
           })}
         </div>
         {added && (
-          <Link to="/program" className="btn btn-primary btn-block mt-16">
-            Dasturni ko‘rish <Icon name="right" size={18} />
+          <Link to={`/?day=${days.find((d) => d.id === added)?.weekday ?? ''}`} className="btn btn-primary btn-block mt-16">
+            Shu kunni ko‘rish <Icon name="right" size={18} />
           </Link>
         )}
       </Sheet>
