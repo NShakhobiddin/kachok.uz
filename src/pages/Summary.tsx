@@ -5,6 +5,7 @@ import { Barbell, PlateBadge } from '../components/Barbell';
 import { BodyMap } from '../components/BodyMap';
 import { ShareSheet } from '../components/ShareSheet';
 import { autoPostWorkout, serverless } from '../api/social';
+import { GoalsAchieved } from '../components/Goals';
 import type { CardData } from '../lib/shareCard';
 import { Icon } from '../components/ui/Icon';
 import { MUSCLES } from '../data/catalog';
@@ -115,6 +116,8 @@ export default function Summary() {
           {msg.text}
         </p>
       </motion.div>
+
+      <GoalsAchieved />
 
       <div className="mt-16">
         <Barbell plates={log.exercises.map(() => ({ progress: 1 }))} />

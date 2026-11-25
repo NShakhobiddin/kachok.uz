@@ -405,6 +405,23 @@ export interface WorkoutLog {
   deload?: boolean;
 }
 
+/** Foydalanuvchi maqsadi: kuch (taxminiy 1RM), tana vazni yoki oyiga mashg'ulotlar soni */
+export interface UserGoal {
+  id: string;
+  kind: 'lift' | 'weight' | 'workouts';
+  /** kuch maqsadi uchun mashq */
+  exerciseId?: string;
+  /** lift — 1RM, kg; weight — tana vazni, kg; workouts — oyiga mashg'ulot */
+  target: number;
+  /** qo'yilgan paytdagi qiymat (progress shundan hisoblanadi) */
+  start: number;
+  createdAt: string;
+  /** muddat, YYYY-MM-DD (ixtiyoriy) */
+  deadline?: string;
+  /** erishilgan sana */
+  doneAt?: string;
+}
+
 export interface BodyEntry {
   date: string;
   weightKg?: number;

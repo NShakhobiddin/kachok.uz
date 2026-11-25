@@ -2,7 +2,7 @@
 // versiyadagi fayl) ilovani buzib qo'ymasin. Faqat exportData yozadigan kalitlar qabul qilinadi.
 import { clampKcalAdjust } from '../engine/nutrition';
 import { GROUP_ORDER } from '../data/catalog';
-import type { BodyEntry, ExerciseLog, FoodEntry, MuscleGroup, PlannedExercise, Profile, Program, SetLog, WorkoutDay, WorkoutLog } from '../types';
+import type { BodyEntry, ExerciseLog, FoodEntry, MuscleGroup, PlannedExercise, Profile, Program, SetLog, WorkoutDay, WorkoutLog, UserGoal } from '../types';
 
 type Obj = Record<string, unknown>;
 export const isObj = (v: unknown): v is Obj => !!v && typeof v === 'object' && !Array.isArray(v);
@@ -31,6 +31,7 @@ export const BACKUP_KEYS = [
   'seenAchievements',
   'settings',
   'exNotes',
+  'goals',
 ] as const;
 
 export const DEFAULT_SETTINGS = { sound: true, vibrate: true, showRir: true, barKg: 20 };
@@ -163,6 +164,30 @@ export function sanitizeFood(v: unknown): FoodEntry | null {
 
 const numRecord = (v: Obj) => Object.fromEntries(Object.entries(v).filter(([, x]) => isNum(x))) as Record<string, number>;
 const strRecord = (v: Obj) => Object.fromEntries(Object.entries(v).filter(([, x]) => isStr(x))) as Record<string, string>;
+const DATE_RE = /^\d{4}-\d{2}-\d{2}/;
+/** Maqsadlar: faqat to'g'ri tuzilganlari (id kaliti bilan) */
+const goalRecord = (v: Obj) =>
+  Object.fromEntries(
+    Object.entries(v).flatMap(([id, g]): [string, UserGoal][] => {
+      if (!isObj(g) || (g.kind !== 'lift' && g.kind !== 'weight' && g.kind !== 'workouts') || !isNum(g.target) || g.target <= 0 || !isNum(g.start) || !isStr(g.createdAt)) return [];
+      if (g.kind === 'lift' && !isStr(g.exerciseId)) return [];
+      return [
+        [
+          id,
+          {
+            id,
+            kind: g.kind,
+            ...(isStr(g.exerciseId) ? { exerciseId: g.exerciseId } : {}),
+            target: g.target,
+            start: g.start,
+            createdAt: g.createdAt,
+            ...(isStr(g.deadline) && DATE_RE.test(g.deadline) ? { deadline: g.deadline.slice(0, 10) } : {}),
+            ...(isStr(g.doneAt) ? { doneAt: g.doneAt } : {}),
+          },
+        ],
+      ];
+    }),
+  ) as Record<string, UserGoal>;
 
 export function sanitizeSettings(v: unknown) {
   const s = isObj(v) ? v : {};
@@ -193,6 +218,7 @@ export interface BackupData {
   seenAchievements: string[];
   settings: ReturnType<typeof sanitizeSettings>;
   exNotes: Record<string, string>;
+  goals: Record<string, UserGoal>;
 }
 
 /**
@@ -254,6 +280,7 @@ export function sanitizeData(d: unknown, strict = true): { data: BackupData; dro
       seenAchievements: list('seenAchievements', (x) => (isStr(x) ? x : null)),
       settings: sanitizeSettings(d.settings),
       exNotes: rec('exNotes', strRecord, {}),
+      goals: rec('goals', goalRecord, {}),
     };
     return { data, dropped };
   } catch {

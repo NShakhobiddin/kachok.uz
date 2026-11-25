@@ -38,9 +38,10 @@ const Friends = lazy(() => import('./pages/Friends'));
 
 const TABS = [
   { to: '/', icon: 'home', label: 'Bugun' },
-  { to: '/library', icon: 'dumbbell', label: 'Mashqlar' },
   { to: '/nutrition', icon: 'food', label: 'Ovqat' },
   { to: '/progress', icon: 'chart', label: 'Natija' },
+  // mashqlar ro'yxati — ma'lumotnoma: Bugun sarlavhasidagi 🔍 va mashq nomlaridan
+  { to: '/friends', icon: 'users', label: 'Do‘stlar' },
 ];
 
 function TabBar() {

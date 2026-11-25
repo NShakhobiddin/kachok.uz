@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { CoachBanner } from '../components/CoachBanner';
+import { GoalStrip } from '../components/Goals';
 import { useArmed } from '../lib/hooks';
 import { ExercisePicker } from '../components/DayEditor';
 import { ExerciseThumb } from '../components/ExerciseThumb';
@@ -157,8 +158,8 @@ export default function Home() {
           </span>
         </div>
         <span className="row gap-8">
-          <Link to="/friends" className="icon-btn" aria-label="Do‘stlar lentasi">
-            <Icon name="users" size={20} />
+          <Link to="/library" className="icon-btn" aria-label="Mashqlar va darslar (qidirish)">
+            <Icon name="search" size={20} />
           </Link>
           <Link to="/profile" className="avatar" aria-label="Profil va sozlamalar">
           {profile.name ? profile.name[0].toUpperCase() : <Icon name="user" />}
@@ -203,6 +204,8 @@ export default function Home() {
           })}
         </div>
       </section>
+
+      <GoalStrip />
 
       {showReport && (
         <Link to={`/report?w=${isoDate(prevWeek)}`} className="report-nudge mt-12">

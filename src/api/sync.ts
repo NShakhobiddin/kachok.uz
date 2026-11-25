@@ -28,7 +28,7 @@ const key = (kind: string, id: string) => `${kind}:${id}`;
 const SINGLETONS: Kind[] = ['profile', 'program', 'meta'];
 
 /** meta:state hujjatidagi kalitlar */
-export const META_KEYS = ['water', 'stretchLog', 'readiness', 'lessonsDone', 'kcalAdjust', 'kcalAdjustAt', 'setDelta', 'setDeltaMeso', 'seenAchievements', 'settings', 'exNotes'] as const;
+export const META_KEYS = ['water', 'stretchLog', 'readiness', 'lessonsDone', 'kcalAdjust', 'kcalAdjustAt', 'setDelta', 'setDeltaMeso', 'seenAchievements', 'settings', 'exNotes', 'goals'] as const;
 type MetaKey = (typeof META_KEYS)[number];
 
 /** Tez xesh (FNV-1a) — hujjat o'zgarganini aniqlash uchun */

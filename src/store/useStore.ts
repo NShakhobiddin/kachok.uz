@@ -7,7 +7,7 @@ import { mesoPerWeek, mesoState, setChange, type MuscleFeedback } from '../engin
 import { clampKcalAdjust } from '../engine/nutrition';
 import { detectPRs } from '../engine/stats';
 import { isoDate } from '../lib/date';
-import type { BodyEntry, ExerciseLog, FoodEntry, MuscleGroup, PlannedExercise, Profile, Program, SetLog, WorkoutDay, WorkoutLog } from '../types';
+import type { BodyEntry, ExerciseLog, FoodEntry, MuscleGroup, PlannedExercise, Profile, Program, SetLog, WorkoutDay, WorkoutLog, UserGoal } from '../types';
 import { MUSCLES, mrvAt } from '../data/catalog';
 import type { PR } from '../engine/stats';
 import { DEFAULT_SETTINGS, sanitizeData } from './sanitize';
@@ -175,6 +175,8 @@ interface State {
   reportSeen?: string;
   /** mashq bo'yicha doimiy eslatmalar ("o'rindiq 4-teshik, keng ushlash") */
   exNotes: Record<string, string>;
+  /** maqsadlar (id bo'yicha — sinxronlashda har biri alohida birlashadi) */
+  goals: Record<string, UserGoal>;
 
   setProfile: (p: Profile, regenerate?: boolean) => void;
   updateProfile: (patch: Partial<Profile>) => void;
@@ -235,6 +237,8 @@ interface State {
   ackProgram: (at: string) => void;
   setReportSeen: (week: string) => void;
   setExNote: (exId: string, text: string) => void;
+  saveGoal: (g: UserGoal) => void;
+  removeGoal: (id: string) => void;
   /** mashg'ulotdagi almashtirish/qo'shimchalarni dastur kuniga yozish */
   applyWorkoutToDay: (dayId: string, edits: WorkoutEdits) => void;
 }
@@ -264,6 +268,7 @@ const initial = {
   programAck: undefined as string | undefined,
   reportSeen: undefined as string | undefined,
   exNotes: {} as Record<string, string>,
+  goals: {} as Record<string, UserGoal>,
 };
 
 export const INITIAL_SYNC: SyncState = { cursor: 0, hashes: {}, stamps: {}, status: 'idle' };
@@ -634,6 +639,12 @@ export const useStore = create<State>()(
       ackProgram: (at) => set({ programAck: at }),
       // faqat oldinga: eski haftaning hisobotini ko'rish Bugun'dagi eslatmani qaytarib chiqarmasin
       setReportSeen: (week) => set({ reportSeen: !get().reportSeen || week > get().reportSeen! ? week : get().reportSeen }),
+      saveGoal: (g) => set({ goals: { ...get().goals, [g.id]: g } }),
+      removeGoal: (id) => {
+        const next = { ...get().goals };
+        delete next[id];
+        set({ goals: next });
+      },
       setExNote: (exId, text) => {
         const next = { ...get().exNotes };
         if (text.trim()) next[exId] = text.trim().slice(0, 200);
@@ -696,6 +707,7 @@ export function exportData(): string {
     seenAchievements: s.seenAchievements,
     settings: s.settings,
     exNotes: s.exNotes,
+    goals: s.goals,
   };
   return JSON.stringify(data, null, 1);
 }

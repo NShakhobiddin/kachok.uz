@@ -28,7 +28,6 @@ import { Toggle } from '../components/ui/controls';
 import { MONTHS } from '../lib/date';
 import { useArmed } from '../lib/hooks';
 import { telegramShare } from '../lib/share';
-import { useBack } from '../lib/useBack';
 import { useStore } from '../store/useStore';
 
 const errText = (e: unknown) => (e instanceof ApiError ? e.message : 'Xatolik yuz berdi');
@@ -48,13 +47,12 @@ export function ago(iso: string, now = Date.now()): string {
 }
 
 export default function Friends() {
-  const back = useBack('/');
   const account = useStore((s) => s.account);
   const sls = serverless();
   if (!apiEnabled && !sls) {
     const bot = botLink();
     return (
-      <Shell back={back}>
+      <Shell>
         <div className="card stack gap-12">
           <b>Telegram’da ishlaydi</b>
           <p className="small muted">Do‘stlar lentasi GYMbos’ning Telegram ilovasida: botni oching — kirish va SMS kerak emas.</p>
@@ -67,18 +65,13 @@ export default function Friends() {
       </Shell>
     );
   }
-  return <Shell back={back}>{account || sls ? <Feed /> : <SignIn />}</Shell>;
+  return <Shell>{account || sls ? <Feed /> : <SignIn />}</Shell>;
 }
 
-function Shell({ back, children }: { back: () => void; children: React.ReactNode }) {
+/** Do'stlar — pastki menyudagi bo'lim (orqaga tugmasi kerak emas) */
+function Shell({ children }: { children: React.ReactNode }) {
   return (
     <div className="page">
-      <div className="back-bar">
-        <button className="icon-btn" onClick={back} aria-label="Orqaga">
-          <Icon name="left" />
-        </button>
-        <span className="eyebrow">Do‘stlar</span>
-      </div>
       <h1 className="display">Do‘stlar</h1>
       <p className="small muted mt-4">Do‘stlaringiz mashg‘ulotlarini ko‘ring, «💪» bilan qo‘llab-quvvatlang — birga shug‘ullanish ko‘proq ilhom beradi.</p>
       <div className="mt-16 stack gap-12">{children}</div>

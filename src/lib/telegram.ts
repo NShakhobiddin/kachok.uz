@@ -110,7 +110,7 @@ export function haptic(kind: keyof typeof PATTERN) {
 }
 
 // asosiy bo'limlar: bu yerda "orqaga" o'rniga Telegram'ning "yopish" tugmasi turadi
-const ROOTS = ['/', '/library', '/nutrition', '/progress'];
+const ROOTS = ['/', '/nutrition', '/progress', '/friends'];
 
 /** Router ichida: Telegram'ning "orqaga" va "sozlamalar" tugmalari, mashg'ulot paytida yopishni tasdiqlash */
 export function useTelegramBridge() {

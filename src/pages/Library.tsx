@@ -14,6 +14,7 @@ import { isHomeExercise } from '../data/routines';
 import { safetyFor } from '../data/safety';
 import { hasEquipment } from '../engine/program';
 import { personalSafety } from '../engine/safety';
+import { useBack } from '../lib/useBack';
 import { useStore } from '../store/useStore';
 import type { MuscleId } from '../types';
 
@@ -30,8 +31,16 @@ const AREAS: { k: string; label: string; muscles: MuscleId[] }[] = [
 export default function Library() {
   const [params, setParams] = useSearchParams();
   const tab = params.get('tab') === 'lessons' ? 'lessons' : params.get('tab') === 'muscles' ? 'muscles' : 'exercises';
+  const back = useBack('/');
   return (
     <div className="page">
+      {/* pastki menyuda emas — Bugun sahifasidagi 🔍 va mashq nomlaridan ochiladi */}
+      <div className="back-bar">
+        <button className="icon-btn" onClick={back} aria-label="Orqaga">
+          <Icon name="left" />
+        </button>
+        <span className="eyebrow">Ma’lumotnoma</span>
+      </div>
       <div className="page-head">
         <h1 className="display">{tab === 'lessons' ? 'Darslar' : tab === 'muscles' ? 'Mushaklar' : 'Mashqlar'}</h1>
       </div>

@@ -8,6 +8,7 @@ import { StrengthLevels } from '../components/StrengthLevels';
 import { TrainingHeatmap } from '../components/TrainingHeatmap';
 import { Icon } from '../components/ui/Icon';
 import { Note } from '../components/ui/Fold';
+import { GoalsSection } from '../components/Goals';
 import { LogEditor } from '../components/LogEditor';
 import { Sheet } from '../components/ui/Sheet';
 import { GROUPS, GROUP_ORDER, VOLUME_LANDMARKS, mrvAt } from '../data/catalog';
@@ -83,6 +84,7 @@ export default function Progress() {
             Bugungi mashqqa o‘tish
           </Link>
         </div>
+        <GoalsSection />
         <section className="section">
           <BodyStats />
         </section>
@@ -106,6 +108,8 @@ export default function Progress() {
         </div>
         <Icon name="right" style={{ color: 'var(--text-3)' }} />
       </Link>
+
+      <GoalsSection />
 
       <WeekBody />
 
@@ -359,7 +363,7 @@ function WeekBody() {
   const cur = sel ? load.find((a) => a.key === sel) : null;
   const top = load.slice(0, 5);
   return (
-    <section className="card glow week-body">
+    <section className="card glow week-body mt-24">
       <div className="row between" style={{ position: 'relative', zIndex: 1 }}>
         <span className="eyebrow accent">Bu hafta ishlagan mushaklar</span>
         <div className="segmented seg-mini" role="radiogroup" aria-label="Ko‘rinish">
