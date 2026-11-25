@@ -3,13 +3,15 @@ import { useEffect, useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { Barbell, PlateBadge } from '../components/Barbell';
 import { BodyMap } from '../components/BodyMap';
+import { ShareSheet } from '../components/ShareSheet';
 import { Icon } from '../components/ui/Icon';
+import { MUSCLES } from '../data/catalog';
 import { EXERCISE_MAP } from '../data/exercises';
 import { ACHIEVEMENTS, finishMessage } from '../data/motivation';
 import { LESSONS } from '../data/lessons';
 import { fmtKg } from '../engine/progression';
 import { allPRs, detectPRs, logSets, logVolume, totals, volumeComparison, weekStreak } from '../engine/stats';
-import { fmtDuration } from '../lib/date';
+import { DAYS, MONTHS, fmtDuration } from '../lib/date';
 import { useStore } from '../store/useStore';
 import type { MuscleId } from '../types';
 
@@ -22,7 +24,7 @@ export default function Summary() {
   const seen = useStore((s) => s.seenAchievements);
   const markAchievements = useStore((s) => s.markAchievements);
   const lessonsDone = useStore((s) => s.lessonsDone);
-  const [copied, setCopied] = useState(false);
+  const [shareOpen, setShareOpen] = useState(false);
   const log = logs.find((l) => l.id === id);
   // rekordlar tarixdan hisoblanadi (sahifa qayta yuklansa ham yo'qolmaydi): shu mashg'ulotdan oldingilarga nisbatan
   const prs = useMemo(
@@ -72,18 +74,32 @@ export default function Summary() {
   const prim = Array.from(new Set(log.exercises.flatMap((e) => EXERCISE_MAP[e.exerciseId]?.primary ?? []))) as MuscleId[];
   const sec = Array.from(new Set(log.exercises.flatMap((e) => EXERCISE_MAP[e.exerciseId]?.secondary ?? []))).filter((m) => !prim.includes(m)) as MuscleId[];
 
-  const share = async () => {
-    const text = `GYMbos: ${log.title} — ${fmtDuration(log.durationMin)}, ${sets} set, ${Math.round(vol)} kg${prs.length ? `, ${prs.length} ta yangi rekord` : ''}. 💪`;
-    try {
-      if (navigator.share) await navigator.share({ text, title: 'GYMbos' });
-      else {
-        await navigator.clipboard.writeText(text);
-        setCopied(true);
-      }
-    } catch {
-      /* bekor qilindi */
-    }
+  // ulashish kartochkasi: har mashqning eng kuchli seti, rekordlar lime bilan
+  const prIds = new Set(prs.map((p) => p.exerciseId));
+  const bestRows = [...new Set(log.exercises.map((e) => e.exerciseId))].flatMap((exId) => {
+    const ex = EXERCISE_MAP[exId];
+    const done = log.exercises.filter((e) => e.exerciseId === exId).flatMap((e) => e.sets.filter((x) => x.done && !x.warmup));
+    if (!ex || !done.length) return [];
+    const top = done.reduce((a, b) => (b.kg * (1 + b.reps / 30) > a.kg * (1 + a.reps / 30) ? b : a));
+    const value = ex.timed ? `${top.reps} s` : top.kg > 0 && !ex.assisted ? `${fmtKg(top.kg)} kg × ${top.reps}` : `${top.reps} marta`;
+    return [{ name: ex.name, value, hot: prIds.has(exId) }];
+  });
+  const started = new Date(log.startedAt);
+  const card = {
+    kind: 'workout' as const,
+    title: log.title,
+    date: `${started.getDate()} ${MONTHS[started.getMonth()]} · ${DAYS[(started.getDay() + 6) % 7]}`,
+    muscles: [...new Set(prim.map((m) => MUSCLES[m].name))].slice(0, 4).join(' · '),
+    stats: [
+      ['Vaqt', fmtDuration(log.durationMin)],
+      ['Setlar', String(sets)],
+      ['Ko‘tarildi', `${Math.round(vol).toLocaleString('ru-RU')} kg`],
+      ['Rekordlar', String(prs.length)],
+    ] as [string, string][],
+    rows: [...bestRows.filter((r) => r.hot), ...bestRows.filter((r) => !r.hot)].slice(0, 6),
+    rowsTitle: prs.length ? 'Rekordlar va eng yaxshi setlar' : 'Eng yaxshi setlar',
   };
+  const shareText = `GYMbos: «${log.title}» — ${fmtDuration(log.durationMin)}, ${sets} set, ${Math.round(vol).toLocaleString('ru-RU')} kg${prs.length ? `, ${prs.length} ta yangi rekord` : ''}. Men bilan mashq qil!`;
 
   return (
     <div className="page no-tab">
@@ -181,18 +197,14 @@ export default function Summary() {
       </section>
 
       <div className="row gap-8 mt-24">
-        <button className="btn btn-secondary" onClick={share} aria-label="Ulashish">
-          <Icon name="share" size={18} />
+        <button className="btn btn-secondary grow" onClick={() => setShareOpen(true)}>
+          <Icon name="share" size={18} /> Do‘stlarga
         </button>
         <Link to="/" className="btn btn-primary grow">
           Bosh sahifa
         </Link>
       </div>
-      {copied && (
-        <p className="small mt-8" role="status" style={{ textAlign: 'center', color: 'var(--green)' }}>
-          Natija matni nusxalandi — Telegramga joylashtiring.
-        </p>
-      )}
+      <ShareSheet open={shareOpen} onClose={() => setShareOpen(false)} card={card} text={shareText} filename={`gymbos-${log.startedAt.slice(0, 10)}.png`} />
       <p className="small faint mt-16" style={{ textAlign: 'center' }}>
         Endi: oqsilli ovqat, suv va 7–9 soat uyqu.
       </p>

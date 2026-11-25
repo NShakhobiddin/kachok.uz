@@ -3018,3 +3018,33 @@ ol.steps li::before {
   margin: -8px -4px -8px 0;
   color: var(--text-2);
 }
+/* ulashish kartochkasi ko'rinishi */
+.share-preview {
+  aspect-ratio: 4 / 5;
+  max-height: 52vh;
+  margin: 0 auto;
+  width: 100%;
+  display: grid;
+  place-items: center;
+  border-radius: 20px;
+  overflow: hidden;
+  background: var(--surface);
+  border: 1px solid var(--line);
+}
+.share-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+.report-nudge {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 48px;
+  padding: 10px 14px;
+  border-radius: 16px;
+  background: var(--accent-soft, rgba(212, 250, 80, 0.08));
+  border: 1px solid var(--accent-line);
+  color: inherit;
+}

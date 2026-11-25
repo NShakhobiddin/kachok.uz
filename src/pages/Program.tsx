@@ -108,7 +108,16 @@ export default function ProgramPage() {
         <p className="tiny faint mt-8">Kunni bosing — mashqlari «Bugun» sahifasida ochiladi: o‘sha yerda soni, seti va almashtirish.</p>
       </section>
 
-      <button className="card row between gap-12 mt-16" style={{ width: '100%', textAlign: 'left' }} onClick={() => setSplitOpen(true)}>
+      <Link to="/routines?tab=programs" className="card row between gap-12 mt-16" style={{ color: 'inherit' }}>
+        <span className="stack" style={{ gap: 2, minWidth: 0 }}>
+          <span className="eyebrow">Tayyor dasturlar</span>
+          <span className="strong">Mashhur uslublardan tanlash</span>
+          <span className="small muted">3×5 kuch, yuqori/pastki, dumba ustuvor, PPL va boshqalar — sizga mosi belgilangan</span>
+        </span>
+        <Icon name="right" size={18} style={{ color: 'var(--text-3)', flex: 'none' }} />
+      </Link>
+
+      <button className="card row between gap-12 mt-12" style={{ width: '100%', textAlign: 'left' }} onClick={() => setSplitOpen(true)}>
         <span className="stack" style={{ gap: 2, minWidth: 0 }}>
           <span className="eyebrow">Kunlar taqsimoti</span>
           <span className="strong">{customSplitOf(profile) ? 'Mushaklarni o‘zingiz tanlagansiz' : 'Tavsiya etilgan'}</span>

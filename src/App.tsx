@@ -28,6 +28,7 @@ const MuscleDetail = lazy(() => import('./pages/MuscleDetail'));
 const Routines = lazy(() => import('./pages/Routines'));
 const RoutineView = lazy(() => import('./pages/Routines').then((m) => ({ default: m.RoutineView })));
 const StretchPlayer = lazy(() => import('./pages/StretchPlayer'));
+const Report = lazy(() => import('./pages/Report'));
 
 const TABS = [
   { to: '/', icon: 'home', label: 'Bugun' },
@@ -58,7 +59,7 @@ function TabBar() {
   );
 }
 
-const NO_TAB = ['/onboarding', '/workout', '/summary', '/lesson', '/lab', '/account', '/premium', '/stretch'];
+const NO_TAB = ['/onboarding', '/workout', '/summary', '/lesson', '/lab', '/account', '/premium', '/stretch', '/report'];
 // profil to'ldirilmasdan ham ochiladigan sahifalar
 const NO_PROFILE_OK = ['/onboarding', '/lab', '/exercise', '/library', '/lesson', '/sources', '/account', '/premium', '/coach', '/muscle', '/routine', '/stretch'];
 
@@ -91,6 +92,7 @@ function Shell() {
           <Route path="/routines" element={<Routines />} />
           <Route path="/routine/:id" element={<RoutineView />} />
           <Route path="/stretch/:id" element={<StretchPlayer />} />
+          <Route path="/report" element={<Report />} />
           <Route path="/muscle/:key" element={<MuscleDetail />} />
           <Route path="/muscles" element={<Navigate to="/library?tab=muscles" replace />} />
           <Route path="/account" element={<Account />} />

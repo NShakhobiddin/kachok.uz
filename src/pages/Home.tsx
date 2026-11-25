@@ -18,7 +18,8 @@ import { dailyPick } from '../data/motivation';
 import { alternatives, estimateMinutes, hasEquipment, manualPlanned, removableIndex, rotationSource } from '../engine/program';
 import { fmtKg, type Suggestion } from '../engine/progression';
 import { weekStreak } from '../engine/stats';
-import { DAYS, DAYS_SHORT, MONTHS, addDays, daysBetween, startOfWeek } from '../lib/date';
+import { DAYS, DAYS_SHORT, MONTHS, addDays, daysBetween, isoDate, startOfWeek } from '../lib/date';
+import { weekSummary } from '../engine/stats';
 import { useNutrition } from '../lib/useNutrition';
 import { useDayPlan, useToday } from '../lib/useToday';
 import { useStore } from '../store/useStore';
@@ -135,6 +136,11 @@ export default function Home() {
   const lastLog = finished.reduce<(typeof finished)[number] | undefined>((a, l) => (!a || l.startedAt > a.startedAt ? l : a), undefined);
   const daysSince = lastLog ? daysBetween(new Date(lastLog.startedAt), now) : null;
   const untilNext = t.nextDay ? (t.nextDay.weekday - t.today + 7) % 7 || 7 : null;
+  // yangi hafta boshida (du–cho) o'tgan hafta hisoboti haqida bir marta eslatma
+  const reportSeen = useStore((s) => s.reportSeen);
+  const prevWeek = addDays(ws, -7);
+  const prevSum = useMemo(() => weekSummary(logs, prevWeek), [logs, prevWeek.getTime()]);
+  const showReport = t.today <= 2 && prevSum.workouts > 0 && reportSeen !== isoDate(prevWeek);
 
   // pastki tugma: faol mashg'ulot → davom; kunda mashq bor va bajarilmagan → boshlash
   const canStart = !active && !!day && day.exercises.length > 0 && !doneThisWeek && !(isToday && t.doneToday);
@@ -191,6 +197,20 @@ export default function Home() {
           })}
         </div>
       </section>
+
+      {showReport && (
+        <Link to={`/report?w=${isoDate(prevWeek)}`} className="report-nudge mt-12">
+          <Icon name="chart" size={18} style={{ color: 'var(--accent)', flex: 'none' }} />
+          <span className="small grow">
+            <b>O‘tgan hafta hisoboti</b>
+            <span className="muted num">
+              {' '}
+              · {prevSum.workouts}/{profile.daysPerWeek} mashg‘ulot
+            </span>
+          </span>
+          <Icon name="right" size={16} style={{ color: 'var(--text-3)', flex: 'none' }} />
+        </Link>
+      )}
 
       {/* Faol mashg'ulot */}
       {active && (
@@ -576,10 +596,10 @@ function Extras({ trainingDay, trainedToday }: { trainingDay: boolean; trainedTo
           <b className="mt-4">Cho‘zilish</b>
           <span className="tiny muted">Taymer bilan · {routineMinutes(ROUTINE_MAP[stretchId])} daq</span>
         </Link>
-        <Link to="/routines" className="card tight stack gap-4" style={{ color: 'inherit' }}>
-          <Icon name="home" size={20} style={{ color: 'var(--accent)' }} />
-          <b className="mt-4">Uyda mashq</b>
-          <span className="tiny muted">Tayyor mashg‘ulotlar</span>
+        <Link to="/routines?tab=health" className="card tight stack gap-4" style={{ color: 'inherit' }}>
+          <Icon name="heart" size={20} style={{ color: 'var(--accent)' }} />
+          <b className="mt-4">Tayyor to‘plamlar</b>
+          <span className="tiny muted">Uyda, sog‘liq uchun, dasturlar</span>
         </Link>
       </div>
       <Link to={`/lesson/${lesson.id}`} className="card row gap-12 mt-12" style={{ color: 'inherit' }}>

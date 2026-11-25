@@ -91,6 +91,17 @@ export default function Progress() {
         <h1 className="display">Natija</h1>
       </div>
 
+      <Link to="/report" className="card row gap-12" style={{ color: 'inherit', marginBottom: 12 }}>
+        <span className="lesson-ico">
+          <Icon name="chart" />
+        </span>
+        <div className="grow">
+          <div className="strong">Haftalik hisobot</div>
+          <div className="tiny muted">Natija, kuch o‘sishi, tavsiyalar — do‘stlarga ulashish</div>
+        </div>
+        <Icon name="right" style={{ color: 'var(--text-3)' }} />
+      </Link>
+
       <WeekBody />
 
       <div className="grid-2 mt-16">

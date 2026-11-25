@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { EXERCISES, EXERCISE_MAP, STRETCHES } from '../../data/exercises';
-import { ROUTINES, isHomeExercise, routineExercises, routineMinutes, stretchSteps } from '../../data/routines';
+import { ROUTINES, ROUTINE_MAP, isHomeExercise, routineExercises, routineMinutes, stretchSteps } from '../../data/routines';
+import { safetyFor } from '../../data/safety';
 import { generateProgram } from '../program';
 import type { Profile } from '../../types';
 
@@ -85,6 +86,26 @@ describe('Tayyor mashg‘ulotlar', () => {
         expect(m, r.id).toBeLessThanOrEqual(40);
       }
     }
+  });
+
+  it('sog‘liq to‘plamlari: manba, kimga, ehtiyot, to‘xtash belgilari, xavfsiz mashqlar', () => {
+    const health = ROUTINES.filter((r) => r.kind === 'health');
+    expect(health.length).toBeGreaterThanOrEqual(5);
+    for (const r of health) {
+      const h = r.health!;
+      expect(h, r.id).toBeTruthy();
+      expect(h.source.length, r.id).toBeGreaterThan(20);
+      expect(h.who.length && h.caution.length && h.stop.length, r.id).toBeTruthy();
+      expect(h.freq.length, r.id).toBeGreaterThan(20);
+      if (h.stretch) expect(ROUTINE_MAP[h.stretch]?.kind, r.id).toBe('stretch');
+      // yuqori xavfli (og'ir shtanga) mashqlar sog'liq to'plamiga kirmaydi
+      for (const { ex } of routineExercises(r)) expect(safetyFor(ex.id)?.risk ?? 1, `${r.id}: ${ex.id}`).toBeLessThan(3);
+    }
+    // homiladorlikda chalqancha yotib bajariladigan va qorinni bukuvchi mashqlar yo'q
+    const preg = ROUTINE_MAP['health-pregnancy'];
+    for (const id of ['glute-bridge', 'crunch', 'dead-bug', 'reverse-crunch', 'bicycle-crunch', 'plank']) expect(preg.items.map((i) => i.id)).not.toContain(id);
+    // bel to'plamida belni bukuvchi press yo'q
+    for (const id of ['crunch', 'bicycle-crunch', 'reverse-crunch', 'superman']) expect(ROUTINE_MAP['health-back'].items.map((i) => i.id)).not.toContain(id);
   });
 
   it('bir tomonlama cho‘zilish ikki qadam bo‘ladi (o‘ng, chap)', () => {

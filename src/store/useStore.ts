@@ -155,6 +155,8 @@ interface State {
   /** ko'rilgan murabbiy xabarlari va dastur yangilanishi */
   seenNotes: string[];
   programAck?: string;
+  /** oxirgi ko'rilgan haftalik hisobot (hafta boshi, YYYY-MM-DD) — Bugun sahifasidagi eslatma shunda yashiriladi */
+  reportSeen?: string;
   /** mashq bo'yicha doimiy eslatmalar ("o'rindiq 4-teshik, keng ushlash") */
   exNotes: Record<string, string>;
 
@@ -208,6 +210,7 @@ interface State {
   setSync: (patch: Partial<SyncState>) => void;
   markNote: (id: string) => void;
   ackProgram: (at: string) => void;
+  setReportSeen: (week: string) => void;
   setExNote: (exId: string, text: string) => void;
   /** mashg'ulotdagi almashtirish/qo'shimchalarni dastur kuniga yozish */
   applyWorkoutToDay: (dayId: string, edits: WorkoutEdits) => void;
@@ -235,6 +238,7 @@ const initial = {
   sync: { cursor: 0, hashes: {}, stamps: {}, status: 'idle' } as SyncState,
   seenNotes: [] as string[],
   programAck: undefined as string | undefined,
+  reportSeen: undefined as string | undefined,
   exNotes: {} as Record<string, string>,
 };
 
@@ -550,6 +554,7 @@ export const useStore = create<State>()(
       setSync: (patch) => set({ sync: { ...get().sync, ...patch } }),
       markNote: (id) => set({ seenNotes: Array.from(new Set([...get().seenNotes, id])).slice(-50) }),
       ackProgram: (at) => set({ programAck: at }),
+      setReportSeen: (week) => set({ reportSeen: week }),
       setExNote: (exId, text) => {
         const next = { ...get().exNotes };
         if (text.trim()) next[exId] = text.trim().slice(0, 200);
