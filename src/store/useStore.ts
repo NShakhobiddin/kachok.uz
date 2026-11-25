@@ -279,7 +279,15 @@ function mapDay(program: Program | null, dayId: string, fn: (d: WorkoutDay) => W
 
 export const useStore = create<State>()(
   persist(
-    (set, get) => ({
+    (set, get) => {
+      /** Dasturdagi kunlar o'zgarganda profildagi jadval ham (haftalik reja soni, hisobot, blok haftasi shunga qarab) */
+      const syncSchedule = (days: WorkoutDay[], program: Program) => {
+        const p = get().profile;
+        if (!p || program.coach) return;
+        const trainingDays = [...new Set(days.map((d) => d.weekday))].sort((a, b) => a - b);
+        set({ profile: { ...p, daysPerWeek: Math.min(6, Math.max(2, days.length)), trainingDays } });
+      };
+      return {
       ...initial,
 
       setProfile: (p, regenerate = true) => {
@@ -344,12 +352,17 @@ export const useStore = create<State>()(
         const program = get().program;
         if (!program) return null;
         const day: WorkoutDay = { id: uid(), title, focus: 'O‘zim tanlagan mashqlar', weekday, exercises: [], estMin: estimateMinutes([]) };
-        set({ program: { ...program, days: [...program.days, day] } });
+        const days = [...program.days, day];
+        set({ program: { ...program, days } });
+        syncSchedule(days, program);
         return day.id;
       },
       removeDay: (dayId) => {
         const program = get().program;
-        if (program && program.days.length > 1) set({ program: { ...program, days: program.days.filter((d) => d.id !== dayId) } });
+        if (!program || program.days.length <= 1) return;
+        const days = program.days.filter((d) => d.id !== dayId);
+        set({ program: { ...program, days } });
+        syncSchedule(days, program);
       },
 
       startWorkout: (day, plan, readiness, initialEx, title) => {
@@ -580,7 +593,8 @@ export const useStore = create<State>()(
       setSync: (patch) => set({ sync: { ...get().sync, ...patch } }),
       markNote: (id) => set({ seenNotes: Array.from(new Set([...get().seenNotes, id])).slice(-50) }),
       ackProgram: (at) => set({ programAck: at }),
-      setReportSeen: (week) => set({ reportSeen: week }),
+      // faqat oldinga: eski haftaning hisobotini ko'rish Bugun'dagi eslatmani qaytarib chiqarmasin
+      setReportSeen: (week) => set({ reportSeen: !get().reportSeen || week > get().reportSeen! ? week : get().reportSeen }),
       setExNote: (exId, text) => {
         const next = { ...get().exNotes };
         if (text.trim()) next[exId] = text.trim().slice(0, 200);
@@ -602,7 +616,8 @@ export const useStore = create<State>()(
             return { ...d, exercises };
           }),
         }),
-    }),
+    };
+    },
     {
       name: 'kachok-v1',
       version: 1,

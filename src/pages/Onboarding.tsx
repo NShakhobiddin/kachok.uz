@@ -110,7 +110,8 @@ export default function Onboarding() {
   };
   const finish = () => {
     setFinished(true);
-    setProfile({ ...p, createdAt: new Date().toISOString() });
+    // faqat bo'shliqdan iborat ism — avatar harfi va sarlavha bo'sh qolardi
+    setProfile({ ...p, name: p.name.trim() || 'Sportchi', createdAt: new Date().toISOString() });
     try {
       sessionStorage.removeItem('kachok-onboarding');
     } catch {

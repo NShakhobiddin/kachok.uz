@@ -19,6 +19,7 @@ import { groupFrequency } from '../engine/program';
 import { fmtKg } from '../engine/progression';
 import { allPRs, exerciseSeries, finished, lastWeeks, logSets, logVolume, totals, volumeComparison, weekStreak, weeklyInsights } from '../engine/stats';
 import { fmtDate, fmtDuration, startOfWeek } from '../lib/date';
+import { useArmed } from '../lib/hooks';
 
 const shortDate = (d: Date | string) => {
   const x = new Date(d);
@@ -53,7 +54,7 @@ export default function Progress() {
   const curEx = exSel ?? exIds[0] ?? null;
   const series = useMemo(() => (curEx ? exerciseSeries(curEx, logs) : []), [curEx, logs]);
   const [open, setOpen] = useState<WorkoutLog | null>(null);
-  const [confirmDel, setConfirmDel] = useState(false);
+  const del = useArmed();
   const history = useMemo(() => finished(logs).sort((a, b) => b.startedAt.localeCompare(a.startedAt)), [logs]);
   const ctx = { logs, totalWorkouts: t.workouts, totalVolume: t.volume, totalMinutes: t.minutes, prCount: prs.length, streak, lessonsDone: lessonsDone.length, lessonsTotal: LESSONS.length };
   const cmp = volumeComparison(t.volume);
@@ -271,7 +272,7 @@ export default function Progress() {
         open={!!open}
         onClose={() => {
           setOpen(null);
-          setConfirmDel(false);
+          del.disarm();
         }}
         label="Mashg‘ulot tafsiloti"
       >
@@ -292,13 +293,14 @@ export default function Progress() {
             <button
               className="btn btn-danger btn-block mt-8"
               onClick={() => {
-                if (!confirmDel) return setConfirmDel(true);
+                if (!del.armed) return del.arm();
+                if (!del.ready()) return;
                 deleteLog(open.id);
-                setConfirmDel(false);
+                del.disarm();
                 setOpen(null);
               }}
             >
-              <Icon name="trash" size={18} /> {confirmDel ? 'Tasdiqlash: butunlay o‘chirish' : 'O‘chirish'}
+              <Icon name="trash" size={18} /> {del.armed ? 'Tasdiqlash: butunlay o‘chirish' : 'O‘chirish'}
             </button>
           </div>
         )}

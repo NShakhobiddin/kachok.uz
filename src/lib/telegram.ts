@@ -1,8 +1,9 @@
 // Telegram Mini App: ilova Telegram ichida ochilganda o'zini oddiy ilovadek tutadi —
 // to'liq ekran, pastga tortilganda yopilib qolmaydi, ranglar bir xil, Telegram'ning "orqaga" tugmasi ishlaydi.
 // SDK faqat Telegram ichida yuklanadi (index.html), oddiy brauzer va PWA'da bu modul hech narsa qilmaydi.
-import { useEffect } from 'react';
+import { useEffect, useSyncExternalStore } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { sheetStack } from '../components/ui/Sheet';
 import { useStore } from '../store/useStore';
 
 type Haptic = 'light' | 'medium' | 'heavy' | 'rigid' | 'soft';
@@ -31,6 +32,8 @@ interface TgWebApp {
   setBackgroundColor: (c: string) => void;
   setBottomBarColor?: (c: string) => void;
   openLink: (url: string) => void;
+  /** Bot API 6.2+: tasdiqlash oynasi */
+  showConfirm?: (message: string, cb?: (ok: boolean) => void) => void;
   /** Bot API 6.9+: raqamni botga ulashish oynasi */
   requestContact?: (cb?: (shared: boolean) => void) => void;
   BackButton: TgButton;
@@ -116,18 +119,20 @@ export function useTelegramBridge() {
 
   const root = ROOTS.includes(loc.pathname);
   const onboardingStart = loc.pathname === '/onboarding' && !loc.search;
-  const showBack = !!tg && !root && !onboardingStart;
+  // ochiq oyna (sheet) bo'lsa — "Orqaga" avval uni yopadi (Android apparat tugmasi ham shu tugmani bosadi)
+  const sheets = useSyncExternalStore(sheetStack.subscribe, sheetStack.size);
+  const showBack = !!tg && (sheets > 0 || (!root && !onboardingStart));
   const first = loc.key === 'default';
 
   useEffect(() => {
     if (!tg) return;
-    const back = () => (first ? nav('/', { replace: true }) : nav(-1));
+    const back = () => (sheets > 0 ? sheetStack.closeTop() : first ? nav('/', { replace: true }) : nav(-1));
     if (showBack) {
       tg.BackButton.show();
       tg.BackButton.onClick(back);
     } else tg.BackButton.hide();
     return () => tg.BackButton.offClick(back);
-  }, [tg, showBack, first, nav]);
+  }, [tg, showBack, first, nav, sheets]);
 
   useEffect(() => {
     const sb = tg?.SettingsButton;
@@ -143,6 +148,20 @@ export function useTelegramBridge() {
     if (active) tg.enableClosingConfirmation();
     else tg.disableClosingConfirmation();
   }, [tg, active]);
+}
+
+/** Tasdiqlash oynasi: Telegram ichida — Telegram'ning o'zi (brauzer oynalari bloklanishi mumkin), aks holda confirm() */
+export function confirmDialog(message: string): Promise<boolean> {
+  const tg = telegram();
+  if (tg?.showConfirm && tg.isVersionAtLeast('6.2'))
+    return new Promise((resolve) => {
+      try {
+        tg.showConfirm!(message, (ok) => resolve(!!ok));
+      } catch {
+        resolve(window.confirm(message));
+      }
+    });
+  return Promise.resolve(window.confirm(message));
 }
 
 /** Telegram profilidagi ism — tanishuvda ism maydonini oldindan to'ldirish uchun */

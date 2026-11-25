@@ -29,28 +29,16 @@ import { PainCheck } from '../components/PainCheck';
 import { ILLUSTRATIONS } from '../data/illustrations';
 import { safetyFor } from '../data/safety';
 import { loadJump, needsPreSetCheck, reducedLoad } from '../engine/safety';
-import { haptic } from '../lib/telegram';
+import { playTones } from '../lib/sound';
+import { confirmDialog, haptic } from '../lib/telegram';
 
-function beep() {
-  try {
-    const Ctx = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
-    const ctx = new Ctx();
-    [0, 0.18, 0.36].forEach((t, i) => {
-      const o = ctx.createOscillator();
-      const g = ctx.createGain();
-      o.frequency.value = i === 2 ? 1320 : 880;
-      g.gain.setValueAtTime(0.0001, ctx.currentTime + t);
-      g.gain.exponentialRampToValueAtTime(0.25, ctx.currentTime + t + 0.02);
-      g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + t + 0.15);
-      o.connect(g).connect(ctx.destination);
-      o.start(ctx.currentTime + t);
-      o.stop(ctx.currentTime + t + 0.16);
-    });
-    setTimeout(() => ctx.close(), 800);
-  } catch {
-    /* ovoz mavjud emas */
-  }
-}
+/** Dam tugadi: uch qisqa signal (umumiy ovoz konteksti — iOS'da ham eshitiladi) */
+const beep = () =>
+  playTones([
+    [880, 0, 0.15],
+    [880, 0.18, 0.15],
+    [1320, 0.36, 0.15],
+  ]);
 
 /** shundan ko'p vaqt oldin tugagan dam (ilova qayta ochilganda) — signalsiz yopiladi */
 const STALE_REST_MS = 60 * 1000;
@@ -88,6 +76,24 @@ export default function Workout() {
   const leaving = useRef(false);
   /** set bajarilgach ko'rsatiladigan keyingi qator (dam paneli ostida qolmasin) */
   const [scrollTarget, setScrollTarget] = useState<{ key: string } | null>(null);
+  // "rekord" nishonlari va "qanchalik og'ir edi?" savoli ro'yxatdagi o'ringa bog'langan: mashq almashtirilsa yoki
+  // set o'chirilsa o'rinlar suriladi — eskilari boshqa setga yopishib qolmasin
+  const shape = st.active?.log.exercises.map((e) => `${e.exerciseId}:${e.sets.length}`).join('|') ?? '';
+  const prevShape = useRef(shape);
+  useEffect(() => {
+    const before = prevShape.current.split('|');
+    const after = shape.split('|');
+    prevShape.current = shape;
+    // faqat oxiriga set/mashq qo'shilgan bo'lsa — o'rinlar o'zgarmaydi
+    const appended = before.every((b, i) => {
+      const [id, n] = b.split(':');
+      const [id2, n2] = (after[i] ?? '').split(':');
+      return id === id2 && Number(n2) >= Number(n);
+    });
+    if (appended) return;
+    setPrSets([]);
+    setLastDone(null);
+  }, [shape]);
 
   // Ekran o‘chmasligi uchun. Brauzer fon rejimida qulfni bo'shatadi — ilovaga qaytilganda qayta olinadi.
   useEffect(() => {
@@ -210,15 +216,24 @@ export default function Workout() {
     setPainOpen(false);
   };
 
-  const completeSet = (j: number) => {
+  const completeSet = async (j: number) => {
     const s = exLog.sets[j];
     if (s.done) {
       st.updateSet(idx, j, { done: false });
+      // belgi olib tashlandi — "rekord" nishoni ham (vazn o'zgartirilib qayta belgilanishi mumkin)
+      setPrSets((p) => p.filter((k) => k !== `${idx}-${j}`));
       return;
     }
     // qo'lda kiritilgan 0 kg (yuksiz tortilish) — tavsiya bilan almashtirilmaydi
     const kg = s.kgSet ? s.kg : s.kg || sug?.kg || 0;
     const reps = s.reps || sug?.reps || pe?.repMin || 0;
+    // xato yozilgan vazn (80 o'rniga 800) — soxta rekord va keyingi tavsiyalarni buzmasin: avval so'raymiz
+    if (kg > 0 && !ex.assisted) {
+      const hist = exerciseHistory(ex.id, logs);
+      const bestKg = hist.length ? Math.max(...hist.flatMap((h) => h.sets.map((x) => x.kg))) : 0;
+      const limit = bestKg ? bestKg * 1.5 + 20 : sug?.kg ? sug.kg * 2 + 20 : 300;
+      if (kg > limit && !(await confirmDialog(`${fmtKg(kg)} kg — avvalgi natijalaringizdan ancha og‘ir. To‘g‘ri yozilganmi?`))) return;
+    }
     st.updateSet(idx, j, { kg, reps, done: true });
     setLastDone({ ex: idx, set: j });
     if (settings.vibrate) haptic('tick');
@@ -247,9 +262,9 @@ export default function Workout() {
   };
 
   return (
-    <div className="page no-tab" style={{ paddingTop: 'calc(var(--safe-t) + 8px)', paddingBottom: `calc(var(--safe-b) + ${Math.max(140, restH + 40)}px)` }}>
-      {/* Sarlavha */}
-      <div className="row between gap-8" style={{ position: 'sticky', top: 0, zIndex: 20, background: 'var(--bg)', padding: '6px 0 10px' }}>
+    <div className="page no-tab" style={{ paddingTop: 0, paddingBottom: `calc(var(--safe-b) + ${Math.max(140, restH + 40)}px)` }}>
+      {/* Sarlavha: xavfsiz chekinish sarlavhaning o'zida — yopishganda status bar / Telegram tugmalari ostiga kirmaydi */}
+      <div className="row between gap-8" style={{ position: 'sticky', top: 0, zIndex: 20, background: 'var(--bg)', padding: 'calc(var(--safe-t) + 14px) 0 10px' }}>
         <button className="icon-btn" onClick={() => nav('/')} aria-label="Kichraytirish (mashg‘ulot saqlanadi)">
           <Icon name="down" />
         </button>
@@ -388,8 +403,8 @@ export default function Workout() {
                       s.done && s.rir !== undefined && <span className="rir-badge">RIR {s.rir >= 4 ? '4+' : s.rir}</span>
                     )}
                   </span>
-                  <NumCell decimal label={`${j + 1}-set vazn`} placeholder={sug?.kg ? fmtKg(sug.kg) : '0'} value={s.kg} zero={s.kgSet} onValue={(kg, typed) => st.updateSet(idx, j, { kg, kgSet: typed })} />
-                  <NumCell label={`${j + 1}-set takror`} placeholder={String(sug?.reps ?? pe?.repMin ?? '')} value={s.reps} onValue={(reps) => st.updateSet(idx, j, { reps })} />
+                  <NumCell decimal max={650} label={`${j + 1}-set vazn`} placeholder={sug?.kg ? fmtKg(sug.kg) : '0'} value={s.kg} zero={s.kgSet} onValue={(kg, typed) => st.updateSet(idx, j, { kg, kgSet: typed })} />
+                  <NumCell max={ex.timed ? 3600 : 100} label={`${j + 1}-set takror`} placeholder={String(sug?.reps ?? pe?.repMin ?? '')} value={s.reps} onValue={(reps) => st.updateSet(idx, j, { reps })} />
                   <button className={`set-check ${s.done ? 'on' : ''}`} onClick={() => completeSet(j)} aria-label={s.done ? 'Bekor qilish' : 'Set bajarildi'} aria-pressed={s.done}>
                     <Icon name="check" size={18} stroke={3} />
                   </button>
@@ -671,7 +686,7 @@ export default function Workout() {
               if (saveDay && dayEdits && active.log.dayId) st.applyWorkoutToDay(active.log.dayId, dayEdits);
               const log = st.finishWorkout(fb);
               setFinishOpen(false);
-              nav(log ? `/summary/${log.id}` : '/', { replace: true });
+              nav(log ? `/summary/${log.id}` : '/', { replace: true, state: log ? { fresh: true } : undefined });
             }}
           />
         )}
@@ -685,13 +700,14 @@ export default function Workout() {
  * Tashqaridan qiymat o'zgarsa (o'tgan natijani ko'chirish, "Qo'llash") — o'sha ko'rsatiladi.
  */
 /** zero — qiymat 0 bo'lsa ham ko'rsatiladi (qo'lda kiritilgan); onValue ning ikkinchi argumenti — maydon bo'sh emas */
-function NumCell({ value, onValue, decimal, label, placeholder, zero }: { value: number; onValue: (v: number, typed: boolean) => void; decimal?: boolean; label: string; placeholder: string; zero?: boolean }) {
+function NumCell({ value, onValue, decimal, label, placeholder, zero, max = Infinity }: { value: number; onValue: (v: number, typed: boolean) => void; decimal?: boolean; label: string; placeholder: string; zero?: boolean; max?: number }) {
   const [draft, setDraft] = useState<string | null>(null);
   const parse = (raw: string) => {
     if (!raw.trim()) return 0;
     if (!decimal && !/^\s*\d+\s*$/.test(raw)) return NaN;
     const v = parseNum(raw);
-    if (!Number.isFinite(v) || v < 0) return NaN;
+    // manfiy va aql bovar qilmaydigan qiymat (8000 kg, 500 takror) — e'tiborsiz
+    if (!Number.isFinite(v) || v < 0 || v > max) return NaN;
     return decimal ? Math.round(v * 100) / 100 : Math.round(v);
   };
   const shown = draft !== null && parse(draft) === value ? draft : value || zero ? String(value) : '';

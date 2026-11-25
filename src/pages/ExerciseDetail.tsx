@@ -186,7 +186,8 @@ export default function ExerciseDetail() {
       </div>
       <h1 className="display display-l">{ex.name}</h1>
 
-      {ILLUSTRATIONS[ex.id] ? <IllustratedStage ex={ex} /> : <ExerciseStage ex={ex} />}
+      {/* key — boshqa mashqqa o'tilganda ko'rinish rejimi (harakat/mushaklar) qaytadan */}
+      {ILLUSTRATIONS[ex.id] ? <IllustratedStage key={ex.id} ex={ex} /> : <ExerciseStage key={ex.id} ex={ex} />}
 
       <div className="row wrap gap-6 mt-12">
         {ex.primary.map((m) => (

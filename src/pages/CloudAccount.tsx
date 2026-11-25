@@ -6,6 +6,7 @@ import { canRequestPhone, deleteCloud, fetchCloud, fmtPhone, registerCloud, requ
 import { syncNow } from '../api/sync';
 import { Logo } from '../components/Logo';
 import { Icon } from '../components/ui/Icon';
+import { useArmed } from '../lib/hooks';
 import { useStore } from '../store/useStore';
 import { timeAgo } from './Account';
 
@@ -125,7 +126,7 @@ function Registered() {
   const cloud = useStore((s) => s.cloud)!;
   const sync = useStore((s) => s.sync);
   const [busy, setBusy] = useState(false);
-  const [wipe, setWipe] = useState<'idle' | 'ask'>('idle');
+  const wipe = useArmed();
   const [err, setErr] = useState<string | null>(null);
 
   const addPhone = async () => {
@@ -186,10 +187,11 @@ function Registered() {
 
       <button
         className="small muted"
-        style={{ textAlign: 'left', color: wipe === 'ask' ? 'var(--danger)' : undefined }}
+        style={{ textAlign: 'left', color: wipe.armed ? 'var(--danger)' : undefined }}
         disabled={busy}
         onClick={async () => {
-          if (wipe !== 'ask') return setWipe('ask');
+          if (!wipe.armed) return wipe.arm();
+          if (!wipe.ready()) return;
           setBusy(true);
           try {
             await deleteCloud();
@@ -197,11 +199,11 @@ function Registered() {
             setErr(errText(e));
           } finally {
             setBusy(false);
-            setWipe('idle');
+            wipe.disarm();
           }
         }}
       >
-        {wipe === 'ask' ? 'Rostdan o‘chirilsinmi? Bulutdagi ma’lumotlar, do‘stlar va lenta o‘chadi (telefondagilari qoladi) — bosing' : 'Akkauntni o‘chirish'}
+        {wipe.armed ? 'Rostdan o‘chirilsinmi? Bulutdagi ma’lumotlar, do‘stlar va lenta o‘chadi (telefondagilari qoladi) — bosing' : 'Akkauntni o‘chirish'}
       </button>
     </div>
   );

@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { useEffect, useMemo, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useLocation } from 'react-router-dom';
 import { Barbell, PlateBadge } from '../components/Barbell';
 import { BodyMap } from '../components/BodyMap';
 import { ShareSheet } from '../components/ShareSheet';
@@ -21,6 +21,7 @@ const PLATE_VAR: Record<string, string> = { red: 'var(--plate-red)', blue: 'var(
 
 export default function Summary() {
   const { id } = useParams();
+  const fresh = !!(useLocation().state as { fresh?: boolean } | null)?.fresh;
   const logs = useStore((s) => s.logs);
   const profile = useStore((s) => s.profile)!;
   const seen = useStore((s) => s.seenAchievements);
@@ -207,7 +208,8 @@ export default function Summary() {
         </Link>
       </div>
       <ShareSheet open={shareOpen} onClose={() => setShareOpen(false)} card={card} text={shareText} filename={`gymbos-${log.startedAt.slice(0, 10)}.png`} feedId={log.id} />
-      <AutoPost logId={log.id} card={card} />
+      {/* faqat hozirgina tugatilgan mashg'ulot (eski mashg'ulot ochilganda lentaga chiqib ketmaydi) */}
+      {fresh && <AutoPost logId={log.id} card={card} />}
       <p className="small faint mt-16" style={{ textAlign: 'center' }}>
         Endi: oqsilli ovqat, suv va 7–9 soat uyqu.
       </p>

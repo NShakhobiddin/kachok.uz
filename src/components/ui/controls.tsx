@@ -24,7 +24,10 @@ export function Stepper({
   unit?: string;
   label?: string;
 }) {
-  const clamp = (v: number) => Math.min(max, Math.max(min, Math.round(v * 100) / 100));
+  // qadam butun son bo'lsa (setlar, yosh, takror) — qiymat ham butun: "2.5 set" rejada 2.5, mashg'ulotda 2 bo'lib qolardi
+  const whole = Number.isInteger(step);
+  const round = (v: number) => (whole ? Math.round(v) : Math.round(v * 100) / 100);
+  const clamp = (v: number) => Math.min(max, Math.max(min, round(v)));
   // yozilayotgan matn: har bosishda cheklanmaydi ("9" → 30 bo'lib ketmasin), maydondan chiqqanda tekshiriladi
   const [draft, setDraft] = useState<string | null>(null);
   const commit = () => {
@@ -42,7 +45,7 @@ export function Stepper({
         <Icon name="minus" />
       </button>
       <input
-        inputMode="decimal"
+        inputMode={whole ? 'numeric' : 'decimal'}
         value={draft ?? (Number.isFinite(value) ? String(value) : '')}
         aria-label={label}
         onFocus={(e) => {
@@ -53,7 +56,7 @@ export function Stepper({
           setDraft(e.target.value);
           // chegaradagi qiymat darhol qo'llanadi (masalan, kaloriya hisobi yangilanadi)
           const v = parseNum(e.target.value);
-          if (Number.isFinite(v) && v >= min && v <= max) onChange(Math.round(v * 100) / 100);
+          if (Number.isFinite(v) && v >= min && v <= max) onChange(round(v));
         }}
         onBlur={commit}
         onKeyDown={(e) => {

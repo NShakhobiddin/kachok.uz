@@ -7,27 +7,12 @@ import { ILLUSTRATIONS } from '../data/illustrations';
 import { ROUTINE_MAP, TRANSITION_SEC, stretchSteps } from '../data/routines';
 import { useBack } from '../lib/useBack';
 import { useStore } from '../store/useStore';
+import { playTones } from '../lib/sound';
 
 type Phase = 'prep' | 'hold' | 'done';
 
 /** Qisqa signal: poza tugadi */
-function beep(freq = 880, ms = 160) {
-  try {
-    const Ctx = window.AudioContext ?? (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
-    if (!Ctx) return;
-    const ctx = new Ctx();
-    const o = ctx.createOscillator();
-    const g = ctx.createGain();
-    o.frequency.value = freq;
-    g.gain.value = 0.08;
-    o.connect(g).connect(ctx.destination);
-    o.start();
-    o.stop(ctx.currentTime + ms / 1000);
-    o.onended = () => void ctx.close();
-  } catch {
-    /* ovoz bo'lmasa — jim */
-  }
-}
+const beep = (freq = 880, ms = 160) => playTones([[freq, 0, ms / 1000]], 0.08);
 
 /** Cho'zilish taymeri: har poza uchun tayyorlanish → ushlash, tomonlar alohida */
 export default function StretchPlayer() {

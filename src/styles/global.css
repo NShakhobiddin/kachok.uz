@@ -763,6 +763,10 @@ p {
   padding: 10px var(--pad) calc(var(--safe-b) + 20px);
   z-index: 61;
 }
+/* oyna dasturiy fokus oladi (ekran o'quvchi uchun) — chiziq ko'rsatilmaydi */
+.sheet:focus {
+  outline: none;
+}
 .sheet-grip {
   width: 40px;
   height: 5px;

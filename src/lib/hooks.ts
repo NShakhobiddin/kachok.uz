@@ -23,3 +23,18 @@ export function useNow(intervalMs = 1000) {
   }, [intervalMs]);
   return now;
 }
+
+/**
+ * Ikki bosqichli tasdiq (xavfli amallar uchun): birinchi bosish tasdiqni ko'rsatadi, ikkinchi bosish faqat ~0.4 s dan
+ * keyin qabul qilinadi — tasodifiy ikki marta bosish (double-tap) o'chirishni bajarib yubormaydi.
+ */
+export function useArmed(delayMs = 400) {
+  const [armedAt, setArmedAt] = useState<number | null>(null);
+  return {
+    armed: armedAt !== null,
+    arm: () => setArmedAt(Date.now()),
+    disarm: () => setArmedAt(null),
+    /** tasdiq tugmasi bosildi: bajarish mumkinmi */
+    ready: () => armedAt !== null && Date.now() - armedAt >= delayMs,
+  };
+}

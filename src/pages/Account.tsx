@@ -11,6 +11,7 @@ import CloudAccount from './CloudAccount';
 import { syncNow } from '../api/sync';
 import { BILLING } from '../lib/features';
 import { fmtDate } from '../lib/date';
+import { useBack } from '../lib/useBack';
 import { useStore, type Account as Acc } from '../store/useStore';
 
 export default function Account() {
@@ -46,11 +47,11 @@ function OpenInTelegram() {
 }
 
 function Shell({ children }: { children: React.ReactNode }) {
-  const nav = useNavigate();
+  const back = useBack('/');
   return (
     <div className="page">
       <div className="back-bar">
-        <button className="icon-btn" onClick={() => (window.history.length > 1 ? nav(-1) : nav('/'))} aria-label="Orqaga">
+        <button className="icon-btn" onClick={back} aria-label="Orqaga">
           <Icon name="left" />
         </button>
       </div>

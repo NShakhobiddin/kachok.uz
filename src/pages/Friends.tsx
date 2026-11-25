@@ -26,6 +26,7 @@ import { Fold } from '../components/ui/Fold';
 import { Icon } from '../components/ui/Icon';
 import { Toggle } from '../components/ui/controls';
 import { MONTHS } from '../lib/date';
+import { useArmed } from '../lib/hooks';
 import { telegramShare } from '../lib/share';
 import { useBack } from '../lib/useBack';
 import { useStore } from '../store/useStore';
@@ -141,7 +142,8 @@ function Feed() {
   const [more, setMore] = useState(false);
   const [friends, setFriends] = useState<Friend[]>([]);
   const [code, setCode] = useState<{ code: string; invite: string } | null>(null);
-  const [wipe, setWipe] = useState<'idle' | 'ask' | 'busy'>('idle');
+  const wipe = useArmed();
+  const [wiping, setWiping] = useState(false);
   const [err, setErr] = useState<string | null>(null);
   const [added, setAdded] = useState<string | null>(null);
   const [input, setInput] = useState('');
@@ -282,22 +284,24 @@ function Feed() {
           {serverless() && (
             <button
               className="small muted mt-8"
-              style={{ textAlign: 'left', color: wipe === 'ask' ? 'var(--red)' : undefined }}
-              disabled={wipe === 'busy'}
+              style={{ textAlign: 'left', color: wipe.armed ? 'var(--red)' : undefined }}
+              disabled={wiping}
               onClick={async () => {
-                if (wipe !== 'ask') return setWipe('ask');
-                setWipe('busy');
+                if (!wipe.armed) return wipe.arm();
+                if (!wipe.ready()) return;
+                setWiping(true);
                 try {
                   await deleteSocialData();
-                  setWipe('idle');
                   await load();
                 } catch (e) {
                   setErr(errText(e));
-                  setWipe('idle');
+                } finally {
+                  wipe.disarm();
+                  setWiping(false);
                 }
               }}
             >
-              {wipe === 'ask' ? 'Rostdan o‘chirilsinmi? Yozuvlar, «💪» va do‘stlar ro‘yxati o‘chadi — bosing' : 'Lentadagi ma’lumotlarimni o‘chirish'}
+              {wipe.armed ? 'Rostdan o‘chirilsinmi? Yozuvlar, «💪» va do‘stlar ro‘yxati o‘chadi — bosing' : 'Lentadagi ma’lumotlarimni o‘chirish'}
             </button>
           )}
         </div>

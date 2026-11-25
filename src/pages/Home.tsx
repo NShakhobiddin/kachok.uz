@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { CoachBanner } from '../components/CoachBanner';
+import { useArmed } from '../lib/hooks';
 import { ExercisePicker } from '../components/DayEditor';
 import { ExerciseThumb } from '../components/ExerciseThumb';
 import { Logo } from '../components/Logo';
@@ -128,7 +129,7 @@ export default function Home() {
   const [adding, setAdding] = useState(false);
 
   // unutilgan mashg'ulot: 6 soatdan ko'p ochiq turgan bo'lsa yakunlash taklif qilinadi
-  const [discardAsk, setDiscardAsk] = useState(false);
+  const discard = useArmed();
   const staleHours = active ? Math.floor((now.getTime() - new Date(active.log.startedAt).getTime()) / 3600000) : 0;
   const activeDone = active ? active.log.exercises.reduce((a, e) => a + e.sets.filter((s) => s.done).length, 0) : 0;
   const activeTotal = active ? active.log.exercises.reduce((a, e) => a + e.sets.length, 0) : 0;
@@ -237,24 +238,27 @@ export default function Home() {
           {staleHours >= 6 && (
             <div className="stack gap-8 mt-12">
               <span className="small">
-                <b>{staleHours} soatdan beri ochiq.</b> Yakunlashni unutdingizmi? Bajarilgan setlar saqlanadi.
+                <b>{staleHours} soatdan beri ochiq.</b>{' '}
+                {activeDone ? 'Yakunlashni unutdingizmi? Bajarilgan setlar saqlanadi.' : 'Hech bir set belgilanmagan — saqlanadigan natija yo‘q.'}
               </span>
               <div className="row gap-8">
-                <button
-                  className="btn btn-success btn-sm grow"
-                  onClick={() => {
-                    const log = finishWorkout();
-                    if (log) nav(`/summary/${log.id}`);
-                  }}
-                >
-                  Yakunlash
-                </button>
-                {discardAsk ? (
-                  <button className="btn btn-danger btn-sm grow" onClick={discardWorkout}>
+                {activeDone > 0 && (
+                  <button
+                    className="btn btn-success btn-sm grow"
+                    onClick={() => {
+                      const log = finishWorkout();
+                      if (log) nav(`/summary/${log.id}`, { state: { fresh: true } });
+                    }}
+                  >
+                    Yakunlash
+                  </button>
+                )}
+                {discard.armed ? (
+                  <button className="btn btn-danger btn-sm grow" onClick={() => discard.ready() && discardWorkout()}>
                     Ha, o‘chirilsin
                   </button>
                 ) : (
-                  <button className="btn btn-ghost btn-sm grow" onClick={() => setDiscardAsk(true)}>
+                  <button className="btn btn-ghost btn-sm grow" onClick={discard.arm}>
                     Saqlamasdan o‘chirish
                   </button>
                 )}

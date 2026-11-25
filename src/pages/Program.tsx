@@ -173,7 +173,15 @@ export default function ProgramPage() {
       />
 
       {/* kun menyusi: hafta kunini o'zgartirish yoki o'chirish */}
-      <Sheet open={!!sel} onClose={() => setSelId(null)} label="Kun sozlamasi">
+      <Sheet
+        open={!!sel}
+        onClose={() => {
+          setSelId(null);
+          // tasdiq keyingi ochilgan kunga o'tib qolmasin
+          setDelDay(false);
+        }}
+        label="Kun sozlamasi"
+      >
         {sel && (
           <div className="stack gap-12">
             <h3 className="title">{thisWeek.get(sel.id)?.title ?? sel.title}</h3>

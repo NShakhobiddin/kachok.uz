@@ -46,7 +46,7 @@ export default function Profile() {
     setPanel(p);
   };
   const save = (regen: boolean) => {
-    setProfile(draft, regen);
+    setProfile({ ...draft, name: draft.name.trim() || profile.name || 'Sportchi' }, regen);
     setPanel(null);
   };
   const regenPanels: Panel[] = ['goal', 'schedule', 'equipment', 'limits'];

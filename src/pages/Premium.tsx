@@ -1,10 +1,11 @@
 // Pro tarif: imkoniyatlar, narxlar va Payme/Click orqali to'lov.
 import { useEffect, useState } from 'react';
-import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { Icon } from '../components/ui/Icon';
 import { api, ApiError, apiEnabled, refreshMe } from '../api/client';
 import { BILLING, PRO_FEATURES, type ProFeature } from '../lib/features';
 import { fmtDate } from '../lib/date';
+import { useBack } from '../lib/useBack';
 import { useStore } from '../store/useStore';
 
 interface Plan {
@@ -27,7 +28,7 @@ const FREE = [
 const som = (n: number) => n.toLocaleString('ru-RU').replace(/ /g, ' ') + ' so‘m';
 
 export default function Premium() {
-  const nav = useNavigate();
+  const back = useBack('/');
   const [params] = useSearchParams();
   const account = useStore((s) => s.account);
   const [plans, setPlans] = useState<Plan[]>([]);
@@ -67,7 +68,7 @@ export default function Premium() {
   return (
     <div className="page">
       <div className="back-bar">
-        <button className="icon-btn" onClick={() => (window.history.length > 1 ? nav(-1) : nav('/'))} aria-label="Orqaga">
+        <button className="icon-btn" onClick={back} aria-label="Orqaga">
           <Icon name="left" />
         </button>
       </div>
