@@ -40,7 +40,7 @@ beforeEach(() => {
 
 describe('tgcloud: ro‘yxatdan o‘tish', () => {
   it('yangi foydalanuvchi — ro‘yxatdan o‘tmagan; register bir marta vaqt yozadi', async () => {
-    expect(await account({}, A)).toEqual({ registered: false, name: 'Ali', phone: null, registeredAt: null });
+    expect(await account({}, A)).toEqual({ registered: false, name: 'Ali', phone: null, registeredAt: null, remind: false, remindHour: 8 });
     const r1 = await register({}, A);
     expect(r1.registered).toBe(true);
     expect(Date.parse(r1.registeredAt)).toBeGreaterThan(0);

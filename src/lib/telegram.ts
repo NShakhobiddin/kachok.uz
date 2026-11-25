@@ -18,7 +18,7 @@ interface TgButton {
 
 interface TgWebApp {
   initData: string;
-  initDataUnsafe: { user?: { id?: number; first_name?: string; last_name?: string; username?: string } };
+  initDataUnsafe: { user?: { id?: number; first_name?: string; last_name?: string; username?: string; allows_write_to_pm?: boolean } };
   platform: string;
   version: string;
   isVersionAtLeast: (v: string) => boolean;
@@ -34,6 +34,8 @@ interface TgWebApp {
   openLink: (url: string) => void;
   /** Bot API 6.2+: tasdiqlash oynasi */
   showConfirm?: (message: string, cb?: (ok: boolean) => void) => void;
+  /** Bot API 6.9+: botga foydalanuvchiga yozish ruxsati */
+  requestWriteAccess?: (cb?: (granted: boolean) => void) => void;
   /** Bot API 6.9+: raqamni botga ulashish oynasi */
   requestContact?: (cb?: (shared: boolean) => void) => void;
   BackButton: TgButton;

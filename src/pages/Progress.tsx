@@ -8,6 +8,7 @@ import { StrengthLevels } from '../components/StrengthLevels';
 import { TrainingHeatmap } from '../components/TrainingHeatmap';
 import { Icon } from '../components/ui/Icon';
 import { Note } from '../components/ui/Fold';
+import { LogEditor } from '../components/LogEditor';
 import { Sheet } from '../components/ui/Sheet';
 import { GROUPS, GROUP_ORDER, VOLUME_LANDMARKS, mrvAt } from '../data/catalog';
 import { EXERCISE_MAP } from '../data/exercises';
@@ -54,6 +55,9 @@ export default function Progress() {
   const curEx = exSel ?? exIds[0] ?? null;
   const series = useMemo(() => (curEx ? exerciseSeries(curEx, logs) : []), [curEx, logs]);
   const [open, setOpen] = useState<WorkoutLog | null>(null);
+  const [editing, setEditing] = useState(false);
+  const [shown, setShown] = useState(30);
+  const updateLog = useStore((s) => s.updateLog);
   const del = useArmed();
   const history = useMemo(() => finished(logs).sort((a, b) => b.startedAt.localeCompare(a.startedAt)), [logs]);
   const ctx = { logs, totalWorkouts: t.workouts, totalVolume: t.volume, totalMinutes: t.minutes, prCount: prs.length, streak, lessonsDone: lessonsDone.length, lessonsTotal: LESSONS.length };
@@ -250,7 +254,7 @@ export default function Progress() {
           <span className="small muted">{history.length} ta</span>
         </div>
         <div className="card flush">
-          {history.slice(0, 30).map((l) => (
+          {history.slice(0, shown).map((l) => (
             <button key={l.id} className="row gap-12" style={{ padding: '12px 14px', borderBottom: '1px solid var(--line)', width: '100%', textAlign: 'left' }} onClick={() => setOpen(l)}>
               <div className="stack" style={{ width: 44, alignItems: 'center' }}>
                 <span style={{ fontSize: 18, fontWeight: 800 }}>{new Date(l.startedAt).getDate()}</span>
@@ -266,12 +270,18 @@ export default function Progress() {
             </button>
           ))}
         </div>
+        {history.length > shown && (
+          <button className="btn btn-ghost btn-block mt-8" onClick={() => setShown((n) => n + 30)}>
+            Yana {Math.min(30, history.length - shown)} ta
+          </button>
+        )}
       </section>
 
       <Sheet
         open={!!open}
         onClose={() => {
           setOpen(null);
+          setEditing(false);
           del.disarm();
         }}
         label="Mashg‘ulot tafsiloti"
@@ -284,14 +294,32 @@ export default function Progress() {
                 {fmtDate(open.startedAt, true)} · {fmtDuration(open.durationMin)}
               </p>
             </div>
-            {open.exercises.map((e, i) => (
-              <div key={i} className="stack gap-4">
-                <span className="strong small">{EXERCISE_MAP[e.exerciseId]?.name}</span>
-                <span className="small muted num">{e.sets.map((s) => (s.kg ? `${fmtKg(s.kg)}×${s.reps}` : `${s.reps}`)).join(' · ')}</span>
-              </div>
-            ))}
+            {editing ? (
+              <LogEditor
+                log={open}
+                onCancel={() => setEditing(false)}
+                onSave={(exercises) => {
+                  updateLog(open.id, exercises);
+                  setOpen(useStore.getState().logs.find((l) => l.id === open.id) ?? null);
+                  setEditing(false);
+                }}
+              />
+            ) : (
+              <>
+                {open.exercises.map((e, i) => (
+                  <div key={i} className="stack gap-4">
+                    <span className="strong small">{EXERCISE_MAP[e.exerciseId]?.name}</span>
+                    <span className="small muted num">{e.sets.map((s) => (s.kg ? `${fmtKg(s.kg)}×${s.reps}` : `${s.reps}`)).join(' · ')}</span>
+                  </div>
+                ))}
+                <button className="btn btn-secondary btn-block mt-8" onClick={() => setEditing(true)}>
+                  <Icon name="edit" size={18} /> Setlarni tuzatish
+                </button>
+              </>
+            )}
+            {!editing && (
             <button
-              className="btn btn-danger btn-block mt-8"
+              className="btn btn-danger btn-block"
               onClick={() => {
                 if (!del.armed) return del.arm();
                 if (!del.ready()) return;
@@ -302,6 +330,7 @@ export default function Progress() {
             >
               <Icon name="trash" size={18} /> {del.armed ? 'Tasdiqlash: butunlay o‘chirish' : 'O‘chirish'}
             </button>
+            )}
           </div>
         )}
       </Sheet>

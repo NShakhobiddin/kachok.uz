@@ -11,6 +11,8 @@ export interface CloudInfo {
   name: string;
   phone: string | null;
   registeredAt: string | null;
+  remind?: boolean;
+  remindHour?: number;
 }
 
 /** Telegram'dagi ism (ro'yxatdan o'tish oynasida ko'rsatish uchun) */
@@ -25,9 +27,9 @@ function apply(info: CloudInfo) {
   const { cloud, setCloud } = useStore.getState();
   if (!id) return;
   if (info.registered) {
-    const next = { tgId: id, name: info.name, phone: info.phone, at: info.registeredAt ?? new Date().toISOString() };
+    const next = { tgId: id, name: info.name, phone: info.phone, at: info.registeredAt ?? new Date().toISOString(), remind: !!info.remind, remindHour: info.remindHour ?? 8 };
     // `at` — ro'yxatdan o'tgan vaqt: o'zgarsa, akkaunt o'chirilib qayta ochilgan (setCloud sinxronni boshidan boshlaydi)
-    if (!cloud || cloud.tgId !== id || cloud.at !== next.at || cloud.name !== next.name || cloud.phone !== next.phone) setCloud(next);
+    if (!cloud || cloud.tgId !== id || cloud.at !== next.at || cloud.name !== next.name || cloud.phone !== next.phone || cloud.remind !== next.remind || cloud.remindHour !== next.remindHour) setCloud(next);
   } else if (cloud && cloud.tgId === id) setCloud(null); // boshqa qurilmada o'chirilgan
 }
 
@@ -72,6 +74,28 @@ export async function waitForPhone(tries = 8, ms = 1000): Promise<string | null>
     await new Promise((r) => setTimeout(r, ms));
   }
   return null;
+}
+
+/** Botga foydalanuvchiga yozish ruxsati (bot bilan chat ochilmagan bo'lsa — Telegram oynasi) */
+function requestWrite(): Promise<boolean> {
+  const tg = telegram();
+  if (tg?.initDataUnsafe.user?.allows_write_to_pm) return Promise.resolve(true);
+  return new Promise((resolve) => {
+    if (!tg?.requestWriteAccess || !tg.isVersionAtLeast('6.9')) return resolve(true);
+    try {
+      tg.requestWriteAccess((granted) => resolve(!!granted));
+    } catch {
+      resolve(false);
+    }
+  });
+}
+
+/** Eslatmalarni yoqish/o'chirish (yoqishda — bot yozish ruxsati so'raladi); false — ruxsat berilmadi */
+export async function setReminders(on: boolean, hour?: number): Promise<boolean> {
+  if (on && !(await requestWrite())) return false;
+  const info = await scall<CloudInfo>('reminders', { on, ...(hour !== undefined ? { hour } : {}), tzOffset: -new Date().getTimezoneOffset() });
+  apply(info);
+  return true;
 }
 
 export async function deleteCloud() {

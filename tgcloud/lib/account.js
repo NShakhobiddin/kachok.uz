@@ -1,14 +1,32 @@
 // Ro'yxatdan o'tish: Telegram akkaunti (platforma tasdiqlaydi) + ixtiyoriy telefon raqami.
 // Raqam faqat Telegram'ning o'zidan keladi: Mini App requestContact → foydalanuvchi o'z kontaktini botga yuboradi →
 // handlers/message.js uni shu yerda saqlaydi (boshqa odamning kontakti qabul qilinmaydi).
-import { db } from 'sdk';
+import { db, EndpointError } from 'sdk';
 import { sql } from 'sdk/db';
 import { deleteSocial } from './social.js';
 
 const iso = (ms) => (ms == null ? null : new Date(Number(ms)).toISOString());
 
 export function accountInfo(user) {
-  return { registered: user.registered_at != null, name: user.name || '', phone: user.phone || null, registeredAt: iso(user.registered_at) };
+  return {
+    registered: user.registered_at != null,
+    name: user.name || '',
+    phone: user.phone || null,
+    registeredAt: iso(user.registered_at),
+    remind: !!Number(user.remind),
+    remindHour: user.remind_hour == null ? 8 : Number(user.remind_hour),
+  };
+}
+
+/** Eslatmalar: { on, hour?, tzOffset? } — faqat ro'yxatdan o'tganlar (eslatma bulutdagi dastur bo'yicha tuziladi) */
+export async function setReminders(user, input) {
+  if (user.registered_at == null) throw new EndpointError('Avval ro‘yxatdan o‘ting', { code: 'NOT_REGISTERED' });
+  const on = input.on === true ? 1 : 0;
+  const hour = Number.isInteger(input.hour) && input.hour >= 5 && input.hour <= 22 ? input.hour : user.remind_hour ?? 8;
+  const tz = Number.isInteger(input.tzOffset) && input.tzOffset >= -720 && input.tzOffset <= 840 ? input.tzOffset : user.tz_offset ?? 300;
+  await db.run(sql`UPDATE users SET remind = ${on}, remind_hour = ${hour}, tz_offset = ${tz} WHERE id = ${user.id}`);
+  Object.assign(user, { remind: on, remind_hour: hour, tz_offset: tz });
+  return accountInfo(user);
 }
 
 export async function register(user) {
@@ -24,6 +42,7 @@ export async function register(user) {
 /** Akkauntni butunlay o'chirish: bulutdagi ma'lumotlar, lenta, do'stliklar */
 export async function deleteAccount(user) {
   await db.run(sql`DELETE FROM docs WHERE user_id = ${user.id}`);
+  await db.run(sql`DELETE FROM notified WHERE user_id = ${user.id}`);
   await deleteSocial(user);
   await db.run(sql`DELETE FROM users WHERE id = ${user.id}`);
 }

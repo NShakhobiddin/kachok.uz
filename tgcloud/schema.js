@@ -13,6 +13,12 @@ export const users = table('users', {
   phone: text('phone'),
   /** ro'yxatdan o'tgan vaqt (unix ms): bulutga saqlash shundan keyin yoqiladi */
   registeredAt: integer('registered_at'),
+  /** botdan eslatma: mashg'ulot kuni ertalab va dushanba — haftalik natija */
+  remind: integer('remind').notNull().default(0),
+  /** soat mintaqasi, UTC dan daqiqa (Toshkent — 300) */
+  tzOffset: integer('tz_offset').notNull().default(300),
+  /** eslatma soati (mahalliy) */
+  remindHour: integer('remind_hour').notNull().default(8),
 });
 
 /** Do'stlik ikki tomonlama: (a, b) va (b, a) */
@@ -87,5 +93,18 @@ export const docs = table(
   (t) => ({
     pk: primaryKey({ columns: [t.userId, t.kind, t.docId] }),
     seqIdx: index('idx_docs_user_seq').on(t.userId, t.seq),
+  }),
+);
+
+/** Yuborilgan eslatmalar: bir kunda bir marta (rejalashtiruvchi ikki marta ishlasa ham) */
+export const notified = table(
+  'notified',
+  {
+    userId: integer('user_id').notNull(),
+    kind: text('kind').notNull(),
+    day: text('day').notNull(),
+  },
+  (t) => ({
+    pk: primaryKey({ columns: [t.userId, t.kind, t.day] }),
   }),
 );

@@ -21,7 +21,7 @@ export async function me(ctx) {
   const name = [u.first_name, u.last_name].filter((s) => typeof s === 'string' && s.trim()).join(' ').trim().slice(0, 60);
   // parallel birinchi chaqiruvlar to'qnashmasligi uchun: DO NOTHING, keyin o'qish
   await db.run(sql`INSERT INTO users (tg_id, name, created_at) VALUES (${u.id}, ${name}, ${now() / 1000 | 0}) ON CONFLICT(tg_id) DO NOTHING`);
-  const row = await db.get(sql`SELECT id, tg_id, name, friend_code, phone, registered_at FROM users WHERE tg_id = ${u.id}`);
+  const row = await db.get(sql`SELECT id, tg_id, name, friend_code, phone, registered_at, remind, tz_offset, remind_hour FROM users WHERE tg_id = ${u.id}`);
   if (name && row.name !== name) {
     await db.run(sql`UPDATE users SET name = ${name} WHERE id = ${row.id}`);
     row.name = name;

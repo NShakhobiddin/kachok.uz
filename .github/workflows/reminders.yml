@@ -1,0 +1,41 @@
+# Botdan eslatmalar: har soat (mashg'ulot kuni ertalab — bugungi reja; dushanba — o'tgan hafta natijasi).
+# Telegram Serverless'da rejalashtirilgan vazifa yo'q — shu yerda tgcloud/lib/remind.js platformada ishga tushiriladi.
+name: Eslatmalar
+
+on:
+  schedule:
+    - cron: '17 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: reminders
+  cancel-in-progress: false
+
+jobs:
+  remind:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      TGCLOUD_TOKEN: ${{ secrets.TGCLOUD_TOKEN }}
+      TGCLOUD_NO_PAGER: '1'
+    steps:
+      - id: token
+        run: echo "ok=$([ -n "$TGCLOUD_TOKEN" ] && echo true || echo false)" >> "$GITHUB_OUTPUT"
+      - if: steps.token.outputs.ok == 'true'
+        uses: actions/checkout@v4
+      - if: steps.token.outputs.ok == 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - if: steps.token.outputs.ok == 'true'
+        run: npm ci --ignore-scripts
+      # bir martalik endpoint: faqat `run` bilan ishlaydi, deploy qilinmaydi
+      - if: steps.token.outputs.ok == 'true'
+        run: |
+          mkdir -p .tgcloud
+          cp scripts/tgcloud/remind.js tgcloud/endpoints/remind.js
+          npx tgcloud run endpoints/remind '{}'

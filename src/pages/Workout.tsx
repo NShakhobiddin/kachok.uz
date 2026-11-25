@@ -188,6 +188,7 @@ export default function Workout() {
   const elapsed = (now - new Date(active.log.startedAt).getTime()) / 1000;
   const doneSets = active.log.exercises.reduce((a, e) => a + e.sets.filter((s) => s.done).length, 0);
   const totalSets = active.log.exercises.reduce((a, e) => a + e.sets.length, 0);
+  const filledSets = active.log.exercises.reduce((a, e) => a + e.sets.filter((s) => !s.done && s.reps > 0 && (s.kg > 0 || s.kgSet)).length, 0);
   const allDoneHere = exLog?.sets.length > 0 && exLog.sets.every((s) => s.done);
   // og'riq tufayli to'xtatilgan (seti bajarilmagan) mashq ham hisobga olinadi
   const lastWithEx = ex
@@ -544,6 +545,19 @@ export default function Workout() {
                 ['chart', 'O‘tgan natijalar', 'Avvalgi mashg‘ulotlardagi vazn va takrorlar', () => setHistoryOpen(true)],
                 ['edit', exNotes[ex.id] ? 'Eslatmani o‘zgartirish' : 'Eslatma yozish', 'Masalan: o‘rindiq 4-teshik, keng ushlash', () => setNoteEdit(true)],
                 ['alert', 'Og‘riq bor', 'Vaznni kamaytirish, almashtirish yoki o‘tkazib yuborish', () => setPainOpen(true)],
+                ...(active.log.exercises.length > 1
+                  ? ([
+                      [
+                        'trash',
+                        'Mashqni olib tashlash',
+                        exLog.sets.some((x) => x.done) ? 'Bajarilgan setlari ham o‘chadi · dastur o‘zgarmaydi' : 'Faqat bugungi mashg‘ulotdan · dastur o‘zgarmaydi',
+                        async () => {
+                          if (exLog.sets.some((x) => x.done) && !(await confirmDialog(`«${ex.name}» va uning bajarilgan setlari bugungi mashg‘ulotdan o‘chirilsinmi?`))) return;
+                          st.removeActiveExercise(idx);
+                        },
+                      ],
+                    ] as const)
+                  : []),
               ] as const
             ).map(([icon, title, desc, run]) => (
               <button
@@ -554,7 +568,7 @@ export default function Workout() {
                   run();
                 }}
               >
-                <span className="pill-num" style={icon === 'alert' ? { color: 'var(--red)' } : undefined}>
+                <span className="pill-num" style={icon === 'alert' || icon === 'trash' ? { color: 'var(--red)' } : undefined}>
                   <Icon name={icon} size={16} />
                 </span>
                 <div className="grow">
@@ -672,6 +686,7 @@ export default function Workout() {
           <FinishSheet
             doneSets={doneSets}
             totalSets={totalSets}
+            filledSets={filledSets}
             groups={finishGroups}
             exercises={finishExercises}
             canSaveDay={canSaveDay}
@@ -681,8 +696,9 @@ export default function Workout() {
               st.discardWorkout();
               nav('/');
             }}
-            onFinish={(fb, saveDay) => {
+            onFinish={(fb, saveDay, withFilled) => {
               leaving.current = true;
+              if (withFilled) st.markFilledDone();
               if (saveDay && dayEdits && active.log.dayId) st.applyWorkoutToDay(active.log.dayId, dayEdits);
               const log = st.finishWorkout(fb);
               setFinishOpen(false);
@@ -835,6 +851,7 @@ function TechniqueSheet({ ex }: { ex: Exercise }) {
 function FinishSheet({
   doneSets,
   totalSets,
+  filledSets,
   groups,
   exercises,
   canSaveDay,
@@ -844,13 +861,17 @@ function FinishSheet({
 }: {
   doneSets: number;
   totalSets: number;
+  /** vazn/takror yozilgan, lekin ✓ bosilmagan setlar */
+  filledSets: number;
   groups: MuscleGroup[];
   exercises: { id: string; name: string }[];
   canSaveDay: boolean;
   initialPain?: string[];
-  onFinish: (fb: FinishFeedback, saveDay: boolean) => void;
+  onFinish: (fb: FinishFeedback, saveDay: boolean, withFilled: boolean) => void;
   onDiscard: () => void;
 }) {
+  // ✓ bosishni unutgan setlar — odatda bajarilgan: saqlash oldindan yoqilgan
+  const [withFilled, setWithFilled] = useState(true);
   const [fb, setFb] = useState<Partial<Record<MuscleGroup, Partial<MuscleFeedback>>>>({});
   const [pain, setPain] = useState<string[]>(initialPain ?? []);
   const [saveDay, setSaveDay] = useState(true);
@@ -858,6 +879,21 @@ function FinishSheet({
   const [discardAsk, setDiscardAsk] = useState(false);
   const [fbOpen, setFbOpen] = useState(false);
   const set = (g: MuscleGroup, k: keyof MuscleFeedback, v: number) => setFb((x) => ({ ...x, [g]: { ...x[g], [k]: v } }));
+  if (doneSets === 0 && filledSets > 0)
+    return (
+      <div className="stack gap-12">
+        <h3 className="title">Setlar belgilanmagan</h3>
+        <p className="muted">
+          {filledSets} ta setga vazn va takror yozilgan, lekin ✓ bosilmagan. Ularni bajarilgan deb saqlaymizmi?
+        </p>
+        <button className="btn btn-success btn-block" onClick={() => onFinish({ muscles: {}, pain }, false, true)}>
+          <Icon name="check" size={18} stroke={3} /> {filledSets} ta setni saqlash
+        </button>
+        <button className="btn btn-ghost btn-block" onClick={onDiscard}>
+          Saqlamasdan chiqish
+        </button>
+      </div>
+    );
   if (doneSets === 0)
     return (
       <div className="stack gap-12">
@@ -876,7 +912,7 @@ function FinishSheet({
     { k: 'recovery', q: 'O‘tgan safardan keyin', o: FB_TEXT.recovery },
   ];
   const save = (
-    <button className="btn btn-success btn-block" onClick={() => onFinish({ muscles: complete, pain }, canSaveDay && saveDay)}>
+    <button className="btn btn-success btn-block" onClick={() => onFinish({ muscles: complete, pain }, canSaveDay && saveDay, filledSets > 0 && withFilled)}>
       <Icon name="check" size={18} stroke={3} /> Saqlash
     </button>
   );
@@ -884,8 +920,20 @@ function FinishSheet({
     <div className="stack gap-12">
       <h3 className="title">Mashg‘ulotni yakunlash</h3>
       <p className="small muted">
-        {doneSets} ta set bajarildi.{doneSets < totalSets ? ` ${totalSets - doneSets} ta bajarilmagan set saqlanmaydi.` : ''} Quyidagi savollar ixtiyoriy.
+        {doneSets} ta set bajarildi.
+        {doneSets + (withFilled ? filledSets : 0) < totalSets ? ` ${totalSets - doneSets - (withFilled ? filledSets : 0)} ta bo‘sh set saqlanmaydi.` : ''} Quyidagi savollar ixtiyoriy.
       </p>
+      {filledSets > 0 && (
+        <label className="row between gap-12">
+          <span className="small">
+            <b>Yozilgan {filledSets} ta setni ham saqlash</b>
+            <span className="muted" style={{ display: 'block' }}>
+              Vazn va takror yozilgan, lekin ✓ bosilmagan
+            </span>
+          </span>
+          <Toggle on={withFilled} onChange={setWithFilled} label="Yozilgan setlarni saqlash" />
+        </label>
+      )}
       {canSaveDay && (
         <label className="row between gap-12">
           <span className="small">

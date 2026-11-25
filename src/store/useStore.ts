@@ -106,6 +106,9 @@ export interface CloudAccount {
   name: string;
   phone: string | null;
   at: string;
+  /** botdan eslatmalar (mashg'ulot kuni ertalab, dushanba — haftalik natija) va soati */
+  remind?: boolean;
+  remindHour?: number;
 }
 
 export interface SyncState {
@@ -194,6 +197,10 @@ interface State {
   updateSet: (exIdx: number, setIdx: number, patch: Partial<SetLog>) => void;
   addSet: (exIdx: number, set?: Partial<SetLog>) => void;
   removeSet: (exIdx: number, setIdx: number) => void;
+  /** mashqni joriy mashg'ulotdan olib tashlash (dastur o'zgarmaydi) */
+  removeActiveExercise: (exIdx: number) => void;
+  /** vazn/takror yozilgan, lekin ✓ bosilmagan setlarni bajarilgan deb belgilash; nechtasi belgilandi */
+  markFilledDone: () => number;
   swapActive: (exIdx: number, newId: string) => void;
   /** mashg'ulot paytida bo'g'imda og'riq — tarixga yoziladi, keyingi safar ogohlantirish chiqadi */
   markPain: (exerciseId: string) => void;
@@ -204,6 +211,8 @@ interface State {
   finishWorkout: (fb?: FinishFeedback) => WorkoutLog | null;
   discardWorkout: () => void;
   deleteLog: (id: string) => void;
+  /** tugagan mashg'ulotdagi setlarni tuzatish (bo'sh mashqlar olib tashlanadi) */
+  updateLog: (id: string, exercises: ExerciseLog[]) => void;
 
   addBody: (e: BodyEntry) => void;
   addFood: (e: FoodEntry) => void;
@@ -407,6 +416,31 @@ export const useStore = create<State>()(
         const exercises = a.log.exercises.map((e, i) => (i !== exIdx ? e : { ...e, sets: e.sets.filter((_, j) => j !== setIdx) }));
         set({ active: { ...a, log: { ...a.log, exercises } } });
       },
+      removeActiveExercise: (exIdx) => {
+        const a = get().active;
+        if (!a || a.log.exercises.length <= 1 || !a.log.exercises[exIdx]) return;
+        const removed = a.log.exercises[exIdx].exerciseId;
+        const exercises = a.log.exercises.filter((_, i) => i !== exIdx);
+        const plan = a.plan.filter((_, i) => i !== exIdx);
+        // qo'shilgan mashq bo'lsa — dasturga ham yozilmasin
+        const added = (a.added ?? []).filter((id) => id !== removed || exercises.some((e) => e.exerciseId === id));
+        set({ active: { ...a, plan, added, index: Math.min(exIdx, exercises.length - 1), log: { ...a.log, exercises } } });
+      },
+      markFilledDone: () => {
+        const a = get().active;
+        if (!a) return 0;
+        let n = 0;
+        const exercises = a.log.exercises.map((e) => ({
+          ...e,
+          sets: e.sets.map((s) => {
+            if (s.done || !(s.reps > 0) || !(s.kg > 0 || s.kgSet)) return s;
+            n++;
+            return { ...s, done: true };
+          }),
+        }));
+        if (n) set({ active: { ...a, log: { ...a.log, exercises } } });
+        return n;
+      },
       // bajarilgan setlar o'chmaydi: eski mashq shu setlar bilan qoladi, yangisi qolgan setlar bilan undan keyin qo'yiladi
       swapActive: (exIdx, newId) => {
         const a = get().active;
@@ -508,6 +542,11 @@ export const useStore = create<State>()(
       },
       discardWorkout: () => set({ active: null }),
       deleteLog: (id) => set({ logs: get().logs.filter((l) => l.id !== id) }),
+      updateLog: (id, exercises) => {
+        const clean = exercises.map((e) => ({ ...e, sets: e.sets.filter((s) => s.reps > 0) })).filter((e) => e.sets.length > 0);
+        if (!clean.length) return;
+        set({ logs: get().logs.map((l) => (l.id === id ? { ...l, exercises: clean } : l)) });
+      },
 
       addBody: (e) => {
         const rest = get().body.filter((b) => b.date !== e.date);
