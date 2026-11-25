@@ -270,6 +270,8 @@ export function repairState(st: unknown): Record<string, unknown> {
   const out: Record<string, unknown> = { ...sanitizeData(s, false)!.data };
   const acc = s.account;
   if (isObj(acc) && isObj(acc.user) && isStr(acc.user.id) && isStr(acc.access) && isStr(acc.refresh)) out.account = acc;
+  const cl = s.cloud;
+  if (isObj(cl) && isNum(cl.tgId) && isStr(cl.name) && isStr(cl.at)) out.cloud = { tgId: cl.tgId, name: cl.name, phone: isStr(cl.phone) ? cl.phone : null, at: cl.at };
   const sync = s.sync;
   if (isObj(sync) && isNum(sync.cursor) && isObj(sync.hashes) && isObj(sync.stamps)) out.sync = { ...sync, status: 'idle', error: undefined };
   out.seenNotes = strs(s.seenNotes);

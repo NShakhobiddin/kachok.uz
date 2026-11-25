@@ -100,6 +100,14 @@ export interface Account {
   coach?: { id: string; name: string } | null;
 }
 
+/** Telegram Serverless'dagi akkaunt (ro'yxatdan o'tgan Telegram foydalanuvchisi) */
+export interface CloudAccount {
+  tgId: number;
+  name: string;
+  phone: string | null;
+  at: string;
+}
+
 export interface SyncState {
   /** qaysi akkauntniki (boshqa akkauntga kirilsa — boshidan) */
   uid?: string;
@@ -154,6 +162,8 @@ interface State {
   lastPRs: PR[];
   settings: Settings;
   account: Account | null;
+  /** Telegram ichida ro'yxatdan o'tgan bo'lsa — bulutga saqlash (Serverless) */
+  cloud: CloudAccount | null;
   sync: SyncState;
   /** ko'rilgan murabbiy xabarlari va dastur yangilanishi */
   seenNotes: string[];
@@ -209,6 +219,7 @@ interface State {
   importData: (json: string) => boolean;
   reset: () => void;
   setAccount: (a: Account | null) => void;
+  setCloud: (c: CloudAccount | null) => void;
   patchAccount: (patch: Partial<Account>) => void;
   setSync: (patch: Partial<SyncState>) => void;
   markNote: (id: string) => void;
@@ -238,6 +249,7 @@ const initial = {
   lastPRs: [] as PR[],
   settings: { ...DEFAULT_SETTINGS } as Settings,
   account: null as Account | null,
+  cloud: null as CloudAccount | null,
   sync: { cursor: 0, hashes: {}, stamps: {}, status: 'idle' } as SyncState,
   seenNotes: [] as string[],
   programAck: undefined as string | undefined,
@@ -549,6 +561,15 @@ export const useStore = create<State>()(
         if (!a) return set({ account: null, sync: { ...sync, uid: sync.uid ?? account?.user.id, status: 'idle', error: undefined } });
         const same = !sync.uid || sync.uid === a.user.id;
         set({ account: a, sync: same ? { ...sync, uid: a.user.id } : { ...INITIAL_SYNC, uid: a.user.id } });
+      },
+      // Telegram akkaunti: boshqa Telegram foydalanuvchisi — sinxron holati boshidan
+      setCloud: (c) => {
+        const { sync } = get();
+        // akkaunt o'chirildi — bulut bo'sh: qayta ro'yxatdan o'tilsa hammasi qaytadan yuborilsin (tahrir vaqtlari qoladi)
+        if (!c) return set({ cloud: null, sync: { ...INITIAL_SYNC, edited: sync.edited } });
+        const id = `tg:${c.tgId}`;
+        const same = !sync.uid || sync.uid === id;
+        set({ cloud: c, sync: same ? { ...sync, uid: id } : { ...INITIAL_SYNC, uid: id } });
       },
       patchAccount: (patch) => {
         const a = get().account;

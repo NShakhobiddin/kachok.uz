@@ -6,6 +6,8 @@ import { Sheet } from '../components/ui/Sheet';
 import { Toggle } from '../components/ui/controls';
 import { api, ApiError, apiEnabled, refreshMe } from '../api/client';
 import { botLink, canTelegramLogin, loginMethods, telegramLogin } from '../api/social';
+import { serverless, TGCLOUD } from '../api/serverless';
+import CloudAccount from './CloudAccount';
 import { syncNow } from '../api/sync';
 import { BILLING } from '../lib/features';
 import { fmtDate } from '../lib/date';
@@ -13,13 +15,34 @@ import { useStore, type Account as Acc } from '../store/useStore';
 
 export default function Account() {
   const account = useStore((s) => s.account);
+  // Telegram Serverless versiyasi: akkaunt — Telegram foydalanuvchisi
+  if (!apiEnabled && TGCLOUD) return <Shell>{serverless() ? <CloudAccount /> : <OpenInTelegram />}</Shell>;
   if (!apiEnabled)
     return (
       <Shell>
-        <div className="card empty">Bu versiyada akkaunt yo‘q — ma’lumotlar faqat shu qurilmada saqlanadi.</div>
+        <OpenInTelegram />
       </Shell>
     );
   return <Shell>{account ? <Signed account={account} /> : <Login />}</Shell>;
+}
+
+/** Akkaunt Telegram ichida: botni ochish havolasi */
+function OpenInTelegram() {
+  const bot = botLink();
+  return (
+    <div className="stack gap-16">
+      <div>
+        <span className="eyebrow">Akkaunt</span>
+        <h1 className="display mt-4">Telegram’da ro‘yxatdan o‘ting</h1>
+        <p className="muted mt-8">Akkaunt va bulutga saqlash GYMbos’ning Telegram ilovasida — bir bosishda, parol va SMS’siz. Bu yerda ma’lumotlar faqat shu qurilmada saqlanadi.</p>
+      </div>
+      {bot && (
+        <a className="btn btn-primary btn-block" href={bot} target="_blank" rel="noopener noreferrer">
+          Telegram’da ochish
+        </a>
+      )}
+    </div>
+  );
 }
 
 function Shell({ children }: { children: React.ReactNode }) {

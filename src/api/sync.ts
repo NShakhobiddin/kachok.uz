@@ -6,6 +6,7 @@ import { clampKcalAdjust } from '../engine/nutrition';
 import { useStore } from '../store/useStore';
 import type { BodyEntry, FoodEntry, Profile, Program, WorkoutLog } from '../types';
 import { api, apiEnabled, refreshMe } from './client';
+import { scall, serverless, TGCLOUD, tgUserId } from './serverless';
 
 type Kind = 'profile' | 'program' | 'log' | 'body' | 'food' | 'meta';
 interface Doc {
@@ -187,8 +188,35 @@ function applyRemote(docs: RemoteDoc[], c: Ctx, preferServer: boolean) {
 
 let running: Promise<void> | null = null;
 
+/** Bulutga saqlash yoqilgan: o'z serverimizda akkaunt yoki Telegram ichida ro'yxatdan o'tgan (shu Telegram foydalanuvchisi) */
+export function cloudSignedIn(s = useStore.getState()): boolean {
+  return (apiEnabled && !!s.account) || (TGCLOUD && !!s.cloud && s.cloud.tgId === tgUserId() && serverless());
+}
+
+/** Bitta sinxron so'rovi: Telegram Serverless (tgcloud/endpoints/sync.js) yoki o'z serverimiz (/sync) — protokol bir xil */
+const callSync = (body: { since: number; changes: unknown[] }) => (serverless() ? scall<SyncResponse>('sync', body) : api<SyncResponse>('/sync', { body }));
+
+/** O'zgarishlarni paketlarga bo'lish: 400 tagacha; Serverless'da so'rov hajmi ham ~512 KB dan oshmaydi */
+export function batches<T>(items: T[], maxCount = 400, maxBytes = Infinity): T[][] {
+  const out: T[][] = [];
+  let cur: T[] = [];
+  let bytes = 0;
+  for (const it of items) {
+    const b = maxBytes === Infinity ? 0 : (JSON.stringify(it) ?? '').length;
+    if (cur.length && (cur.length >= maxCount || bytes + b > maxBytes)) {
+      out.push(cur);
+      cur = [];
+      bytes = 0;
+    }
+    cur.push(it);
+    bytes += b;
+  }
+  if (cur.length) out.push(cur);
+  return out;
+}
+
 export function syncNow(): Promise<void> {
-  if (!apiEnabled || !useStore.getState().account) return Promise.resolve();
+  if (!cloudSignedIn()) return Promise.resolve();
   running ??= run().finally(() => (running = null));
   return running;
 }
@@ -208,7 +236,7 @@ async function run() {
     const pull = async () => {
       let more = true;
       while (more) {
-        const res = await api<SyncResponse>('/sync', { body: { since: cursor, changes: [] } });
+        const res = await callSync({ since: cursor, changes: [] });
         applyRemote(res.docs, c, preferServer);
         cursor = res.cursor;
         more = res.more;
@@ -245,16 +273,14 @@ async function run() {
       c.stamps[k] = t;
     }
 
-    for (let i = 0; i < changes.length; ) {
-      const batch = changes.slice(i, i + 400);
-      i += batch.length;
-      const res = await api<SyncResponse>('/sync', { body: { since: cursor, changes: batch } });
+    for (const batch of batches(changes, 400, serverless() ? 512 * 1024 : Infinity)) {
+      const res = await callSync({ since: cursor, changes: batch });
       applyRemote(res.docs, c, false);
       cursor = res.cursor;
       save();
       if (res.more) await pull();
     }
-    setSync({ cursor, hashes: c.hashes, stamps: c.stamps, base: c.base, forceLocal: false, uid: useStore.getState().account?.user.id ?? sync.uid, lastSyncAt: Date.now(), status: 'idle' });
+    setSync({ cursor, hashes: c.hashes, stamps: c.stamps, base: c.base, forceLocal: false, uid: useStore.getState().account?.user.id ?? (useStore.getState().cloud ? `tg:${useStore.getState().cloud!.tgId}` : sync.uid), lastSyncAt: Date.now(), status: 'idle' });
     refreshMe().catch(() => {});
   } catch (e) {
     setSync({ status: 'error', error: (e as Error).message });
@@ -294,7 +320,7 @@ let timer: ReturnType<typeof setTimeout> | null = null;
 
 /** Ilova ishga tushganda: o'zgarishlarni kuzatib, fon rejimida sinxronlash */
 export function startAutoSync() {
-  if (!apiEnabled) return () => {};
+  if (!apiEnabled && !TGCLOUD) return () => {};
   if (useStore.getState().sync.status === 'syncing') useStore.getState().setSync({ status: 'idle' });
   const schedule = (ms: number) => {
     if (timer) clearTimeout(timer);
@@ -307,8 +333,8 @@ export function startAutoSync() {
       const at = Date.now();
       s.setSync({ edited: { ...s.sync.edited, ...Object.fromEntries(touched.map((k) => [k, at])) } });
     }
-    if (!s.account) return;
-    if (!prev.account) return schedule(300);
+    if (!cloudSignedIn(s)) return;
+    if (!cloudSignedIn(prev)) return schedule(300);
     if (touched.length) schedule(4000);
   });
   const onFocus = () => document.visibilityState === 'visible' && schedule(500);

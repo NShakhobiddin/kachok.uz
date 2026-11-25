@@ -9,6 +9,10 @@ export const users = table('users', {
   name: text('name').notNull().default(''),
   friendCode: text('friend_code').unique(),
   createdAt: integer('created_at').notNull().default(sql`(unixepoch())`),
+  /** Telegram orqali ulashilgan raqam (requestContact → bot chatiga kontakt); do'stlarga ko'rinmaydi */
+  phone: text('phone'),
+  /** ro'yxatdan o'tgan vaqt (unix ms): bulutga saqlash shundan keyin yoqiladi */
+  registeredAt: integer('registered_at'),
 });
 
 /** Do'stlik ikki tomonlama: (a, b) va (b, a) */
@@ -63,3 +67,25 @@ export const hits = table('hits', {
   windowStart: integer('window_start').notNull(),
   count: integer('count').notNull(),
 });
+
+/** Bulutdagi ilova ma'lumotlari (sinxronlash): profil, dastur, mashg'ulotlar, vazn, ovqat, sozlamalar */
+export const docs = table(
+  'docs',
+  {
+    userId: integer('user_id').notNull(),
+    kind: text('kind').notNull(),
+    docId: text('doc_id').notNull(),
+    /** JSON; o'chirilgan hujjatda null */
+    data: text('data'),
+    /** unix ms — ziddiyatda eng yangisi yutadi */
+    updatedAt: integer('updated_at').notNull(),
+    deleted: integer('deleted').notNull().default(0),
+    /** foydalanuvchi bo'yicha o'sib boruvchi o'zgarish raqami (kursor) */
+    seq: integer('seq').notNull(),
+    size: integer('size').notNull().default(0),
+  },
+  (t) => ({
+    pk: primaryKey({ columns: [t.userId, t.kind, t.docId] }),
+    seqIdx: index('idx_docs_user_seq').on(t.userId, t.seq),
+  }),
+);

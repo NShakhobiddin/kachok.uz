@@ -67,7 +67,9 @@ jobs:
           npx tgcloud run endpoints/friendCode '{}' --ctx "$ctx"
           npx tgcloud run endpoints/postSave "{ kind: 'week', clientId: 'ci-smoke', data: { label: 'CI', done: 1, planned: 3, streak: 0, stats: [['Setlar', '1']], rows: [], rowsTitle: '' } }" --ctx "$ctx"
           npx tgcloud run endpoints/feed '{}' --ctx "$ctx"
-          npx tgcloud run endpoints/socialDelete '{}' --ctx "$ctx"
+          npx tgcloud run endpoints/register '{}' --ctx "$ctx"
+          npx tgcloud run endpoints/sync "{ since: 0, changes: [{ kind: 'meta', id: 'state', data: { ci: 1 }, updatedAt: 1 }] }" --ctx "$ctx"
+          npx tgcloud run endpoints/accountDelete '{}' --ctx "$ctx"
       # bir martalik endpoint: faqat `run` bilan ishlaydi, deploy qilinmaydi
       - name: Bot sozlamalari (menyu tugmasi, tavsif, /start)
         if: steps.token.outputs.ok == 'true'

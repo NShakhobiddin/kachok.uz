@@ -2,6 +2,7 @@
 // mashqlar sonini − / + bilan o'zgartirish (+ da dastur kunga mos mashqni o'zi tanlaydi), har mashqda bitta "⋯" menyu.
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { serverless } from '../api/serverless';
 import { CoachBanner } from '../components/CoachBanner';
 import { ExercisePicker } from '../components/DayEditor';
 import { ExerciseThumb } from '../components/ExerciseThumb';
@@ -141,6 +142,10 @@ export default function Home() {
   const prevWeek = addDays(ws, -7);
   const prevSum = useMemo(() => weekSummary(logs, prevWeek), [logs, prevWeek.getTime()]);
   const showReport = t.today <= 2 && prevSum.workouts > 0 && reportSeen !== isoDate(prevWeek);
+  // Telegram ichida, ro'yxatdan o'tmagan va kamida bitta mashg'ulot bor — natijalar faqat shu telefonda
+  const cloud = useStore((s) => s.cloud);
+  const [regHidden, setRegHidden] = useState(() => regNudgeHidden());
+  const showReg = !showReport && !regHidden && !cloud && serverless() && logs.some((l) => l.finishedAt);
 
   // pastki tugma: faol mashg'ulot → davom; kunda mashq bor va bajarilmagan → boshlash
   const canStart = !active && !!day && day.exercises.length > 0 && !doneThisWeek && !(isToday && t.doneToday);
@@ -215,6 +220,27 @@ export default function Home() {
           </span>
           <Icon name="right" size={16} style={{ color: 'var(--text-3)', flex: 'none' }} />
         </Link>
+      )}
+
+      {showReg && (
+        <div className="report-nudge mt-12">
+          <Icon name="refresh" size={18} style={{ color: 'var(--accent)', flex: 'none' }} />
+          <Link to="/account" className="small grow" style={{ color: 'inherit' }}>
+            <b>Natijalaringiz faqat shu telefonda</b>
+            <span className="muted"> · ro‘yxatdan o‘ting ›</span>
+          </Link>
+          <button
+            className="icon-btn"
+            style={{ width: 32, height: 32, flex: 'none' }}
+            aria-label="Yopish"
+            onClick={() => {
+              hideRegNudge();
+              setRegHidden(true);
+            }}
+          >
+            <Icon name="x" size={14} />
+          </button>
+        </div>
       )}
 
       {/* Faol mashg'ulot */}
@@ -621,4 +647,22 @@ function Extras({ trainingDay, trainedToday }: { trainingDay: boolean; trainedTo
       </Link>
     </section>
   );
+}
+
+/** "Ro'yxatdan o'ting" eslatmasi yopilsa — 14 kun ko'rinmaydi */
+const REG_NUDGE_KEY = 'gymbos-reg-nudge';
+function regNudgeHidden(): boolean {
+  try {
+    const t = Number(localStorage.getItem(REG_NUDGE_KEY));
+    return Number.isFinite(t) && Date.now() - t < 14 * 24 * 3600 * 1000;
+  } catch {
+    return false;
+  }
+}
+function hideRegNudge() {
+  try {
+    localStorage.setItem(REG_NUDGE_KEY, String(Date.now()));
+  } catch {
+    /* bo'sh */
+  }
 }

@@ -17,7 +17,7 @@ interface TgButton {
 
 interface TgWebApp {
   initData: string;
-  initDataUnsafe: { user?: { first_name?: string } };
+  initDataUnsafe: { user?: { id?: number; first_name?: string; last_name?: string; username?: string } };
   platform: string;
   version: string;
   isVersionAtLeast: (v: string) => boolean;
@@ -31,6 +31,8 @@ interface TgWebApp {
   setBackgroundColor: (c: string) => void;
   setBottomBarColor?: (c: string) => void;
   openLink: (url: string) => void;
+  /** Bot API 6.9+: raqamni botga ulashish oynasi */
+  requestContact?: (cb?: (shared: boolean) => void) => void;
   BackButton: TgButton;
   SettingsButton?: TgButton;
   HapticFeedback?: { impactOccurred: (s: Haptic) => void; notificationOccurred: (t: Notice) => void };

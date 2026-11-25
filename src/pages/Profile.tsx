@@ -12,6 +12,7 @@ import { DEFAULT_DAYS } from '../engine/program';
 import { customSplitOf, resizeSplit } from '../engine/split';
 import { DAYS_SHORT } from '../lib/date';
 import { apiEnabled } from '../api/client';
+import { TGCLOUD } from '../api/serverless';
 import { saveFile } from '../lib/download';
 import { BILLING } from '../lib/features';
 import { APP_VERSION, forceUpdate } from '../lib/pwa';
@@ -32,6 +33,7 @@ export default function Profile() {
   const importData = useStore((s) => s.importData);
   const reset = useStore((s) => s.reset);
   const account = useStore((s) => s.account);
+  const cloud = useStore((s) => s.cloud);
   const [panel, setPanel] = useState<Panel>(null);
   const [draft, setDraft] = useState<P>(profile);
   const [importMsg, setImportMsg] = useState<string | null>(null);
@@ -86,6 +88,13 @@ export default function Profile() {
         </div>
       </div>
 
+      {TGCLOUD && !apiEnabled && (
+        <section className="section">
+          <div className="card flush">
+            <Item icon="user" label={cloud ? 'Akkaunt va sinxronlash' : 'Ro‘yxatdan o‘tish'} value={cloud ? (cloud.phone ? `+${cloud.phone.slice(0, 3)} ${cloud.phone.slice(3, 5)} ···` : 'Telegram') : 'Bulutda saqlash'} onClick={() => nav('/account')} last />
+          </div>
+        </section>
+      )}
       {apiEnabled && (
         <section className="section">
           <div className="card flush">
@@ -173,7 +182,7 @@ export default function Profile() {
           </p>
         )}
         <p className="tiny faint mt-8">
-          {account ? 'Ma’lumotlar telefonda va bulutda saqlanadi.' : 'Barcha ma’lumotlar faqat shu qurilmada saqlanadi. Telefonni almashtirishdan oldin zaxira nusxa oling'}
+          {account || cloud ? 'Ma’lumotlar telefonda va bulutda saqlanadi.' : 'Barcha ma’lumotlar faqat shu qurilmada saqlanadi. Telefonni almashtirishdan oldin zaxira nusxa oling'}
           {!account && apiEnabled ? ' yoki akkauntga kiring.' : !account ? '.' : ''}
         </p>
         <button className="btn btn-ghost btn-block mt-16" style={{ color: 'var(--danger)' }} onClick={() => setResetOpen(true)}>

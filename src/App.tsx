@@ -1,6 +1,8 @@
 import { motion } from 'framer-motion';
-import { lazy, Suspense, useEffect } from 'react';
+import { lazy, Suspense, useEffect, useState } from 'react';
 import { BrowserRouter, MemoryRouter, Navigate, NavLink, Route, Routes, useLocation } from 'react-router-dom';
+import { bootCloud } from './api/cloud';
+import { serverless, TGCLOUD } from './api/serverless';
 import { acceptPendingFriend, capturePendingFriend } from './api/social';
 import { startAutoSync } from './api/sync';
 import { Icon } from './components/ui/Icon';
@@ -65,14 +67,41 @@ const NO_TAB = ['/onboarding', '/workout', '/summary', '/lesson', '/lab', '/acco
 // profil to'ldirilmasdan ham ochiladigan sahifalar
 const NO_PROFILE_OK = ['/onboarding', '/lab', '/exercise', '/library', '/lesson', '/sources', '/account', '/premium', '/coach', '/muscle', '/routine', '/stretch'];
 
+/**
+ * Telegram ichida: akkaunt holati tekshiriladi. Ro'yxatdan o'tgan foydalanuvchi yangi qurilmada ochsa (profil yo'q) —
+ * bulutdagi ma'lumotlar tiklanguncha kutamiz (ko'pi bilan 10 s), aks holda "tanishuv" sahifasi ochilib ketadi.
+ */
+function useCloudBoot() {
+  const profile = useStore((s) => s.profile);
+  const [waiting, setWaiting] = useState(() => TGCLOUD && serverless() && !useStore.getState().profile);
+  useEffect(() => {
+    const t = setTimeout(() => setWaiting(false), 10_000);
+    void bootCloud().finally(() => {
+      clearTimeout(t);
+      setWaiting(false);
+    });
+    return () => clearTimeout(t);
+  }, []);
+  return waiting && !profile;
+}
+
 function Shell() {
   const profile = useStore((s) => s.profile);
   const loc = useLocation();
   useTelegramBridge();
+  const restoring = useCloudBoot();
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [loc.pathname]);
   const hideTab = NO_TAB.some((p) => loc.pathname.startsWith(p));
+  if (restoring)
+    return (
+      <div className="page" style={{ display: 'grid', placeItems: 'center', minHeight: '100dvh' }}>
+        <p className="small muted" role="status">
+          Ma’lumotlaringiz tiklanmoqda…
+        </p>
+      </div>
+    );
   if (!profile && !NO_PROFILE_OK.some((p) => loc.pathname.startsWith(p))) return <Navigate to="/onboarding" replace />;
   return (
     <div className="app">

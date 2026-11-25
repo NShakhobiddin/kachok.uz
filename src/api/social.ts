@@ -4,7 +4,9 @@
 import type { CardData } from '../lib/shareCard';
 import { telegram } from '../lib/telegram';
 import { useStore, type Account } from '../store/useStore';
-import { api, ApiError, apiEnabled, refreshMe } from './client';
+import { api, apiEnabled, refreshMe } from './client';
+import { scall, serverless, tgInitData } from './serverless';
+export { serverless, tgInitData };
 import { syncNow } from './sync';
 
 type WorkoutCard = Omit<Extract<CardData, { kind: 'workout' }>, 'kind'>;
@@ -33,31 +35,7 @@ export interface Friend {
 const TG_BOT = (import.meta.env.VITE_TG_BOT as string | undefined)?.replace(/^@/, '');
 const TG_APP = import.meta.env.VITE_TG_APP as string | undefined;
 
-/** Telegram Mini App ichida: kirish ma'lumoti bor */
-export const tgInitData = (): string => (telegram() as unknown as { initData?: string } | undefined)?.initData ?? '';
 export const canTelegramLogin = () => apiEnabled && tgInitData().length > 0;
-
-/** Telegram Serverless: Mini App app<id>.tgcloud.ai da yig'ilgan (VITE_TGCLOUD=1) va Telegram ichida ochilgan */
-type SlsError = Error & { type?: string; status?: number; parameters?: { code?: string } };
-type Sls = { call: (name: string, input: object, cb: (err: SlsError | null, result: unknown) => void) => void };
-const TGCLOUD = import.meta.env.VITE_TGCLOUD === '1';
-const sls = () => (telegram() as unknown as { Serverless?: Sls } | undefined)?.Serverless;
-export const serverless = () => TGCLOUD && !!sls() && tgInitData().length > 0;
-
-/** Endpoint chaqiruvi (tgcloud/endpoints/<name>.js); xato — ApiError (EndpointError matni foydalanuvchiga) */
-function scall<T>(name: string, input: object = {}): Promise<T> {
-  return new Promise((resolve, reject) => {
-    try {
-      sls()!.call(name, input, (err, result) => {
-        if (!err) return resolve(result as T);
-        const mine = err.type === 'ENDPOINT_ERROR';
-        reject(new ApiError(err.status ?? 0, err.parameters?.code ?? err.type ?? 'error', mine ? err.message : err.status ? 'Server xatosi — birozdan keyin qayta urinib ko‘ring' : 'Internet bilan bog‘lanib bo‘lmadi'));
-      });
-    } catch {
-      reject(new ApiError(0, 'no_telegram', 'Ilovani Telegram ichida oching'));
-    }
-  });
-}
 
 /** Lentadan foydalanish mumkin: Serverless yoki kirilgan akkaunt */
 export const socialReady = () => serverless() || (apiEnabled && !!useStore.getState().account);
