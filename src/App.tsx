@@ -9,8 +9,9 @@ import { Icon } from './components/ui/Icon';
 import { useTelegramBridge } from './lib/telegram';
 import { useStore } from './store/useStore';
 import Home from './pages/Home';
-import Onboarding from './pages/Onboarding';
 
+// tanishuv bir marta ochiladi — u bilan birga og'ir mushak-faollik jadvali ham faqat kerak bo'lganda yuklanadi
+const Onboarding = lazy(() => import('./pages/Onboarding'));
 const ProgramPage = lazy(() => import('./pages/Program'));
 const Library = lazy(() => import('./pages/Library'));
 const ExerciseDetail = lazy(() => import('./pages/ExerciseDetail'));

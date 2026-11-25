@@ -439,7 +439,8 @@ export default function Workout() {
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: -80, opacity: 0 }}
             transition={{ type: 'spring', damping: 18 }}
-            style={{ position: 'fixed', top: 'calc(var(--safe-t) + 12px)', left: 16, right: 16, zIndex: 70, maxWidth: 528, margin: '0 auto' }}
+            // sarlavha ("Tugatish") ostida; bosishlarni o'tkazib yuboradi — tagidagi tugmalar ishlayveradi
+            style={{ position: 'fixed', top: 'calc(var(--safe-t) + 72px)', left: 16, right: 16, zIndex: 70, maxWidth: 528, margin: '0 auto', pointerEvents: 'none' }}
             className="notice gold"
             role="status"
           >
