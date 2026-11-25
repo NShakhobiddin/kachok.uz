@@ -6,17 +6,14 @@ import { BodyHero } from '../components/BodyHero';
 import { Logo } from '../components/Logo';
 import { Icon } from '../components/ui/Icon';
 import { Choice, Stepper } from '../components/ui/controls';
-import { EquipmentGrid } from '../components/EquipmentGrid';
-import { EQUIPMENT_PRESETS, GROUPS, GROUP_ORDER, INJURIES } from '../data/catalog';
-import { ACTIVITY, nutritionPlan } from '../engine/nutrition';
+import { EQUIPMENT_PRESETS, INJURIES } from '../data/catalog';
+import { nutritionPlan } from '../engine/nutrition';
 import { planLoad } from '../engine/bodyLoad';
 import { DEFAULT_DAYS } from '../engine/program';
-import { resizeSplit } from '../engine/split';
-import { SplitBuilder } from '../components/SplitBuilder';
 import { DAYS_SHORT } from '../lib/date';
 import { telegramFirstName } from '../lib/telegram';
 import { useStore } from '../store/useStore';
-import type { ActivityLevel, EquipmentId, Goal, Injury, Level, MuscleGroup, Profile, Sex } from '../types';
+import type { Goal, Injury, Level, Profile, Sex } from '../types';
 
 export const GOALS: { id: Goal; title: string; desc: string; icon: string }[] = [
   { id: 'muscle', title: 'Mushak massasi (kachok bo‘lish)', desc: 'Mushakni o‘stirish, kuchli va katta ko‘rinish', icon: 'dumbbell' },
@@ -49,7 +46,8 @@ const WELCOME_LOAD = planLoad([
   { exerciseId: 'pull-up', sets: 3 },
 ]);
 
-const STEPS = ['welcome', 'about', 'goal', 'body', 'level', 'schedule', 'equipment', 'limits', 'activity', 'health', 'done'] as const;
+// qisqa tanishuv: 4 savol; qolganlari (aniq kunlar, davomiylik, faollik, ustuvor mushaklar, ovqat) — standart, keyin Profil'da
+const STEPS = ['welcome', 'goal', 'body', 'plan', 'health', 'done'] as const;
 type Step = (typeof STEPS)[number];
 
 export default function Onboarding() {
@@ -120,7 +118,7 @@ export default function Onboarding() {
     setDir(1);
     setStep('done');
   };
-  const canNext = step !== 'schedule' || (p.trainingDays.length === p.daysPerWeek && (!p.split || p.split.every((d) => d.length)));
+  const canNext = true;
 
   const progress = idx <= 0 ? 0 : Math.min(1, idx / (STEPS.length - 2));
   const np = useMemo(() => (step === 'done' ? nutritionPlan({ ...p, createdAt: '' }) : null), [step, p]);
@@ -210,24 +208,6 @@ export default function Onboarding() {
           className="stack gap-16"
           style={{ flex: 1 }}
         >
-          {step === 'about' && (
-            <>
-              <StepHead title="Tanishaylik" text="Ism ixtiyoriy — faqat sizga murojaat qilish uchun." />
-              <div className="field">
-                <label htmlFor="nm">Ismingiz</label>
-                <input id="nm" className="input" placeholder="Masalan, Aziz" value={p.name} onChange={(e) => up({ name: e.target.value })} autoComplete="given-name" />
-              </div>
-              <div className="field">
-                <label>Jinsingiz (kaloriya hisobi uchun)</label>
-                <div className="grid-2">
-                  {(['male', 'female'] as Sex[]).map((s) => (
-                    <Choice key={s} on={p.sex === s} onClick={() => up({ sex: s })} title={s === 'male' ? 'Erkak' : 'Ayol'} />
-                  ))}
-                </div>
-              </div>
-            </>
-          )}
-
           {step === 'goal' && (
             <>
               <StepHead title="Asosiy maqsad" text="Dastur va ovqatlanish shu maqsadga moslanadi. Keyin o‘zgartirish mumkin." />
@@ -241,7 +221,12 @@ export default function Onboarding() {
 
           {step === 'body' && (
             <>
-              <StepHead title="Tana ko‘rsatkichlari" text="Mifflin–St Jeor formulasi bo‘yicha energiya sarfini hisoblash uchun." />
+              <StepHead title="O‘zingiz haqingizda" text="Kaloriya va boshlang‘ich vaznlarni hisoblash uchun." />
+              <div className="grid-2">
+                {(['male', 'female'] as Sex[]).map((s) => (
+                  <Choice key={s} on={p.sex === s} onClick={() => up({ sex: s })} title={s === 'male' ? 'Erkak' : 'Ayol'} />
+                ))}
+              </div>
               <div className="field">
                 <label>Yosh</label>
                 <Stepper value={p.age} onChange={(v) => up({ age: v })} min={14} max={90} unit="yosh" label="Yosh" />
@@ -254,6 +239,10 @@ export default function Onboarding() {
                 <label>Vazn</label>
                 <Stepper value={p.weightKg} onChange={(v) => up({ weightKg: v })} step={0.5} min={35} max={250} unit="kg" label="Vazn" />
               </div>
+              <div className="field">
+                <label htmlFor="nm">Ismingiz (ixtiyoriy)</label>
+                <input id="nm" className="input" placeholder="Masalan, Aziz" value={p.name} onChange={(e) => up({ name: e.target.value })} autoComplete="given-name" />
+              </div>
               {p.age < 18 && (
                 <div className="notice info">
                   <Icon name="info" />
@@ -263,113 +252,54 @@ export default function Onboarding() {
             </>
           )}
 
-          {step === 'level' && (
+          {step === 'plan' && (
             <>
-              <StepHead title="Tajribangiz" text="Mashqlar murakkabligi, hajm va boshlang‘ich vaznlar shunga qarab tanlanadi." />
-              <div className="stack gap-8">
-                {LEVELS.map((l) => (
-                  <Choice key={l.id} on={p.level === l.id} onClick={() => up({ level: l.id })} title={l.title} desc={l.desc} />
-                ))}
-              </div>
-            </>
-          )}
-
-          {step === 'schedule' && (
-            <>
-              <StepHead title="Jadval" text="Haftasiga necha kun va qaysi kunlari zalga bora olasiz?" />
+              <StepHead title="Reja" text="Tajriba, haftalik kunlar va zalingiz — dastur shundan tuziladi." />
               <div className="field">
-                <label>Haftasiga kunlar</label>
+                <label>Tajribangiz</label>
+                <div className="stack gap-8">
+                  {LEVELS.map((l) => (
+                    <Choice key={l.id} on={p.level === l.id} onClick={() => up({ level: l.id })} title={l.title} desc={l.desc} />
+                  ))}
+                </div>
+              </div>
+              <div className="field">
+                <label>Haftasiga necha kun</label>
                 <div className="row gap-8">
                   {[2, 3, 4, 5, 6].map((n) => (
                     <button
                       key={n}
                       className={`chip ${p.daysPerWeek === n ? 'on' : ''}`}
                       style={{ flex: 1, height: 48, justifyContent: 'center', fontSize: 18, fontWeight: 800 }}
-                      onClick={() => up({ daysPerWeek: n, trainingDays: DEFAULT_DAYS[n], split: p.split ? resizeSplit(p.split, n) : undefined })}
+                      aria-pressed={p.daysPerWeek === n}
+                      onClick={() => up({ daysPerWeek: n, trainingDays: DEFAULT_DAYS[n], split: undefined })}
                     >
                       {n}
                     </button>
                   ))}
                 </div>
                 <span className="tiny faint">
-                  {p.daysPerWeek <= 3
-                    ? 'Yangi boshlovchilar uchun ideal — har mushak haftasiga 2–3 marta.'
-                    : p.daysPerWeek === 4
-                      ? 'Eng muvozanatli tanlov.'
-                      : 'Ko‘proq hajm — yaxshi tiklanish kerak.'}
+                  {p.trainingDays.map((d) => DAYS_SHORT[d]).join(' · ')} — kunlarni keyin «Haftalik reja»da o‘zgartirasiz.
                 </span>
               </div>
               <div className="field">
-                <label>
-                  Kunlar ({p.trainingDays.length}/{p.daysPerWeek})
-                </label>
-                <div className="row gap-6">
-                  {DAYS_SHORT.map((d, i) => {
-                    const on = p.trainingDays.includes(i);
-                    return (
-                      <button
-                        key={d}
-                        className={`chip ${on ? 'on' : ''}`}
-                        style={{ flex: 1, height: 44, justifyContent: 'center', padding: 0 }}
-                        aria-pressed={on}
-                        onClick={() => {
-                          const next = on ? p.trainingDays.filter((x) => x !== i) : [...p.trainingDays, i].sort();
-                          if (next.length <= p.daysPerWeek) up({ trainingDays: next });
-                        }}
-                      >
-                        {d}
-                      </button>
-                    );
+                <label>Zalingizda nima bor?</label>
+                <div className="stack gap-8">
+                  {EQUIPMENT_PRESETS.map((pr) => {
+                    const on = pr.items.length === p.equipment.length && pr.items.every((x) => p.equipment.includes(x));
+                    return <Choice key={pr.id} on={on} onClick={() => up({ equipment: pr.items })} title={pr.name} desc={pr.desc} />;
                   })}
                 </div>
+                <span className="tiny faint">Aniq jihozlar ro‘yxati — Profil → Zal jihozlari.</span>
               </div>
-              <div className="field">
-                <label>Bir mashg‘ulot davomiyligi</label>
-                <div className="row gap-6 wrap">
-                  {[30, 45, 60, 75, 90].map((m) => (
-                    <button key={m} className={`chip ${p.sessionMin === m ? 'on' : ''}`} onClick={() => up({ sessionMin: m })}>
-                      {m} daqiqa
-                    </button>
-                  ))}
-                </div>
-              </div>
-              <div className="field">
-                <label>Kunlarga mushaklar</label>
-                <div className="row gap-6">
-                  <button className={`chip ${!p.split ? 'on' : ''}`} style={{ flex: 1, justifyContent: 'center' }} aria-pressed={!p.split} onClick={() => up({ split: undefined })}>
-                    Tavsiya etilgan
-                  </button>
-                  <button className={`chip ${p.split ? 'on' : ''}`} style={{ flex: 1, justifyContent: 'center' }} aria-pressed={!!p.split} onClick={() => up({ split: p.split ?? resizeSplit(undefined, p.daysPerWeek) })}>
-                    O‘zim tanlayman
-                  </button>
-                </div>
-                <span className="tiny faint">
-                  {p.split ? 'Har kuni qaysi mushaklar ishlashini belgilang — mashqlarni dastur tanlaydi.' : 'Dastur kunlarni o‘zi taqsimlaydi: har mushak haftasiga ~2 marta.'}
-                </span>
-              </div>
-              {p.split && <SplitBuilder value={p.split} onChange={(split) => up({ split })} trainingDays={p.trainingDays} sessionMin={p.sessionMin} />}
             </>
           )}
 
-          {step === 'equipment' && (
+          {step === 'health' && (
             <>
-              <StepHead title="Zalingizda nima bor?" text="Faqat mavjud jihozlarga mos mashqlar tanlanadi." />
-              <div className="stack gap-8">
-                {EQUIPMENT_PRESETS.map((pr) => {
-                  const on = pr.items.length === p.equipment.length && pr.items.every((x) => p.equipment.includes(x));
-                  return <Choice key={pr.id} on={on} onClick={() => up({ equipment: pr.items })} title={pr.name} desc={pr.desc} />;
-                })}
-              </div>
-              <div className="eyebrow mt-8">Yoki aniq belgilang</div>
-              <EquipmentGrid value={p.equipment} onChange={(eq: EquipmentId[]) => up({ equipment: eq })} />
-            </>
-          )}
-
-          {step === 'limits' && (
-            <>
-              <StepHead title="Cheklovlar va ustuvorlik" text="Og‘riyotgan joylar uchun xavfli mashqlar chiqariladi va muqobil bilan almashtiriladi." />
+              <StepHead title="Sog‘liq" text="Xavfli mashqlar chiqariladi va muqobili bilan almashtiriladi." />
               <div className="field">
-                <label>Og‘riq yoki jarohat bor joylar</label>
+                <label>Og‘riq yoki jarohat bor joylar (bo‘lsa)</label>
                 <div className="row wrap gap-8">
                   {INJURIES.map((inj) => {
                     const on = p.injuries.includes(inj.id);
@@ -385,64 +315,17 @@ export default function Onboarding() {
                     );
                   })}
                 </div>
-                {p.injuries.length > 0 && (
-                  <div className="notice warn mt-8">
-                    <Icon name="alert" />
-                    <span>Kuchli yoki o‘tkir og‘riq bo‘lsa, avval shifokor yoki fizioterapevtga murojaat qiling. Dastur tashxis qo‘ymaydi.</span>
-                  </div>
-                )}
               </div>
-              <div className="field mt-8">
-                <label>Ko‘proq e’tibor beriladigan mushaklar (ixtiyoriy)</label>
-                <div className="row wrap gap-8">
-                  {GROUP_ORDER.map((g) => {
-                    const on = p.focus.includes(g);
-                    return (
-                      <button
-                        key={g}
-                        className={`chip ${on ? 'on' : ''}`}
-                        aria-pressed={on}
-                        onClick={() => up({ focus: on ? p.focus.filter((x) => x !== g) : p.focus.length < 3 ? [...p.focus, g as MuscleGroup] : p.focus })}
-                      >
-                        {GROUPS[g].name}
-                      </button>
-                    );
+              <div className="field">
+                <label>Qaysi biriga «Ha» deb javob berasiz? (PAR-Q+)</label>
+                <div className="stack gap-8">
+                  {PARQ.map((q, i) => {
+                    const on = p.healthFlags.includes(String(i));
+                    return <Choice key={i} multi on={on} onClick={() => up({ healthFlags: on ? p.healthFlags.filter((x) => x !== String(i)) : [...p.healthFlags, String(i)] })} title={q} />;
                   })}
                 </div>
-                <span className="tiny faint">3 tagacha. Har biriga qo‘shimcha mashq qo‘shiladi.</span>
               </div>
-            </>
-          )}
-
-          {step === 'activity' && (
-            <>
-              <StepHead title="Kundalik faollik" text="Zaldan tashqari harakat — kaloriya hisobining eng katta qismi." />
-              <div className="stack gap-8">
-                {(Object.keys(ACTIVITY) as ActivityLevel[]).map((a) => (
-                  <Choice key={a} on={p.activity === a} onClick={() => up({ activity: a })} title={ACTIVITY[a].name} desc={ACTIVITY[a].desc} />
-                ))}
-              </div>
-              <div className="row wrap gap-8 mt-8">
-                <button className={`chip ${p.dietPrefs.vegetarian ? 'on' : ''}`} onClick={() => up({ dietPrefs: { ...p.dietPrefs, vegetarian: !p.dietPrefs.vegetarian } })}>
-                  Go‘sht yemayman
-                </button>
-                <button className={`chip ${p.dietPrefs.lactoseFree ? 'on' : ''}`} onClick={() => up({ dietPrefs: { ...p.dietPrefs, lactoseFree: !p.dietPrefs.lactoseFree } })}>
-                  Sut mahsulotlarisiz
-                </button>
-              </div>
-            </>
-          )}
-
-          {step === 'health' && (
-            <>
-              <StepHead title="Sog‘liq tekshiruvi" text="Xalqaro PAR-Q+ so‘rovnomasi. Qaysi biriga «Ha» deb javob berasiz?" />
-              <div className="stack gap-8">
-                {PARQ.map((q, i) => {
-                  const on = p.healthFlags.includes(String(i));
-                  return <Choice key={i} multi on={on} onClick={() => up({ healthFlags: on ? p.healthFlags.filter((x) => x !== String(i)) : [...p.healthFlags, String(i)] })} title={q} />;
-                })}
-              </div>
-              {p.healthFlags.length > 0 ? (
+              {p.healthFlags.length > 0 || p.injuries.length > 0 ? (
                 <div className="notice warn">
                   <Icon name="alert" />
                   <span>
@@ -472,6 +355,7 @@ export default function Onboarding() {
                 <Row k="Oqsil" v={`${np.protein} g / kun`} />
               </div>
               <p className="muted small">{program.splitWhy}</p>
+              <p className="small muted">Kunlar, mashg‘ulot davomiyligi, kundalik faollik va ustuvor mushaklarni istalgan vaqtda Profil’da aniqlashtirasiz — dastur shunga moslanadi.</p>
               <div style={{ flex: 1 }} />
               <button className="btn btn-primary btn-block" onClick={() => nav('/', { replace: true })}>
                 Bosh sahifaga <Icon name="right" size={20} />
@@ -486,11 +370,6 @@ export default function Onboarding() {
           <button className="btn btn-primary btn-block" disabled={!canNext} onClick={() => (step === 'health' ? finish() : go(1))}>
             {step === 'health' ? 'Dasturni tuzish' : 'Davom etish'}
           </button>
-          {!canNext && (
-            <p className="tiny faint mt-8" style={{ textAlign: 'center' }}>
-              {p.trainingDays.length !== p.daysPerWeek ? `${p.daysPerWeek} ta kunni tanlang` : 'Har bir kunga kamida bitta mushak tanlang'}
-            </p>
-          )}
         </div>
       )}
     </div>

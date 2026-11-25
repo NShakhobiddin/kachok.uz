@@ -60,16 +60,34 @@ type Cat = (typeof CATS)[number]['value'];
 
 function Exercises() {
   const profile = useStore((s) => s.profile);
+  // qidiruv va filtrlar URL'da: mashqqa kirib "orqaga" qaytilganda joyida qoladi
   const [params, setParams] = useSearchParams();
+  const patch = (next: Record<string, string | null>) =>
+    setParams(
+      (prev) => {
+        const n = new URLSearchParams(prev);
+        for (const [k, v] of Object.entries(next)) if (v === null) n.delete(k);
+        else n.set(k, v);
+        return n;
+      },
+      { replace: true },
+    );
   const cat: Cat = CATS.some((c) => c.value === params.get('cat')) ? (params.get('cat') as Cat) : 'all';
-  const setCat = (c: Cat) => setParams(c === 'all' ? {} : { cat: c }, { replace: true });
-  const [q, setQ] = useState('');
-  const [area, setArea] = useState('all');
-  const [picked, setPicked] = useState<MuscleId[]>([]);
-  const [mine, setMine] = useState(!!profile);
+  const setCat = (c: Cat) => patch({ cat: c === 'all' ? null : c });
+  const q = params.get('q') ?? '';
+  const setQ = (v: string) => patch({ q: v || null });
+  const area = params.get('area') ?? 'all';
+  const picked = useMemo(() => (params.get('m') ?? '').split(',').filter(Boolean) as MuscleId[], [params]);
+  const setPicked = (f: MuscleId[] | ((p: MuscleId[]) => MuscleId[])) => {
+    const next = typeof f === 'function' ? f(picked) : f;
+    patch({ m: next.length ? next.join(',') : null });
+  };
+  const mine = params.has('mine') ? params.get('mine') === '1' : !!profile;
+  const setMine = (v: boolean) => patch({ mine: v === !!profile ? null : v ? '1' : '0' });
   const [showMap, setShowMap] = useState(false);
   const injuries = profile?.injuries ?? [];
-  const [safeOnly, setSafeOnly] = useState(false);
+  const safeOnly = params.get('safe') === '1';
+  const setSafeOnly = (v: boolean) => patch({ safe: v ? '1' : null });
   const list = useMemo(() => {
     const areaM = AREAS.find((a) => a.k === area)?.muscles ?? [];
     const filterM = picked.length ? picked : areaM;
@@ -151,8 +169,7 @@ function Exercises() {
             key={a.k}
             className={`chip ${area === a.k && !picked.length ? 'on' : ''}`}
             onClick={() => {
-              setArea(a.k);
-              setPicked([]);
+              patch({ area: a.k === 'all' ? null : a.k, m: null });
             }}
           >
             {a.label}

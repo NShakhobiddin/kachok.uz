@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
-import { lazy, Suspense, useEffect, useState } from 'react';
-import { BrowserRouter, MemoryRouter, Navigate, NavLink, Route, Routes, useLocation } from 'react-router-dom';
+import { lazy, Suspense, useEffect, useRef, useState } from 'react';
+import { BrowserRouter, MemoryRouter, Navigate, NavLink, Route, Routes, useLocation, useNavigationType } from 'react-router-dom';
 import { bootCloud } from './api/cloud';
 import { serverless, tgUserId } from './api/serverless';
 import { acceptPendingFriend, capturePendingFriend } from './api/social';
@@ -99,14 +99,45 @@ function useCloudGate(): Gate {
   return state === 'failed' ? 'ok' : 'register';
 }
 
+/**
+ * Sahifadagi joy: "orqaga" qaytilganda (POP) — avvalgi joyiga, yangi sahifaga o'tilganda — yuqoridan.
+ * Faqat URL parametri o'zgarsa (filtr, qidiruv) — joy o'zgarmaydi.
+ */
+const scrollMemory = new Map<string, number>();
+function useScrollMemory() {
+  const loc = useLocation();
+  const navType = useNavigationType();
+  const prevPath = useRef(loc.pathname);
+  useEffect(() => {
+    const key = loc.key;
+    const save = () => scrollMemory.set(key, window.scrollY);
+    window.addEventListener('scroll', save, { passive: true });
+    return () => window.removeEventListener('scroll', save);
+  }, [loc.key]);
+  useEffect(() => {
+    const samePage = prevPath.current === loc.pathname;
+    prevPath.current = loc.pathname;
+    const y = scrollMemory.get(loc.key);
+    if (navType === 'POP' && y !== undefined) {
+      // kech yuklanadigan sahifa balandligi tayyor bo'lguncha bir necha marta urinamiz
+      let tries = 0;
+      const restore = () => {
+        window.scrollTo(0, y);
+        if (Math.abs(window.scrollY - y) > 2 && ++tries < 12) setTimeout(restore, 60);
+      };
+      requestAnimationFrame(restore);
+      return;
+    }
+    if (!samePage) window.scrollTo(0, 0);
+  }, [loc.key]);
+}
+
 function Shell() {
   const profile = useStore((s) => s.profile);
   const loc = useLocation();
   useTelegramBridge();
   const gate = useCloudGate();
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [loc.pathname]);
+  useScrollMemory();
   const hideTab = NO_TAB.some((p) => loc.pathname.startsWith(p));
   if (gate === 'checking' || gate === 'restoring')
     return (
