@@ -3,6 +3,7 @@
 // seq — foydalanuvchi bo'yicha: har yozuv bitta SQL so'rovda max(seq)+1 oladi (SQLite yozuvlari ketma-ket — kursor sakramaydi).
 import { db, EndpointError } from 'sdk';
 import { sql } from 'sdk/db';
+import { limit } from './social.js';
 
 export const DOC_KINDS = ['profile', 'program', 'log', 'body', 'food', 'meta'];
 export const MAX_DOC_BYTES = 256 * 1024;
@@ -10,6 +11,12 @@ export const MAX_CHANGES = 400;
 const PAGE = 200;
 const PAGE_BYTES = 1024 * 1024;
 export const USER_QUOTA_BYTES = 20 * 1024 * 1024;
+/** Bitta foydalanuvchining hujjatlari (o'chirilganlari ham) — bazani cheksiz to'ldirib bo'lmasin */
+export const MAX_DOCS = 5000;
+/** Har qator uchun qo'shimcha hajm (kalitlar, indeks) — kvotada hisoblanadi: bo'sh hujjatlar ham "bepul" emas */
+const ROW_BYTES = 64;
+/** Shundan eski o'chirilganlik belgilari tozalanadi */
+const TOMBSTONE_TTL_MS = 365 * 24 * 3600 * 1000;
 
 const bad = (description, code = 'BAD_REQUEST') => {
   throw new EndpointError(description, { code });
@@ -39,6 +46,7 @@ export async function sync(user, input) {
   const changes = input.changes === undefined ? [] : input.changes;
   if (!Array.isArray(changes) || changes.length > MAX_CHANGES) bad('changes noto‘g‘ri');
   const uid = user.id;
+  await limit(`sync:${user.tg_id}`, 600, 3600);
   // kelajakdagi vaqt bilan yozib, boshqa qurilmalarni "yutib" qo'yishning oldini olish
   const maxTs = Date.now() + 5 * 60 * 1000;
   const prepared = [];
@@ -60,13 +68,19 @@ export async function sync(user, input) {
     prepared.push({ kind: ch.kind, id: ch.id, json, size, deleted: ch.deleted ? 1 : 0, updatedAt: Math.min(ch.updatedAt, maxTs) });
   }
 
-  if (incoming > 0) {
-    // kvota: hozirgi hajm − almashtiriladigan hujjatlar + yangilari
-    const rows = await db.all(sql`SELECT kind, doc_id, size FROM docs WHERE user_id = ${uid} AND deleted = 0`);
+  if (prepared.length) {
+    // kvota: hozirgi hajm − almashtiriladigan hujjatlar + yangilari (har qatorga qo'shimcha hajm); hujjatlar soni ham cheklangan
+    const rows = await db.all(sql`SELECT kind, doc_id, size, deleted FROM docs WHERE user_id = ${uid}`);
     const touched = new Set(prepared.map((p) => `${p.kind}:${p.id}`));
-    let total = incoming;
-    for (const d of rows) if (!touched.has(`${d.kind}:${d.doc_id}`)) total += Number(d.size);
-    if (total > USER_QUOTA_BYTES) bad(`Bulutdagi joy tugadi (${USER_QUOTA_BYTES / 1024 / 1024} MB). Eski mashg‘ulot yoki ovqat yozuvlarini o‘chirib, qayta urinib ko‘ring.`, 'QUOTA');
+    let total = incoming + prepared.length * ROW_BYTES;
+    let count = prepared.length;
+    for (const d of rows) {
+      if (touched.has(`${d.kind}:${d.doc_id}`)) continue;
+      count++;
+      total += Number(d.size) + ROW_BYTES;
+    }
+    const quota = `Bulutdagi joy tugadi (${USER_QUOTA_BYTES / 1024 / 1024} MB). Eski mashg‘ulot yoki ovqat yozuvlarini o‘chirib, qayta urinib ko‘ring.`;
+    if (count > MAX_DOCS || (incoming > 0 && total > USER_QUOTA_BYTES)) bad(quota, 'QUOTA');
   }
 
   for (const p of prepared) {
@@ -78,6 +92,9 @@ export async function sync(user, input) {
             WHERE docs.updated_at <= excluded.updated_at`,
     );
   }
+
+  // juda eski o'chirilganlik belgilari (qurilmalar ularni allaqachon olgan) — joy bo'shatish
+  if (prepared.some((p) => p.deleted)) await db.run(sql`DELETE FROM docs WHERE user_id = ${uid} AND deleted = 1 AND updated_at < ${Date.now() - TOMBSTONE_TTL_MS}`);
 
   // sahifa: ko'pi bilan PAGE hujjat va ~PAGE_BYTES bayt (kamida bitta hujjat)
   const heads = await db.all(sql`SELECT seq, size FROM docs WHERE user_id = ${uid} AND seq > ${since} ORDER BY seq LIMIT ${PAGE + 1}`);

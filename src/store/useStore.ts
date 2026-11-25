@@ -564,12 +564,14 @@ export const useStore = create<State>()(
       },
       // Telegram akkaunti: boshqa Telegram foydalanuvchisi — sinxron holati boshidan
       setCloud: (c) => {
-        const { sync } = get();
+        const { sync, cloud } = get();
         // akkaunt o'chirildi — bulut bo'sh: qayta ro'yxatdan o'tilsa hammasi qaytadan yuborilsin (tahrir vaqtlari qoladi)
         if (!c) return set({ cloud: null, sync: { ...INITIAL_SYNC, edited: sync.edited } });
         const id = `tg:${c.tgId}`;
-        const same = !sync.uid || sync.uid === id;
-        set({ cloud: c, sync: same ? { ...sync, uid: id } : { ...INITIAL_SYNC, uid: id } });
+        // shu Telegram akkaunti o'chirib, qayta ro'yxatdan o'tgan (boshqa qurilmada) — serverda yangi akkaunt, kursor boshidan
+        const reRegistered = !!cloud && cloud.tgId === c.tgId && cloud.at !== c.at;
+        const same = !reRegistered && (!sync.uid || sync.uid === id);
+        set({ cloud: c, sync: same ? { ...sync, uid: id } : { ...INITIAL_SYNC, edited: sync.edited, uid: id } });
       },
       patchAccount: (patch) => {
         const a = get().account;

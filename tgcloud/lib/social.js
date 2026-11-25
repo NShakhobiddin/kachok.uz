@@ -21,7 +21,7 @@ export async function me(ctx) {
   const name = [u.first_name, u.last_name].filter((s) => typeof s === 'string' && s.trim()).join(' ').trim().slice(0, 60);
   // parallel birinchi chaqiruvlar to'qnashmasligi uchun: DO NOTHING, keyin o'qish
   await db.run(sql`INSERT INTO users (tg_id, name, created_at) VALUES (${u.id}, ${name}, ${now() / 1000 | 0}) ON CONFLICT(tg_id) DO NOTHING`);
-  const row = await db.get(sql`SELECT id, name, friend_code, phone, registered_at FROM users WHERE tg_id = ${u.id}`);
+  const row = await db.get(sql`SELECT id, tg_id, name, friend_code, phone, registered_at FROM users WHERE tg_id = ${u.id}`);
   if (name && row.name !== name) {
     await db.run(sql`UPDATE users SET name = ${name} WHERE id = ${row.id}`);
     row.name = name;
@@ -83,7 +83,8 @@ export async function listFriends(uid) {
 export async function addFriend(user, rawCode) {
   const code = typeof rawCode === 'string' ? rawCode.trim().toUpperCase() : '';
   if (!/^[A-Z0-9]{6,12}$/.test(code)) fail('Kod noto‘g‘ri', 'BAD_CODE');
-  await limit(`add:${user.id}`, 30, 3600);
+  // cheklov Telegram id bo'yicha: ma'lumotlarni o'chirib qayta kirish uni nolga tushirmaydi
+  await limit(`add:${user.tg_id}`, 30, 3600);
   const friend = await db.get(sql`SELECT id, name FROM users WHERE friend_code = ${code}`);
   if (!friend) fail('Bunday kod topilmadi', 'NOT_FOUND');
   if (friend.id === user.id) fail('Bu o‘zingizning kodingiz', 'SELF');
@@ -104,11 +105,13 @@ export async function removeFriend(user, rawId) {
   const id = Number(rawId);
   if (!Number.isSafeInteger(id)) return;
   await db.run(sql`DELETE FROM friendships WHERE (user_id = ${user.id} AND friend_id = ${id}) OR (user_id = ${id} AND friend_id = ${user.id})`);
+  // eski kod bilan darhol qayta qo'shilib olmasin: kod yangilanadi (keyingi so'rovda yangisi yaratiladi)
+  await db.run(sql`UPDATE users SET friend_code = NULL WHERE id = ${user.id}`);
 }
 
 export async function savePost(user, input) {
   const p = validatePost(input);
-  await limit(`post:${user.id}`, 60, 3600);
+  await limit(`post:${user.tg_id}`, 60, 3600);
   const r = await db.run(
     sql`INSERT INTO posts (user_id, client_id, kind, data, created_at) VALUES (${user.id}, ${p.clientId}, ${p.kind}, ${JSON.stringify(p.data)}, ${now()})
         ON CONFLICT(user_id, client_id) DO UPDATE SET data = excluded.data, kind = excluded.kind
@@ -165,7 +168,7 @@ export async function setKudos(user, rawId, on) {
   const id = Number(rawId);
   if (!Number.isSafeInteger(id)) fail('Yozuv topilmadi', 'NOT_FOUND');
   if (on) {
-    await limit(`kudos:${user.id}`, 300, 3600);
+    await limit(`kudos:${user.tg_id}`, 300, 3600);
     const visible = await db.get(
       sql`SELECT 1 AS x FROM posts p WHERE p.id = ${id} AND (p.user_id = ${user.id} OR EXISTS (SELECT 1 FROM friendships f WHERE f.user_id = ${user.id} AND f.friend_id = p.user_id))`,
     );
@@ -176,12 +179,15 @@ export async function setKudos(user, rawId, on) {
   }
 }
 
-/** Foydalanuvchining lentadagi hamma ma'lumoti: yozuvlar, ularga «💪», do'stliklar va akkaunt */
-export async function deleteMe(user) {
+/**
+ * Foydalanuvchining lentadagi hamma ma'lumoti: yozuvlar, ularga «💪», do'stliklar va taklif kodi.
+ * Akkaunt (ro'yxat, raqam, bulutdagi ma'lumotlar) qoladi — u account.js deleteAccount da o'chiriladi.
+ * So'rov cheklovlari (hits) o'chirilmaydi: aks holda o'chirib-qayta kirib cheklovni chetlab o'tish mumkin edi.
+ */
+export async function deleteSocial(user) {
   const uid = user.id;
   await db.run(sql`DELETE FROM kudos WHERE user_id = ${uid} OR post_id IN (SELECT id FROM posts WHERE user_id = ${uid})`);
   await db.run(sql`DELETE FROM posts WHERE user_id = ${uid}`);
   await db.run(sql`DELETE FROM friendships WHERE user_id = ${uid} OR friend_id = ${uid}`);
-  await db.run(sql`DELETE FROM hits WHERE key LIKE ${'%:' + uid}`);
-  await db.run(sql`DELETE FROM users WHERE id = ${uid}`);
+  await db.run(sql`UPDATE users SET friend_code = NULL WHERE id = ${uid}`);
 }

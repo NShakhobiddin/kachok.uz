@@ -3,7 +3,7 @@
 // handlers/message.js uni shu yerda saqlaydi (boshqa odamning kontakti qabul qilinmaydi).
 import { db } from 'sdk';
 import { sql } from 'sdk/db';
-import { deleteMe } from './social.js';
+import { deleteSocial } from './social.js';
 
 const iso = (ms) => (ms == null ? null : new Date(Number(ms)).toISOString());
 
@@ -24,7 +24,8 @@ export async function register(user) {
 /** Akkauntni butunlay o'chirish: bulutdagi ma'lumotlar, lenta, do'stliklar */
 export async function deleteAccount(user) {
   await db.run(sql`DELETE FROM docs WHERE user_id = ${user.id}`);
-  await deleteMe(user);
+  await deleteSocial(user);
+  await db.run(sql`DELETE FROM users WHERE id = ${user.id}`);
 }
 
 /** Botga kelgan kontakt: faqat yuboruvchining o'z raqami saqlanadi. Javob (sendMessage) yoki null */

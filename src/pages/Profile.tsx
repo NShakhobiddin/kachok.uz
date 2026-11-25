@@ -12,6 +12,7 @@ import { DEFAULT_DAYS } from '../engine/program';
 import { customSplitOf, resizeSplit } from '../engine/split';
 import { DAYS_SHORT } from '../lib/date';
 import { apiEnabled } from '../api/client';
+import { deleteCloud } from '../api/cloud';
 import { TGCLOUD } from '../api/serverless';
 import { saveFile } from '../lib/download';
 import { BILLING } from '../lib/features';
@@ -34,6 +35,7 @@ export default function Profile() {
   const reset = useStore((s) => s.reset);
   const account = useStore((s) => s.account);
   const cloud = useStore((s) => s.cloud);
+  const [resetBusy, setResetBusy] = useState(false);
   const [panel, setPanel] = useState<Panel>(null);
   const [draft, setDraft] = useState<P>(profile);
   const [importMsg, setImportMsg] = useState<string | null>(null);
@@ -209,7 +211,11 @@ export default function Profile() {
         <h3 className="title">Hammasini o‘chirasizmi?</h3>
         <p className="muted mt-8">
           Profil, dastur va butun mashg‘ulotlar tarixi shu qurilmadan o‘chiriladi.{' '}
-          {account ? 'Akkauntdan ham chiqasiz — bulutdagi nusxa saqlanib qoladi, qayta kirsangiz tiklanadi.' : 'Buni qaytarib bo‘lmaydi — avval zaxira nusxa oling.'}
+          {cloud
+            ? 'Telegram akkauntingiz bulutidagi nusxa, do‘stlar va lenta ham o‘chadi. Buni qaytarib bo‘lmaydi — avval zaxira nusxa oling.'
+            : account
+              ? 'Akkauntdan ham chiqasiz — bulutdagi nusxa saqlanib qoladi, qayta kirsangiz tiklanadi.'
+              : 'Buni qaytarib bo‘lmaydi — avval zaxira nusxa oling.'}
         </p>
         <div className="row gap-8 mt-16">
           <button className="btn btn-secondary grow" onClick={() => setResetOpen(false)}>
@@ -217,12 +223,23 @@ export default function Profile() {
           </button>
           <button
             className="btn btn-danger grow"
-            onClick={() => {
+            disabled={resetBusy}
+            onClick={async () => {
+              // Telegram ichida: bulutdagi nusxa ham o'chiriladi — aks holda keyingi ochilishda hammasi qaytib kelardi
+              if (cloud) {
+                setResetBusy(true);
+                try {
+                  await deleteCloud();
+                } catch {
+                  setResetBusy(false);
+                  return;
+                }
+              }
               reset();
               nav('/onboarding');
             }}
           >
-            O‘chirish
+            {resetBusy ? 'O‘chirilmoqda…' : 'O‘chirish'}
           </button>
         </div>
       </Sheet>

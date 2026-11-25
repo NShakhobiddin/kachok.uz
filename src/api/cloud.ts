@@ -26,7 +26,8 @@ function apply(info: CloudInfo) {
   if (!id) return;
   if (info.registered) {
     const next = { tgId: id, name: info.name, phone: info.phone, at: info.registeredAt ?? new Date().toISOString() };
-    if (!cloud || cloud.tgId !== id || cloud.name !== next.name || cloud.phone !== next.phone) setCloud(next);
+    // `at` — ro'yxatdan o'tgan vaqt: o'zgarsa, akkaunt o'chirilib qayta ochilgan (setCloud sinxronni boshidan boshlaydi)
+    if (!cloud || cloud.tgId !== id || cloud.at !== next.at || cloud.name !== next.name || cloud.phone !== next.phone) setCloud(next);
   } else if (cloud && cloud.tgId === id) setCloud(null); // boshqa qurilmada o'chirilgan
 }
 

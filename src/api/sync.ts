@@ -125,6 +125,9 @@ interface Ctx {
   edited: Record<string, number>;
 }
 
+/** Serverdan kelgan o'zgarish qo'llanayotganda — "tahrir vaqti" yozilmaydi (bu foydalanuvchi tahriri emas) */
+let applying = false;
+
 /** Serverdan kelgan hujjatlarni qurilma holatiga qo'llash */
 function applyRemote(docs: RemoteDoc[], c: Ctx, preferServer: boolean) {
   if (!docs.length) return;
@@ -140,6 +143,14 @@ function applyRemote(docs: RemoteDoc[], c: Ctx, preferServer: boolean) {
     const editedLater = dirty && (c.edited[k] ?? 0) > d.updatedAt;
     const prefer = preferServer && SINGLETONS.includes(d.kind);
     const localNewer = !prefer && ((c.stamps[k] ?? 0) > d.updatedAt || editedLater);
+    // o'zimiz yuborgan nusxa qaytdi: server vaqt belgisini olamiz — telefon soati oldinda bo'lsa ham
+    // keyingi (boshqa qurilmadagi) o'zgarishlar "eskiroq" deb tashlab ketilmaydi (server vaqtni now+5 daq bilan cheklaydi)
+    if (!d.deleted && c.hashes[k] !== undefined && c.hashes[k] === hash(d.kind === 'food' && !Array.isArray(d.data) ? [] : d.data)) {
+      c.stamps[k] = d.updatedAt;
+      if (d.kind === 'food') c.base[k] = (d.data as FoodEntry[]).map((e) => e.id);
+      if (d.kind === 'meta') c.base[k] = d.data;
+      continue;
+    }
     if (d.kind === 'food') {
       // ovqat har doim birlashtiriladi
       if ((c.stamps[k] ?? 0) > d.updatedAt) continue;
@@ -183,8 +194,19 @@ function applyRemote(docs: RemoteDoc[], c: Ctx, preferServer: boolean) {
   }
   // eski mijozdan kelgan haddan tashqari kaloriya tuzatishi chegaraga keltiriladi
   if (meta && typeof meta.kcalAdjust === 'number') meta.kcalAdjust = clampKcalAdjust(meta.kcalAdjust);
-  useStore.setState({ profile, program, logs, body, food, ...(meta ?? {}) });
+  applying = true;
+  try {
+    useStore.setState({ profile, program, logs, body, food, ...(meta ?? {}) });
+  } finally {
+    applying = false;
+  }
 }
+
+/** Kimning ma'lumoti sinxronlanmoqda: akkaunt yoki Telegram akkaunti (qayta ro'yxatdan o'tish — yangi egasi) */
+function ownerKey(s = useStore.getState()): string {
+  return `${s.account?.user.id ?? ''}|${s.cloud ? `${s.cloud.tgId}:${s.cloud.at}` : ''}`;
+}
+class OwnerChanged extends Error {}
 
 let running: Promise<void> | null = null;
 
@@ -196,13 +218,16 @@ export function cloudSignedIn(s = useStore.getState()): boolean {
 /** Bitta sinxron so'rovi: Telegram Serverless (tgcloud/endpoints/sync.js) yoki o'z serverimiz (/sync) — protokol bir xil */
 const callSync = (body: { since: number; changes: unknown[] }) => (serverless() ? scall<SyncResponse>('sync', body) : api<SyncResponse>('/sync', { body }));
 
+/** UTF-8 bayt soni (o‘zbekcha ‘ — 3 bayt) */
+export const utf8Bytes = (s: string) => new TextEncoder().encode(s).length;
+
 /** O'zgarishlarni paketlarga bo'lish: 400 tagacha; Serverless'da so'rov hajmi ham ~512 KB dan oshmaydi */
 export function batches<T>(items: T[], maxCount = 400, maxBytes = Infinity): T[][] {
   const out: T[][] = [];
   let cur: T[] = [];
   let bytes = 0;
   for (const it of items) {
-    const b = maxBytes === Infinity ? 0 : (JSON.stringify(it) ?? '').length;
+    const b = maxBytes === Infinity ? 0 : utf8Bytes(JSON.stringify(it) ?? '');
     if (cur.length && (cur.length >= maxCount || bytes + b > maxBytes)) {
       out.push(cur);
       cur = [];
@@ -228,8 +253,16 @@ async function run() {
     const sync = useStore.getState().sync;
     const c: Ctx = { hashes: { ...sync.hashes }, stamps: { ...sync.stamps }, base: { ...sync.base }, edited: sync.edited ?? {} };
     let cursor = sync.cursor;
+    // sinxron davomida akkaunt o'chirilsa / almashsa — eski natija yangi egasining holatiga yozilmaydi
+    const owner = ownerKey();
+    const check = () => {
+      if (ownerKey() !== owner) throw new OwnerChanged();
+    };
     // har sahifadan keyin saqlaymiz: uzilib qolsa, qo'llangan o'zgarish ikkinchi marta birlashtirilmaydi
-    const save = () => setSync({ cursor, hashes: { ...c.hashes }, stamps: { ...c.stamps }, base: { ...c.base } });
+    const save = () => {
+      check();
+      setSync({ cursor, hashes: { ...c.hashes }, stamps: { ...c.stamps }, base: { ...c.base } });
+    };
     // Birinchi ulanishda serverdagi profil/dastur ustun: yangi telefondagi bo'sh profil eski ma'lumotni bosib ketmasin
     // (zaxiradan tiklanganda esa — qurilmadagisi)
     const preferServer = cursor === 0 && !sync.forceLocal;
@@ -237,6 +270,7 @@ async function run() {
       let more = true;
       while (more) {
         const res = await callSync({ since: cursor, changes: [] });
+        check();
         applyRemote(res.docs, c, preferServer);
         cursor = res.cursor;
         more = res.more;
@@ -252,37 +286,47 @@ async function run() {
     const now = Date.now();
     const edited = useStore.getState().sync.edited ?? {};
     const at = (k: string) => Math.max(Math.min(edited[k] ?? now, now), (c.stamps[k] ?? 0) + 1);
-    const changes: (Doc & { updatedAt: number; deleted?: boolean })[] = [];
+    type Change = Doc & { updatedAt: number; deleted?: boolean };
+    // hash/vaqt belgisi faqat paket serverga yetib borgach yoziladi — 2-paket uzilsa, u keyingi safar qayta yuboriladi
+    const pending: { ch: Change; k: string; h?: string }[] = [];
     for (const [k, d] of local) {
       const h = hash(d.data);
-      if (c.hashes[k] !== h) {
-        // tahrir vaqti: murabbiy keyinroq yozgan dasturni eski oflayn tahrir bosib ketmasin
-        const t = at(k);
-        changes.push({ ...d, updatedAt: t });
-        c.hashes[k] = h;
-        c.stamps[k] = t;
-      }
+      // tahrir vaqti: murabbiy keyinroq yozgan dasturni eski oflayn tahrir bosib ketmasin
+      if (c.hashes[k] !== h) pending.push({ ch: { ...d, updatedAt: at(k) }, k, h });
     }
     for (const k of Object.keys(c.hashes)) {
       if (local.has(k)) continue;
       const [kind, ...rest] = k.split(':');
       if (kind !== 'log' && kind !== 'body' && kind !== 'food') continue;
-      const t = at(k);
-      changes.push({ kind: kind as Kind, id: rest.join(':'), data: null, updatedAt: t, deleted: true });
-      delete c.hashes[k];
-      c.stamps[k] = t;
+      pending.push({ ch: { kind: kind as Kind, id: rest.join(':'), data: null, updatedAt: at(k), deleted: true }, k });
     }
 
-    for (const batch of batches(changes, 400, serverless() ? 512 * 1024 : Infinity)) {
-      const res = await callSync({ since: cursor, changes: batch });
+    for (const batch of batches(pending, 400, serverless() ? 512 * 1024 : Infinity)) {
+      const res = await callSync({ since: cursor, changes: batch.map((p) => p.ch) });
+      check();
+      for (const p of batch) {
+        if (p.ch.deleted) {
+          delete c.hashes[p.k];
+          delete c.base[p.k];
+        } else c.hashes[p.k] = p.h!;
+        c.stamps[p.k] = p.ch.updatedAt;
+      }
       applyRemote(res.docs, c, false);
       cursor = res.cursor;
       save();
       if (res.more) await pull();
     }
-    setSync({ cursor, hashes: c.hashes, stamps: c.stamps, base: c.base, forceLocal: false, uid: useStore.getState().account?.user.id ?? (useStore.getState().cloud ? `tg:${useStore.getState().cloud!.tgId}` : sync.uid), lastSyncAt: Date.now(), status: 'idle' });
+    check();
+    // eskirgan yozuvlar: o'chirilgan hujjatlarning tahrir vaqti va asos nusxasi saqlanib, xotira o'sib borardi
+    const live = new Set([...collectDocs().keys(), ...Object.keys(c.hashes)]);
+    const editedLive = Object.fromEntries(Object.entries(useStore.getState().sync.edited ?? {}).filter(([k]) => live.has(k)));
+    for (const k of Object.keys(c.base)) if (!live.has(k)) delete c.base[k];
+    const st = useStore.getState();
+    setSync({ cursor, hashes: c.hashes, stamps: c.stamps, base: c.base, edited: editedLive, forceLocal: false, uid: st.account?.user.id ?? (st.cloud ? `tg:${st.cloud.tgId}` : sync.uid), lastSyncAt: Date.now(), status: 'idle' });
     refreshMe().catch(() => {});
   } catch (e) {
+    // egasi almashgan — eski sinxron natijasi tashlab yuboriladi (yangi egasining holati o'zgarmaydi)
+    if (e instanceof OwnerChanged) return;
     setSync({ status: 'error', error: (e as Error).message });
   }
 }
@@ -328,7 +372,7 @@ export function startAutoSync() {
   };
   const unsub = useStore.subscribe((s, prev) => {
     // tahrir vaqti akkauntsiz ham yoziladi: keyin kirilganda oflayn yozilgan ma'lumot to'g'ri vaqt bilan yuboriladi
-    const touched = touchedDocs(s, prev);
+    const touched = applying ? [] : touchedDocs(s, prev);
     if (touched.length) {
       const at = Date.now();
       s.setSync({ edited: { ...s.sync.edited, ...Object.fromEntries(touched.map((k) => [k, at])) } });

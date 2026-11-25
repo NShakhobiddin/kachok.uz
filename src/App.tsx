@@ -88,7 +88,8 @@ function useCloudGate(): Gate {
     const t = setTimeout(() => setState((s) => (s === 'checking' ? 'failed' : s)), 10_000);
     void bootCloud().then((info) => {
       clearTimeout(t);
-      setState(info ? 'done' : 'failed');
+      // ilova allaqachon ochilgan (kutish muddati o'tgan) — kech kelgan javob uni ro'yxat oynasiga almashtirmaydi
+      setState((s) => (s === 'failed' ? 'failed' : info ? 'done' : 'failed'));
     });
     return () => clearTimeout(t);
   }, [sls]);

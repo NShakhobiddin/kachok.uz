@@ -106,12 +106,13 @@ describe('tgcloud: bulutga sinxronlash', () => {
 
   it('eskiroq o‘zgarish yangisini bosmaydi; o‘chirish ham hujjat sifatida keladi; kelajak vaqti cheklanadi', async () => {
     await register({}, A);
-    await sync({ since: 0, changes: [doc('profile', 'me', { v: 2 }, 5000)] }, A);
-    await sync({ since: 0, changes: [doc('profile', 'me', { v: 1 }, 4000)] }, A);
+    const T = Date.now() - 60_000;
+    await sync({ since: 0, changes: [doc('profile', 'me', { v: 2 }, T + 5000)] }, A);
+    await sync({ since: 0, changes: [doc('profile', 'me', { v: 1 }, T + 4000)] }, A);
     let all = await sync({ since: 0, changes: [] }, A);
     expect(all.docs[0].data).toEqual({ v: 2 });
-    await sync({ since: 0, changes: [doc('log', 'L1', { id: 'L1' }, 1000)] }, A);
-    await sync({ since: 0, changes: [{ kind: 'log', id: 'L1', data: null, updatedAt: 3000, deleted: true }] }, A);
+    await sync({ since: 0, changes: [doc('log', 'L1', { id: 'L1' }, T + 1000)] }, A);
+    await sync({ since: 0, changes: [{ kind: 'log', id: 'L1', data: null, updatedAt: T + 3000, deleted: true }] }, A);
     all = await sync({ since: 0, changes: [] }, A);
     expect(all.docs.find((d: Doc) => d.id === 'L1')).toMatchObject({ deleted: true, data: null });
     const future = Date.now() + 10 * 24 * 3600 * 1000;
@@ -153,5 +154,43 @@ describe('tgcloud: bulutga sinxronlash', () => {
     expect(await errCode(sync({ since: 0, changes: [doc('log', 'L-over', { s: chunk })] }, A))).toBe('QUOTA');
     // mavjud hujjatni almashtirish kvotaga qo'shilmaydi
     expect(await errCode(sync({ since: 0, changes: [doc('log', 'L0', { s: 'small' }, 9999)] }, A))).toBeNull();
+  });
+});
+
+describe('tgcloud: audit tuzatishlari', () => {
+  it('lenta ma’lumotlarini o‘chirish akkaunt va bulutdagi ma’lumotlarni o‘chirmaydi', async () => {
+    const socialDelete = (await import('../../tgcloud/endpoints/socialDelete.js')).default;
+    await register({}, A);
+    await sync({ since: 0, changes: [doc('profile', 'me', { name: 'Ali' }, Date.now())] }, A);
+    await socialDelete({}, A);
+    expect((await account({}, A)).registered).toBe(true);
+    expect((await sync({ since: 0, changes: [] }, A)).docs).toHaveLength(1);
+  });
+
+  it('do‘stlikdan chiqarilgan odam eski kod bilan qayta qo‘shila olmaydi', async () => {
+    const friendRemove = (await import('../../tgcloud/endpoints/friendRemove.js')).default;
+    const { code } = await friendCode({}, A);
+    await friendAdd({ code }, B);
+    const bId = (await friends({}, A)).friends[0].id;
+    await friendRemove({ id: bId }, A);
+    expect(await errCode(friendAdd({ code }, B))).toBe('NOT_FOUND');
+    expect((await friendCode({}, A)).code).not.toBe(code);
+  });
+
+  it('hujjatlar soni cheklangan (o‘chirilganlari ham); bo‘sh hujjatlar ham kvotada', async () => {
+    const { MAX_DOCS } = await import('../../tgcloud/lib/sync.js');
+    await register({}, A);
+    const t = Date.now();
+    for (let i = 0; i < MAX_DOCS; i += 400) await sync({ since: 0, changes: Array.from({ length: Math.min(400, MAX_DOCS - i) }, (_, j) => doc('log', `L${i + j}`, {}, t)) }, A);
+    expect(await errCode(sync({ since: 0, changes: [doc('log', 'one-more', {}, t)] }, A))).toBe('QUOTA');
+    // mavjud hujjatni yangilash — mumkin
+    expect(await errCode(sync({ since: 0, changes: [doc('log', 'L0', { x: 1 }, t + 1)] }, A))).toBeNull();
+  });
+
+  it('so‘rov cheklovi Telegram id bo‘yicha — ma’lumotlarni o‘chirib qayta kirish uni nolga tushirmaydi', async () => {
+    const socialDelete = (await import('../../tgcloud/endpoints/socialDelete.js')).default;
+    for (let i = 0; i < 30; i++) await errCode(friendAdd({ code: 'ZZZZZZZ' + (i % 10) }, B));
+    await socialDelete({}, B);
+    expect(await errCode(friendAdd({ code: 'ZZZZZZZZ' }, B))).toBe('RATE_LIMIT');
   });
 });
