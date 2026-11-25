@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { ApiError } from '../api/client';
 import { canRequestPhone, deleteCloud, fetchCloud, fmtPhone, registerCloud, requestPhone, tgProfile, waitForPhone } from '../api/cloud';
 import { syncNow } from '../api/sync';
+import { Logo } from '../components/Logo';
 import { Icon } from '../components/ui/Icon';
 import { useStore } from '../store/useStore';
 import { timeAgo } from './Account';
@@ -31,12 +32,15 @@ function Benefit({ children }: { children: React.ReactNode }) {
   );
 }
 
-function Register() {
+/** Ro'yxatdan o'tish. entry — ilovaga kirishdagi oyna (App.tsx): tugagach ilova o'zi ochiladi */
+export function Register({ entry = false }: { entry?: boolean }) {
   const nav = useNavigate();
   const tg = tgProfile();
   const [busy, setBusy] = useState<'phone' | 'plain' | null>(null);
   const [err, setErr] = useState<string | null>(null);
-  const done = () => nav(useStore.getState().profile ? '/account' : '/onboarding', { replace: true });
+  const done = () => {
+    if (!entry) nav(useStore.getState().profile ? '/account' : '/onboarding', { replace: true });
+  };
 
   const withPhone = async () => {
     setBusy('phone');
@@ -70,11 +74,19 @@ function Register() {
 
   return (
     <div className="stack gap-16">
-      <div>
-        <span className="eyebrow">Akkaunt</span>
-        <h1 className="display mt-4">Ro‘yxatdan o‘tish</h1>
-        <p className="muted mt-8">Telegram akkauntingiz bilan bir bosishda — parol va SMS kerak emas.</p>
-      </div>
+      {entry ? (
+        <div>
+          <Logo size={30} />
+          <h1 className="display mt-16">Xush kelibsiz!</h1>
+          <p className="muted mt-8">Boshlash uchun ro‘yxatdan o‘ting — Telegram akkauntingiz bilan bir bosishda, parol va SMS kerak emas.</p>
+        </div>
+      ) : (
+        <div>
+          <span className="eyebrow">Akkaunt</span>
+          <h1 className="display mt-4">Ro‘yxatdan o‘tish</h1>
+          <p className="muted mt-8">Telegram akkauntingiz bilan bir bosishda — parol va SMS kerak emas.</p>
+        </div>
+      )}
 
       <div className="card row gap-12">
         <span className="avatar">{(tg.name || 'G')[0].toUpperCase()}</span>

@@ -2,7 +2,7 @@ import { motion } from 'framer-motion';
 import { lazy, Suspense, useEffect, useState } from 'react';
 import { BrowserRouter, MemoryRouter, Navigate, NavLink, Route, Routes, useLocation } from 'react-router-dom';
 import { bootCloud } from './api/cloud';
-import { serverless, TGCLOUD } from './api/serverless';
+import { serverless, tgUserId } from './api/serverless';
 import { acceptPendingFriend, capturePendingFriend } from './api/social';
 import { startAutoSync } from './api/sync';
 import { Icon } from './components/ui/Icon';
@@ -23,6 +23,7 @@ const LessonView = lazy(() => import('./pages/LessonView'));
 const Sources = lazy(() => import('./pages/Sources'));
 const Lab = lazy(() => import('./pages/Lab'));
 const Account = lazy(() => import('./pages/Account'));
+const Register = lazy(() => import('./pages/CloudAccount').then((m) => ({ default: m.Register })));
 const Coach = lazy(() => import('./pages/Coach'));
 const CoachClient = lazy(() => import('./pages/CoachClient'));
 const Premium = lazy(() => import('./pages/Premium'));
@@ -67,39 +68,60 @@ const NO_TAB = ['/onboarding', '/workout', '/summary', '/lesson', '/lab', '/acco
 // profil to'ldirilmasdan ham ochiladigan sahifalar
 const NO_PROFILE_OK = ['/onboarding', '/lab', '/exercise', '/library', '/lesson', '/sources', '/account', '/premium', '/coach', '/muscle', '/routine', '/stretch'];
 
+type Gate = 'ok' | 'checking' | 'restoring' | 'register';
 /**
- * Telegram ichida: akkaunt holati tekshiriladi. Ro'yxatdan o'tgan foydalanuvchi yangi qurilmada ochsa (profil yo'q) —
- * bulutdagi ma'lumotlar tiklanguncha kutamiz (ko'pi bilan 10 s), aks holda "tanishuv" sahifasi ochilib ketadi.
+ * Telegram ichida ilovaga kirish: avval akkaunt tekshiriladi.
+ * - ro'yxatdan o'tmagan → ro'yxatdan o'tish oynasi (ilovadan oldin);
+ * - ro'yxatdan o'tgan, lekin qurilmada profil yo'q (yangi telefon) → bulutdagi ma'lumotlar tiklanguncha kutiladi;
+ * - qurilmada shu Telegram akkaunti saqlangan → kutilmaydi (tekshiruv fonda).
+ * Tarmoq xatosida ilova bloklanmaydi.
  */
-function useCloudBoot() {
+function useCloudGate(): Gate {
   const profile = useStore((s) => s.profile);
-  const [waiting, setWaiting] = useState(() => TGCLOUD && serverless() && !useStore.getState().profile);
+  const cloud = useStore((s) => s.cloud);
+  const sls = serverless();
+  const mine = !!cloud && cloud.tgId === tgUserId();
+  const [state, setState] = useState<'checking' | 'done' | 'failed'>(sls ? 'checking' : 'done');
   useEffect(() => {
-    const t = setTimeout(() => setWaiting(false), 10_000);
-    void bootCloud().finally(() => {
+    if (!sls) return;
+    const t = setTimeout(() => setState((s) => (s === 'checking' ? 'failed' : s)), 10_000);
+    void bootCloud().then((info) => {
       clearTimeout(t);
-      setWaiting(false);
+      setState(info ? 'done' : 'failed');
     });
     return () => clearTimeout(t);
-  }, []);
-  return waiting && !profile;
+  }, [sls]);
+  if (!sls) return 'ok';
+  if (mine) return state === 'checking' && !profile ? 'restoring' : 'ok';
+  if (state === 'checking') return 'checking';
+  return state === 'failed' ? 'ok' : 'register';
 }
 
 function Shell() {
   const profile = useStore((s) => s.profile);
   const loc = useLocation();
   useTelegramBridge();
-  const restoring = useCloudBoot();
+  const gate = useCloudGate();
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [loc.pathname]);
   const hideTab = NO_TAB.some((p) => loc.pathname.startsWith(p));
-  if (restoring)
+  if (gate === 'checking' || gate === 'restoring')
     return (
       <div className="page" style={{ display: 'grid', placeItems: 'center', minHeight: '100dvh' }}>
         <p className="small muted" role="status">
-          Ma’lumotlaringiz tiklanmoqda…
+          {gate === 'restoring' ? 'Ma’lumotlaringiz tiklanmoqda…' : 'Yuklanmoqda…'}
         </p>
+      </div>
+    );
+  if (gate === 'register')
+    return (
+      <div className="app">
+        <div className="page">
+          <Suspense fallback={null}>
+            <Register entry />
+          </Suspense>
+        </div>
       </div>
     );
   if (!profile && !NO_PROFILE_OK.some((p) => loc.pathname.startsWith(p))) return <Navigate to="/onboarding" replace />;

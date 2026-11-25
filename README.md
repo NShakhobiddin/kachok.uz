@@ -79,7 +79,7 @@ Bot va do'stlar lentasi [Telegram Serverless](https://core.telegram.org/bots/ser
 - `tgcloud/schema.js` — baza (foydalanuvchilar, do'stliklar, yozuvlar, «💪»).
 - `tgcloud/endpoints/*.js` — Mini App chaqiradigan funksiyalar (`Telegram.WebApp.Serverless.call`): taklif kodi, do'st qo'shish, lenta, «💪», ma'lumotlarni o'chirish. Foydalanuvchini Telegram tasdiqlaydi — kirish/SMS kerak emas.
 - `tgcloud/handlers/message.js` — `/start` (va `/start f_KOD` — do'st taklifi) ga ilovani ochish tugmasi; ro'yxatdan o'tishda ulashilgan kontakt (faqat foydalanuvchining o'z raqami) saqlanadi.
-- **Ro'yxatdan o'tish** (*Profil → Ro'yxatdan o'tish*): Telegram akkaunti bilan bir bosishda, raqam — Telegram'ning "raqamni ulashish" oynasi orqali (SMS kerak emas). Shundan keyin profil, dastur, mashg'ulotlar, vazn va ovqat yozuvlari bulutga sinxronlanadi (`endpoints/sync.js`, o'z serverimizdagi `/sync` bilan bir xil protokol) va boshqa qurilmada shu Telegram akkaunti bilan ochilganda o'zi tiklanadi. Akkauntni o'chirish — bulutdagi hamma narsani o'chiradi.
+- **Ro'yxatdan o'tish** — Telegram ichida ilovaga kirishda (ro'yxatdan o'tmagan bo'lsa, ilovadan oldin; akkaunt — *Profil → Akkaunt va sinxronlash*): Telegram akkaunti bilan bir bosishda, raqam — Telegram'ning "raqamni ulashish" oynasi orqali (SMS kerak emas). Shundan keyin profil, dastur, mashg'ulotlar, vazn va ovqat yozuvlari bulutga sinxronlanadi (`endpoints/sync.js`, o'z serverimizdagi `/sync` bilan bir xil protokol) va boshqa qurilmada shu Telegram akkaunti bilan ochilganda o'zi tiklanadi. Akkauntni o'chirish — bulutdagi hamma narsani o'chiradi.
 - Mini App shu yerda yig'iladi va `https://app<id>.tgcloud.ai/` da joylanadi (`tgcloud.jsonc`, `VITE_TGCLOUD=1`).
 
 Ulash (bir marta):
