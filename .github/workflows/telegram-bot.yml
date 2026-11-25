@@ -1,0 +1,40 @@
+# Telegram botni sozlaydi — botning o'z serveri shart emas: menyu tugmasi «Ochish» → Mini App, tavsif,
+# API_URL o'zgaruvchisi bo'lsa — /start uchun webhook. Skript: scripts/telegram-bot.mjs
+# Bir martalik: @BotFather tokenini Settings → Secrets and variables → Actions → New repository secret: TELEGRAM_BOT_TOKEN
+name: Telegram bot
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - scripts/telegram-bot.mjs
+      - .github/workflows/telegram-bot.yml
+
+permissions:
+  contents: read
+  actions: write
+
+concurrency:
+  group: telegram-bot
+  cancel-in-progress: false
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - id: bot
+        run: node scripts/telegram-bot.mjs
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          API_URL: ${{ vars.API_URL }}
+          APP_URL: ${{ vars.APP_URL }}
+      # bot nomi ilovaga tushishi uchun (taklif havolalari t.me/<bot>?startapp=...) saytni qayta yig'ish
+      - if: github.event_name == 'workflow_dispatch' && steps.bot.outputs.username != ''
+        run: gh workflow run pages.yml --ref main --repo "$GITHUB_REPOSITORY"
+        env:
+          GH_TOKEN: ${{ github.token }}

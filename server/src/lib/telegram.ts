@@ -64,3 +64,9 @@ export function signInitData(fields: Record<string, string>, botToken: string): 
   const hash = check(secret, Object.entries(fields));
   return new URLSearchParams({ ...fields, hash }).toString();
 }
+
+/**
+ * Webhook maxfiy kaliti (X-Telegram-Bot-Api-Secret-Token): bot tokenidan hosil qilinadi — alohida sozlash kerak emas.
+ * Xuddi shu hisob scripts/telegram-bot.mjs da (setWebhook) — o'zgartirsangiz ikkalasini ham.
+ */
+export const webhookSecret = (botToken: string) => createHmac('sha256', botToken).update('gymbos-webhook').digest('hex');

@@ -12,6 +12,7 @@ import { billingRoutes } from './routes/billing.js';
 import { coachRoutes } from './routes/coach.js';
 import { socialRoutes } from './routes/social.js';
 import { syncRoutes } from './routes/sync.js';
+import { telegramRoutes } from './routes/telegram.js';
 import type { SmsSender } from './sms/index.js';
 
 export interface Deps {
@@ -74,6 +75,7 @@ export function createApp(deps: Deps) {
   app.route('/coach', coachRoutes(deps));
   app.route('/billing', billingRoutes(deps));
   app.route('/social', socialRoutes(deps));
+  app.route('/telegram', telegramRoutes(deps));
   // /me va /notes auth marshrutlari ichida
   app.route('/', authRoutes(deps, true));
 
