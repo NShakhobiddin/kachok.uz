@@ -9,6 +9,7 @@ import { hmac, otpCode, randomToken, safeEqual, sha256 } from '../lib/crypto.js'
 import { ApiError, readBody, readJson, scrubError } from '../lib/http.js';
 import { signAccess } from '../lib/jwt.js';
 import { normalizePhone } from '../lib/phone.js';
+import { verifyInitData, type TgUser } from '../lib/telegram.js';
 
 const HOUR_MS = 60 * 60 * 1000;
 const OTP_TTL_MS = 5 * 60 * 1000;
@@ -24,7 +25,8 @@ const REFRESH_DAYS = 60;
 
 interface UserRow {
   id: string;
-  phone: string;
+  phone: string | null;
+  telegram_id?: number | null;
   name: string;
   role: 'athlete' | 'coach';
   created_at: Date;
@@ -36,6 +38,7 @@ export function publicUser(u: UserRow) {
 
 /** Bepul sinov belgisi uchun kalit: raqamning o'zi saqlanmaydi */
 const trialKey = (env: Env, phone: string) => hmac(env.JWT_SECRET, `trial:${phone}`);
+const tgTrialKey = (env: Env, tgId: number) => hmac(env.JWT_SECRET, `trial:tg:${tgId}`);
 
 async function issueTokens(deps: Deps, user: UserRow) {
   const access = await signAccess(deps.env.JWT_SECRET, { sub: user.id, role: user.role });
@@ -57,6 +60,25 @@ async function findOrCreateUser(deps: Deps, phone: string): Promise<{ user: User
        ON CONFLICT (phone) DO UPDATE SET phone = EXCLUDED.phone
        RETURNING *, (xmax = 0) AS inserted`,
       [phone, env.TRIAL_DAYS, fresh.rows.length > 0],
+    );
+    const { inserted, ...user } = rows[0];
+    return { user, isNew: inserted };
+  });
+}
+
+/** Telegram foydalanuvchisini topish yoki yaratish (ism Telegram'dagi ismdan; sinov — shu Telegram akkauntga bir marta) */
+async function findOrCreateTelegramUser(deps: Deps, tg: TgUser): Promise<{ user: UserRow; isNew: boolean }> {
+  const { db, env } = deps;
+  const existing = (await db.query<UserRow>('SELECT * FROM users WHERE telegram_id = $1', [tg.id])).rows[0];
+  if (existing) return { user: existing, isNew: false };
+  const name = [tg.first_name, tg.last_name].filter(Boolean).join(' ').trim().slice(0, 60);
+  return db.tx(async (q) => {
+    const fresh = await q.query('INSERT INTO trial_used (phone_hash) VALUES ($1) ON CONFLICT DO NOTHING RETURNING 1', [tgTrialKey(env, tg.id)]);
+    const { rows } = await q.query<UserRow & { inserted: boolean }>(
+      `INSERT INTO users (telegram_id, name, trial_until) VALUES ($1, $2, CASE WHEN $4 THEN now() + make_interval(days => $3) END)
+       ON CONFLICT (telegram_id) DO UPDATE SET telegram_id = EXCLUDED.telegram_id
+       RETURNING *, (xmax = 0) AS inserted`,
+      [tg.id, name, env.TRIAL_DAYS, fresh.rows.length > 0],
     );
     const { inserted, ...user } = rows[0];
     return { user, isNew: inserted };
@@ -104,10 +126,11 @@ export function authRoutes(deps: Deps, meOnly = false) {
     r.delete('/me', async (c) => {
       const uid = c.get('uid');
       await db.tx(async (q) => {
-        const u = (await q.query<{ phone: string }>('SELECT phone FROM users WHERE id = $1 FOR UPDATE', [uid])).rows[0];
+        const u = (await q.query<{ phone: string | null; telegram_id: number | null }>('SELECT phone, telegram_id FROM users WHERE id = $1 FOR UPDATE', [uid])).rows[0];
         if (!u) return;
         // qayta ro'yxatdan o'tganda yangi bepul sinov berilmasin
-        await q.query('INSERT INTO trial_used (phone_hash) VALUES ($1) ON CONFLICT DO NOTHING', [trialKey(env, u.phone)]);
+        for (const key of [u.phone ? trialKey(env, u.phone) : null, u.telegram_id ? tgTrialKey(env, Number(u.telegram_id)) : null])
+          if (key) await q.query('INSERT INTO trial_used (phone_hash) VALUES ($1) ON CONFLICT DO NOTHING', [key]);
         // to'lovlar (orders) o'chmaydi: user_id = NULL bo'ladi
         await q.query('DELETE FROM users WHERE id = $1', [uid]);
       });
@@ -127,7 +150,21 @@ export function authRoutes(deps: Deps, meOnly = false) {
 
   let otpRequests = 0;
 
+  // qaysi kirish usullari yoqilgan (ilova shunga qarab tugmalarni ko'rsatadi)
+  r.get('/methods', (c) => c.json({ sms: env.SMS_PROVIDER !== 'none', telegram: !!env.TELEGRAM_BOT_TOKEN }));
+
+  // Telegram Mini App ichida: initData bot tokeni bilan tekshiriladi, telefon va SMS kerak emas
+  r.post('/telegram', rateLimit(env, 60, HOUR_MS), async (c) => {
+    if (!env.TELEGRAM_BOT_TOKEN) return c.json({ error: 'tg_disabled', message: 'Telegram orqali kirish sozlanmagan' }, 503);
+    const { initData } = await readBody(c, z.object({ initData: z.string().min(10).max(4096) }));
+    const tg = verifyInitData(initData, env.TELEGRAM_BOT_TOKEN, env.TELEGRAM_AUTH_MAX_AGE);
+    if (!tg) return c.json({ error: 'bad_telegram', message: 'Telegram ma’lumoti tasdiqlanmadi. Ilovani Telegram’da qayta oching.' }, 401);
+    const { user, isNew } = await findOrCreateTelegramUser(deps, tg.user);
+    return c.json({ ...(await issueTokens(deps, user)), user: publicUser(user), isNew });
+  });
+
   r.post('/otp', rateLimit(env, 20, HOUR_MS), async (c) => {
+    if (env.SMS_PROVIDER === 'none') return c.json({ error: 'sms_disabled', message: 'SMS orqali kirish yoqilmagan — ilovani Telegram’da ochib kiring.' }, 503);
     const { phone: raw } = await readBody(c, z.object({ phone: z.string().max(32) }));
     const phone = normalizePhone(raw);
     if (!phone) return c.json({ error: 'bad_phone', message: 'Raqam noto‘g‘ri. Masalan: +998 90 123 45 67' }, 400);

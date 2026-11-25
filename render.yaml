@@ -1,0 +1,46 @@
+# Render Blueprint: API server (Docker) + PostgreSQL.
+# Ulash: https://render.com/deploy?repo=https://github.com/NShakhobiddin/kachok.uz
+# Render faqat TELEGRAM_BOT_TOKEN ni so'raydi (@BotFather bergan token); JWT_SECRET avtomatik yaratiladi.
+services:
+  - type: web
+    name: gymbos-api
+    runtime: docker
+    plan: free
+    region: frankfurt
+    branch: main
+    dockerfilePath: ./server/Dockerfile
+    dockerContext: ./server
+    healthCheckPath: /health
+    autoDeploy: true
+    # faqat server o'zgarganda qayta joylanadi
+    buildFilter:
+      paths:
+        - server/**
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: gymbos-db
+          property: connectionString
+      - key: JWT_SECRET
+        generateValue: true
+      - key: APP_URL
+        value: https://nshakhobiddin.github.io/kachok.uz/
+      - key: CORS_ORIGINS
+        value: https://nshakhobiddin.github.io
+      # Render proksi ortida: mijoz IP'si X-Forwarded-For'dan
+      - key: TRUST_PROXY
+        value: "1"
+      # SMS (Eskiz) ulanmaguncha — kirish faqat Telegram orqali
+      - key: SMS_PROVIDER
+        value: none
+      - key: TELEGRAM_BOT_TOKEN
+        sync: false
+
+databases:
+  - name: gymbos-db
+    plan: free
+    region: frankfurt
+    databaseName: gymbos
+    user: gymbos

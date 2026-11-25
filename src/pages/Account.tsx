@@ -5,6 +5,7 @@ import { Icon } from '../components/ui/Icon';
 import { Sheet } from '../components/ui/Sheet';
 import { Toggle } from '../components/ui/controls';
 import { api, ApiError, apiEnabled, refreshMe } from '../api/client';
+import { botLink, canTelegramLogin, loginMethods, telegramLogin } from '../api/social';
 import { syncNow } from '../api/sync';
 import { BILLING } from '../lib/features';
 import { fmtDate } from '../lib/date';
@@ -53,6 +54,29 @@ function Login() {
   const [err, setErr] = useState<string | null>(null);
   const [wait, setWait] = useState(0);
   const codeRef = useRef<HTMLInputElement>(null);
+  const [methods, setMethods] = useState<{ sms: boolean; telegram: boolean } | null>(null);
+  useEffect(() => {
+    loginMethods()
+      .then(setMethods)
+      .catch(() => setMethods({ sms: true, telegram: false }));
+  }, []);
+  // Telegram ichida — bir bosishda kirish; SMS o'chiq bo'lsa telefon formasi yo'q
+  const tg = canTelegramLogin() && methods?.telegram !== false;
+  const sms = methods?.sms !== false;
+  const bot = botLink();
+
+  const tgLogin = async () => {
+    setBusy(true);
+    setErr(null);
+    try {
+      await telegramLogin();
+      nav(useStore.getState().profile ? '/account' : '/onboarding', { replace: true });
+    } catch (e) {
+      setErr(errText(e));
+    } finally {
+      setBusy(false);
+    }
+  };
 
   useEffect(() => {
     if (wait <= 0) return;
@@ -107,7 +131,7 @@ function Login() {
         <h1 className="display mt-4">{stage === 'phone' ? 'Kirish' : 'SMS kod'}</h1>
         <p className="muted mt-8">
           {stage === 'phone' ? (
-            'Telefon raqamingiz bilan kiring: mashg‘ulotlar bulutda saqlanadi, telefon almashsa ham yo‘qolmaydi va murabbiyingiz natijalaringizni ko‘ra oladi.'
+            `${tg || !sms ? 'Kiring' : 'Telefon raqamingiz bilan kiring'}: mashg‘ulotlar bulutda saqlanadi, telefon almashsa ham yo‘qolmaydi, murabbiy va do‘stlaringiz natijalaringizni ko‘ra oladi.`
           ) : (
             <>
               <b>+998 {fmtLocal(digits)}</b> raqamiga 6 xonali kod yuborildi.
@@ -116,7 +140,32 @@ function Login() {
         </p>
       </div>
 
+      {stage === 'phone' && tg && (
+        <button className="btn btn-primary btn-block" disabled={busy} onClick={tgLogin}>
+          {busy ? 'Kirilmoqda…' : 'Telegram orqali kirish'}
+        </button>
+      )}
+      {stage === 'phone' && !sms && !tg && (
+        <div className="stack gap-12">
+          <div className="notice info small">
+            <Icon name="info" />
+            <span>Hozircha kirish Telegram orqali: ilovani Telegram’da oching — bir bosishda kirasiz, SMS kerak emas.</span>
+          </div>
+          {bot && (
+            <a className="btn btn-primary btn-block" href={bot} target="_blank" rel="noopener noreferrer">
+              Telegram’da ochish
+            </a>
+          )}
+        </div>
+      )}
+      {stage === 'phone' && tg && sms && (
+        <p className="tiny muted" style={{ textAlign: 'center' }}>
+          yoki telefon raqam bilan
+        </p>
+      )}
+
       {stage === 'phone' ? (
+        sms && (
         <form
           className="stack gap-12"
           onSubmit={(e) => {
@@ -144,10 +193,11 @@ function Login() {
               />
             </div>
           </label>
-          <button className="btn btn-primary btn-block" disabled={digits.length !== 9 || busy}>
+          <button className={`btn btn-block ${tg ? 'btn-secondary' : 'btn-primary'}`} disabled={digits.length !== 9 || busy}>
             {busy ? 'Yuborilmoqda...' : 'Kod olish'}
           </button>
         </form>
+        )
       ) : (
         <div className="stack gap-12">
           <input
@@ -194,7 +244,7 @@ function Login() {
         </p>
       )}
       <p className="tiny faint">
-        Kirish orqali shaxsiy ma’lumotlaringiz (raqam, mashg‘ulot va tana o‘lchovlari) ilova xizmati uchun saqlanishiga rozilik bildirasiz. Akkauntni istalgan vaqtda o‘chirishingiz mumkin.
+        Kirish orqali shaxsiy ma’lumotlaringiz (raqam yoki Telegram ismi, mashg‘ulot va tana o‘lchovlari) ilova xizmati uchun saqlanishiga rozilik bildirasiz. Akkauntni istalgan vaqtda o‘chirishingiz mumkin.
       </p>
     </div>
   );
@@ -265,7 +315,7 @@ function Signed({ account }: { account: Acc }) {
         </span>
         <div style={{ minWidth: 0 }}>
           <h1 className="display display-m ellipsis">{account.user.name || 'Akkaunt'}</h1>
-          <p className="small muted num">+{account.user.phone.replace(/^(998)(\d{2})(\d{3})(\d{2})(\d{2})$/, '$1 $2 $3 $4 $5')}</p>
+          <p className="small muted num">{account.user.phone ? `+${account.user.phone.replace(/^(998)(\d{2})(\d{3})(\d{2})(\d{2})$/, '$1 $2 $3 $4 $5')}` : 'Telegram orqali'}</p>
         </div>
       </div>
 
@@ -280,7 +330,7 @@ function Signed({ account }: { account: Acc }) {
           </span>
         </div>
         {sync.status === 'error' && <p className="small muted">{sync.error}. Internet tiklanganda o‘zi qayta urinadi.</p>}
-        <p className="small muted">Mashg‘ulotlar avval telefonga, internet bo‘lsa bulutga ham yoziladi. Boshqa telefonda shu raqam bilan kirsangiz hammasi qaytadi.</p>
+        <p className="small muted">Mashg‘ulotlar avval telefonga, internet bo‘lsa bulutga ham yoziladi. Boshqa telefonda shu {account.user.phone ? 'raqam' : 'Telegram akkaunt'} bilan kirsangiz hammasi qaytadi.</p>
         <button className="btn btn-secondary btn-sm" style={{ alignSelf: 'flex-start' }} disabled={sync.status === 'syncing'} onClick={() => syncNow()}>
           Hozir sinxronlash
         </button>

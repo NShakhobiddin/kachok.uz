@@ -3048,3 +3048,31 @@ ol.steps li::before {
   border: 1px solid var(--accent-line);
   color: inherit;
 }
+/* do'stlar lentasi */
+.avatar.sm {
+  width: 36px;
+  height: 36px;
+  font-size: 15px;
+  flex: none;
+}
+.kudos {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 40px;
+  padding: 0 14px;
+  border-radius: 20px;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  color: var(--text);
+  font-size: 16px;
+}
+.kudos.on {
+  border-color: var(--accent-line);
+  background: rgba(212, 250, 80, 0.1);
+}
+.kudos:disabled {
+  opacity: 1;
+  cursor: default;
+}

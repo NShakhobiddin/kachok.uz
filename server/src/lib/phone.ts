@@ -6,6 +6,7 @@ export function normalizePhone(input: string): string | null {
 }
 
 /** Murabbiyga ko'rsatish uchun: +998 90 ••• •• 67 */
-export function maskPhone(p: string): string {
+export function maskPhone(p: string | null): string {
+  if (!p) return 'Telegram';
   return `+${p.slice(0, 3)} ${p.slice(3, 5)} ••• •• ${p.slice(10)}`;
 }

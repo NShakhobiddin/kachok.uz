@@ -37,8 +37,8 @@ const schema = z.object({
   /** 1 — API teskari proksi (nginx, Caddy) ortida: mijoz IP manzili X-Forwarded-For'ning eng o'ngidagi qiymatidan olinadi */
   TRUST_PROXY: flag.default('0'),
 
-  /** console — kod server logiga yoziladi (faqat DEV_MODE=1 bilan!), eskiz — Eskiz.uz SMS */
-  SMS_PROVIDER: z.enum(['console', 'eskiz']).default('console'),
+  /** console — kod server logiga yoziladi (faqat DEV_MODE=1 bilan!), eskiz — Eskiz.uz SMS, none — SMS bilan kirish o'chiq (faqat Telegram) */
+  SMS_PROVIDER: z.enum(['console', 'eskiz', 'none']).default('console'),
   ESKIZ_EMAIL: z.string().optional(),
   ESKIZ_PASSWORD: z.string().optional(),
   ESKIZ_FROM: z.string().default('4546'),
@@ -53,6 +53,11 @@ const schema = z.object({
   CLICK_SERVICE_ID: z.string().optional(),
   CLICK_MERCHANT_ID: z.string().optional(),
   CLICK_SECRET_KEY: z.string().optional(),
+
+  /** Telegram bot tokeni (@BotFather): Mini App ichida Telegram orqali kirish uchun. Bo'sh — o'chiq */
+  TELEGRAM_BOT_TOKEN: z.string().regex(/^\d+:[\w-]{30,}$/, 'TELEGRAM_BOT_TOKEN noto‘g‘ri: @BotFather bergan «123456:ABC...» ko‘rinishida').optional().or(z.literal('').transform(() => undefined)),
+  /** Telegram ma'lumoti necha soniyagacha amal qiladi (ilova ochilgan paytdan) */
+  TELEGRAM_AUTH_MAX_AGE: z.coerce.number().int().positive().default(24 * 60 * 60),
 
   /** Yangi akkauntga beriladigan bepul Pro sinov kunlari */
   TRIAL_DAYS: z.coerce.number().default(7),

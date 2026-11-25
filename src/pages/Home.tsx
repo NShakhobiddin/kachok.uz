@@ -155,9 +155,14 @@ export default function Home() {
             {DAYS[t.today]} · {now.getDate()} {MONTHS[now.getMonth()]}
           </span>
         </div>
-        <Link to="/profile" className="avatar" aria-label="Profil va sozlamalar">
+        <span className="row gap-8">
+          <Link to="/friends" className="icon-btn" aria-label="Do‘stlar lentasi">
+            <Icon name="users" size={20} />
+          </Link>
+          <Link to="/profile" className="avatar" aria-label="Profil va sozlamalar">
           {profile.name ? profile.name[0].toUpperCase() : <Icon name="user" />}
-        </Link>
+          </Link>
+        </span>
       </header>
 
       <CoachBanner />

@@ -10,6 +10,7 @@ import { verifyAccess } from './lib/jwt.js';
 import { authRoutes } from './routes/auth.js';
 import { billingRoutes } from './routes/billing.js';
 import { coachRoutes } from './routes/coach.js';
+import { socialRoutes } from './routes/social.js';
 import { syncRoutes } from './routes/sync.js';
 import type { SmsSender } from './sms/index.js';
 
@@ -72,6 +73,7 @@ export function createApp(deps: Deps) {
   app.route('/sync', syncRoutes(deps));
   app.route('/coach', coachRoutes(deps));
   app.route('/billing', billingRoutes(deps));
+  app.route('/social', socialRoutes(deps));
   // /me va /notes auth marshrutlari ichida
   app.route('/', authRoutes(deps, true));
 

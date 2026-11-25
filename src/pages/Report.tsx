@@ -179,7 +179,7 @@ export default function Report() {
           <Icon name="share" size={18} /> Do‘stlarga ulashish
         </button>
       </div>
-      <ShareSheet open={shareOpen} onClose={() => setShareOpen(false)} card={card} text={shareText} filename={`gymbos-hafta-${isoDate(start)}.png`} />
+      <ShareSheet open={shareOpen} onClose={() => setShareOpen(false)} card={card} text={shareText} filename={`gymbos-hafta-${isoDate(start)}.png`} feedId={`week-${isoDate(start)}`} />
     </div>
   );
 }

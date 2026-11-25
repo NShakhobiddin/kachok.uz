@@ -54,7 +54,15 @@ export class EskizSms implements SmsSender {
   }
 }
 
+/** SMS bilan kirish o'chiq (SMS_PROVIDER=none): /auth/otp oldinroq 503 qaytaradi */
+export class NoSms implements SmsSender {
+  async send() {
+    throw new Error('SMS o‘chirilgan');
+  }
+}
+
 export function createSms(env: Env): SmsSender {
+  if (env.SMS_PROVIDER === 'none') return new NoSms();
   if (env.SMS_PROVIDER === 'eskiz') {
     if (!env.ESKIZ_EMAIL || !env.ESKIZ_PASSWORD) throw new Error('ESKIZ_EMAIL va ESKIZ_PASSWORD kerak');
     return new EskizSms(env.ESKIZ_EMAIL, env.ESKIZ_PASSWORD, env.ESKIZ_FROM);

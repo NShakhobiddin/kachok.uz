@@ -172,6 +172,7 @@ export function sanitizeSettings(v: unknown) {
     showRir: typeof s.showRir === 'boolean' ? s.showRir : DEFAULT_SETTINGS.showRir,
     barKg: isNum(s.barKg) && s.barKg >= 0 && s.barKg <= 50 ? s.barKg : DEFAULT_SETTINGS.barKg,
     ...(typeof s.adaptiveTdee === 'boolean' ? { adaptiveTdee: s.adaptiveTdee } : {}),
+    ...(typeof s.feedShare === 'boolean' ? { feedShare: s.feedShare } : {}),
   };
 }
 

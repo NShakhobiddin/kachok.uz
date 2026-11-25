@@ -81,7 +81,8 @@ export function workoutEnd(a: Pick<ActiveWorkout, 'log' | 'lastSetAt'>, now = Da
 
 export interface AccountUser {
   id: string;
-  phone: string;
+  /** Telegram orqali kirganda — yo'q */
+  phone: string | null;
   name: string;
   role: 'athlete' | 'coach';
 }
@@ -126,6 +127,8 @@ export interface Settings {
   barKg: number;
   /** kaloriya rejasida formula o'rniga kundalik va vazn asosidagi sarf (TDEE) */
   adaptiveTdee?: boolean;
+  /** tugagan mashg'ulotlar do'stlar lentasiga avtomatik chiqadi (berilmasa — ha) */
+  feedShare?: boolean;
 }
 
 interface State {

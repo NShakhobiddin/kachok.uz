@@ -4,6 +4,8 @@ import { Link, useParams } from 'react-router-dom';
 import { Barbell, PlateBadge } from '../components/Barbell';
 import { BodyMap } from '../components/BodyMap';
 import { ShareSheet } from '../components/ShareSheet';
+import { autoPostWorkout } from '../api/social';
+import type { CardData } from '../lib/shareCard';
 import { Icon } from '../components/ui/Icon';
 import { MUSCLES } from '../data/catalog';
 import { EXERCISE_MAP } from '../data/exercises';
@@ -204,7 +206,8 @@ export default function Summary() {
           Bosh sahifa
         </Link>
       </div>
-      <ShareSheet open={shareOpen} onClose={() => setShareOpen(false)} card={card} text={shareText} filename={`gymbos-${log.startedAt.slice(0, 10)}.png`} />
+      <ShareSheet open={shareOpen} onClose={() => setShareOpen(false)} card={card} text={shareText} filename={`gymbos-${log.startedAt.slice(0, 10)}.png`} feedId={log.id} />
+      <AutoPost logId={log.id} card={card} />
       <p className="small faint mt-16" style={{ textAlign: 'center' }}>
         Endi: oqsilli ovqat, suv va 7–9 soat uyqu.
       </p>
@@ -219,5 +222,26 @@ function Stat({ label, value, sub, accent }: { label: string; value: string; sub
       <span style={{ fontSize: 24, fontWeight: 800 }}>{value}</span>
       {sub && <span className="tiny faint">{sub}</span>}
     </div>
+  );
+}
+
+/** Kirgan va sozlamada o'chirilmagan bo'lsa — natija do'stlar lentasiga (bir marta) */
+function AutoPost({ logId, card }: { logId: string; card: CardData }) {
+  const account = useStore((s) => s.account);
+  const [done, setDone] = useState(false);
+  useEffect(() => {
+    if (!account) return;
+    autoPostWorkout(logId, card)
+      .then((ok) => setDone(ok))
+      .catch(() => null);
+    // kartochka shu mashg'ulot uchun bir marta yuboriladi
+  }, [logId, !!account]);
+  if (!done) return null;
+  return (
+    <p className="small mt-8" role="status" style={{ textAlign: 'center' }}>
+      <Link to="/friends" className="accent-text strong">
+        Do‘stlar lentasiga chiqdi ›
+      </Link>
+    </p>
   );
 }

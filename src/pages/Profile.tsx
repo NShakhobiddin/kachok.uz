@@ -92,7 +92,7 @@ export default function Profile() {
             <Item
               icon="user"
               label={account ? 'Akkaunt va sinxronlash' : 'Akkauntga kirish'}
-              value={account ? `+${account.user.phone.slice(0, 3)} ${account.user.phone.slice(3, 5)} ···` : 'Bulutda saqlash'}
+              value={account ? (account.user.phone ? `+${account.user.phone.slice(0, 3)} ${account.user.phone.slice(3, 5)} ···` : 'Telegram') : 'Bulutda saqlash'}
               onClick={() => nav('/account')}
               last={!(account?.user.role === 'coach') && !BILLING}
             />

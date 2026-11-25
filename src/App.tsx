@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { lazy, Suspense, useEffect } from 'react';
 import { BrowserRouter, MemoryRouter, Navigate, NavLink, Route, Routes, useLocation } from 'react-router-dom';
+import { acceptPendingFriend, capturePendingFriend } from './api/social';
 import { startAutoSync } from './api/sync';
 import { Icon } from './components/ui/Icon';
 import { useTelegramBridge } from './lib/telegram';
@@ -29,6 +30,7 @@ const Routines = lazy(() => import('./pages/Routines'));
 const RoutineView = lazy(() => import('./pages/Routines').then((m) => ({ default: m.RoutineView })));
 const StretchPlayer = lazy(() => import('./pages/StretchPlayer'));
 const Report = lazy(() => import('./pages/Report'));
+const Friends = lazy(() => import('./pages/Friends'));
 
 const TABS = [
   { to: '/', icon: 'home', label: 'Bugun' },
@@ -93,6 +95,7 @@ function Shell() {
           <Route path="/routine/:id" element={<RoutineView />} />
           <Route path="/stretch/:id" element={<StretchPlayer />} />
           <Route path="/report" element={<Report />} />
+          <Route path="/friends" element={<Friends />} />
           <Route path="/muscle/:key" element={<MuscleDetail />} />
           <Route path="/muscles" element={<Navigate to="/library?tab=muscles" replace />} />
           <Route path="/account" element={<Account />} />
@@ -113,6 +116,11 @@ const Router = import.meta.env.VITE_TARGET === 'artifact' ? MemoryRouter : Brows
 
 export default function App() {
   useEffect(() => startAutoSync(), []);
+  // do'st taklif havolasi bilan ochilgan bo'lsa — kod eslab qolinadi, kirgan bo'lsa darhol qo'shiladi
+  useEffect(() => {
+    capturePendingFriend();
+    void acceptPendingFriend();
+  }, []);
   return (
     <Router basename={import.meta.env.BASE_URL}>
       <Shell />

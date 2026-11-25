@@ -72,6 +72,16 @@ npm test               # API testlari: kirish, sinxronlash, murabbiy, Payme, Cli
 
 Production: `docker compose up -d` (PostgreSQL 16 + API) yoki `npm run build && npm start`. Jadvallar ishga tushganda avtomatik yaratiladi (`server/src/db/migrations`).
 
+### Tez joylash: Render + Telegram (do'stlar lentasi)
+
+Do'stlar lentasi, bulutli sinxronlash va akkaunt uchun server kerak. SMS ulanmagan bo'lsa ham kirish Telegram Mini App orqali ishlaydi (`SMS_PROVIDER=none`).
+
+1. **Bot:** Telegram'da [@BotFather](https://t.me/BotFather) → `/newbot` (yoki mavjud bot uchun `/token`) — tokenni oling. So'ng `/mybots` → bot → *Bot Settings* → *Configure Mini App* → *Enable Mini App* → URL: `https://nshakhobiddin.github.io/kachok.uz/`.
+2. **Server:** [render.com/deploy?repo=https://github.com/NShakhobiddin/kachok.uz](https://render.com/deploy?repo=https://github.com/NShakhobiddin/kachok.uz) — `render.yaml` bo'yicha API (Docker) va PostgreSQL yaratiladi. So'ralganda `TELEGRAM_BOT_TOKEN` ni kiriting; `JWT_SECRET` avtomatik yaratiladi. Tayyor bo'lgach `https://<nom>.onrender.com/health` → `{"ok":true}`.
+3. **Ilova:** repo *Settings → Secrets and variables → Actions → Variables*: `API_URL` = serverning `https://….onrender.com` manzili, `TG_BOT` = bot nomi (`@`siz), Mini App qisqa nomi bo'lsa `TG_APP`. So'ng *Actions → GitHub Pages → Run workflow*.
+
+Bepul tarif cheklovlari: server 15 daqiqa so'rovsiz turganda "uxlaydi" (birinchi ochilish ~30–60 s), bepul Postgres ma'lum muddatdan keyin o'chiriladi — doimiy foydalanish uchun pullik tarif yoki tashqi baza (masalan Neon: `DATABASE_URL` ni qo'lda bering, `?sslmode=require` bilan).
+
 **Muhim — ma'lumotlarni lokalizatsiya qilish.** "Shaxsga doir ma'lumotlar to'g'risida"gi qonunning 27¹-moddasiga ko'ra O'zbekiston fuqarolarining shaxsiy ma'lumotlari O'zbekiston hududidagi serverlarda saqlanishi kerak. Shuning uchun server va bazani mahalliy data-markazda (masalan, Uztelecom, UZCLOUD yoki boshqa mahalliy provayder) joylashtiring va ishga tushirishdan oldin yurist bilan tekshiring.
 
 ### Ulash uchun kerak bo'ladigan akkauntlar
