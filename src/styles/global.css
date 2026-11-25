@@ -2985,8 +2985,36 @@ ol.steps li::before {
   display: flex;
   align-items: center;
   gap: 6px;
-  padding: 4px 6px 4px 14px;
+  padding: 4px 14px;
   border-radius: 18px;
   background: var(--surface);
   border: 1px solid var(--line);
+}
+/* mashg'ulot: mashqlar orasida ‹ 2/6 › */
+.wo-nav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.wo-nav-mid {
+  flex: 1;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border-radius: 14px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  color: var(--text);
+}
+.wo-nav .icon-btn:disabled {
+  opacity: 0.3;
+}
+.wo-more {
+  width: 40px;
+  height: 40px;
+  flex: none;
+  margin: -8px -4px -8px 0;
+  color: var(--text-2);
 }

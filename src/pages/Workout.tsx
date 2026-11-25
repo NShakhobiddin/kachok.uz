@@ -75,6 +75,9 @@ export default function Workout() {
   const exNotes = useStore((s) => s.exNotes);
   const setExNote = useStore((s) => s.setExNote);
   const [addOpen, setAddOpen] = useState(false);
+  /** joriy mashq amallari (⋯) va barcha mashqlar ro'yxati */
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [listOpen, setListOpen] = useState(false);
   const [techOpen, setTechOpen] = useState(false);
   const [painOpen, setPainOpen] = useState(false);
   /** setdan oldingi xavfsizlik ro'yxati yopilgan mashqlar (shu mashg'ulotda) */
@@ -272,31 +275,19 @@ export default function Workout() {
         ))}
       </div>
 
-      {/* Mashqlar ro‘yxati */}
-      <div className="hscroll mt-12" role="tablist" aria-label="Mashqlar">
-        {active.log.exercises.map((e, i) => {
-          const x = EXERCISE_MAP[e.exerciseId];
-          const done = e.sets.length > 0 && e.sets.every((s) => s.done);
-          return (
-            <button
-              key={i}
-              role="tab"
-              aria-selected={i === idx}
-              className={`chip ${i === idx ? 'on' : ''}`}
-              onClick={() => st.setActiveIndex(i)}
-              style={{ height: 38, borderColor: done && i !== idx ? 'var(--accent-line)' : undefined }}
-            >
-              <span className="pill-num" style={{ minWidth: 20, height: 20, fontSize: 11, background: done ? 'var(--accent)' : undefined, color: done ? 'var(--accent-ink)' : undefined }}>
-                {done ? <Icon name="check" size={12} stroke={3} /> : i + 1}
-              </span>
-              <span className="ellipsis" style={{ maxWidth: 130 }}>
-                {x?.name}
-              </span>
-            </button>
-          );
-        })}
-        <button className="chip" style={{ height: 38 }} onClick={() => setAddOpen(true)} aria-label="Mashq qo‘shish">
-          <Icon name="plus" size={16} />
+      {/* Mashqlar orasida: ‹ oldingi · ro'yxat · keyingi › */}
+      <div className="wo-nav mt-12">
+        <button className="icon-btn" disabled={idx === 0} onClick={() => st.setActiveIndex(idx - 1)} aria-label="Oldingi mashq">
+          <Icon name="left" />
+        </button>
+        <button className="wo-nav-mid" onClick={() => setListOpen(true)} aria-label="Barcha mashqlar ro‘yxati">
+          <span className="strong num">
+            Mashq {idx + 1} / {active.log.exercises.length}
+          </span>
+          <Icon name="down" size={16} />
+        </button>
+        <button className="icon-btn" disabled={isLast} onClick={() => st.setActiveIndex(idx + 1)} aria-label="Keyingi mashq">
+          <Icon name="right" />
         </button>
       </div>
 
@@ -304,9 +295,14 @@ export default function Workout() {
         <motion.div key={idx} initial={{ opacity: 0, x: 16 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.22 }} className="mt-16 stack gap-12">
           <div className="wo-head">
             <div className="grow stack gap-6" style={{ minWidth: 0 }}>
-              <span className="eyebrow accent">
-                {idx + 1}/{active.log.exercises.length} · {ex.primary.map((m) => MUSCLES[m].name).join(', ')}
-              </span>
+              <div className="row between gap-8">
+                <span className="eyebrow accent" style={{ minWidth: 0 }}>
+                  {ex.primary.map((m) => MUSCLES[m].name).join(', ')}
+                </span>
+                <button className="icon-btn wo-more" onClick={() => setMenuOpen(true)} aria-label={`${ex.name}: texnika, almashtirish, tarix, eslatma, og‘riq`}>
+                  <Icon name="more" size={22} stroke={3} />
+                </button>
+              </div>
               <h2 className="display wo-title">{ex.name}</h2>
             </div>
             <button className="stage wo-fig thumb-img" onClick={() => setTechOpen(true)} aria-label={`${ex.name}: texnika`}>
@@ -317,28 +313,6 @@ export default function Workout() {
               )}
             </button>
           </div>
-          <div className="hscroll wo-actions">
-            <button className="chip sm" style={{ height: 40 }} onClick={() => setTechOpen(true)}>
-              <Icon name="info" size={14} /> Texnika
-            </button>
-            <button className="chip sm" style={{ height: 40 }} onClick={() => setSwapOpen(true)}>
-              <Icon name="swap" size={14} /> Almashtirish
-            </button>
-            <button className="chip sm" style={{ height: 40 }} onClick={() => setHistoryOpen(true)}>
-              <Icon name="chart" size={14} /> Tarix
-            </button>
-            <button className="chip sm" style={{ height: 40 }} onClick={() => setNoteEdit((v) => !v)} aria-expanded={noteEdit}>
-              <Icon name="edit" size={14} /> Eslatma
-            </button>
-            <button
-              className="chip sm"
-              onClick={() => setPainOpen(true)}
-              style={{ height: 40, ...(active.log.painEx?.includes(ex.id) ? { borderColor: 'var(--red)', background: 'var(--red-soft)' } : {}) }}
-            >
-              <Icon name="alert" size={14} /> Og‘riq
-            </button>
-          </div>
-
           {painLast && (
             <div className="notice warn">
               <Icon name="alert" />
@@ -404,12 +378,7 @@ export default function Workout() {
                   >
                     {s.warmup ? 'I' : s.kind === 'drop' ? 'D' : s.kind === 'failure' ? 'Ch' : j + 1 - exLog.sets.slice(0, j).filter((x) => x.warmup).length}
                   </button>
-                  <button
-                    className="small faint num stack prev-cell"
-                    disabled={!prev || s.done}
-                    onClick={() => prev && st.updateSet(idx, j, { kg: prev.kg ?? 0, reps: prev.reps, kgSet: true })}
-                    aria-label={prev ? `O‘tgan safargi ${fmtKg(prev.kg ?? 0)}×${prev.reps} ni ko‘chirish` : 'O‘tgan natija yo‘q'}
-                  >
+                  <span className="small faint num stack prev-cell" aria-label={prev ? `O‘tgan safar ${fmtKg(prev.kg ?? 0)}×${prev.reps}` : 'O‘tgan natija yo‘q'}>
                     <span>{prev ? `${fmtKg(prev.kg ?? 0)}×${prev.reps}${prev.rir !== undefined ? ` @${prev.rir}` : ''}` : '—'}</span>
                     {prSets.includes(`${idx}-${j}`) && s.done ? (
                       <span className="rir-badge" style={{ color: 'var(--yellow)' }}>
@@ -418,7 +387,7 @@ export default function Workout() {
                     ) : (
                       s.done && s.rir !== undefined && <span className="rir-badge">RIR {s.rir >= 4 ? '4+' : s.rir}</span>
                     )}
-                  </button>
+                  </span>
                   <NumCell decimal label={`${j + 1}-set vazn`} placeholder={sug?.kg ? fmtKg(sug.kg) : '0'} value={s.kg} zero={s.kgSet} onValue={(kg, typed) => st.updateSet(idx, j, { kg, kgSet: typed })} />
                   <NumCell label={`${j + 1}-set takror`} placeholder={String(sug?.reps ?? pe?.repMin ?? '')} value={s.reps} onValue={(reps) => st.updateSet(idx, j, { reps })} />
                   <button className={`set-check ${s.done ? 'on' : ''}`} onClick={() => completeSet(j)} aria-label={s.done ? 'Bekor qilish' : 'Set bajarildi'} aria-pressed={s.done}>
@@ -429,13 +398,8 @@ export default function Workout() {
             })}
             <div className="row" style={{ borderTop: '1px solid var(--line)' }}>
               <button className="btn btn-ghost btn-sm grow" onClick={() => st.addSet(idx)}>
-                <Icon name="plus" size={16} /> Set
+                <Icon name="plus" size={16} /> Set qo‘shish
               </button>
-              {exLog.sets.length > 1 && (
-                <button className="btn btn-ghost btn-sm grow" onClick={() => st.removeSet(idx, exLog.sets.length - 1)}>
-                  <Icon name="minus" size={16} /> Set
-                </button>
-              )}
             </div>
           </div>
 
@@ -496,16 +460,15 @@ export default function Workout() {
             <div className="stack gap-8 grow">
               <span className="small muted">{remaining > 0 ? 'Keyingi setgacha dam oling' : 'Vaqt bo‘ldi — keyingi set!'}</span>
               <div className="row gap-6">
-                <button className="btn btn-secondary btn-xs grow" onClick={() => st.adjustRest(-15)}>
-                  −15 s
-                </button>
-                <button className="btn btn-secondary btn-xs grow" onClick={() => st.adjustRest(15)}>
-                  +15 s
+                {remaining > 0 && (
+                  <button className="btn btn-secondary btn-sm" onClick={() => st.adjustRest(15)} aria-label="Damni 15 soniyaga uzaytirish">
+                    +15 s
+                  </button>
+                )}
+                <button className="btn btn-primary btn-sm grow" onClick={() => st.stopRest()}>
+                  {remaining > 0 ? 'O‘tkazib yuborish' : 'Davom etish'}
                 </button>
               </div>
-              <button className="btn btn-primary btn-sm" onClick={() => st.stopRest()}>
-                {remaining > 0 ? 'O‘tkazib yuborish' : 'Davom etish'}
-              </button>
             </div>
           </motion.div>
         )}
@@ -550,6 +513,82 @@ export default function Workout() {
                 <Icon name="trash" size={16} /> Setni o‘chirish
               </button>
             )}
+          </div>
+        )}
+      </Sheet>
+
+      <Sheet open={menuOpen} onClose={() => setMenuOpen(false)} label="Mashq amallari">
+        {menuOpen && ex && (
+          <div className="stack gap-8">
+            <h3 className="title">{ex.name}</h3>
+            {(
+              [
+                ['info', 'Texnika', 'Qanday bajariladi, ko‘p uchraydigan xatolar', () => setTechOpen(true)],
+                ['swap', 'Boshqa mashqqa almashtirish', 'Jihoz band yoki noqulay bo‘lsa', () => setSwapOpen(true)],
+                ['chart', 'O‘tgan natijalar', 'Avvalgi mashg‘ulotlardagi vazn va takrorlar', () => setHistoryOpen(true)],
+                ['edit', exNotes[ex.id] ? 'Eslatmani o‘zgartirish' : 'Eslatma yozish', 'Masalan: o‘rindiq 4-teshik, keng ushlash', () => setNoteEdit(true)],
+                ['alert', 'Og‘riq bor', 'Vaznni kamaytirish, almashtirish yoki o‘tkazib yuborish', () => setPainOpen(true)],
+              ] as const
+            ).map(([icon, title, desc, run]) => (
+              <button
+                key={title}
+                className="choice"
+                onClick={() => {
+                  setMenuOpen(false);
+                  run();
+                }}
+              >
+                <span className="pill-num" style={icon === 'alert' ? { color: 'var(--red)' } : undefined}>
+                  <Icon name={icon} size={16} />
+                </span>
+                <div className="grow">
+                  <div className="ch-title">{title}</div>
+                  <div className="ch-desc">{desc}</div>
+                </div>
+              </button>
+            ))}
+          </div>
+        )}
+      </Sheet>
+
+      <Sheet open={listOpen} onClose={() => setListOpen(false)} label="Mashqlar">
+        {listOpen && (
+          <div className="stack gap-8">
+            <h3 className="title">Mashqlar</h3>
+            {active.log.exercises.map((e, i) => {
+              const x = EXERCISE_MAP[e.exerciseId];
+              const d = e.sets.filter((q) => q.done).length;
+              const done = e.sets.length > 0 && d === e.sets.length;
+              return (
+                <button
+                  key={i}
+                  className={`choice ${i === idx ? 'on' : ''}`}
+                  onClick={() => {
+                    st.setActiveIndex(i);
+                    setListOpen(false);
+                  }}
+                >
+                  <span className="pill-num" style={done ? { background: 'var(--accent)', color: 'var(--accent-ink)' } : undefined}>
+                    {done ? <Icon name="check" size={13} stroke={3} /> : i + 1}
+                  </span>
+                  <div className="grow" style={{ minWidth: 0 }}>
+                    <div className="ch-title">{x?.name ?? e.exerciseId}</div>
+                    <div className="ch-desc num">
+                      {d}/{e.sets.length} set
+                    </div>
+                  </div>
+                </button>
+              );
+            })}
+            <button
+              className="btn btn-ghost btn-block"
+              onClick={() => {
+                setListOpen(false);
+                setAddOpen(true);
+              }}
+            >
+              <Icon name="plus" size={18} /> Mashq qo‘shish
+            </button>
           </div>
         )}
       </Sheet>

@@ -223,9 +223,6 @@ export function PreSetCheck({ ex, injuries, onDone }: { ex: Exercise; injuries: 
           <RiskTag risk={s.risk} />
           <Icon name="down" size={16} style={{ color: 'var(--text-3)', flex: 'none' }} />
         </button>
-        <button className="icon-btn" style={{ width: 36, height: 36, flex: 'none' }} onClick={onDone} aria-label="Yopish">
-          <Icon name="x" size={16} />
-        </button>
       </div>
     );
   return (
