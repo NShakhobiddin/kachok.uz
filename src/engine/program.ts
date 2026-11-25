@@ -1,6 +1,7 @@
 // Dastur generatori: maqsad, tajriba, kunlar, vaqt, jihoz va jarohatlarga qarab haftalik reja tuzadi.
 // Asos: ACSM 2026 (har mushak haftasiga 2+ marta), Schoenfeld 2017 / Pelland 2026 (haftalik hajm),
 // Refalo 2023 (1–3 takror zaxira), Schoenfeld 2016 (murakkab mashqlarda uzunroq dam).
+import { isoDate } from '../lib/date';
 import { EXERCISES, EXERCISE_MAP } from '../data/exercises';
 import { safetyFor } from '../data/safety';
 import { GROUP_ORDER, GROUPS, MUSCLES, WEEKLY_TARGET } from '../data/catalog';
@@ -491,7 +492,8 @@ export function generateProgram(p: Profile): Program {
     days,
     mesoWeeks,
     method,
-    startDate: new Date().toISOString().slice(0, 10),
+    // mahalliy sana (UTC emas): Toshkentda tun yarmidan keyin tuzilsa ham bugungi kun
+    startDate: isoDate(),
   };
 }
 
@@ -695,9 +697,11 @@ export function volumeStatus(group: MuscleGroup, sets: number): 'low' | 'ok' | '
 export function alternatives(exId: string, p: Profile): Exercise[] {
   const ex = EXERCISES.find((e) => e.id === exId);
   if (!ex) return [];
-  const same = EXERCISES.filter((e) => e.id !== exId && e.pattern === ex.pattern && isSafe(e, p));
+  // ehtiyotkor rejim (sog'liq so'rovnomasi): dastur tuzishdagi bilan bir xil — murakkab va yuqori xavfli mashqlarsiz
+  const ok = (e: Exercise) => isSafe(e, p) && (!cautious(p) || (e.level < 3 && (safetyFor(e.id)?.risk ?? 1) < 3));
+  const same = EXERCISES.filter((e) => e.id !== exId && e.pattern === ex.pattern && ok(e));
   const prim = new Set(ex.primary);
-  const similar = EXERCISES.filter((e) => e.id !== exId && e.pattern !== ex.pattern && e.primary.some((m) => prim.has(m)) && isSafe(e, p));
+  const similar = EXERCISES.filter((e) => e.id !== exId && e.pattern !== ex.pattern && e.primary.some((m) => prim.has(m)) && ok(e));
   const ordered = [...same, ...similar];
   return ordered.sort((a, b) => Number(hasEquipment(b, p.equipment)) - Number(hasEquipment(a, p.equipment)) || b.score - a.score);
 }

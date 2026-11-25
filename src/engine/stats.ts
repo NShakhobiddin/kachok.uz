@@ -129,8 +129,8 @@ export function exerciseSeries(exId: string, logs: WorkoutLog[]) {
   return finished(logs)
     .sort((a, b) => a.startedAt.localeCompare(b.startedAt))
     .map((l) => {
-      const e = l.exercises.find((x) => x.exerciseId === exId);
-      const sets = e?.sets.filter((s) => s.done && !s.warmup) ?? [];
+      // bir mashg'ulotda mashq ikki marta bo'lishi mumkin — barcha setlari
+      const sets = l.exercises.filter((x) => x.exerciseId === exId).flatMap((x) => x.sets.filter((s) => s.done && !s.warmup));
       if (!sets.length) return null;
       return {
         date: l.startedAt,

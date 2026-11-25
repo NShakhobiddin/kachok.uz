@@ -142,10 +142,10 @@ export function startingWeight(ex: Exercise, bodyKg: number, sex: Sex, level: Le
 export function exerciseHistory(exId: string, logs: WorkoutLog[], exclude?: ReadonlySet<string>) {
   return logs
     .filter((l) => l.finishedAt && !exclude?.has(l.id))
-    .map((l) => ({ date: l.startedAt, ex: l.exercises.find((e) => e.exerciseId === exId) }))
-    .filter((x) => x.ex && x.ex.sets.some((s) => s.done && !s.warmup))
-    .sort((a, b) => b.date.localeCompare(a.date))
-    .map((x) => ({ date: x.date, sets: x.ex!.sets.filter((s) => s.done && !s.warmup) }));
+    // bir mashg'ulotda mashq ikki marta bo'lishi mumkin (almashtirish, qo'shish) — barcha setlari birga
+    .map((l) => ({ date: l.startedAt, sets: l.exercises.filter((e) => e.exerciseId === exId).flatMap((e) => e.sets.filter((s) => s.done && !s.warmup)) }))
+    .filter((x) => x.sets.length > 0)
+    .sort((a, b) => b.date.localeCompare(a.date));
 }
 
 type History = ReturnType<typeof exerciseHistory>;
@@ -174,12 +174,17 @@ export interface SuggestCtx {
   equipment?: EquipmentId[];
 }
 
+/** Shundan past tayyorlik — "charchagan kun": bitta set kam, vazn 5% yengil */
+export const EASY_READINESS = 2.6;
+
 /**
  * Progressiya tayanchi: yengillashtirish (deload) haftasidagi mashg'ulotlarsiz tarix — aks holda yengil vazn
  * keyingi blokning boshlang'ich nuqtasiga aylanib qoladi. Faqat deload mashg'ulotlari bo'lsa — to'liq tarix.
  */
 export function baselineHistory(exId: string, logs: WorkoutLog[], ctx: Pick<SuggestCtx, 'program' | 'perWeek'> = {}): History {
   const skip = ctx.program ? deloadLogIds(ctx.program, logs, ctx.perWeek) : new Set(logs.filter((l) => l.deload).map((l) => l.id));
+  // tayyorlik past kun (bitta set kam, vazn 5% yengil) ham tayanch emas — aks holda keyingi oddiy kunda vazn oshmaydi
+  for (const l of logs) if (l.readiness !== undefined && l.readiness < EASY_READINESS) skip.add(l.id);
   const all = exerciseHistory(exId, logs);
   if (!skip.size) return all;
   const base = exerciseHistory(exId, logs, skip);
@@ -219,12 +224,20 @@ export function rirAt(reps: number, pct: number): number {
   return best;
 }
 
-/** Tarixdan ishonchli 1RM: RIR yozilgan bo'lsa — RPE jadvali (EMA), bo'lmasa — eng yaxshi set (Epley) */
+/** Kuch bloki rejasidagi %1RM takror soni bo'yicha (methods.ts blockWeek bilan bir xil) */
+const BLOCK_PCT: Record<number, number> = { 6: 0.75, 5: 0.8, 4: 0.85, 3: 0.88 };
+
+/**
+ * Tarixdan ishonchli 1RM: RIR yozilgan bo'lsa — RPE jadvali (EMA), bo'lmasa — eng yaxshi set.
+ * RIR yozilmagan setni chegaragacha deb hisoblash (Epley) kuch blokida 1RM ni har mashg'ulot pasaytirardi
+ * (rejadagi setlar ~3 zaxira bilan) — blok takrorlari uchun rejadagi %1RM olinadi: rejadagidek bajarilgan
+ * mashg'ulot 1RM ni o'zgartirmaydi, ko'proq takror — oshiradi.
+ */
 function historyE1rm(hist: History): number | null {
   if (!hist.length) return null;
   const rpe = refE1rm(hist.map((h) => h.sets));
   if (rpe) return rpe;
-  const best = Math.max(...hist[0].sets.filter((x) => x.reps <= 12).map((x) => e1rm(x.kg, x.reps)), 0);
+  const best = Math.max(...hist[0].sets.filter((x) => x.reps <= 12).map((x) => Math.max(e1rm(x.kg, x.reps), BLOCK_PCT[x.reps] ? x.kg / BLOCK_PCT[x.reps] : 0)), 0);
   return best || null;
 }
 
@@ -258,7 +271,7 @@ function suggestBlock(ex: Exercise, pe: PlannedExercise, hist: History, ctx: Sug
     : barOnly
       ? `Kuch bloki, ${(ctx.week ?? 0) + 1}-hafta: taxminiy hisob grifdan yengil chiqdi — bo‘sh grif (${fmtKg(out.kg ?? 0)} kg) bilan ${w.sets}×${w.reps}. Texnikani o‘rnating; keyingi vazn natijangizdan hisoblanadi.`
       : `Kuch bloki, ${(ctx.week ?? 0) + 1}-hafta: ${w.sets}×${w.reps} @ ${Math.round(w.pct * 100)}% 1RM${e1 ? ` (1RM ≈ ${Math.round(e1)} kg${estimated ? ', taxminiy' : ''})` : ''}. Har set ~${out.rir} takror zaxira bilan tugashi kerak.`;
-  if (!w.deload && ctx.readiness !== undefined && ctx.readiness < 2.6) {
+  if (!w.deload && ctx.readiness !== undefined && ctx.readiness < EASY_READINESS) {
     out.sets = Math.max(1, out.sets - 1);
     if (out.kg) out.kg = roundLoad(ex, out.kg * 0.95, bar);
     out.kind = 'easy';
@@ -270,15 +283,15 @@ function suggestBlock(ex: Exercise, pe: PlannedExercise, hist: History, ctx: Sug
 
 /** Bitta og'ir set (sinov) yoki hech bir set repMin ga yetmagan bo'lsa — vazn 1RM taxminidan oshmasin */
 function capLone(ex: Exercise, last: History[number], repMin: number, rir: number, out: Suggestion, w: number, bar?: number) {
-  const lone = last.sets.filter((s) => s.kg === w).length === 1 && !last.sets.some((s) => s.reps >= repMin);
-  if (!lone || !out.kg) return;
+  // hech bir set repMin ga yetmagan (masalan 3×5 dan keyin 8–12 takrorli sxema) — vazn 1RM taxminidan oshmasin
+  if (last.sets.some((s) => s.reps >= repMin) || !out.kg) return;
   const cap = e1rmCap(last.sets, repMin, rir);
   if (cap === null) return;
   const kg = roundLoad(ex, cap, bar);
   if (kg >= out.kg) return;
   out.kg = kg;
   out.kind = 'down';
-  out.reason = `O‘tgan safar ${fmtKg(w)} kg bilan atigi bitta set (${Math.max(...last.sets.filter((s) => s.kg === w).map((s) => s.reps))} takror). ${repMin} takror uchun taxminiy 1RM bo‘yicha — ${fmtKg(kg)} kg.`;
+  out.reason = `O‘tgan safar ${fmtKg(w)} kg bilan ko‘pi bilan ${Math.max(...last.sets.filter((s) => s.kg === w).map((s) => s.reps))} takror. ${repMin} takror uchun taxminiy 1RM bo‘yicha — ${fmtKg(kg)} kg.`;
 }
 
 /** Chiziqli progressiya: barcha takrorlar bajarilsa — har mashg'ulot +vazn (Rippetoe) */
@@ -367,7 +380,7 @@ export function suggest(ex: Exercise, pe: PlannedExercise, logs: WorkoutLog[], c
     // ishchi vazndan og'ir, lekin repMin ga yetmagan setlar (sinov) — "barcha setlar" sanog'iga kirmaydi
     const considered = last.sets.filter((s) => !(s.kg > w && s.reps < pe.repMin));
     const work = last.sets.filter((s) => s.kg === w);
-    const allTop = work.length >= Math.min(pe.sets, considered.length) && work.every((s) => s.reps >= pe.repMax);
+    const allTop = work.length >= Math.min(pe.sets, Math.max(considered.length, pe.sets - 1)) && work.every((s) => s.reps >= pe.repMax);
     const anyMiss = work.some((s) => s.reps < pe.repMin);
     const prevMiss = hist[1]?.sets.some((s) => s.kg === w && s.reps < pe.repMin);
     const minReps = Math.min(...work.map((s) => s.reps));
@@ -457,13 +470,14 @@ export function suggest(ex: Exercise, pe: PlannedExercise, logs: WorkoutLog[], c
   if (ctx.deload) {
     sets = Math.max(1, Math.round(sets * 0.5));
     rir = Math.max(4, rir + 2);
-    if (out.kg) out.kg = roundLoad(ex, out.kg * 0.85, bar);
+    // yordamchi trenajyorda og'irlik — yordam: yengillashtirish uchun uni ko'paytiramiz
+    if (out.kg) out.kg = roundLoad(ex, ex.assisted ? out.kg / 0.85 : out.kg * 0.85, bar);
     out.kind = 'deload';
     out.reason = 'Yengillashtirish haftasi: kamroq set va yengilroq vazn. Charchoq ketadi, kuch keyingi bloklarda o‘sadi.';
-  } else if (ctx.readiness !== undefined && ctx.readiness < 2.6) {
+  } else if (ctx.readiness !== undefined && ctx.readiness < EASY_READINESS) {
     sets = Math.max(1, sets - 1);
     rir = rir + 1;
-    if (out.kg) out.kg = roundLoad(ex, out.kg * 0.95, bar);
+    if (out.kg) out.kg = roundLoad(ex, ex.assisted ? out.kg / 0.95 : out.kg * 0.95, bar);
     out.kind = 'easy';
     out.reason = 'Bugun tana charchagan: bitta set kamroq va biroz yengilroq. Mashqni o‘tkazib yubormaslikning o‘zi g‘alaba.';
   }
@@ -479,7 +493,8 @@ export function suggest(ex: Exercise, pe: PlannedExercise, logs: WorkoutLog[], c
  * NSCA umumiy → maxsus isinish; RTS amaliyoti.
  */
 export function warmupSets(ex: Exercise, kg: number | null, reps = 8, barKg = DEFAULT_BAR_KG): SetTarget[] {
-  if (!kg || ex.mechanics !== 'compound') return [];
+  // yordamchi trenajyorda kam yordam — og'irroq: isinish seti ish setidan og'ir bo'lib qolardi
+  if (!kg || ex.mechanics !== 'compound' || ex.assisted) return [];
   if (ex.loadType === 'barbell') {
     const bar = barFor(ex, barKg);
     if (kg <= bar) return [];

@@ -56,7 +56,7 @@ export default function Home() {
   const plan = useDayPlan(day);
   const sugOf = useMemo(() => new Map(plan.map((x) => [x.pe, x.sug])), [plan]);
   // chiziqli A/B navbatida ko'rsatilgan mashqlar boshqa kundan — tahrir o'sha kunga yoziladi
-  const srcId = day ? (program && t.meso ? rotationSource(program, day.id, t.meso.absWeek) : day.id) : null;
+  const srcId = day ? (program && t.meso ? rotationSource(program, day.id, t.rotKeys.get(day.id) ?? t.meso.absWeek) : day.id) : null;
 
   const ws = startOfWeek(new Date(t.dateKey + 'T12:00:00'));
   const now = new Date();

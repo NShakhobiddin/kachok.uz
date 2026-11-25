@@ -55,11 +55,14 @@ export function kcalFloor(sex: Sex, bmrKcal: number): number {
   return Math.ceil(Math.max(bmrKcal * 1.05, sex === 'male' ? 1500 : 1200) / 10) * 10;
 }
 
-/** Semizlikda oqsilni "ideal" vaznga (BMI 25) nisbatan hisoblash — ortiqcha raqamlardan saqlaydi */
+/**
+ * Semizlikda oqsil va yog' uchun "moslashtirilgan" vazn: BMI 30 dagi vazn + ortig'ining 25% i —
+ * ortiqcha raqamlardan saqlaydi va BMI 30 chegarasida keskin sakramaydi (avval 97.2 → 97.3 kg da oqsil 175 → 145 g edi).
+ */
 export function referenceWeight(kg: number, cm: number): number {
-  const bmi = kg / (cm / 100) ** 2;
-  if (bmi <= 30) return kg;
-  return 25 * (cm / 100) ** 2;
+  const h2 = (cm / 100) ** 2;
+  if (kg / h2 <= 30) return kg;
+  return 30 * h2 + 0.25 * (kg - 30 * h2);
 }
 
 function surplusPct(goal: Goal, level: Level): number {
@@ -589,7 +592,8 @@ function windowObs(intake: Map<number, number>, weights: { x: number; y: number 
 }
 
 export function adaptiveTdee(food: { date: string; kcal: number }[], body: BodyEntry[], prior: number, today: string, weeks = 8): TdeeEstimate {
-  const intake = dailyIntake(food, prior);
+  // bugungi kun hali tugamagan — yarim yozilgan iste'mol sarfni pasaytirib, maqsad kun davomida "suzib" yurardi
+  const intake = dailyIntake(food.filter((e) => e.date < today), prior);
   const weights = body
     .filter((b) => b.weightKg)
     .map((b) => ({ x: dayNum(b.date), y: b.weightKg! }))

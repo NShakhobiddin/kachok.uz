@@ -5,7 +5,7 @@ import { mesoPerWeek, mesoState, type MesoState } from '../engine/meso';
 import { rotateLinear } from '../engine/program';
 import { suggest, type Suggestion } from '../engine/progression';
 import { useStore } from '../store/useStore';
-import type { PlannedExercise, Program, WorkoutDay } from '../types';
+import type { PlannedExercise, Program, WorkoutDay, WorkoutLog } from '../types';
 import { isoDate, startOfWeek, weekdayIdx } from './date';
 
 export function useMeso(): MesoState | null {
@@ -16,9 +16,34 @@ export function useMeso(): MesoState | null {
   return useMemo(() => (program ? mesoState(program, logs, level, mesoPerWeek(program, daysPerWeek ? { daysPerWeek } : null)) : null), [program, logs, level, daysPerWeek]);
 }
 
-/** Shu haftadagi kunlar: chiziqli dasturda A/B navbati haftadan haftaga almashadi (id va hafta kuni o'zgarmaydi) */
-export function weekDays(program: Program | null, meso: MesoState | null): WorkoutDay[] {
-  return (program?.days ?? []).map((d) => (program && meso ? rotateLinear(program, d, meso.absWeek) : d));
+/**
+ * Har kun uchun A/B navbat kaliti (rotateLinear ga: juft — dastlabki tartib, toq — almashgan).
+ * Chiziqli dasturda — bajarilgan mashg'ulotlar ketma-ketligidan: haftaning bajarilgan va hali oldindagi kunlari
+ * navbat bilan; o'tkazib yuborilgan kun navbatni egallamaydi — A dan keyin har doim B keladi.
+ * Boshqa dasturlarda — blok haftasi (meso.absWeek).
+ */
+export function rotationKeys(program: Program | null, meso: MesoState | null, logs: WorkoutLog[], weekStart: Date, today: number): Map<string, number> {
+  const out = new Map<string, number>();
+  if (!program) return out;
+  if (program.method !== 'linear' || program.days.length !== 3) {
+    for (const d of program.days) out.set(d.id, meso?.absWeek ?? 0);
+    return out;
+  }
+  const ids = new Set(program.days.map((d) => d.id));
+  const progLogs = logs.filter((l) => l.finishedAt && l.dayId && ids.has(l.dayId) && isoDate(new Date(l.startedAt)) >= program.startDate);
+  let k = progLogs.filter((l) => new Date(l.startedAt) < weekStart).length;
+  const doneIds = new Set(progLogs.filter((l) => new Date(l.startedAt) >= weekStart).map((l) => l.dayId));
+  for (const d of [...program.days].sort((a, b) => a.weekday - b.weekday)) {
+    const at = program.days.findIndex((x) => x.id === d.id);
+    out.set(d.id, Math.abs(k - at));
+    if (doneIds.has(d.id) || d.weekday >= today) k++;
+  }
+  return out;
+}
+
+/** Shu haftadagi kunlar: chiziqli dasturda A/B navbati (id va hafta kuni o'zgarmaydi) */
+export function weekDays(program: Program | null, meso: MesoState | null, keys?: Map<string, number>): WorkoutDay[] {
+  return (program?.days ?? []).map((d) => (program && (keys || meso) ? rotateLinear(program, d, keys?.get(d.id) ?? meso?.absWeek ?? 0) : d));
 }
 
 /**
@@ -70,7 +95,8 @@ export function useToday() {
     const weekLogs = logs.filter((l) => l.finishedAt && new Date(l.startedAt) >= ws);
     const doneDays = new Set(weekLogs.map((l) => weekdayIdx(new Date(l.startedAt))));
     const doneDayIds = new Set(weekLogs.map((l) => l.dayId).filter(Boolean) as string[]);
-    const days = weekDays(program, meso).sort((a, b) => a.weekday - b.weekday);
+    const rotKeys = rotationKeys(program, meso, logs, ws, today);
+    const days = weekDays(program, meso, rotKeys).sort((a, b) => a.weekday - b.weekday);
     const todayDay = days.find((d) => d.weekday === today) ?? null;
     const todayLogs = logs.filter((l) => l.finishedAt && isoDate(new Date(l.startedAt)) === dateKey);
     // bugun dastur kuni bo'lsa — erkin mashg'ulot uni "bajarilgan" qilmaydi (rejadagi mashq ko'rinib turadi)
@@ -85,7 +111,7 @@ export function useToday() {
     const week = meso ? meso.week + 1 : 1;
     const deload = meso?.deload ?? false;
     const readinessToday = readiness[dateKey];
-    return { today, todayDay, doneToday, trainedToday, doneDays, doneDayIds, days, missed, nextDay, week, deload, readinessToday, weekLogs, meso, dateKey };
+    return { today, todayDay, doneToday, trainedToday, doneDays, doneDayIds, days, missed, nextDay, week, deload, readinessToday, weekLogs, meso, dateKey, rotKeys };
   }, [program, logs, readiness, meso, createdAt, dateKey]);
 }
 

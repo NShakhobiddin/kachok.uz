@@ -1,6 +1,7 @@
 // Mezotsikl (blok) periodizatsiyasi — Renaissance Periodization (Israetel, Hoffmann) va Helms uslubida:
 // har hafta zaxira (RIR) kamayadi va setlar mushak fikriga qarab oshadi, blok oxirida yengillashtirish (deload).
 // Hafta kalendar bo'yicha emas, bajarilgan mashg'ulotlar soni bo'yicha o'tadi — o'tkazib yuborilgan hafta blokni buzmaydi.
+import { isoDate } from '../lib/date';
 import type { Level, MuscleGroup, Profile, Program, WorkoutLog } from '../types';
 
 export interface MesoState {
@@ -37,7 +38,8 @@ type MesoProgram = Pick<Program, 'days' | 'startDate' | 'mesoWeeks'>;
 function programLogs(program: MesoProgram, logs: WorkoutLog[]): WorkoutLog[] {
   const ids = new Set(program.days.map((d) => d.id));
   const start = program.startDate;
-  return logs.filter((l) => l.finishedAt && l.dayId && ids.has(l.dayId) && l.startedAt.slice(0, 10) >= start).sort((a, b) => a.startedAt.localeCompare(b.startedAt));
+  // mahalliy sana bilan (startedAt — UTC): Toshkentda ertalab 5 gacha boshlangan mashg'ulot oldingi kunga tushib qolmasin
+  return logs.filter((l) => l.finishedAt && l.dayId && ids.has(l.dayId) && isoDate(new Date(l.startedAt)) >= start).sort((a, b) => a.startedAt.localeCompare(b.startedAt));
 }
 
 export function programSessions(program: MesoProgram, logs: WorkoutLog[]) {

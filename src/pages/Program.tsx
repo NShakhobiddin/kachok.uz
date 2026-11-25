@@ -14,7 +14,7 @@ import { customSplitOf, resizeSplit, type DaySplit } from '../engine/split';
 import { fmtKg, suggest } from '../engine/progression';
 import { mesoPlan, type MesoState } from '../engine/meso';
 import { useNutrition } from '../lib/useNutrition';
-import { mesoCtx, useMeso, weekDays } from '../lib/useToday';
+import { mesoCtx, useMeso, useToday, weekDays } from '../lib/useToday';
 import { DAYS, DAYS_SHORT } from '../lib/date';
 import { useIsPro } from '../lib/features';
 import { useStore } from '../store/useStore';
@@ -43,7 +43,8 @@ export default function ProgramPage() {
   const freq = useMemo(() => groupFrequency(program ?? { days: [] }), [program]);
   const meso = useMeso();
   // chiziqli dasturda A/B navbati: shu hafta har kuni aslida qaysi mashg'ulot (id va hafta kuni o'zgarmaydi)
-  const thisWeek = useMemo(() => new Map(weekDays(program, meso).map((d) => [d.id, d])), [program, meso]);
+  const rotKeys = useToday().rotKeys;
+  const thisWeek = useMemo(() => new Map(weekDays(program, meso, rotKeys).map((d) => [d.id, d])), [program, meso, rotKeys]);
   const nut = useNutrition();
   if (!program) return null;
   const sel = days.find((d) => d.id === selId) ?? null;
