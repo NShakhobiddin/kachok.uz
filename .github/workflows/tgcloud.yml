@@ -1,0 +1,85 @@
+# Telegram Serverless (BotFather → bot → Serverless): bot handleri, endpointlar, baza va Mini App (app<id>.tgcloud.ai).
+# Repo — yagona manba: har push'da tgcloud/ va ilova yig'masi bulutga joylanadi (BotFather'da qo'lda qilingan o'zgarishlar ustidan yoziladi).
+# Bir martalik: BotFather → bot → Serverless → CLI Access → Access token'ni
+#   Settings → Secrets and variables → Actions → New repository secret: TGCLOUD_TOKEN
+name: Telegram Serverless
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tgcloud
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      TGCLOUD_TOKEN: ${{ secrets.TGCLOUD_TOKEN }}
+      TGCLOUD_NO_PAGER: '1'
+    steps:
+      - name: Token
+        id: token
+        run: |
+          if [ -z "$TGCLOUD_TOKEN" ]; then
+            echo "::warning::TGCLOUD_TOKEN secret yo'q: BotFather → Serverless → CLI Access → Access token'ni repo secret sifatida qo'shing"
+            echo "### Telegram Serverless: TGCLOUD_TOKEN secret yo'q — joylanmadi" >> "$GITHUB_STEP_SUMMARY"
+            echo "ok=false" >> "$GITHUB_OUTPUT"
+          else
+            app="${TGCLOUD_TOKEN%%:*}"
+            echo "ok=true" >> "$GITHUB_OUTPUT"
+            echo "url=https://${app}.tgcloud.ai/" >> "$GITHUB_OUTPUT"
+          fi
+      - if: steps.token.outputs.ok == 'true'
+        uses: actions/checkout@v4
+      - if: steps.token.outputs.ok == 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - if: steps.token.outputs.ok == 'true'
+        run: npm ci
+      - if: steps.token.outputs.ok == 'true'
+        run: npm test
+      - name: Mini App yig'ish
+        if: steps.token.outputs.ok == 'true'
+        run: npm run build
+        env:
+          VITE_BASE: /
+          VITE_TGCLOUD: '1'
+          VITE_TG_BOT: ${{ vars.TG_BOT || 'gym_bosbot' }}
+      - name: Joylash va baza migratsiyasi
+        if: steps.token.outputs.ok == 'true'
+        run: |
+          mkdir -p .tgcloud
+          npx tgcloud push --force
+          npx tgcloud migrate --safe
+      # haqiqiy platformada: sxema, SQL va Bot API ishlaydimi (sinov foydalanuvchisi oxirida o'chiriladi)
+      - name: Tekshiruv (smoke)
+        if: steps.token.outputs.ok == 'true'
+        run: |
+          ctx='{ initData: { user: { id: 1, first_name: "CI" } } }'
+          npx tgcloud run endpoints/friendCode '{}' --ctx "$ctx"
+          npx tgcloud run endpoints/postSave "{ kind: 'week', clientId: 'ci-smoke', data: { label: 'CI', done: 1, planned: 3, streak: 0, stats: [['Setlar', '1']], rows: [], rowsTitle: '' } }" --ctx "$ctx"
+          npx tgcloud run endpoints/feed '{}' --ctx "$ctx"
+          npx tgcloud run endpoints/socialDelete '{}' --ctx "$ctx"
+      # bir martalik endpoint: faqat `run` bilan ishlaydi, deploy qilinmaydi
+      - name: Bot sozlamalari (menyu tugmasi, tavsif, /start)
+        if: steps.token.outputs.ok == 'true'
+        run: |
+          set -o pipefail
+          cp scripts/tgcloud/setupBot.js tgcloud/endpoints/setupBot.js
+          npx tgcloud run endpoints/setupBot "{ appUrl: '${{ steps.token.outputs.url }}' }" | tee setup.out
+          rm tgcloud/endpoints/setupBot.js
+          {
+            echo "### Telegram Serverless joylandi"
+            echo "- Mini App: ${{ steps.token.outputs.url }}"
+            if grep -Eq 'mainApp"?:[[:space:]]*false' setup.out; then
+              echo "- ⚠️ Asosiy Mini App: @BotFather → /mybots → bot → Bot Settings → Configure Mini App → Enable Mini App → ${{ steps.token.outputs.url }}"
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"

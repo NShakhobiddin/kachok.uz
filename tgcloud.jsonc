@@ -1,0 +1,10 @@
+// Telegram Serverless loyiha sozlamasi: Mini App (Vite yig'masi) app<id>.tgcloud.ai da, bot kodi — tgcloud/ papkada.
+// Joylash: .github/workflows/tgcloud.yml (TGCLOUD_TOKEN secret). Yig'ish: VITE_TGCLOUD=1 VITE_BASE=/ npm run build
+{
+  "$schema": "./node_modules/@tgcloud/cli/schema/tgcloud.json",
+  "static": {
+    "source": "dist",
+    "spa": true,
+    "immutable": ["/assets/*"]
+  }
+}

@@ -8,3 +8,6 @@ dist-single
 .env
 .env.local
 scripts/images/out/
+
+# Telegram Serverless CLI holati (token, snapshot)
+.tgcloud/

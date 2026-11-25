@@ -1,8 +1,10 @@
-// Do'stlar va lenta: Telegram orqali kirish, taklif kodi, do'st qo'shish, lenta va "💪".
+// Do'stlar va lenta: taklif kodi, do'st qo'shish, lenta va "💪".
+// Ikki xil server: Telegram Serverless (tgcloud/ — ilova app<id>.tgcloud.ai da, Telegram ichida; kirish shart emas)
+// yoki o'z API serverimiz (server/ — VITE_API_URL, akkaunt bilan).
 import type { CardData } from '../lib/shareCard';
 import { telegram } from '../lib/telegram';
 import { useStore, type Account } from '../store/useStore';
-import { api, apiEnabled, refreshMe } from './client';
+import { api, ApiError, apiEnabled, refreshMe } from './client';
 import { syncNow } from './sync';
 
 type WorkoutCard = Omit<Extract<CardData, { kind: 'workout' }>, 'kind'>;
@@ -35,6 +37,31 @@ const TG_APP = import.meta.env.VITE_TG_APP as string | undefined;
 export const tgInitData = (): string => (telegram() as unknown as { initData?: string } | undefined)?.initData ?? '';
 export const canTelegramLogin = () => apiEnabled && tgInitData().length > 0;
 
+/** Telegram Serverless: Mini App app<id>.tgcloud.ai da yig'ilgan (VITE_TGCLOUD=1) va Telegram ichida ochilgan */
+type SlsError = Error & { type?: string; status?: number; parameters?: { code?: string } };
+type Sls = { call: (name: string, input: object, cb: (err: SlsError | null, result: unknown) => void) => void };
+const TGCLOUD = import.meta.env.VITE_TGCLOUD === '1';
+const sls = () => (telegram() as unknown as { Serverless?: Sls } | undefined)?.Serverless;
+export const serverless = () => TGCLOUD && !!sls() && tgInitData().length > 0;
+
+/** Endpoint chaqiruvi (tgcloud/endpoints/<name>.js); xato — ApiError (EndpointError matni foydalanuvchiga) */
+function scall<T>(name: string, input: object = {}): Promise<T> {
+  return new Promise((resolve, reject) => {
+    try {
+      sls()!.call(name, input, (err, result) => {
+        if (!err) return resolve(result as T);
+        const mine = err.type === 'ENDPOINT_ERROR';
+        reject(new ApiError(err.status ?? 0, err.parameters?.code ?? err.type ?? 'error', mine ? err.message : err.status ? 'Server xatosi — birozdan keyin qayta urinib ko‘ring' : 'Internet bilan bog‘lanib bo‘lmadi'));
+      });
+    } catch {
+      reject(new ApiError(0, 'no_telegram', 'Ilovani Telegram ichida oching'));
+    }
+  });
+}
+
+/** Lentadan foydalanish mumkin: Serverless yoki kirilgan akkaunt */
+export const socialReady = () => serverless() || (apiEnabled && !!useStore.getState().account);
+
 /** Telegram ichida bir bosishda kirish (SMS kerak emas) */
 export async function telegramLogin() {
   const r = await api<{
@@ -59,30 +86,39 @@ export async function telegramLogin() {
   return r;
 }
 
-export const getFriendCode = () => api<{ code: string }>('/social/code').then((r) => r.code);
-export const listFriends = () => api<{ friends: Friend[] }>('/social/friends').then((r) => r.friends);
+/** Taklif kodi va havolasi */
+export async function getFriendCode(): Promise<{ code: string; invite: string }> {
+  if (serverless()) {
+    const r = await scall<{ code: string; invite: string | null }>('friendCode');
+    return { code: r.code, invite: r.invite ?? inviteLink(r.code) };
+  }
+  const { code } = await api<{ code: string }>('/social/code');
+  return { code, invite: inviteLink(code) };
+}
+export const listFriends = () => (serverless() ? scall<{ friends: Friend[] }>('friends') : api<{ friends: Friend[] }>('/social/friends')).then((r) => r.friends);
 export const addFriend = (code: string) =>
-  api<{ friend: { id: string; name: string } }>('/social/friends', {
-    body: { code },
-  }).then((r) => r.friend);
-export const removeFriend = (id: string) => api(`/social/friends/${id}`, { method: 'DELETE' });
-export const getFeed = (before?: string) => api<{ posts: FeedPost[]; more: boolean }>(`/social/feed${before ? `?before=${encodeURIComponent(before)}` : ''}`);
-export const setKudos = (id: string, on: boolean) => api(`/social/posts/${id}/kudos`, { method: on ? 'PUT' : 'DELETE' });
-export const deletePost = (id: string) => api(`/social/posts/${id}`, { method: 'DELETE' });
+  (serverless() ? scall<{ friend: { id: string; name: string } }>('friendAdd', { code }) : api<{ friend: { id: string; name: string } }>('/social/friends', { body: { code } })).then((r) => r.friend);
+export const removeFriend = (id: string) => (serverless() ? scall('friendRemove', { id }) : api(`/social/friends/${id}`, { method: 'DELETE' }));
+export const getFeed = (before?: string) =>
+  serverless()
+    ? scall<{ posts: FeedPost[]; more: boolean }>('feed', before ? { before } : {})
+    : api<{ posts: FeedPost[]; more: boolean }>(`/social/feed${before ? `?before=${encodeURIComponent(before)}` : ''}`);
+export const setKudos = (id: string, on: boolean) => (serverless() ? scall('kudos', { id, on }) : api(`/social/posts/${id}/kudos`, { method: on ? 'PUT' : 'DELETE' }));
+export const deletePost = (id: string) => (serverless() ? scall('postDelete', { id }) : api(`/social/posts/${id}`, { method: 'DELETE' }));
+/** Serverless: lentadagi barcha ma'lumotlarimni o'chirish (akkaunt serverida — Akkaunt sahifasida) */
+export const deleteSocialData = () => scall('socialDelete');
 
 /** Natijani lentaga joylash (shu mashg'ulot/hafta qayta yuborilsa — yangilanadi) */
 export function postCard(clientId: string, card: CardData) {
   const { kind, ...data } = card;
-  return api<{ id: string }>('/social/posts', {
-    body: { kind, clientId, data },
-  });
+  return serverless() ? scall<{ id: string }>('postSave', { kind, clientId, data }) : api<{ id: string }>('/social/posts', { body: { kind, clientId, data } });
 }
 
 /** Tugagan mashg'ulot avtomatik lentaga (kirgan va sozlamada o'chirilmagan bo'lsa); bir mashg'ulot — bir marta */
 const POSTED_KEY = 'gymbos-posted';
 export async function autoPostWorkout(logId: string, card: CardData): Promise<boolean> {
   const st = useStore.getState();
-  if (!apiEnabled || !st.account || st.settings.feedShare === false) return false;
+  if (!socialReady() || st.settings.feedShare === false) return false;
   let posted: string[] = [];
   try {
     posted = JSON.parse(localStorage.getItem(POSTED_KEY) ?? '[]');
@@ -142,14 +178,33 @@ export const pendingFriend = (): string | null => {
   }
 };
 
+const ADDED_KEY = 'gymbos-friend-added';
+/** Taklif orqali qo'shilgan do'st ismi (bir marta o'qiladi) */
+export function takeAddedFriend(): string | null {
+  try {
+    const n = sessionStorage.getItem(ADDED_KEY);
+    sessionStorage.removeItem(ADDED_KEY);
+    return n;
+  } catch {
+    return null;
+  }
+}
+
 /** Kutilayotgan taklifni qabul qilish (kirgan bo'lsa); qo'shilgan do'st ismi */
 export async function acceptPendingFriend(): Promise<string | null> {
   const code = pendingFriend();
-  if (!code || !useStore.getState().account) return null;
+  if (!code || !socialReady()) return null;
   try {
     const f = await addFriend(code);
     localStorage.removeItem(PENDING_KEY);
-    return f.name || 'Do‘st';
+    const name = f.name || 'Do‘st';
+    // ilova ochilishida qabul qilinsa — Do'stlar sahifasi keyin xabar ko'rsatadi
+    try {
+      sessionStorage.setItem(ADDED_KEY, name);
+    } catch {
+      /* bo'sh */
+    }
+    return name;
   } catch (e) {
     // o'z kodi yoki topilmagan — qayta urinish ma'nosiz
     if ((e as { status?: number }).status && (e as { status: number }).status < 500) localStorage.removeItem(PENDING_KEY);

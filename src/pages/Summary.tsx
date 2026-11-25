@@ -4,7 +4,7 @@ import { Link, useParams } from 'react-router-dom';
 import { Barbell, PlateBadge } from '../components/Barbell';
 import { BodyMap } from '../components/BodyMap';
 import { ShareSheet } from '../components/ShareSheet';
-import { autoPostWorkout } from '../api/social';
+import { autoPostWorkout, serverless } from '../api/social';
 import type { CardData } from '../lib/shareCard';
 import { Icon } from '../components/ui/Icon';
 import { MUSCLES } from '../data/catalog';
@@ -225,12 +225,12 @@ function Stat({ label, value, sub, accent }: { label: string; value: string; sub
   );
 }
 
-/** Kirgan va sozlamada o'chirilmagan bo'lsa — natija do'stlar lentasiga (bir marta) */
+/** Kirgan (yoki Telegram Serverless) va sozlamada o'chirilmagan bo'lsa — natija do'stlar lentasiga (bir marta) */
 function AutoPost({ logId, card }: { logId: string; card: CardData }) {
   const account = useStore((s) => s.account);
   const [done, setDone] = useState(false);
   useEffect(() => {
-    if (!account) return;
+    if (!account && !serverless()) return;
     autoPostWorkout(logId, card)
       .then((ok) => setDone(ok))
       .catch(() => null);

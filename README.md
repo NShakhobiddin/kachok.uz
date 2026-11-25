@@ -72,16 +72,27 @@ npm test               # API testlari: kirish, sinxronlash, murabbiy, Payme, Cli
 
 Production: `docker compose up -d` (PostgreSQL 16 + API) yoki `npm run build && npm start`. Jadvallar ishga tushganda avtomatik yaratiladi (`server/src/db/migrations`).
 
-### Tez joylash: Render + Telegram (do'stlar lentasi)
+### Telegram Serverless: bot va do'stlar lentasi (server shart emas)
 
-Do'stlar lentasi, bulutli sinxronlash va akkaunt uchun server kerak. SMS ulanmagan bo'lsa ham kirish Telegram Mini App orqali ishlaydi (`SMS_PROVIDER=none`).
+Bot va do'stlar lentasi [Telegram Serverless](https://core.telegram.org/bots/serverless)da ishlaydi: kod, SQLite baza va Mini App fayllari Telegram'ning o'zida, alohida server yo'q.
 
-1. **Bot (o'z serveri shart emas):** Telegram'da [@BotFather](https://t.me/BotFather) → `/newbot` — tokenni oling. `/mybots` → bot → *Bot Settings* → *Configure Mini App* → *Enable Mini App* → URL: `https://nshakhobiddin.github.io/kachok.uz/`. Avatar: `/setuserpic` → `docs/brand/telegram-avatar.png`.
-   Tokenni repo *Settings → Secrets and variables → Actions → New repository secret* ga `TELEGRAM_BOT_TOKEN` nomi bilan qo'shing va *Actions → Telegram bot → Run workflow* ni bosing ([`scripts/telegram-bot.mjs`](scripts/telegram-bot.mjs)): menyu tugmasi «Ochish» → Mini App, bot tavsifi o'rnatiladi va sayt bot nomi bilan qayta yig'iladi (do'st taklif havolalari `t.me/<bot>?startapp=f_KOD`).
-2. **Server:** [render.com/deploy?repo=https://github.com/NShakhobiddin/kachok.uz](https://render.com/deploy?repo=https://github.com/NShakhobiddin/kachok.uz) — `render.yaml` bo'yicha API (Docker) va PostgreSQL yaratiladi. So'ralganda o'sha `TELEGRAM_BOT_TOKEN` ni kiriting; `JWT_SECRET` avtomatik yaratiladi. Tayyor bo'lgach `https://<nom>.onrender.com/health` → `{"ok":true}`.
-3. **Ulash:** repo *Settings → Secrets and variables → Actions → Variables*: `API_URL` = serverning `https://….onrender.com` manzili. So'ng *Actions → Telegram bot → Run workflow* ni qayta bosing: webhook o'rnatiladi (bot `/start` ga ilovani ochish tugmasi bilan javob beradi, `server/src/routes/telegram.ts`) va sayt serverga ulanadi.
+- `tgcloud/schema.js` — baza (foydalanuvchilar, do'stliklar, yozuvlar, «💪»).
+- `tgcloud/endpoints/*.js` — Mini App chaqiradigan funksiyalar (`Telegram.WebApp.Serverless.call`): taklif kodi, do'st qo'shish, lenta, «💪», ma'lumotlarni o'chirish. Foydalanuvchini Telegram tasdiqlaydi — kirish/SMS kerak emas.
+- `tgcloud/handlers/message.js` — `/start` (va `/start f_KOD` — do'st taklifi) ga ilovani ochish tugmasi.
+- Mini App shu yerda yig'iladi va `https://app<id>.tgcloud.ai/` da joylanadi (`tgcloud.jsonc`, `VITE_TGCLOUD=1`).
 
-Bepul tarif cheklovlari: server 15 daqiqa so'rovsiz turganda "uxlaydi" (birinchi ochilish ~30–60 s), bepul Postgres ma'lum muddatdan keyin o'chiriladi — doimiy foydalanish uchun pullik tarif yoki tashqi baza (masalan Neon: `DATABASE_URL` ni qo'lda bering, `?sslmode=require` bilan).
+Ulash (bir marta):
+1. @BotFather → bot → **Serverless** → **CLI Access** → *Access token* ni nusxalang va repo *Settings → Secrets and variables → Actions → New repository secret* ga `TGCLOUD_TOKEN` nomi bilan qo'shing.
+2. *Actions → Telegram Serverless → Run workflow* (keyin har `main` push'da o'zi joylanadi, [`.github/workflows/tgcloud.yml`](.github/workflows/tgcloud.yml)): testlar → ilovani yig'ish → `tgcloud push` → `migrate --safe` → haqiqiy platformada tekshiruv → bot sozlamalari (menyu tugmasi «Ochish», tavsif, `/start`). Natija sahifasida Mini App manzili chiqadi.
+3. @BotFather → `/mybots` → bot → *Bot Settings* → *Configure Mini App* → *Enable Mini App* → o'sha `https://app<id>.tgcloud.ai/` manzil (do'st taklif havolalari `t.me/<bot>?startapp=f_KOD` shu bilan to'g'ridan-to'g'ri ilovani ochadi).
+
+Repo — yagona manba: BotFather'da qo'lda o'zgartirilgan kod keyingi push'da ustidan yoziladi. Mahalliy tekshiruv: `npm test` (`test/tgcloud/` — endpointlar haqiqiy SQLite bilan), platformada: `npx tgcloud run endpoints/feed '{}' --ctx '{ initData: { user: { id: 1, first_name: "Test" } } }'`.
+
+Telegram ichidagi ilova boshqa manzilda (`app<id>.tgcloud.ai`) bo'lgani uchun, avval GitHub Pages manzilida ishlatilgan bo'lsa, qurilmadagi ma'lumotlar o'zi ko'chmaydi: *Profil → zaxira nusxa* bilan ko'chiring.
+
+### Muqobil: o'z serveri (akkaunt, sinxronlash, murabbiy, to'lov)
+
+`server/` ni [render.com/deploy?repo=https://github.com/NShakhobiddin/kachok.uz](https://render.com/deploy?repo=https://github.com/NShakhobiddin/kachok.uz) orqali joylash mumkin (`render.yaml`: API + PostgreSQL; SMS ulanmagan bo'lsa `SMS_PROVIDER=none` — kirish Telegram orqali). So'ng repo *Variables* ga `API_URL` qo'shing — GitHub Pages versiyasi serverga ulanadi. Bepul tarifda server 15 daqiqa so'rovsiz "uxlaydi", bepul Postgres muddatli.
 
 **Muhim — ma'lumotlarni lokalizatsiya qilish.** "Shaxsga doir ma'lumotlar to'g'risida"gi qonunning 27¹-moddasiga ko'ra O'zbekiston fuqarolarining shaxsiy ma'lumotlari O'zbekiston hududidagi serverlarda saqlanishi kerak. Shuning uchun server va bazani mahalliy data-markazda (masalan, Uztelecom, UZCLOUD yoki boshqa mahalliy provayder) joylashtiring va ishga tushirishdan oldin yurist bilan tekshiring.
 

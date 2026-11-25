@@ -5,15 +5,19 @@ import { ApiError, apiEnabled } from '../api/client';
 import {
   acceptPendingFriend,
   addFriend,
+  botLink,
   canTelegramLogin,
   deletePost,
+  deleteSocialData,
   getFeed,
   getFriendCode,
   inviteLink,
   listFriends,
   pendingFriend,
   removeFriend,
+  serverless,
   setKudos,
+  takeAddedFriend,
   telegramLogin,
   type FeedPost,
   type Friend,
@@ -45,16 +49,24 @@ export function ago(iso: string, now = Date.now()): string {
 export default function Friends() {
   const back = useBack('/');
   const account = useStore((s) => s.account);
-  if (!apiEnabled)
+  const sls = serverless();
+  if (!apiEnabled && !sls) {
+    const bot = botLink();
     return (
       <Shell back={back}>
-        <div className="card stack gap-8">
-          <b>Server hali ulanmagan</b>
-          <p className="small muted">Do‘stlar lentasi uchun ilova serverga ulanishi kerak. Tez orada yoqiladi.</p>
+        <div className="card stack gap-12">
+          <b>Telegram’da ishlaydi</b>
+          <p className="small muted">Do‘stlar lentasi GYMbos’ning Telegram ilovasida: botni oching — kirish va SMS kerak emas.</p>
+          {bot && (
+            <a className="btn btn-primary btn-block" href={bot} target="_blank" rel="noopener noreferrer">
+              Telegram’da ochish
+            </a>
+          )}
         </div>
       </Shell>
     );
-  return <Shell back={back}>{account ? <Feed /> : <SignIn />}</Shell>;
+  }
+  return <Shell back={back}>{account || sls ? <Feed /> : <SignIn />}</Shell>;
 }
 
 function Shell({ back, children }: { back: () => void; children: React.ReactNode }) {
@@ -128,7 +140,8 @@ function Feed() {
   const [posts, setPosts] = useState<FeedPost[] | null>(null);
   const [more, setMore] = useState(false);
   const [friends, setFriends] = useState<Friend[]>([]);
-  const [code, setCode] = useState<string | null>(null);
+  const [code, setCode] = useState<{ code: string; invite: string } | null>(null);
+  const [wipe, setWipe] = useState<'idle' | 'ask' | 'busy'>('idle');
   const [err, setErr] = useState<string | null>(null);
   const [added, setAdded] = useState<string | null>(null);
   const [input, setInput] = useState('');
@@ -137,7 +150,8 @@ function Feed() {
   const load = useCallback(async () => {
     setErr(null);
     try {
-      const name = await acceptPendingFriend();
+      await acceptPendingFriend();
+      const name = takeAddedFriend();
       if (name) setAdded(name);
       const [f, fr, c] = await Promise.all([getFeed(), listFriends(), getFriendCode()]);
       setPosts(f.posts);
@@ -153,7 +167,7 @@ function Feed() {
     void load();
   }, [load]);
 
-  const invite = () => code && telegramShare(`Men GYMbos’da mashq qilyapman — do‘st bo‘lib, bir-birimizni qo‘llab-quvvatlaylik! Mening kodim: ${code}\n${inviteLink(code)}`);
+  const invite = () => code && telegramShare(`Men GYMbos’da mashq qilyapman — do‘st bo‘lib, bir-birimizni qo‘llab-quvvatlaylik! Mening kodim: ${code.code}\n${code.invite || inviteLink(code.code)}`);
   const add = async () => {
     setBusy(true);
     setErr(null);
@@ -189,7 +203,7 @@ function Feed() {
       <div className="card stack gap-10">
         <div className="row between gap-8">
           <b>Do‘stlarni taklif qiling</b>
-          {code && <span className="tag num">Kod: {code}</span>}
+          {code && <span className="tag num">Kod: {code.code}</span>}
         </div>
         <button className="btn btn-primary btn-block" onClick={invite} disabled={!code}>
           <Icon name="share" size={18} /> Telegram’da taklif yuborish
@@ -265,6 +279,27 @@ function Feed() {
             <span className="small">Tugagan mashg‘ulotlarim do‘stlarga avtomatik ko‘rinsin</span>
             <Toggle on={settings.feedShare !== false} onChange={(v) => setSettings({ feedShare: v })} label="Lentaga avtomatik" />
           </label>
+          {serverless() && (
+            <button
+              className="small muted mt-8"
+              style={{ textAlign: 'left', color: wipe === 'ask' ? 'var(--red)' : undefined }}
+              disabled={wipe === 'busy'}
+              onClick={async () => {
+                if (wipe !== 'ask') return setWipe('ask');
+                setWipe('busy');
+                try {
+                  await deleteSocialData();
+                  setWipe('idle');
+                  await load();
+                } catch (e) {
+                  setErr(errText(e));
+                  setWipe('idle');
+                }
+              }}
+            >
+              {wipe === 'ask' ? 'Rostdan o‘chirilsinmi? Yozuvlar, «💪» va do‘stlar ro‘yxati o‘chadi — bosing' : 'Lentadagi ma’lumotlarimni o‘chirish'}
+            </button>
+          )}
         </div>
       </Fold>
     </>

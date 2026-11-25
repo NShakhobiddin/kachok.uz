@@ -49,6 +49,8 @@ export default defineConfig({
       workbox: {
         globPatterns: ['**/*.{js,css,html,svg,png,woff2}', 'bodymap/*.webp', 'illustrations/thumb/*.webp'],
         navigateFallback: `${base}index.html`,
+        // Telegram Serverless endpointlari (POST /api/<nom>) — ilova sahifasi emas
+        navigateFallbackDenylist: [/^\/api\//],
         // 3D model (~3.6 MB) oldindan yuklanmaydi: birinchi ochilganda keshga tushadi va keyin internetsiz ishlaydi
         runtimeCaching: [
           {

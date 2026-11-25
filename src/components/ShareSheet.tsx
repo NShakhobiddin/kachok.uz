@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { apiEnabled } from '../api/client';
-import { postCard } from '../api/social';
+import { postCard, serverless } from '../api/social';
 import { useStore } from '../store/useStore';
 import { appUrl, canShareFiles, saveImage, shareImage, telegramShare } from '../lib/share';
 import { renderCard, type CardData } from '../lib/shareCard';
@@ -40,7 +40,7 @@ export function ShareSheet({ open, onClose, card, text, filename, feedId }: { op
     <Sheet open={open} onClose={onClose} label="Ulashish">
       <div className="stack gap-12">
         <h3 className="title">Do‘stlar bilan ulashish</h3>
-        {feedId && apiEnabled && account && (
+        {feedId && (serverless() || (apiEnabled && account)) && (
           <div className="row gap-8">
             <button
               className="btn btn-secondary grow"
