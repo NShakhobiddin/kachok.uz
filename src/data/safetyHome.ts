@@ -114,14 +114,26 @@ export const SAFETY_HOME: Record<string, ExerciseSafety> = {
   clamshell: {
     risk: 1,
     why: 'Yonboshlab yotib, kichik amplituda — eng xavfsiz dumba mashqlaridan.',
-    joints: [],
+    joints: [
+      {
+        at: 'hip',
+        how: 'Yonboshlab yotganda ostki son suyagining tashqi qismi polga bosiladi, ustki dumba paylari esa ishlaydi — dumba paylari og‘rig‘ida (tendinopatiya) kuchayishi mumkin.',
+        mod: 'Ostki son ostiga yumshoq yostiq qo‘ying, lentasiz va kichik amplitudada boshlang; og‘riq bo‘lsa — ko‘prikcha.',
+      },
+    ],
     check: ['Yumshoq gilam; boshni qo‘l yoki yostiqqa qo‘ying.'],
     stop: [S.hip],
   },
   'side-leg-raise': {
     risk: 1,
     why: 'Yonboshlab, o‘z vazni bilan — xavf past. Asosiy xato — oyoqni juda baland ko‘tarib tosni qiyshaytirish.',
-    joints: [],
+    joints: [
+      {
+        at: 'hip',
+        how: 'Yonboshlab oyoq ko‘tarish son suyagi tashqi qismidagi dumba paylariga bosim beradi — u yerda og‘riq (tendinopatiya) bo‘lsa, kuchayishi mumkin; 40 yoshdan keyingi ayollarda ko‘p uchraydi.',
+        mod: 'Oyoqni 20–30 sm dan baland ko‘tarmang, ostki son ostiga yumshoq yostiq qo‘ying; og‘riq bo‘lsa — ko‘prikcha yoki trenajyorda sonni ochish (yengil).',
+      },
+    ],
     check: ['Yumshoq gilam; tos va yelkalar bir tekislikda.'],
     stop: [S.hip, S.back],
   },
@@ -162,7 +174,7 @@ export const SAFETY_HOME: Record<string, ExerciseSafety> = {
       {
         at: 'lowerBack',
         how: 'Qo‘l va oyoqlar birga ko‘tarilganda bel egilgan holatda umurtqaga siqilish yuklamasi ancha oshadi.',
-        mod: 'Avval faqat qo‘llarni yoki faqat oyoqlarni ko‘taring yoki «qush-it» mashqini bajaring; balandlik bir necha santimetrdan oshmasin.',
+        mod: 'Tavsiya etilmaydi: «qush-it» — bel tekis qoladi. Shifokor ruxsati bilan — faqat qo‘llarni yoki faqat oyoqlarni bir necha santimetr ko‘tarish.',
       },
       {
         at: 'neck',

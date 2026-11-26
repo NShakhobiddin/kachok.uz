@@ -123,7 +123,7 @@ export const SAFETY_MACHINES: Record<string, ExerciseSafety> = {
       {
         at: 'lowerBack',
         how: 'Press tanani ushlay olmasa, bel pastga osiladi — bel umurtqalari orqaga egilib siqiladi.',
-        mod: 'Qisqa masofa (devorga qarab dumalating), dumbani qisib tosni «buring»; og‘riq bo‘lsa — planka yoki «o‘lik qo‘ng‘iz».',
+        mod: 'Tavsiya etilmaydi: planka yoki «o‘lik qo‘ng‘iz». Shifokor ruxsati bilan — qisqa masofa (devorga qarab dumalating), dumbani qisib tosni orqaga «o‘rang».',
       },
       {
         at: 'shoulder',

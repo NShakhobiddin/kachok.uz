@@ -61,6 +61,16 @@ const BASE: Record<string, ExerciseSafety> = {
     why: 'Og‘ir shtanga umurtqa ustida: xato belga katta bosim beradi, ko‘tara olmasangiz shtanga ostida qolish xavfi bor.',
     joints: [
       {
+        at: 'shoulder',
+        how: 'Shtangani past va tor ushlash yelkani kuchli tashqariga buradi — yelka old qismi va bilakka bosim tushadi.',
+        mod: 'Ushlashni kengroq qiling, tirsaklar pastga; og‘riq qolsa — old o‘tirish, gakk-mashina yoki oyoq press.',
+      },
+      {
+        at: 'neck',
+        how: 'Shtanga bo‘yin umurtqasi ustiga (trapetsiya o‘rniga) qo‘yilsa, bo‘yinga bevosita bosim tushadi; boshni yuqoriga ko‘tarish ham bo‘yinni zo‘riqtiradi.',
+        mod: 'Shtangani trapetsiya mushagi ustiga qo‘ying, nigoh 2 m oldinda; og‘riq bo‘lsa — kubok o‘tirish yoki oyoq press.',
+      },
+      {
         at: 'lowerBack',
         how: 'Pastki nuqtada bel dumaloqlanishi («butt wink») yoki tik turishda belni ortiqcha egish disk va bo‘g‘imchalarga yuklamani oshiradi.',
         mod: 'Tavsiya etilmaydi: kubok o‘tirish, gakk-mashina yoki oyoq press — umurtqaga o‘q yuklamasi kam. Shifokor ruxsati bilan: yengil vazn, qutiga o‘tirish (box squat), bel tekis qoladigan chuqurlik.',
@@ -85,6 +95,11 @@ const BASE: Record<string, ExerciseSafety> = {
     risk: 3,
     why: 'Og‘ir shtanga old yelkada: umurtqaga bosim orqa o‘tirishdan kam va shtangani oldinga tashlash oson, lekin tirsaklar tushsa shtanga bilan oldinga qulash mumkin.',
     joints: [
+      {
+        at: 'hip',
+        how: 'Chuqur o‘tirishda son tosga ko‘p bukiladi — tos-son bo‘g‘imida qisilish (impingement) yoki og‘riq bo‘lsa, pastki nuqtada zo‘riqadi.',
+        mod: 'Chuqurlikni og‘riqsiz nuqtagacha cheklang (qutiga o‘tirish), oyoqlarni biroz kengroq va uchlarini tashqariga qo‘ying; og‘riq qolsa — vaznni kamaytiring.',
+      },
       {
         at: 'wrist',
         how: 'Klassik ushlashda bilak keskin orqaga bukiladi — harakatchanlik yetmasa bilak va tirsak zo‘riqadi.',
@@ -111,6 +126,11 @@ const BASE: Record<string, ExerciseSafety> = {
     why: 'Yuklama old tomonda va nisbatan yengil: gavda tik qoladi, ko‘tara olmasangiz gantelni shunchaki polga qo‘yasiz.',
     joints: [
       {
+        at: 'hip',
+        how: 'Chuqur o‘tirishda son tosga ko‘p bukiladi — tos-son bo‘g‘imida qisilish (impingement) yoki og‘riq bo‘lsa, pastki nuqtada zo‘riqadi.',
+        mod: 'Chuqurlikni og‘riqsiz nuqtagacha cheklang (qutiga o‘tirish), oyoqlarni biroz kengroq va uchlarini tashqariga qo‘ying; og‘riq qolsa — vaznni kamaytiring.',
+      },
+      {
         at: 'knee',
         how: 'Tizzalar ichkariga qulasa yoki pastda «sakrasangiz» tizzaga yonlama bosim tushadi.',
         mod: 'Og‘riqsiz chuqurlik, qutiga o‘tirish; tovon ostiga yupqa taglik tizza burchagini qulaylashtiradi.',
@@ -124,6 +144,11 @@ const BASE: Record<string, ExerciseSafety> = {
     risk: 2,
     why: 'Yo‘nalish qotirilgan — muvozanat oson, lekin tana shtanga yo‘liga moslashadi: noto‘g‘ri oyoq holati tizza va belni zo‘riqtiradi.',
     joints: [
+      {
+        at: 'hip',
+        how: 'Chuqur o‘tirishda son tosga ko‘p bukiladi — tos-son bo‘g‘imida qisilish (impingement) yoki og‘riq bo‘lsa, pastki nuqtada zo‘riqadi.',
+        mod: 'Chuqurlikni og‘riqsiz nuqtagacha cheklang (qutiga o‘tirish), oyoqlarni biroz kengroq va uchlarini tashqariga qo‘ying; og‘riq qolsa — vaznni kamaytiring.',
+      },
       {
         at: 'knee',
         how: 'Oyoqlar to‘g‘ri shtanga ostida bo‘lsa, tizzalar haddan oldinga chiqib, tizza qopqog‘i ostiga bosim oshadi.',
@@ -144,6 +169,11 @@ const BASE: Record<string, ExerciseSafety> = {
     risk: 2,
     why: 'Juda og‘ir vazn ko‘tariladi: pastda tos o‘rindiqdan uzilsa bel bukiladi, tepada tizzani «qulflash» tizzaning teskari bukilishiga olib kelishi mumkin.',
     joints: [
+      {
+        at: 'hip',
+        how: 'Platforma juda past tushsa, tos o‘rindiqdan ko‘tarilib, son qoringa yaqinlashadi — tos-son bo‘g‘imining old qismi qisiladi.',
+        mod: 'Amplitudani tos o‘rindiqdan uzilmaydigan nuqtagacha cheklang; oyoqlarni platformada biroz yuqoriroq va kengroq qo‘ying.',
+      },
       {
         at: 'knee',
         how: 'Tepada tizzani to‘liq qulflash og‘ir vaznda tizzani orqaga bukib yuborishi mumkin; chuqur pastda tizzaga bosim ortadi.',
@@ -167,6 +197,11 @@ const BASE: Record<string, ExerciseSafety> = {
     risk: 2,
     why: 'Og‘ir vazn yelkada, yo‘nalish qotirilgan: chuqur pastda tizzaga yuklama katta, xavfsizlik ilgaklari yoqilmasa ostida qolish mumkin.',
     joints: [
+      {
+        at: 'hip',
+        how: 'Chuqur o‘tirishda son tosga ko‘p bukiladi — tos-son bo‘g‘imida qisilish (impingement) yoki og‘riq bo‘lsa, pastki nuqtada zo‘riqadi.',
+        mod: 'Chuqurlikni og‘riqsiz nuqtagacha cheklang (qutiga o‘tirish), oyoqlarni biroz kengroq va uchlarini tashqariga qo‘ying; og‘riq qolsa — vaznni kamaytiring.',
+      },
       {
         at: 'knee',
         how: 'Chuqur pastda va tovonlar ko‘tarilganda tizza qopqog‘i ostiga yuklama keskin oshadi.',
@@ -475,6 +510,11 @@ const BASE: Record<string, ExerciseSafety> = {
     why: 'Butun tana vazni yelkaga eng noqulay holatda tushadi: pastda yelka chuqur orqaga cho‘ziladi — yelka oldi, o‘mrov uchi va to‘sh-o‘mrov bo‘g‘imi zo‘riqadi.',
     joints: [
       {
+        at: 'wrist',
+        how: 'Butun tana vazni yozilgan bilakka tushadi — bilak orqaga egilib qolsa, bilak bo‘g‘imi zo‘riqadi.',
+        mod: 'Bilakni tekis tuting (kaft dasta ustida, bilak bilan bir chiziqda); og‘riq bo‘lsa — gravitronda yoki tor ushlab yotib jim.',
+      },
+      {
         at: 'shoulder',
         how: 'Pastki nuqtada yelka chuqur orqaga cho‘zilgan — yelka oldi kapsulasi, bitseps uzun boshi payi va o‘mrov uchi bo‘g‘imi yuklanadi.',
         mod: 'Tavsiya etilmaydi: tor ushlab yotib jim, blokda triseps yoki ko‘krak press trenajyori. Shifokor ruxsati bilan — yelka tirsak sathigacha tushadigan qisqa amplituda, yengillashtiruvchi trenajyor.',
@@ -565,9 +605,14 @@ const BASE: Record<string, ExerciseSafety> = {
     why: 'Shtanga yuz va bosh ustidan o‘tadi: bel orqaga egilsa umurtqa siqiladi, shtanga iyak yoki burunga urilishi mumkin.',
     joints: [
       {
+        at: 'wrist',
+        how: 'Shtanga barmoqlarda qolib bilak orqaga egilsa — og‘ir vazn bilak bo‘g‘imiga tushadi.',
+        mod: 'Shtangani kaft asosida, bilak bilan bir chiziqda ushlang; kerak bo‘lsa — bilak bandaji.',
+      },
+      {
         at: 'shoulder',
         how: 'Yelka harakatchanligi yetmasa, shtanga tepaga emas, oldinga ketadi va bu bel egilishi bilan «to‘ldiriladi»; yelka tepasida qisilish.',
-        mod: 'Yengilroq vazn yoki o‘tirib gantel jimi neytral ushlash bilan; landmin jimi (shtanganing bir uchi polda) — yelka uchun qulayroq.',
+        mod: 'Tavsiya etilmaydi: o‘tirib gantel jimi neytral ushlash bilan yoki landmin jimi (shtanganing bir uchi polda) — yelka uchun qulayroq. Shifokor ruxsati bilan — yengil vazn, og‘riqsiz amplituda.',
       },
       {
         at: 'lowerBack',
@@ -897,6 +942,11 @@ const BASE: Record<string, ExerciseSafety> = {
     why: 'Og‘ir shtanga yuz va ko‘krak ustida: ko‘tara olmasangiz ostida qolish xavfi; tor ushlash bilakni zo‘riqtiradi.',
     joints: [
       {
+        at: 'shoulder',
+        how: 'Pastki nuqtada yelka oldi cho‘ziladi; tirsaklar yonga yoyilsa, yelka bo‘g‘imi qisiladi.',
+        mod: 'Tirsaklar tanaga yaqin (~30–45°), amplitudani og‘riqsiz nuqtagacha cheklang; og‘riq bo‘lsa — blokda triseps.',
+      },
+      {
         at: 'wrist',
         how: 'Juda tor ushlashda bilak ichkariga va orqaga bukilib zo‘riqadi.',
         mod: 'Ushlash yelka kengligida (juda tor emas), shtanga kaft asosida; bilak bog‘ichi.',
@@ -916,6 +966,11 @@ const BASE: Record<string, ExerciseSafety> = {
     risk: 2,
     why: 'Qo‘llar tanadan orqada: yelka chuqur orqaga cho‘zilgan va ichkariga buralgan holatda yuklanadi — yelka oldi qisilishiga moyil.',
     joints: [
+      {
+        at: 'wrist',
+        how: 'Kaftlar skameyka chetida, bilak keskin orqaga bukilgan holatda tana vaznini ushlaydi.',
+        mod: 'Barmoqlar oldinga qaragan, kaft to‘liq skameykada bo‘lsin; og‘riq bo‘lsa — blokda triseps.',
+      },
       {
         at: 'shoulder',
         how: 'Pastki nuqtada yelka haddan orqaga cho‘zilgan va ichkariga buralgan — yelka oldi va o‘mrov uchi bo‘g‘imi zo‘riqadi.',
@@ -962,7 +1017,18 @@ const BASE: Record<string, ExerciseSafety> = {
   'cable-crunch': {
     risk: 1,
     why: 'Blokda, tiz cho‘kib — xavf past.',
-    joints: [],
+    joints: [
+      {
+        at: 'lowerBack',
+        how: 'Og‘irlik bilan umurtqani bukish — disk bilan bog‘liq bel og‘rig‘ida yuklama oshadi.',
+        mod: 'Yengil vazn, harakat faqat qovurg‘alardan (tos qimirlamaydi); og‘riq bo‘lsa — «o‘lik qo‘ng‘iz» yoki planka.',
+      },
+      {
+        at: 'neck',
+        how: 'Arqonni bosh bilan tortish yoki boshni keskin oldinga egish bo‘yinni zo‘riqtiradi.',
+        mod: 'Arqonni qo‘llar bilan bosh yonida ushlang, bo‘yin neytral; harakat qorindan.',
+      },
+    ],
     check: [C.stack, 'Tizza ostida yumshoq yostiq.'],
     stop: [S.back],
   },
@@ -970,6 +1036,11 @@ const BASE: Record<string, ExerciseSafety> = {
     risk: 1,
     why: 'O‘z vazni bilan, qisqa amplituda — xavf past. Asosiy xato — boshni qo‘llar bilan tortish.',
     joints: [
+      {
+        at: 'lowerBack',
+        how: 'Ko‘p marta takrorlanadigan umurtqa bukilishi disk bilan bog‘liq bel og‘rig‘ini kuchaytirishi mumkin.',
+        mod: 'Amplitudani qisqartiring (faqat kuraklar ko‘tariladi); og‘riq bo‘lsa — «o‘lik qo‘ng‘iz» yoki planka.',
+      },
       {
         at: 'neck',
         how: 'Qo‘llar bilan boshni oldinga tortish bo‘yin umurtqalarini bukadi.',

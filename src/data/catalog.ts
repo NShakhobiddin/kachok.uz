@@ -188,7 +188,7 @@ export const BENEFITS: Record<BenefitId, { name: string; icon: string; x: number
     icon: 'spine',
     x: 50,
     y: 52,
-    text: "Kuraklarni orqaga tortuvchi mushaklar kuchaysa, yelkalar oldinga egilmaydi — telefon va kompyuter ortidagi «bukchayish» kamayadi.",
+    text: 'Gavdani tik ushlovchi mushaklar (kurak, bel, qorin va dumba) kuchaysa, uzoq o‘tirish va «bukchayish»dan keladigan noqulaylik kamayishi mumkin.',
     source: 'westcott2012',
   },
   backHealth: {

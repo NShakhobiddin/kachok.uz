@@ -681,7 +681,13 @@ export function weeklyVolume(program: Pick<Program, 'days'>): Record<MuscleGroup
 
 export function addVolume(out: Record<MuscleGroup, number>, ex: Exercise, sets: number) {
   const prim = new Set(ex.primary.map((m) => MUSCLES[m].group));
-  const sec = new Set(ex.secondary.map((m) => MUSCLES[m].group).filter((g) => !prim.has(g)));
+  // ushlash (bilak) ikkilamchi bo'lsa — bitseps hajmiga qo'shilmaydi: o'lik tortish va shrug bitsepsni o'stirmaydi
+  const sec = new Set(
+    ex.secondary
+      .filter((m) => m !== 'forearms')
+      .map((m) => MUSCLES[m].group)
+      .filter((g) => !prim.has(g)),
+  );
   prim.forEach((g) => (out[g] += sets));
   sec.forEach((g) => (out[g] += sets * 0.5));
 }

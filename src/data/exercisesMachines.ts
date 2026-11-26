@@ -203,7 +203,7 @@ export const MACHINE_EXERCISES: Exercise[] = [
     ],
     benefits: [
       { id: 'balance', text: 'Dumbaning o‘rta mushagi bir oyoqda turish, yurish va zinapoyaga chiqishda tosni tekis ushlaydi.' },
-      { id: 'joints', text: 'Son bo‘g‘imini yon tomondan barqarorlashtiruvchi mushaklarni kuchaytiradi.' },
+      { id: 'joints', text: 'Tos-son bo‘g‘imini yon tomondan barqarorlashtiruvchi mushaklarni kuchaytiradi.' },
     ],
     anim: hipAbduction(),
   },
@@ -279,7 +279,7 @@ export const MACHINE_EXERCISES: Exercise[] = [
       'Tayanch oyoq tizzasi yengil bukik, qorin tarang.',
     ],
     steps: [
-      'Ishchi oyoqni sondan orqaga uzating — tizza deyarli qimirlamaydi, harakat son bo‘g‘imida.',
+      'Ishchi oyoqni sondan orqaga uzating — tizza deyarli qimirlamaydi, harakat tos-son bo‘g‘imida.',
       'Oyoq gavda chizig‘iga yetganda dumbani 1 soniya qising.',
       'Nazorat bilan oldinga qaytaring — tros bo‘shab qolmasin.',
       'Bir tomonni tugatib, ikkinchi oyoqqa o‘ting.',
@@ -293,7 +293,7 @@ export const MACHINE_EXERCISES: Exercise[] = [
     mistakes: [
       {
         title: 'Bel egilib ketadi',
-        why: 'Oyoq tos chizig‘idan yuqoriga «otilsa», harakat dumbadan belga o‘tadi — bel bo‘g‘imchalari siqiladi.',
+        why: 'Oyoq gavda chizig‘idan yuqoriga «otilsa», harakat dumbadan belga o‘tadi — bel bo‘g‘imchalari siqiladi.',
         fix: 'Amplitudani gavda chizig‘igacha cheklang, qorinni tarang qiling, vaznni kamaytiring.',
         demo: { set: [{ kf: 2, pose: { torso: 8, head: 12, th: 236, sh: 246 } }, { kf: 3, pose: { torso: 8, head: 12, th: 236, sh: 246 } }] },
       },
@@ -373,7 +373,7 @@ export const MACHINE_EXERCISES: Exercise[] = [
     loadType: 'machine',
     increment: 5,
     setup: [
-      'O‘tirib, oyoq panjalarini (kaftning old qismini) platforma chetiga qo‘ying — tovonlar havoda.',
+      'O‘tirib, oyoq panjalarini (oyoq kaftining old qismini) platforma chetiga qo‘ying — tovonlar havoda.',
       'Tizza yostig‘ini sonning pastki qismiga, tizzadan biroz yuqoriga mahkam tushiring.',
       'Tovonni biroz ko‘tarib, ushlagichni (stoporni) oling.',
     ],
@@ -463,7 +463,7 @@ export const MACHINE_EXERCISES: Exercise[] = [
     equipment: ['tbar'],
     level: 2,
     score: 8,
-    loadType: 'barbell',
+    loadType: 'machine',
     increment: 2.5,
     avoid: ['lowerBack'],
     setup: [
@@ -480,6 +480,7 @@ export const MACHINE_EXERCISES: Exercise[] = [
       'Gavda burchagi o‘zgarmasin — ko‘krak bilan grifga «yetib bormang»',
       'Neytral ushlash (kaftlar bir-biriga qaragan) bilakka qulay',
       'Grif bir uchidan qotirilgan: yo‘li yoy bo‘ylab, shtanga bilan tortishdan muvozanat osonroq',
+      'Jurnalga faqat taqilgan disklar og‘irligini yozing — grif og‘irligi qo‘shilmaydi',
     ],
     breathing: BREATH_PULL,
     mistakes: [
@@ -513,7 +514,7 @@ export const MACHINE_EXERCISES: Exercise[] = [
     primary: ['biceps'],
     secondary: ['forearms'],
     equipment: ['preacher'],
-    equipmentAny: ['ezBar', 'dumbbells'],
+    equipmentAny: ['ezBar', 'barbell'],
     level: 1,
     score: 7,
     loadType: 'barbell',
@@ -522,7 +523,7 @@ export const MACHINE_EXERCISES: Exercise[] = [
     setup: [
       'O‘rindiq balandligini shunday sozlangki, qo‘ltiq yostiqning yuqori chetiga tegib tursin.',
       'Qo‘lning yuqori qismini (tirsakdan qo‘ltiqqacha) yostiqqa to‘liq qo‘ying.',
-      'EZ-shtangani yelka kengligida, kaftlar yuqoriga qaragan holda ushlang (yoki bir qo‘lda gantel).',
+      'EZ-shtangani yelka kengligida, kaftlar yuqoriga qaragan holda ushlang.',
     ],
     steps: [
       'Shtangani yelka tomon bukib ko‘taring — qo‘l yostiqdan uzilmasin.',
@@ -532,7 +533,7 @@ export const MACHINE_EXERCISES: Exercise[] = [
     cues: [
       'Yelka qimirlamaydi — faqat tirsak bo‘g‘imi ishlaydi',
       'Eng og‘ir qismi — pastki yarmi: aynan shu yerda sekin ishlang',
-      'Tirsakka yaqin (pastki) qism o‘sishi uchun yaxshi qo‘shimcha — qiya skameykadagi bitseps bilan almashtirib turing',
+      'Cho‘zilgan (pastki) holatda yuklama katta — qiya skameykadagi bitseps bilan almashtirib turing',
     ],
     breathing: BREATH_PULL,
     mistakes: [
@@ -553,10 +554,7 @@ export const MACHINE_EXERCISES: Exercise[] = [
         fix: 'Qo‘ltiq yostiqqa bosilgan, dumba o‘rindiqda qolsin.',
       },
     ],
-    benefits: [
-      { id: 'grip', text: 'Qo‘l va bilak kuchi.' },
-      { id: 'joints', text: 'Tirsakni bukuvchi mushaklarni yelka qimirlamagan holda, nazoratli kuchaytiradi.' },
-    ],
+    benefits: [{ id: 'joints', text: 'Tirsakni bukuvchi mushaklarni yelka qimirlamagan holda, nazoratli kuchaytiradi.' }],
     anim: preacherCurl(),
   },
 
@@ -574,7 +572,8 @@ export const MACHINE_EXERCISES: Exercise[] = [
     score: 7,
     loadType: 'bodyweight',
     increment: 0,
-    caution: ['lowerBack', 'shoulder'],
+    caution: ['shoulder'],
+    avoid: ['lowerBack'],
     setup: [
       'Tizzalarni yumshoq gilam yoki yostiqqa qo‘yib tiz cho‘king.',
       'Rolikni yelkalar ostida, polda ikki qo‘l bilan ushlang.',

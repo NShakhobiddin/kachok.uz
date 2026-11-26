@@ -300,7 +300,7 @@ export const HOME_EXERCISES: Exercise[] = [
     steps: [
       'Tizzalarni oyoq uchlari yo‘nalishida yonga ochib, tosni to‘g‘ri pastga tushiring.',
       'Son polga parallel bo‘lguncha (yoki og‘riqsiz chuqurlikkacha) tushing — gavda tik, bel tekis.',
-      'Tovonlar orqali polni itarib turing, tepada dumbani qising.',
+      'Tovonlar orqali polni itarib, tik holatga qayting; tepada dumbani qising.',
     ],
     cues: ['Tizzalar oyoq uchlari ustida — ichkariga qulamasin', 'Yuk tos ostida tik pastga-yuqoriga yursin', 'Osonlashsa — og‘irroq gantel yoki pastda 2 soniya pauza'],
     breathing: BREATH_BRACE,
@@ -341,7 +341,7 @@ export const HOME_EXERCISES: Exercise[] = [
       'Orqa tizza polga yaqinlashguncha ikkala tizzani bukib to‘g‘ri pastga tushing.',
       'Old oyoq tovoni orqali itarib, boshlang‘ich holatga qayting. Barcha takrorlardan so‘ng oyoqni almashtiring.',
     ],
-    cues: ['Old boldir deyarli tik — tizza oyoq uchidan oshib ketmasin', 'Gavdani biroz oldinga engashtirsangiz — dumba ko‘proq ishlaydi', 'Orqaga qadam oldinga hamladan tizzaga yengilroq'],
+    cues: ['Old boldir deyarli tik, og‘irlik old oyoqning butun kaftida — tovon poldan uzilmasin', 'Gavdani biroz oldinga engashtirsangiz — dumba ko‘proq ishlaydi', 'Orqaga qadam oldinga hamladan tizzaga yengilroq'],
     breathing: BREATH_BRACE,
     mistakes: [
       { title: 'Old tizza ichkariga qulaydi', why: 'Tizzaga yonlama bosim tushadi.', fix: 'Tizzani ikkinchi-uchinchi barmoq yo‘nalishida ushlang.' },
@@ -353,7 +353,7 @@ export const HOME_EXERCISES: Exercise[] = [
     ],
     benefits: [
       { id: 'balance', text: 'Bir oyoqda tushish muvozanat va tos barqarorligini yaxshilaydi.' },
-      { id: 'joints', text: 'O‘ng va chap oyoq kuchidagi farqni tekislaydi.' },
+      { id: 'joints', text: 'Har bir oyoqni alohida ishlatib, tizza va tos atrofidagi mushaklarni mustahkamlaydi; o‘ng va chap oyoq kuchidagi farqni ham tekislaydi.' },
     ],
     anim: reverseLungeAnim(),
   },
@@ -381,7 +381,7 @@ export const HOME_EXERCISES: Exercise[] = [
     cues: [
       'Tos va yelkalar to‘g‘ri oldinga qarasin — burilmasin',
       'Old tizza oyoq uchi yo‘nalishida qoladi',
-      'Kesishuvni kichikdan boshlang — tizza yoki son bo‘g‘imida noqulaylik bo‘lsa, kamaytiring',
+      'Kesishuvni kichikdan boshlang — tizza yoki tos-son bo‘g‘imida noqulaylik bo‘lsa, kamaytiring',
     ],
     breathing: BREATH_BRACE,
     mistakes: [
@@ -390,7 +390,7 @@ export const HOME_EXERCISES: Exercise[] = [
     ],
     benefits: [
       { id: 'balance', text: 'Muvozanat va tos barqarorligi.' },
-      { id: 'joints', text: 'Oddiy hamladan ko‘ra dumbaning yon (o‘rta) mushagini ko‘proq ishlatadi.' },
+      { id: 'joints', text: 'Dumbaning yon (o‘rta) mushagini ham ishlatadi — bu mushak tos va tizzani barqaror ushlaydi.' },
     ],
     anim: curtsyLungeAnim(),
   },
@@ -413,7 +413,7 @@ export const HOME_EXERCISES: Exercise[] = [
     steps: [
       'Orqani devor bo‘ylab sirpantirib, son polga parallel bo‘lguncha tushing — tizzalar taxminan 90°.',
       'Tizzalar to‘piq ustida, orqa va bosh devorda. 20–60 soniya ushlang.',
-      'Devor bo‘ylab sirpanib turing.',
+      'Devor bo‘ylab yuqoriga sirpanib, tik turing.',
     ],
     cues: [
       'Tizzalar oyoq uchidan oldinga chiqsa — oyoqlarni devordan uzoqroq qo‘ying',
@@ -425,7 +425,10 @@ export const HOME_EXERCISES: Exercise[] = [
       { title: 'Tizzalar oldinga chiqib ketadi', why: 'Tizza qopqog‘i ostiga bosim oshadi.', fix: 'Oyoqlarni devordan uzoqroq qo‘ying — boldir tik bo‘lsin.' },
       { title: 'Qo‘llar bilan sonlarga tirash', why: 'Yuk qo‘llarga o‘tadi, son kam ishlaydi.', fix: 'Qo‘llarni oldinga cho‘zing.' },
     ],
-    benefits: [{ id: 'joints', text: 'Son oldi mushaklarini harakatsiz ushlab kuchaytiradi — tizzani takroriy bukmasdan.' }],
+    benefits: [
+      { id: 'joints', text: 'Son oldi mushaklarini harakatsiz ushlab kuchaytiradi — tizzani takroriy bukmasdan.' },
+      { id: 'heart', text: 'Muntazam izometrik mashq (ayniqsa devorga suyanib o‘tirish) tinch holatdagi qon bosimini pasaytirishda eng samarali mashqlardan biri.' },
+    ],
     anim: wallSitAnim(),
   },
 
@@ -445,10 +448,10 @@ export const HOME_EXERCISES: Exercise[] = [
     increment: 0,
     unilateral: true,
     caution: ['lowerBack'],
-    setup: ['Chalqancha yoting, bir oyoq kafti polda tosga yaqin, ikkinchi oyoq tizzada to‘g‘rilangan.', 'Qo‘llar yonda, kaftlar polda.'],
+    setup: ['Chalqancha yoting: bir oyoq kafti polda, tovon dumbadan taxminan 25–30 sm uzoqlikda; ikkinchi oyoq tizzada to‘g‘rilangan.', 'Qo‘llar yonda, kaftlar polda.'],
     steps: [
       'Polda turgan oyoq tovoni orqali itarib, tosni yelka va tizza bilan bir chiziqqa ko‘taring.',
-      'Erkin oyoq tayanch son bilan bir burchakda qolsin; tepada dumbani 1–2 soniya qising.',
+      'Erkin oyoq to‘g‘ri holda tayanch son bilan bir chiziqda qolsin; tepada dumbani 1–2 soniya qising.',
       'Sekin tushiring. Barcha takrorlardan so‘ng oyoqni almashtiring.',
     ],
     cues: [
@@ -493,7 +496,7 @@ export const HOME_EXERCISES: Exercise[] = [
       'Son pol bilan parallel bo‘lganda dumbani 1 soniya qising.',
       'Sekin qaytaring, tizza polga tegmasin. Barcha takrorlardan so‘ng oyoqni almashtiring.',
     ],
-    cues: ['Harakat son bo‘g‘imidan — bel egilmaydi', 'Son gavda chizig‘idan yuqoriga chiqmasin', 'Osonlashsa — tizzalar ustidan mini-lenta yoki to‘piqqa yengil yuk'],
+    cues: ['Harakat tos-son bo‘g‘imidan — bel egilmaydi', 'Son gavda chizig‘idan yuqoriga chiqmasin', 'Osonlashsa — tizzalar ustidan mini-lenta yoki to‘piqqa yengil yuk'],
     breathing: BREATH_PRESS,
     mistakes: [
       {
@@ -528,12 +531,12 @@ export const HOME_EXERCISES: Exercise[] = [
       'Sekin tushiring. Barcha takrorlardan so‘ng tomonni almashtiring.',
     ],
     cues: ['Gavda ko‘tarilgan oyoq tomonga og‘masin', 'Og‘irlik ikki kaft va tayanch tizzada teng', 'Qiyinlashtirish: tizzalar ustidan mini-lenta'],
-    breathing: BREATH_PRESS,
+    breathing: 'Tizzani ko‘tarayotganda nafas chiqaring, sekin tushirayotganda nafas oling.',
     mistakes: [
       { title: 'Gavdani qiyshaytirish', why: 'Oyoq tos aylanishi hisobiga ko‘tariladi, dumba kam ishlaydi.', fix: 'Amplitudani kamaytiring — tos pol bilan parallel qolsin.' },
       { title: 'Belni egish yoki bukish', why: 'Bel holati buzilib, yuk belga o‘tadi.', fix: 'Qorinni yengil taranglab, belni tekis ushlang.' },
     ],
-    benefits: [{ id: 'joints', text: 'Son bo‘g‘imini barqarorlashtiruvchi dumba o‘rta mushagini mashq qildiradi.' }],
+    benefits: [{ id: 'joints', text: 'Tos-son bo‘g‘imini barqarorlashtiruvchi dumba o‘rta mushagini mashq qildiradi.' }],
     anim: fireHydrantAnim(),
   },
   {
@@ -550,6 +553,7 @@ export const HOME_EXERCISES: Exercise[] = [
     loadType: 'bodyweight',
     increment: 0,
     unilateral: true,
+    caution: ['hip'],
     setup: [
       'Yonboshlab yoting: bosh pastki qo‘lda, sonlar oldinga taxminan 45°, tizzalar taxminan 90° bukik.',
       'Tovonlar, tizzalar va son suyaklari bir-birining ustida; ustki qo‘l tos ustida.',
@@ -560,7 +564,7 @@ export const HOME_EXERCISES: Exercise[] = [
       'Sekin yoping. Barcha takrorlardan so‘ng ikkinchi tomonga yoting.',
     ],
     cues: ['Tos orqaga ochilmasin — ustki son suyagi biroz oldinga «qulagan» holda qoladi', 'Harakat kichik — muhimi dumbaning yon qismini his qilish', 'Qiyinlashtirish: tizzalardan biroz yuqoriga mini-lenta'],
-    breathing: BREATH_PRESS,
+    breathing: 'Tizzani ochayotganda nafas chiqaring, sekin yopayotganda nafas oling.',
     mistakes: [
       { title: 'Tos orqaga ag‘dariladi', why: 'Tizza dumba emas, tos aylanishi hisobiga ochiladi.', fix: 'Amplitudani kamaytiring, ustki qo‘l bilan tosni ushlab turing.' },
       { title: 'Tez va silkitib bajarish', why: 'Mushak yuklamasi kamayadi.', fix: 'Ochishda 1 soniya, tepada 1 soniya, yopishda 2 soniya.' },
@@ -582,6 +586,7 @@ export const HOME_EXERCISES: Exercise[] = [
     loadType: 'bodyweight',
     increment: 0,
     unilateral: true,
+    caution: ['hip'],
     setup: [
       'Yonboshlab yoting, pastki tizza biroz bukik, ustki oyoq to‘g‘ri.',
       'Bosh pastki qo‘lda, tos va yelkalar bir tekislikda — oldinga ham, orqaga ham ag‘darilmasin.',
@@ -592,7 +597,7 @@ export const HOME_EXERCISES: Exercise[] = [
       'Sekin tushiring. Barcha takrorlardan so‘ng ikkinchi tomonga yoting.',
     ],
     cues: ['Oyoq gavda chizig‘ida yoki undan biroz orqada', 'Oyoq uchini shiftga burmang — aks holda son oldi ishlaydi', 'Baland emas — sekin va nazoratli'],
-    breathing: BREATH_PRESS,
+    breathing: 'Oyoqni ko‘tarayotganda nafas chiqaring, sekin tushirayotganda nafas oling.',
     mistakes: [
       {
         title: 'Oyoq oldinga ketadi',
@@ -603,7 +608,7 @@ export const HOME_EXERCISES: Exercise[] = [
       { title: 'Oyoq uchi shiftga qaraydi', why: 'Son tashqariga buriladi, ish son oldiga o‘tadi.', fix: 'Oyoq uchini oldinga yoki biroz pastga qarating.' },
     ],
     benefits: [
-      { id: 'joints', text: 'Son bo‘g‘imini yon tomondan barqarorlashtiruvchi mushaklarni kuchaytiradi.' },
+      { id: 'joints', text: 'Tos-son bo‘g‘imini yon tomondan barqarorlashtiruvchi mushaklarni kuchaytiradi.' },
       { id: 'balance', text: 'Kuchli dumba o‘rta mushagi bir oyoqda turganda tosni tekis ushlaydi.' },
     ],
     anim: sideLegRaiseAnim(),
@@ -629,7 +634,7 @@ export const HOME_EXERCISES: Exercise[] = [
     steps: [
       'Bir oyoq bilan yon tomonga kichik qadam tashlang — lenta tarang bo‘lsin.',
       'Ikkinchi oyoqni nazorat bilan yaqinlashtiring, lenta bo‘shab qolmasin.',
-      'Bir tomonga 10–15 qadam, so‘ng shuncha qaytib.',
+      'Bir tomonga 10–15 qadam yuring, so‘ng shuncha qadam bilan qayting.',
     ],
     cues: ['Gavda chayqalmasin, tos bir balandlikda yursin', 'Oyoq uchlari oldinga qaragan, tizzalar ichkariga qulamaydi', 'Lenta qanchalik pastda bo‘lsa (to‘piq, oyoq kafti) — shunchalik qiyin'],
     breathing: 'Bir tekis nafas oling — har qadamda nafasni ushlamang.',
@@ -641,7 +646,7 @@ export const HOME_EXERCISES: Exercise[] = [
         fix: 'Tizzalarni faol ravishda tashqariga ochib turing; yengilroq lenta oling.',
       },
     ],
-    benefits: [{ id: 'joints', text: 'Tos va tizzani barqarorlashtiruvchi dumba mushaklarini mashq qildiradi — razminkada ham qulay.' }],
+    benefits: [{ id: 'joints', text: 'Tos va tizzani barqarorlashtiruvchi dumba mushaklarini mashq qildiradi — isinishda ham qulay.' }],
     anim: lateralWalkAnim(),
   },
 
@@ -656,7 +661,7 @@ export const HOME_EXERCISES: Exercise[] = [
     secondary: ['glutes', 'calves'],
     equipment: ['fitball'],
     level: 2,
-    score: 3,
+    score: 5,
     loadType: 'bodyweight',
     increment: 0,
     caution: ['lowerBack'],
@@ -696,7 +701,8 @@ export const HOME_EXERCISES: Exercise[] = [
     score: 3,
     loadType: 'bodyweight',
     increment: 0,
-    caution: ['lowerBack', 'neck'],
+    caution: ['neck'],
+    avoid: ['lowerBack'],
     setup: ['Qorin bilan polga yoting, qo‘llar boshdan oldinga cho‘zilgan, oyoqlar to‘g‘ri.', 'Peshona polga yaqin, nigoh pastda.'],
     steps: [
       'Dumbani qisib, qo‘llar, ko‘krak va oyoqlarni poldan bir necha santimetr ko‘taring.',
@@ -815,6 +821,7 @@ export const HOME_EXERCISES: Exercise[] = [
     loadType: 'bodyweight',
     increment: 0,
     caution: ['wrist'],
+    unilateral: true,
     setup: ['To‘rt oyoqlab turing: kaftlar yelka ostida, tizzalar tos ostida, bel tabiiy tekis.'],
     steps: [
       'Qorinni yengil taranglab, bir qo‘lni oldinga va qarama-qarshi oyoqni orqaga gavda chizig‘igacha cho‘zing.',
@@ -852,7 +859,7 @@ export const HOME_EXERCISES: Exercise[] = [
     setup: ['Yonboshlab yoting: tirsak to‘g‘ri yelka ostida, bilak oldinga qaragan, oyoqlar ustma-ust.'],
     steps: [
       'Tosni ko‘tarib, tanani to‘piqdan boshgacha to‘g‘ri chiziqqa keltiring.',
-      'Ustki qo‘lni tosga qo‘ying yoki shiftga cho‘zing. 20–45 soniya ushlang.',
+      'Ustki qo‘lni tosga qo‘ying yoki shiftga cho‘zing. Belgilangan vaqt (odatda 20–60 soniya) ushlang.',
       'Sekin tushib, ikkinchi tomonni bajaring.',
     ],
     cues: ['Tos tushib ketmasin va orqaga ag‘darilmasin', 'Qiyin bo‘lsa — tizzalarni bukib, tizzaga tayanib bajaring', 'Tayanch yelkani quloqdan uzoqlashtiring'],
@@ -889,7 +896,7 @@ export const HOME_EXERCISES: Exercise[] = [
     setup: ['Chalqancha yoting, qo‘llar yonda, kaftlar polda.', 'Son tik, tizzalar 90° bukik — boldirlar polga parallel.'],
     steps: [
       'Qorinning pastki qismini qisib, tosni poldan ko‘taring — tizzalar ko‘krakka yaqinlashsin.',
-      'Tepada 1 soniya qising: belning pastki qismi poldan ozgina uziladi.',
+      'Tepada 1 soniya qising: dumba (tosning pastki qismi) poldan bir necha santimetr uziladi.',
       'Tosni umurtqama-umurtqa sekin tushiring — oyoqlar tushib ketmasin.',
     ],
     cues: ['Harakat — tosning «o‘ralishi», oyoqlarni silkitmang', 'Qo‘llar polni itarmaydi — faqat muvozanat uchun', 'Tizzalar burchagi o‘zgarmaydi'],
@@ -952,7 +959,7 @@ export const HOME_EXERCISES: Exercise[] = [
     setup: ['Otjimaniyaning yuqori holatida turing: kaftlar yelka ostida, tana boshdan tovongacha to‘g‘ri.'],
     steps: [
       'Bir tizzani ko‘krakka torting, so‘ng orqaga qaytaring va shu zahoti ikkinchi tizzani torting.',
-      'Oyoqlarni navbatma-navbat almashtiring, tos va yelkalar bir balandlikda qolsin. 20–40 soniya.',
+      'Oyoqlarni navbatma-navbat almashtiring, tos va yelkalar bir balandlikda qolsin. Belgilangan vaqt (odatda 20–60 soniya) davom ettiring.',
     ],
     cues: ['Avval sekin; texnika barqaror bo‘lsa — tezroq', 'Tos tepaga ko‘tarilmasin, bel osilmasin', 'Yelkalar kaftlar ustida'],
     breathing: 'Ritm bilan nafas oling — nafasni ushlamang.',

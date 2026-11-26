@@ -8,7 +8,8 @@ import type { BenefitId } from '../types';
 import { BodySilhouette } from './BodyMap';
 import { Icon } from './ui/Icon';
 
-export function BenefitMap({ items }: { items: { id: BenefitId; text: string }[] }) {
+/** generic=false — umumiy matn va manba ko‘rsatilmaydi (cho‘zilishlar: ular kuch mashqlari haqida) */
+export function BenefitMap({ items, generic = true }: { items: { id: BenefitId; text: string }[]; generic?: boolean }) {
   const [i, setI] = useState(0);
   const [paused, setPaused] = useState(false);
   const sk = useMemo(() => solveFront({ ua: 166, fa: 170 }, 50, 214), []);
@@ -49,8 +50,8 @@ export function BenefitMap({ items }: { items: { id: BenefitId; text: string }[]
                 </span>
               </span>
               <p style={{ fontSize: 15 }}>{cur.text}</p>
-              <p className="small muted">{info.text}</p>
-              {src && <span className="tiny faint">Manba: {src.short}</span>}
+              {generic && <p className="small muted">{info.text}</p>}
+              {generic && src && <span className="tiny faint">Manba: {src.short}</span>}
             </motion.div>
           </AnimatePresence>
         </div>

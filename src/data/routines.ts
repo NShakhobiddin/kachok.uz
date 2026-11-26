@@ -451,6 +451,6 @@ export function routineMinutes(r: Routine): number {
 }
 
 /** Uyda mashq qilsa bo'ladigan jihozlar (jihozsiz mashqlar ham shu bo'limda) */
-export const HOME_EQUIPMENT: EquipmentId[] = ['dumbbells', 'kettlebell', 'bands', 'miniBand', 'fitball', 'box', 'pullupBar'];
+export const HOME_EQUIPMENT: EquipmentId[] = ['dumbbells', 'kettlebell', 'bands', 'miniBand', 'fitball', 'box', 'pullupBar', 'abWheel'];
 export const isHomeExercise = (ex: Exercise) =>
   ex.equipment.every((e) => HOME_EQUIPMENT.includes(e)) && (!ex.equipmentAny || ex.equipmentAny.some((e) => HOME_EQUIPMENT.includes(e)));

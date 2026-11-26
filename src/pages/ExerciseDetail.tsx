@@ -293,7 +293,7 @@ export default function ExerciseDetail() {
           </Fold>
 
           <Fold icon={<Icon name="heart" size={18} />} title="Sog‘liq uchun foydasi" hint={`${ex.benefits.length} ta foyda`}>
-            <BenefitMap items={ex.benefits} />
+            <BenefitMap items={ex.benefits} generic={!stretch} />
           </Fold>
 
           {lift && (

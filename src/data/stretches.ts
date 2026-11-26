@@ -332,7 +332,7 @@ export const STRETCHES: Exercise[] = [
       'Dumbani tovonlar tomon tushirib, gavdani sonlar ustiga oldinga engashtiring.',
       'Qo‘llarni oldinga cho‘zib, kaftlarni polga qo‘ying; peshonani polga yoki yostiqqa qo‘ying.',
       'Har nafas chiqarishda dumbani tovonga, kaftlarni esa oldinga biroz uzoqroq cho‘zing.',
-      '30 soniya ushlang, so‘ng qo‘llarga tayanib sekin o‘tiring.',
+      'Belgilangan vaqt (odatda 30–45 soniya) ushlang, so‘ng qo‘llarga tayanib sekin o‘tiring.',
     ],
     cues: [
       'Yelka va bo‘yinni butunlay bo‘shashtiring',
@@ -456,7 +456,7 @@ export const STRETCHES: Exercise[] = [
     timed: true,
     hold: 45,
     perSide: true,
-    caution: ['wrist', 'shoulder'],
+    caution: ['wrist', 'shoulder', 'neck'],
     setup: ['Gilamchada to‘rt oyoqlab turing: kaftlar yelka ostida, tizzalar tos ostida.'],
     steps: [
       'Nafas olib, o‘ng qo‘lni yon tomondan shiftga ko‘taring — ko‘krakni oching va qo‘lga qarang.',
@@ -551,7 +551,7 @@ export const STRETCHES: Exercise[] = [
       'Dumbani qisib, tosni ostiga buring («dumni ichkariga») — orqa oyoq sonining old qismida taranglik paydo bo‘ladi.',
       'Gavdani tik saqlab, tosni asta 2–5 sm oldinga suring; belni egmang.',
       'Kuchaytirish uchun orqadagi oyoq tomonidagi qo‘lni boshdan yuqoriga cho‘zing.',
-      '30 soniya ushlang, so‘ng oyoqlarni almashtiring.',
+      'Belgilangan vaqt (odatda 30–40 soniya) ushlang, so‘ng oyoqlarni almashtiring.',
     ],
     cues: [
       'Cho‘zilish orqa oyoq sonining yuqori old qismida va chovda (yonbosh-bel mushagi — iliopsoas) sezilsin, belda emas',
@@ -587,7 +587,8 @@ export const STRETCHES: Exercise[] = [
     timed: true,
     hold: 30,
     perSide: true,
-    caution: ['knee', 'hip'],
+    caution: ['hip'],
+    avoid: ['knee'],
     setup: [
       'To‘rt oyoqlab turing. Dumba ostiga qo‘yish uchun yostiq yoki buklangan adyolni yoningizda tayyorlang.',
     ],
@@ -595,7 +596,7 @@ export const STRETCHES: Exercise[] = [
       'O‘ng tizzani oldinga, o‘ng kaft orqasiga olib keling; boldirni gilamchaga qiya qo‘ying (tovon chap son oldida).',
       'Chap oyoqni orqaga to‘g‘ri cho‘zing, oyoq kaftining usti polda; tos tekis — ikkala yonbosh oldinga qarasin.',
       'Qo‘llarga tayanib gavdani tik tuting, so‘ng xohlasangiz belni to‘g‘ri saqlab oldinga engashing.',
-      '30 soniya ushlang, so‘ng tomonni almashtiring.',
+      'Belgilangan vaqt (odatda 30–40 soniya) ushlang, so‘ng tomonni almashtiring.',
     ],
     cues: [
       'Cho‘zilish oldingi oyoq dumbasida (noksimon mushak) sezilsin, tizzada emas',
@@ -634,7 +635,7 @@ export const STRETCHES: Exercise[] = [
     caution: ['knee'],
     setup: [
       'Gilamchada chalqancha yoting, tizzalar bukik, oyoq kaftlari polda.',
-      'O‘ng to‘piqni chap tizzaning biroz pastiga, son ustiga qo‘ying; o‘ng tizzani yon tomonga oching.',
+      'O‘ng to‘piqni chap sonning tizzaga yaqin qismiga qo‘ying — to‘piq suyagi sondan biroz tashqariga chiqib tursin; o‘ng tizzani yon tomonga oching.',
     ],
     steps: [
       'O‘ng oyoq panjasini o‘zingizga torting — bu tizzani himoya qiladi.',
@@ -650,7 +651,7 @@ export const STRETCHES: Exercise[] = [
     breathing: BREATH_STRETCH,
     mistakes: [
       { title: 'Boshni ko‘tarish', why: 'Bo‘yin va yelka zo‘riqadi, tana bo‘shashmaydi.', fix: 'Bosh polda qolsin; qo‘l yetmasa — son orqasiga sochiq ilib torting.' },
-      { title: 'Oyoq panjasini bo‘sh qoldirish', why: 'To‘piq qayrilib, tizzaga buruvchi kuch tushadi.', fix: 'Oyoq panjasini o‘zingizga torting, to‘piqni tizza ustidan biroz o‘tkazing.' },
+      { title: 'Oyoq panjasini bo‘sh qoldirish', why: 'To‘piq qayrilib, tizzaga buruvchi kuch tushadi.', fix: 'Oyoq panjasini o‘zingizga torting, to‘piq suyagi sondan biroz tashqariga chiqib tursin.' },
       { title: 'Og‘riqqacha tortish', why: 'Mushak himoya refleksi bilan qisqaradi va cho‘zilish kamayadi.', fix: 'Yoqimli taranglikda (10 dan 4–6) ushlang, chuqurlashtirishni nafas chiqarishda qiling.' },
     ],
     benefits: [
@@ -675,7 +676,7 @@ export const STRETCHES: Exercise[] = [
     increment: 0,
     timed: true,
     hold: 30,
-    caution: ['knee'],
+    caution: ['knee', 'hip'],
     setup: [
       'Polga o‘tiring, oyoq kaftlarini bir-biriga tegizib, tovonlarni chovga tomon torting.',
       'Bel bukchaysa — dumba ostiga buklangan adyol yoki yostiq qo‘ying.',
@@ -684,7 +685,7 @@ export const STRETCHES: Exercise[] = [
       'Oyoq kaftlarini qo‘llar bilan ushlang, umurtqani tik cho‘zing.',
       'Tizzalarni yon tomonlarga erkin tushiring — og‘irlik kuchi ishlasin.',
       'Chuqurlashtirish uchun belni to‘g‘ri saqlab, tosdan biroz oldinga engashing.',
-      '30 soniya ushlang.',
+      'Belgilangan vaqt (odatda 30–45 soniya) ushlang.',
     ],
     cues: [
       'Tizzalarni qo‘l bilan pastga bosmang — o‘z-o‘zidan tushsin',
@@ -944,7 +945,7 @@ export const STRETCHES: Exercise[] = [
     cues: [
       'Qo‘l tortmaydi — faqat og‘irlik qo‘shadi',
       'Iyakni biroz pastga tushirsangiz — cho‘zilish bo‘yin ortiga o‘tadi',
-      'Uvishish, bosh aylanishi yoki qo‘lga tarqaluvchi og‘riq bo‘lsa — to‘xtating',
+      'Uvishish, bosh aylanishi yoki qo‘lga tarqaluvchi og‘riq bo‘lsa — darhol to‘xtang',
     ],
     breathing: BREATH_STRETCH,
     mistakes: [
