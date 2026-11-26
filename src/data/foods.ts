@@ -2,7 +2,7 @@
 // Asosiy mahsulotlar: USDA FoodData Central. Milliy taomlar: an'anaviy retseptlar bo'yicha hisoblangan o'rtacha qiymat
 // (oshxonaga qarab ±20% farq qiladi). Porsiyalar — O'zbekistondagi odatiy idish va dona o'lchamlari.
 
-export type FoodCat = 'dish' | 'meat' | 'dairy' | 'grain' | 'veg' | 'fruit' | 'nut' | 'fat' | 'sweet' | 'drink' | 'fast';
+export type FoodCat = 'recipe' | 'dish' | 'meat' | 'dairy' | 'grain' | 'veg' | 'fruit' | 'nut' | 'fat' | 'sweet' | 'drink' | 'fast';
 
 export interface FoodItem {
   id: string;
@@ -16,9 +16,12 @@ export interface FoodItem {
   c: number;
   /** odatiy porsiyalar; birinchisi — standart */
   units?: { name: string; g: number }[];
+  /** grammda kiritib bo‘lmaydi (retsept — faqat porsiya) */
+  noGram?: boolean;
 }
 
 export const FOOD_CATS: Record<FoodCat, string> = {
+  recipe: 'GYMbos retseptlari',
   dish: 'Milliy taomlar',
   meat: 'Go‘sht, baliq, tuxum',
   dairy: 'Sut mahsulotlari',
@@ -177,11 +180,11 @@ export function normalize(s: string): string {
     .trim();
 }
 
-export function searchFoods(q: string, limit = 40): FoodItem[] {
+export function searchFoods(q: string, limit = 40, list: FoodItem[] = FOOD_DB): FoodItem[] {
   const n = normalize(q);
-  if (!n) return FOOD_DB.slice(0, limit);
+  if (!n) return list.slice(0, limit);
   const words = n.split(' ');
-  return FOOD_DB.map((f) => {
+  return list.map((f) => {
     const hay = normalize(`${f.name} ${f.alt ?? ''}`);
     if (!words.every((w) => hay.includes(w))) return null;
     // so'z boshida mos kelsa — yuqoriroq

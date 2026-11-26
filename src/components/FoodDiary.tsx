@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FOOD_CATS, FOOD_DB, FOOD_MAP, portion, searchFoods, type FoodCat, type FoodItem } from '../data/foods';
+import { RECIPE_FOODS } from '../data/recipes';
 import type { NutritionPlan, TdeeEstimate } from '../engine/nutrition';
 import { fmtDate, isoDate } from '../lib/date';
 import { useDateKey } from '../lib/useToday';
@@ -34,7 +35,12 @@ export function sumEntries(list: Pick<FoodEntry, 'kcal' | 'p' | 'f' | 'c'>[]) {
   return list.reduce((a, e) => ({ kcal: a.kcal + e.kcal, p: a.p + e.p, f: a.f + e.f, c: a.c + e.c }), { kcal: 0, p: 0, f: 0, c: 0 });
 }
 
-export function FoodDiary({ np }: { np: NutritionPlan }) {
+/** kundalikdagi qidiruv: mahsulotlar + GYMbos retseptlari (porsiya bilan) */
+const ALL_FOODS: FoodItem[] = [...FOOD_DB, ...RECIPE_FOODS];
+const ALL_MAP: Record<string, FoodItem> = { ...FOOD_MAP, ...Object.fromEntries(RECIPE_FOODS.map((f) => [f.id, f])) };
+
+/** extra — bugungi kun ko‘rsatilganda yig‘indi kartasidan keyin (ovqat tavsiyasi) */
+export function FoodDiary({ np, extra }: { np: NutritionPlan; extra?: React.ReactNode }) {
   const food = useStore((s) => s.food);
   const removeFood = useStore((s) => s.removeFood);
   const addFood = useStore((s) => s.addFood);
@@ -91,6 +97,8 @@ export function FoodDiary({ np }: { np: NutritionPlan }) {
           <MacroLine label="Yog‘" value={tot.f} target={np.fat} color={MACRO_COLORS.f} />
         </div>
       </div>
+
+      {date === today && extra}
 
       {MEALS.map((name, m) => {
         const items = list.filter((e) => e.meal === m);
@@ -207,14 +215,14 @@ function AddFoodSheet({ open, meal, date, onClose }: { open: boolean; meal: Meal
     const out: FoodItem[] = [];
     for (let i = food.length - 1; i >= 0 && out.length < 8; i--) {
       const id = food[i].foodId;
-      if (id && FOOD_MAP[id] && !seen.has(id)) {
+      if (id && ALL_MAP[id] && !seen.has(id)) {
         seen.add(id);
-        out.push(FOOD_MAP[id]);
+        out.push(ALL_MAP[id]);
       }
     }
     return out;
   }, [food]);
-  const results = useMemo(() => (q.trim() ? searchFoods(q) : []), [q]);
+  const results = useMemo(() => (q.trim() ? searchFoods(q, 40, ALL_FOODS) : []), [q]);
   const add = (e: Omit<FoodEntry, 'id' | 'date' | 'meal'>) => {
     addFood({ ...e, id: uid(), date, meal: m });
     close();
@@ -256,7 +264,7 @@ function AddFoodSheet({ open, meal, date, onClose }: { open: boolean; meal: Meal
                     <span>{FOOD_CATS[cat]}</span>
                     <Icon name="down" size={16} />
                   </summary>
-                  <FoodList items={FOOD_DB.filter((f) => f.cat === cat)} onPick={setPick} />
+                  <FoodList items={ALL_FOODS.filter((f) => f.cat === cat)} onPick={setPick} />
                 </details>
               ))}
             </>
@@ -278,7 +286,7 @@ function FoodList({ items, onPick }: { items: FoodItem[]; onPick: (f: FoodItem) 
             <span className="stack" style={{ gap: 2, minWidth: 0, textAlign: 'left' }}>
               <span className="small strong">{f.name}</span>
               <span className="tiny faint num">
-                {u ? `1 ${u.name} (${u.g} g)` : '100 g'} · O {v.p} g
+                {u ? (f.noGram ? `1 ${u.name}` : `1 ${u.name} (${u.g} g)`) : '100 g'} · O {v.p} g
               </span>
             </span>
             <span className="small num" style={{ flex: 'none' }}>
@@ -291,7 +299,7 @@ function FoodList({ items, onPick }: { items: FoodItem[]; onPick: (f: FoodItem) 
   );
 }
 
-function MealChips({ meal, setMeal }: { meal: Meal; setMeal: (m: Meal) => void }) {
+export function MealChips({ meal, setMeal }: { meal: Meal; setMeal: (m: Meal) => void }) {
   return (
     <div className="row wrap gap-6" role="radiogroup" aria-label="Ovqat mahali">
       {MEALS.map((n, i) => (
@@ -316,7 +324,7 @@ function PortionStep({
   onBack: () => void;
   onAdd: (e: Omit<FoodEntry, 'id' | 'date' | 'meal'>) => void;
 }) {
-  const units = [...(food.units ?? []), { name: 'g', g: 1 }];
+  const units = [...(food.units ?? []), ...(food.noGram ? [] : [{ name: 'g', g: 1 }])];
   const [ui, setUi] = useState(0);
   const unit = units[ui];
   const isGram = unit.g === 1;
@@ -332,25 +340,28 @@ function PortionStep({
       <div>
         <h3 className="title">{food.name}</h3>
         <p className="tiny faint num mt-4">
-          100 g: {food.kcal} kkal · O {food.p} · U {food.c} · Y {food.f}
+          {food.noGram ? '1 porsiya' : '100 g'}: {food.kcal} kkal · O {food.p} · U {food.c} · Y {food.f}
         </p>
       </div>
-      <div className="row wrap gap-6" role="radiogroup" aria-label="O‘lchov birligi">
-        {units.map((u, i) => (
-          <button
-            key={u.name}
-            role="radio"
-            aria-checked={ui === i}
-            className={`chip sm ${ui === i ? 'on' : ''}`}
-            onClick={() => {
-              setUi(i);
-              setQty(u.g === 1 ? Math.round((qty * unit.g) / 10) * 10 || 100 : 1);
-            }}
-          >
-            {u.g === 1 ? 'gramm' : `${u.name} · ${u.g} g`}
-          </button>
-        ))}
-      </div>
+      {/* birlik bitta bo‘lsa (retsept — faqat porsiya) tanlov ko‘rsatilmaydi */}
+      {units.length > 1 && (
+        <div className="row wrap gap-6" role="radiogroup" aria-label="O‘lchov birligi">
+          {units.map((u, i) => (
+            <button
+              key={u.name}
+              role="radio"
+              aria-checked={ui === i}
+              className={`chip sm ${ui === i ? 'on' : ''}`}
+              onClick={() => {
+                setUi(i);
+                setQty(u.g === 1 ? Math.round((qty * unit.g) / 10) * 10 || 100 : 1);
+              }}
+            >
+              {u.g === 1 ? 'gramm' : food.noGram ? u.name : `${u.name} · ${u.g} g`}
+            </button>
+          ))}
+        </div>
+      )}
       <Stepper value={qty} onChange={setQty} step={isGram ? 10 : 0.5} min={isGram ? 5 : 0.5} max={isGram ? 3000 : 20} unit={isGram ? 'g' : unit.name} label="Miqdor" />
       <div className="card tight row between">
         <span className="stack" style={{ gap: 2 }}>
@@ -366,7 +377,7 @@ function PortionStep({
         </span>
       </div>
       <MealChips meal={meal} setMeal={setMeal} />
-      <button className="btn btn-primary btn-block" onClick={() => onAdd({ foodId: food.id, name: food.name, g, label, ...v })}>
+      <button className="btn btn-primary btn-block" onClick={() => onAdd({ foodId: food.id, name: food.name, ...(food.noGram ? {} : { g }), label, ...v })}>
         <Icon name="plus" size={18} /> Qo‘shish
       </button>
     </div>

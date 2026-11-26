@@ -1,8 +1,9 @@
 import { useMemo, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { LineChart, MacroBar } from '../components/charts';
 import { FoodDiary, TdeeCard } from '../components/FoodDiary';
 import { ProGate } from '../components/ProGate';
+import { MealIdeasCard, RecipeBrowser } from '../components/Recipes';
 import { Icon } from '../components/ui/Icon';
 import { Note } from '../components/ui/Fold';
 import { Sheet } from '../components/ui/Sheet';
@@ -12,6 +13,8 @@ import { ACTIVITY, NATIONAL_DISHES, SUPPLEMENTS, clampKcalAdjust, mealPlan, week
 import { fmtDate, isoDate } from '../lib/date';
 import { useNutrition } from '../lib/useNutrition';
 import { useStore } from '../store/useStore';
+
+type Tab = 'diary' | 'recipes' | 'plan';
 
 const GOAL_TEXT: Record<string, string> = {
   fatLoss: 'ozish',
@@ -31,14 +34,19 @@ export default function Nutrition() {
   const addBody = useStore((s) => s.addBody);
   const setSettings = useStore((s) => s.setSettings);
   const { np, est, adaptiveOn, useAdaptive } = useNutrition();
-  const [tab, setTabRaw] = useState<'diary' | 'plan'>(() => {
+  // ?r=<retsept> — to‘g‘ridan-to‘g‘ri retseptni ochish (bot xabari, ulashilgan havola)
+  const [params] = useSearchParams();
+  const deepRecipe = params.get('r');
+  const [tab, setTabRaw] = useState<Tab>(() => {
+    if (deepRecipe) return 'recipes';
     try {
-      return localStorage.getItem('kachok-ntab') === 'plan' ? 'plan' : 'diary';
+      const t = localStorage.getItem('kachok-ntab');
+      return t === 'plan' || t === 'recipes' ? t : 'diary';
     } catch {
       return 'diary';
     }
   });
-  const setTab = (t: 'diary' | 'plan') => {
+  const setTab = (t: Tab) => {
     setTabRaw(t);
     try {
       localStorage.setItem('kachok-ntab', t);
@@ -123,14 +131,17 @@ export default function Nutrition() {
         <button role="tab" aria-selected={tab === 'diary'} className={tab === 'diary' ? 'on' : ''} onClick={() => setTab('diary')}>
           Kundalik
         </button>
+        <button role="tab" aria-selected={tab === 'recipes'} className={tab === 'recipes' ? 'on' : ''} onClick={() => setTab('recipes')}>
+          Retseptlar
+        </button>
         <button role="tab" aria-selected={tab === 'plan'} className={tab === 'plan' ? 'on' : ''} onClick={() => setTab('plan')}>
-          Reja va bilim
+          Reja
         </button>
       </div>
 
       {tab === 'diary' && (
         <>
-          <FoodDiary np={np} />
+          <FoodDiary np={np} extra={<MealIdeasCard np={np} onAll={() => setTab('recipes')} />} />
           {weightSection}
           <section className="section">
             <div className="section-head">
@@ -140,6 +151,8 @@ export default function Nutrition() {
           </section>
         </>
       )}
+
+      {tab === 'recipes' && <RecipeBrowser initial={deepRecipe} />}
 
       {tab === 'plan' && (
         <>

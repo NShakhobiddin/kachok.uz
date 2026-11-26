@@ -3080,3 +3080,65 @@ ol.steps li::before {
   opacity: 1;
   cursor: default;
 }
+
+/* ---------- Retseptlar ---------- */
+.recipe-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 60px;
+  padding: 8px 0;
+  border-top: 1px solid var(--line);
+}
+.recipe-row:first-child {
+  border-top: 0;
+}
+.recipe-ico {
+  width: 42px;
+  height: 42px;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  flex: none;
+  font-size: 22px;
+  line-height: 1;
+  background: var(--surface-2);
+}
+.recipe-ico.lg {
+  width: 56px;
+  height: 56px;
+  border-radius: 18px;
+  font-size: 30px;
+}
+.recipe-steps {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: step;
+  display: grid;
+  gap: 10px;
+}
+.recipe-steps li {
+  counter-increment: step;
+  position: relative;
+  padding-left: 34px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--text-2);
+}
+.recipe-steps li::before {
+  content: counter(step);
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 12px;
+  font-weight: 800;
+  background: var(--accent-soft);
+  color: var(--accent);
+}
