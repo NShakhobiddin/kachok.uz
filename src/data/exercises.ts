@@ -2,6 +2,7 @@
 import type { Exercise } from '../types';
 import * as A from './anims';
 import { BREATH_BRACE, BREATH_PRESS, BREATH_PULL } from './exerciseText';
+import { EXTRA_EXERCISES } from './exercisesExtra';
 import { HOME_EXERCISES } from './exercisesHome';
 import { MACHINE_EXERCISES } from './exercisesMachines';
 import { STRETCHES } from './stretches';
@@ -1831,7 +1832,7 @@ const BASE: Exercise[] = [
 ];
 
 /** kuch mashqlari: dastur, mashg'ulot va statistika shu ro'yxatdan */
-export const EXERCISES: Exercise[] = [...BASE, ...HOME_EXERCISES, ...MACHINE_EXERCISES];
+export const EXERCISES: Exercise[] = [...BASE, ...HOME_EXERCISES, ...MACHINE_EXERCISES, ...EXTRA_EXERCISES];
 
 export { STRETCHES };
 

@@ -11,11 +11,12 @@ const parts = [
   ['U', 'docs/emg/pull.json'],
   ['H', 'docs/emg/home.json'],
   ['M', 'docs/emg/machines.json'],
+  ['X', 'docs/emg/extra.json'],
 ].map(([ns, p]) => ({ ns, ...read(p) }));
-const uz = { ...read('docs/emg/uz.json'), ...read('docs/emg/uz-home.json'), ...read('docs/emg/uz-machines.json') };
+const uz = { ...read('docs/emg/uz.json'), ...read('docs/emg/uz-home.json'), ...read('docs/emg/uz-machines.json'), ...read('docs/emg/uz-extra.json') };
 // kuch mashqlari (cho'zilishlarda EMG yo'q — ular faollik emas, cho'zilish)
 const ids = new Set(
-  ['exercises.ts', 'exercisesHome.ts', 'exercisesMachines.ts'].flatMap((f) =>
+  ['exercises.ts', 'exercisesHome.ts', 'exercisesMachines.ts', 'exercisesExtra.ts'].flatMap((f) =>
     [...readFileSync(new URL(`src/data/${f}`, root), 'utf8').matchAll(/\n {4}id: '([^']+)'/g)].map((m) => m[1]),
   ),
 );
@@ -70,7 +71,7 @@ if (problems.length) {
 }
 
 const header = `// Mashqlarda mushaklarning EMG faolligi (% MVIC). AVTOMATIK YARATILGAN — qo'lda tahrirlamang:
-// manba jadvallar docs/emg/{lower,push,pull,home,machines}.json, o'zbekcha izohlar docs/emg/uz*.json, skript scripts/build-activation.mjs.
+// manba jadvallar docs/emg/{lower,push,pull,home,machines,extra}.json, o'zbekcha izohlar docs/emg/uz*.json, skript scripts/build-activation.mjs.
 // est: true — qiymat to'g'ridan-to'g'ri o'lchanmagan (o'xshash mashq, tadqiqotdagi nisbiy farq yoki oraliq asosida baho).
 import type { M3 } from './muscles3d';
 

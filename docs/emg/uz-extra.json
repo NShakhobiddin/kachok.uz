@@ -1,0 +1,92 @@
+{
+ "straight-arm-pulldown": {
+  "similar": "lat-pulldown",
+  "load": "blokda o‘rtacha vazn, 10–15 takror",
+  "rom": "Keng orqa qo‘llar ko‘z sathidan sonlarga tushayotganda, ayniqsa pastki yarmida eng faol.",
+  "notes": "Bu mashq bo‘yicha EMG tadqiqot topilmadi: qiymatlar yuqori blokni tortishdan olingan baho, bitseps deyarli ishlamaydi."
+ },
+ "reverse-pec-deck": {
+  "similar": "reverse-fly",
+  "load": "yengil-o‘rta vazn, 12–20 takror",
+  "rom": "Orqa delta qo‘llar gavda chizig‘iga yaqinlashganda eng faol.",
+  "notes": "Qiymatlar lentani yoyishdan olingan baho: trenajyor yuklamani barqaror ushlaydi."
+ },
+ "db-reverse-fly": {
+  "similar": "reverse-fly",
+  "load": "yengil gantellar, 12–20 takror",
+  "rom": "Orqa delta tepada (qo‘llar yelka sathida) eng faol.",
+  "notes": "Qiymatlar lentani yoyishdan olingan baho; engashgan holat bel mushaklarini ham ishlatadi."
+ },
+ "lying-leg-curl": {
+  "similar": "leg-curl",
+  "load": "trenajyor, 10–15 takror",
+  "rom": "Son orqasi tizza bukilgan sari faolroq.",
+  "notes": "O‘tirib bukishdan olingan baho. Tadqiqotlarda o‘tirib bukish son orqasini ko‘proq o‘stirgan (son cho‘zilgan holatda) — ikkalasini almashtirib turish mumkin."
+ },
+ "db-lunge": {
+  "similar": "split-squat",
+  "load": "gantellar, har oyoqqa 8–12 takror",
+  "rom": "Son oldi va dumba pastki nuqtadan ko‘tarilishda eng faol; oldinga qadam to‘xtatish fazasini qo‘shadi.",
+  "notes": "Split-o‘tirishdan olingan baho."
+ },
+ "single-leg-rdl": {
+  "similar": "db-rdl",
+  "load": "tadqiqotda — o‘z vazni; ilovada — yengil gantel",
+  "rom": "Dumba va son orqasi pastki nuqtadan ko‘tarilishda eng faol; dumbaning o‘rta mushagi muvozanatni ushlaydi.",
+  "notes": "Katta va o‘rta dumba qiymatlari DiStefano 2009 da bir oyoqda o‘lik tortish uchun o‘lchangan (yuklamasiz); son orqasi va bel — baho."
+ },
+ "cable-overhead-extension": {
+  "similar": "overhead-extension",
+  "load": "blokda, 10–15 takror",
+  "rom": "Trisepsning uzun boshi qo‘llar bosh ustida — cho‘zilgan holatda kuchli yuklanadi.",
+  "notes": "Bosh ortidan gantel bilan trisepsdan olingan baho. Maeo 2023: bosh ustidagi holatda triseps pastga itarishdagidan ko‘proq o‘sgan."
+ },
+ "farmers-carry": {
+  "similar": "db-shrug",
+  "load": "og‘ir gantel yoki girya, 30–45 soniya",
+  "rom": "Yurish davomida doimiy (izometrik) faollik.",
+  "notes": "McGill 2009: fermer yurishida qorin, bel va dumbaning o‘rta mushaklari yuqori faol. Aniq foizlar — baho."
+ },
+ "pallof-press": {
+  "similar": "plank",
+  "load": "yengil blok yoki lenta",
+  "rom": "Qo‘llar to‘liq oldinga cho‘zilganda burilishga qarshi yuklama eng katta.",
+  "notes": "Pallof press bo‘yicha %MVIC tadqiqot topilmadi — baho."
+ },
+ "hanging-knee-raise": {
+  "similar": "hanging-leg-raise",
+  "load": "o‘z vazni",
+  "rom": "Press tepada, tos ko‘krak tomon buralganda eng faol.",
+  "notes": "Turnikda oyoq ko‘tarishdan olingan baho: tizza bukilgani uchun richag qisqa, faollik pastroq."
+ },
+ "sumo-deadlift": {
+  "similar": "deadlift",
+  "load": "og‘ir, 3–6 takror",
+  "rom": "Son oldi va dumba pastdan ko‘tarilishda, bel rostlovchilar tizza sathida eng faol.",
+  "notes": "Escamilla 2002: sumo uslubida tashqi va ichki son oldi mushaklari oddiy o‘lik tortishdagidan faolroq. Foizlar o‘lik tortish profilidan olingan baho."
+ },
+ "incline-push-up": {
+  "similar": "push-up",
+  "load": "o‘z vazni, qo‘llar ~45 sm balandlikda",
+  "rom": "Ko‘krak pastki nuqtadan itarishda eng faol.",
+  "notes": "Oddiy otjimaniyadan olingan baho: qo‘llar baland bo‘lgani uchun yuklama va faollik pastroq."
+ },
+ "nordic-curl": {
+  "similar": "leg-curl",
+  "load": "o‘z vazni, ekssentrik (sekin tushish)",
+  "rom": "Son orqasi tana oldinga engashib, tizza yozilgan sari eng kuchli yuklanadi.",
+  "notes": "Bourne 2017: Nordik bukilish son orqasini eng yuqori faollashtirgan mashqlardan, ayniqsa yarimpay mushakni. Foizlar — baho. Van Dyk 2019 meta-tahlili: son orqasi jarohatlarini qariyb ikki barobar kamaytiradi."
+ },
+ "lateral-lunge": {
+  "similar": "reverse-lunge",
+  "load": "o‘z vazni",
+  "rom": "Bukilgan oyoq son oldi va dumbasi pastki nuqtada, to‘g‘ri oyoq son ichki mushaklari cho‘zilishda ishlaydi.",
+  "notes": "Orqaga hamladan olingan baho."
+ },
+ "jump-squat": {
+  "similar": "bw-squat",
+  "load": "o‘z vazni",
+  "rom": "Sakrashdan oldingi itarish va qo‘nishda eng yuqori (cho‘qqi) faollik.",
+  "notes": "O‘z vazni bilan o‘tirishdan olingan cho‘qqi qiymat bahosi."
+ }
+}

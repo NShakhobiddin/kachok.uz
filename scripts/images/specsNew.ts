@@ -234,7 +234,7 @@ export const NEW_SPECS: Record<string, NewExerciseSpec> = {
   'nordic-curl': {
     uz: 'Nordik bukilish',
     en: 'Nordic Hamstring Curl',
-    why: 'Son orqasi jarohatini ~50% kamaytiradi (van der Horst 2015); uyda divan ostiga oyoqni qistirib.',
+    why: 'Son orqasi jarohatini qariyb ikki barobar kamaytiradi (van Dyk 2019 meta-tahlili); uyda divan ostiga oyoqni qistirib.',
     female: true,
     phase: 'the mid-lowering position, body leaning forward',
     phaseUz: 'Tushish',

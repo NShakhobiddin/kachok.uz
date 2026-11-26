@@ -1,0 +1,988 @@
+{
+ "meta": {
+  "compiled": "2026-11-26",
+  "scope": "Exercises added after the 2026-11 audit (src/data/exercisesExtra.ts).",
+  "verification": "Most values are estimates (estimate=true) from a similar exercise in the app, adjusted for the change in load or position. Direct values only where the cited study measured that exercise. DOIs only where confirmed.",
+  "estimateFlag": "estimate=true = interpolated from a similar exercise or judged; the range shows the uncertainty."
+ },
+ "exercises": {
+  "straight-arm-pulldown": {
+   "basis": "similar:lat-pulldown (shoulder extension with straight arms; no %MVIC study of the cable straight-arm pulldown was found)",
+   "load": "moderate cable load, 10-15 RM",
+   "metric": "mean",
+   "muscles": {
+    "lats": {
+     "mvic": 60,
+     "range": [
+      40,
+      80
+     ],
+     "src": [],
+     "estimate": true
+    },
+    "teresMajor": {
+     "mvic": 45,
+     "range": [
+      30,
+      65
+     ],
+     "src": [],
+     "estimate": true
+    },
+    "tricepsLong": {
+     "mvic": 40,
+     "range": [
+      25,
+      60
+     ],
+     "src": [],
+     "estimate": true
+    },
+    "deltPost": {
+     "mvic": 30,
+     "range": [
+      15,
+      45
+     ],
+     "src": [],
+     "estimate": true
+    },
+    "rectusAbdominis": {
+     "mvic": 15,
+     "range": [
+      5,
+      25
+     ],
+     "src": [],
+     "estimate": true
+    }
+   },
+   "ranking": [
+    "lats",
+    "teresMajor",
+    "tricepsLong",
+    "deltPost",
+    "rectusAbdominis"
+   ]
+  },
+  "reverse-pec-deck": {
+   "basis": "similar:reverse-fly (horizontal abduction against a machine; rear deltoid is the prime mover)",
+   "load": "light-moderate machine load, 12-20 RM",
+   "metric": "mean",
+   "muscles": {
+    "deltPost": {
+     "mvic": 80,
+     "range": [
+      55,
+      100
+     ],
+     "src": [],
+     "estimate": true
+    },
+    "trapMid": {
+     "mvic": 50,
+     "range": [
+      30,
+      70
+     ],
+     "src": [],
+     "estimate": true
+    },
+    "rhomboids": {
+     "mvic": 45,
+     "range": [
+      25,
+      65
+     ],
+     "src": [],
+     "estimate": true
+    },
+    "infraspinatus": {
+     "mvic": 40,
+     "range": [
+      25,
+      60
+     ],
+     "src": [],
+     "estimate": true
+    },
+    "deltLat": {
+     "mvic": 30,
+     "range": [
+      15,
+      45
+     ],
+     "src": [],
+     "estimate": true
+    }
+   },
+   "ranking": [
+    "deltPost",
+    "trapMid",
+    "rhomboids",
+    "infraspinatus",
+    "deltLat"
+   ]
+  },
+  "db-reverse-fly": {
+   "basis": "similar:reverse-fly (bent-over horizontal abduction with dumbbells)",
+   "load": "light dumbbells, 12-20 RM",
+   "metric": "mean",
+   "muscles": {
+    "deltPost": {
+     "mvic": 75,
+     "range": [
+      50,
+      95
+     ],
+     "src": [],
+     "estimate": true
+    },
+    "trapMid": {
+     "mvic": 50,
+     "range": [
+      30,
+      70
+     ],
+     "src": [],
+     "estimate": true
+    },
+    "rhomboids": {
+     "mvic": 45,
+     "range": [
+      25,
+      65
+     ],
+     "src": [],
+     "estimate": true
+    },
+    "infraspinatus": {
+     "mvic": 40,
+     "range": [
+      25,
+      60
+     ],
+     "src": [],
+     "estimate": true
+    },
+    "erectors": {
+     "mvic": 25,
+     "range": [
+      10,
+      40
+     ],
+     "src": [],
+     "estimate": true
+    }
+   },
+   "ranking": [
+    "deltPost",
+    "trapMid",
+    "rhomboids",
+    "infraspinatus",
+    "erectors"
+   ]
+  },
+  "lying-leg-curl": {
+   "basis": "similar:leg-curl (prone instead of seated; knee flexion against a roller)",
+   "load": "machine 10-15 RM",
+   "metric": "mean",
+   "muscles": {
+    "medialHamstrings": {
+     "mvic": 75,
+     "range": [
+      55,
+      95
+     ],
+     "src": [],
+     "estimate": true
+    },
+    "bicepsFemoris": {
+     "mvic": 70,
+     "range": [
+      50,
+      90
+     ],
+     "src": [],
+     "estimate": true
+    },
+    "gastrocnemius": {
+     "mvic": 35,
+     "range": [
+      20,
+      50
+     ],
+     "src": [],
+     "estimate": true
+    }
+   },
+   "ranking": [
+    "medialHamstrings",
+    "bicepsFemoris",
+    "gastrocnemius"
+   ]
+  },
+  "db-lunge": {
+   "basis": "similar:split-squat (forward step adds a deceleration phase)",
+   "load": "dumbbells, 8-12 RM per leg",
+   "metric": "mean",
+   "muscles": {
+    "vastusLateralis": {
+     "mvic": 70,
+     "range": [
+      45,
+      95
+     ],
+     "src": [],
+     "estimate": true
+    },
+    "vastusMedialis": {
+     "mvic": 70,
+     "range": [
+      45,
+      95
+     ],
+     "src": [],
+     "estimate": true
+    },
+    "gluteMax": {
+     "mvic": 45,
+     "range": [
+      25,
+      65
+     ],
+     "src": [],
+     "estimate": true
+    },
+    "rectusFemoris": {
+     "mvic": 35,
+     "range": [
+      20,
+      50
+     ],
+     "src": [],
+     "estimate": true
+    },
+    "adductors": {
+     "mvic": 30,
+     "range": [
+      15,
+      45
+     ],
+     "src": [],
+     "estimate": true
+    },
+    "gastrocnemius": {
+     "mvic": 20,
+     "range": [
+      10,
+      35
+     ],
+     "src": [],
+     "estimate": true
+    },
+    "bicepsFemoris": {
+     "mvic": 20,
+     "range": [
+      10,
+      35
+     ],
+     "src": [],
+     "estimate": true
+    }
+   },
+   "ranking": [
+    "vastusLateralis",
+    "vastusMedialis",
+    "gluteMax",
+    "rectusFemoris",
+    "adductors",
+    "gastrocnemius",
+    "bicepsFemoris"
+   ]
+  },
+  "single-leg-rdl": {
+   "basis": "direct (DiStefano 2009 measured the single-limb deadlift without load; hamstrings and erectors are estimated)",
+   "load": "bodyweight in the study; app uses a light dumbbell",
+   "metric": "mean",
+   "muscles": {
+    "gluteMax": {
+     "mvic": 59,
+     "range": [
+      31,
+      87
+     ],
+     "src": [
+      "distefano2009"
+     ],
+     "estimate": false
+    },
+    "gluteMed": {
+     "mvic": 58,
+     "range": [
+      33,
+      83
+     ],
+     "src": [
+      "distefano2009"
+     ],
+     "estimate": false
+    },
+    "bicepsFemoris": {
+     "mvic": 55,
+     "range": [
+      35,
+      75
+     ],
+     "src": [],
+     "estimate": true
+    },
+    "medialHamstrings": {
+     "mvic": 55,
+     "range": [
+      35,
+      75
+     ],
+     "src": [],
+     "estimate": true
+    },
+    "erectors": {
+     "mvic": 40,
+     "range": [
+      25,
+      60
+     ],
+     "src": [],
+     "estimate": true
+    },
+    "adductors": {
+     "mvic": 25,
+     "range": [
+      10,
+      40
+     ],
+     "src": [],
+     "estimate": true
+    }
+   },
+   "ranking": [
+    "gluteMax",
+    "gluteMed",
+    "bicepsFemoris",
+    "medialHamstrings",
+    "erectors",
+    "adductors"
+   ]
+  },
+  "cable-overhead-extension": {
+   "basis": "similar:overhead-extension (cable keeps tension in the stretched position)",
+   "load": "cable 10-15 RM",
+   "metric": "mean",
+   "muscles": {
+    "tricepsLong": {
+     "mvic": 80,
+     "range": [
+      60,
+      100
+     ],
+     "src": [],
+     "estimate": true
+    },
+    "tricepsLateral": {
+     "mvic": 65,
+     "range": [
+      45,
+      85
+     ],
+     "src": [],
+     "estimate": true
+    },
+    "tricepsMedial": {
+     "mvic": 65,
+     "range": [
+      45,
+      85
+     ],
+     "src": [],
+     "estimate": true
+    },
+    "rectusAbdominis": {
+     "mvic": 15,
+     "range": [
+      5,
+      25
+     ],
+     "src": [],
+     "estimate": true
+    }
+   },
+   "ranking": [
+    "tricepsLong",
+    "tricepsLateral",
+    "tricepsMedial",
+    "rectusAbdominis"
+   ]
+  },
+  "farmers-carry": {
+   "basis": "similar:db-shrug (loaded carry; McGill 2009 reported high trunk and hip abductor demand in the farmer's walk, values estimated)",
+   "load": "heavy dumbbells or kettlebells, 30-45 s",
+   "metric": "mean",
+   "muscles": {
+    "forearmFlexors": {
+     "mvic": 80,
+     "range": [
+      60,
+      100
+     ],
+     "src": [],
+     "estimate": true
+    },
+    "trapUpper": {
+     "mvic": 60,
+     "range": [
+      40,
+      80
+     ],
+     "src": [],
+     "estimate": true
+    },
+    "externalOblique": {
+     "mvic": 35,
+     "range": [
+      20,
+      55
+     ],
+     "src": [
+      "mcgill2009"
+     ],
+     "estimate": true
+    },
+    "erectors": {
+     "mvic": 35,
+     "range": [
+      20,
+      55
+     ],
+     "src": [
+      "mcgill2009"
+     ],
+     "estimate": true
+    },
+    "gluteMed": {
+     "mvic": 30,
+     "range": [
+      15,
+      50
+     ],
+     "src": [
+      "mcgill2009"
+     ],
+     "estimate": true
+    },
+    "rectusAbdominis": {
+     "mvic": 20,
+     "range": [
+      10,
+      35
+     ],
+     "src": [],
+     "estimate": true
+    }
+   },
+   "ranking": [
+    "forearmFlexors",
+    "trapUpper",
+    "externalOblique",
+    "erectors",
+    "gluteMed",
+    "rectusAbdominis"
+   ]
+  },
+  "pallof-press": {
+   "basis": "similar:plank (isometric anti-rotation hold; no %MVIC study found)",
+   "load": "light cable or band",
+   "metric": "mean",
+   "muscles": {
+    "externalOblique": {
+     "mvic": 40,
+     "range": [
+      25,
+      60
+     ],
+     "src": [],
+     "estimate": true
+    },
+    "rectusAbdominis": {
+     "mvic": 25,
+     "range": [
+      15,
+      40
+     ],
+     "src": [],
+     "estimate": true
+    },
+    "gluteMed": {
+     "mvic": 20,
+     "range": [
+      10,
+      35
+     ],
+     "src": [],
+     "estimate": true
+    },
+    "serratus": {
+     "mvic": 20,
+     "range": [
+      10,
+      35
+     ],
+     "src": [],
+     "estimate": true
+    },
+    "deltAnt": {
+     "mvic": 20,
+     "range": [
+      10,
+      35
+     ],
+     "src": [],
+     "estimate": true
+    }
+   },
+   "ranking": [
+    "externalOblique",
+    "rectusAbdominis",
+    "gluteMed",
+    "serratus",
+    "deltAnt"
+   ]
+  },
+  "hanging-knee-raise": {
+   "basis": "similar:hanging-leg-raise (bent knees shorten the lever; lower activity)",
+   "load": "bodyweight",
+   "metric": "mean",
+   "muscles": {
+    "rectusAbdominis": {
+     "mvic": 60,
+     "range": [
+      40,
+      80
+     ],
+     "src": [],
+     "estimate": true
+    },
+    "iliopsoas": {
+     "mvic": 55,
+     "range": [
+      35,
+      75
+     ],
+     "src": [],
+     "estimate": true
+    },
+    "externalOblique": {
+     "mvic": 40,
+     "range": [
+      25,
+      60
+     ],
+     "src": [],
+     "estimate": true
+    },
+    "forearmFlexors": {
+     "mvic": 35,
+     "range": [
+      20,
+      50
+     ],
+     "src": [],
+     "estimate": true
+    },
+    "rectusFemoris": {
+     "mvic": 30,
+     "range": [
+      15,
+      45
+     ],
+     "src": [],
+     "estimate": true
+    }
+   },
+   "ranking": [
+    "rectusAbdominis",
+    "iliopsoas",
+    "externalOblique",
+    "forearmFlexors",
+    "rectusFemoris"
+   ]
+  },
+  "sumo-deadlift": {
+   "basis": "similar:deadlift (Escamilla 2002: the sumo style produced greater vastus lateralis and medialis activity than the conventional style; values estimated from the deadlift profile)",
+   "load": "heavy, 3-6 RM",
+   "metric": "mean",
+   "muscles": {
+    "gluteMax": {
+     "mvic": 70,
+     "range": [
+      45,
+      95
+     ],
+     "src": [],
+     "estimate": true
+    },
+    "vastusLateralis": {
+     "mvic": 65,
+     "range": [
+      45,
+      90
+     ],
+     "src": [
+      "escamilla2002"
+     ],
+     "estimate": true
+    },
+    "vastusMedialis": {
+     "mvic": 65,
+     "range": [
+      45,
+      90
+     ],
+     "src": [
+      "escamilla2002"
+     ],
+     "estimate": true
+    },
+    "erectors": {
+     "mvic": 60,
+     "range": [
+      40,
+      85
+     ],
+     "src": [],
+     "estimate": true
+    },
+    "adductors": {
+     "mvic": 55,
+     "range": [
+      35,
+      75
+     ],
+     "src": [],
+     "estimate": true
+    },
+    "bicepsFemoris": {
+     "mvic": 45,
+     "range": [
+      25,
+      65
+     ],
+     "src": [],
+     "estimate": true
+    },
+    "medialHamstrings": {
+     "mvic": 40,
+     "range": [
+      25,
+      60
+     ],
+     "src": [],
+     "estimate": true
+    },
+    "forearmFlexors": {
+     "mvic": 40,
+     "range": [
+      25,
+      60
+     ],
+     "src": [],
+     "estimate": true
+    },
+    "trapUpper": {
+     "mvic": 30,
+     "range": [
+      15,
+      45
+     ],
+     "src": [],
+     "estimate": true
+    }
+   },
+   "ranking": [
+    "gluteMax",
+    "vastusLateralis",
+    "vastusMedialis",
+    "erectors",
+    "adductors",
+    "bicepsFemoris",
+    "medialHamstrings",
+    "forearmFlexors",
+    "trapUpper"
+   ]
+  },
+  "incline-push-up": {
+   "basis": "similar:push-up (hands elevated reduce the load on the arms; lower activity)",
+   "load": "bodyweight, hands on a ~45 cm bench",
+   "metric": "mean",
+   "muscles": {
+    "pecMid": {
+     "mvic": 40,
+     "range": [
+      25,
+      55
+     ],
+     "src": [],
+     "estimate": true
+    },
+    "deltAnt": {
+     "mvic": 35,
+     "range": [
+      20,
+      50
+     ],
+     "src": [],
+     "estimate": true
+    },
+    "tricepsLateral": {
+     "mvic": 30,
+     "range": [
+      15,
+      45
+     ],
+     "src": [],
+     "estimate": true
+    },
+    "serratus": {
+     "mvic": 25,
+     "range": [
+      15,
+      40
+     ],
+     "src": [],
+     "estimate": true
+    },
+    "rectusAbdominis": {
+     "mvic": 15,
+     "range": [
+      5,
+      25
+     ],
+     "src": [],
+     "estimate": true
+    }
+   },
+   "ranking": [
+    "pecMid",
+    "deltAnt",
+    "tricepsLateral",
+    "serratus",
+    "rectusAbdominis"
+   ]
+  },
+  "nordic-curl": {
+   "basis": "similar:leg-curl (Bourne 2017 found the Nordic curl among the highest hamstring activations, preferentially the semitendinosus; values estimated)",
+   "load": "bodyweight, eccentric",
+   "metric": "mean",
+   "muscles": {
+    "medialHamstrings": {
+     "mvic": 90,
+     "range": [
+      65,
+      110
+     ],
+     "src": [
+      "bourne2017"
+     ],
+     "estimate": true
+    },
+    "bicepsFemoris": {
+     "mvic": 70,
+     "range": [
+      50,
+      95
+     ],
+     "src": [
+      "bourne2017"
+     ],
+     "estimate": true
+    },
+    "gastrocnemius": {
+     "mvic": 40,
+     "range": [
+      25,
+      60
+     ],
+     "src": [],
+     "estimate": true
+    },
+    "gluteMax": {
+     "mvic": 25,
+     "range": [
+      10,
+      40
+     ],
+     "src": [],
+     "estimate": true
+    }
+   },
+   "ranking": [
+    "medialHamstrings",
+    "bicepsFemoris",
+    "gastrocnemius",
+    "gluteMax"
+   ]
+  },
+  "lateral-lunge": {
+   "basis": "similar:reverse-lunge (frontal-plane lunge; adductors of the straight leg and gluteus medius work more)",
+   "load": "bodyweight",
+   "metric": "mean",
+   "muscles": {
+    "vastusLateralis": {
+     "mvic": 55,
+     "range": [
+      35,
+      75
+     ],
+     "src": [],
+     "estimate": true
+    },
+    "vastusMedialis": {
+     "mvic": 55,
+     "range": [
+      35,
+      75
+     ],
+     "src": [],
+     "estimate": true
+    },
+    "gluteMax": {
+     "mvic": 40,
+     "range": [
+      25,
+      60
+     ],
+     "src": [],
+     "estimate": true
+    },
+    "adductors": {
+     "mvic": 40,
+     "range": [
+      25,
+      60
+     ],
+     "src": [],
+     "estimate": true
+    },
+    "gluteMed": {
+     "mvic": 30,
+     "range": [
+      15,
+      45
+     ],
+     "src": [],
+     "estimate": true
+    },
+    "bicepsFemoris": {
+     "mvic": 20,
+     "range": [
+      10,
+      35
+     ],
+     "src": [],
+     "estimate": true
+    }
+   },
+   "ranking": [
+    "vastusLateralis",
+    "vastusMedialis",
+    "gluteMax",
+    "adductors",
+    "gluteMed",
+    "bicepsFemoris"
+   ]
+  },
+  "jump-squat": {
+   "basis": "similar:bw-squat (explosive concentric and landing; peak values)",
+   "load": "bodyweight",
+   "metric": "peak",
+   "muscles": {
+    "vastusLateralis": {
+     "mvic": 80,
+     "range": [
+      55,
+      110
+     ],
+     "src": [],
+     "estimate": true
+    },
+    "vastusMedialis": {
+     "mvic": 80,
+     "range": [
+      55,
+      110
+     ],
+     "src": [],
+     "estimate": true
+    },
+    "gastrocnemius": {
+     "mvic": 60,
+     "range": [
+      40,
+      85
+     ],
+     "src": [],
+     "estimate": true
+    },
+    "gluteMax": {
+     "mvic": 55,
+     "range": [
+      35,
+      80
+     ],
+     "src": [],
+     "estimate": true
+    },
+    "rectusFemoris": {
+     "mvic": 40,
+     "range": [
+      25,
+      60
+     ],
+     "src": [],
+     "estimate": true
+    },
+    "bicepsFemoris": {
+     "mvic": 25,
+     "range": [
+      10,
+      40
+     ],
+     "src": [],
+     "estimate": true
+    }
+   },
+   "ranking": [
+    "vastusLateralis",
+    "vastusMedialis",
+    "gastrocnemius",
+    "gluteMax",
+    "rectusFemoris",
+    "bicepsFemoris"
+   ]
+  }
+ },
+ "sources": {
+  "distefano2009": {
+   "cite": "DiStefano LJ, Blackburn JT, Marshall SW, Padua DA. Gluteal muscle activation during common therapeutic exercises. J Orthop Sports Phys Ther 39(7):532-540, 2009.",
+   "doi": "10.2519/jospt.2009.2796"
+  },
+  "mcgill2009": {
+   "cite": "McGill SM, McDermott A, Fenwick CMJ. Comparison of different strongman events: trunk muscle activation and lumbar spine motion, load, and stiffness. J Strength Cond Res 23(4):1148-1161, 2009."
+  },
+  "escamilla2002": {
+   "cite": "Escamilla RF, Francisco AC, Kayes AV, Speer KP, Moorman CT 3rd. An electromyographic analysis of sumo and conventional style deadlifts. Med Sci Sports Exerc 34(4):682-688, 2002."
+  },
+  "bourne2017": {
+   "cite": "Bourne MN, Williams MD, Opar DA, Al Najjar A, Kerr GK, Shield AJ. Impact of exercise selection on hamstring muscle activation. Br J Sports Med 51(13):1021-1028, 2017."
+  }
+ }
+}

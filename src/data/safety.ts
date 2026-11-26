@@ -5,6 +5,7 @@
 import type { Injury } from '../types';
 import { BAR_DOWN, BENCH_BAIL, C, DB_PRESS_BAIL, FALL_BAIL, S } from './safetyText';
 import { SAFETY_HOME } from './safetyHome';
+import { SAFETY_EXTRA } from './safetyExtra';
 import { SAFETY_MACHINES } from './safetyMachines';
 
 /** 1 — past, 2 — o‘rta, 3 — yuqori */
@@ -1059,7 +1060,7 @@ const BASE: Record<string, ExerciseSafety> = {
   },
 };
 
-const SAFETY: Record<string, ExerciseSafety> = { ...BASE, ...SAFETY_HOME, ...SAFETY_MACHINES };
+const SAFETY: Record<string, ExerciseSafety> = { ...BASE, ...SAFETY_HOME, ...SAFETY_MACHINES, ...SAFETY_EXTRA };
 
 export const safetyFor = (id: string): ExerciseSafety | undefined => SAFETY[id];
 export const SAFETY_IDS = Object.keys(SAFETY);

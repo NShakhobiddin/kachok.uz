@@ -1,5 +1,5 @@
 // Mashqlarda mushaklarning EMG faolligi (% MVIC). AVTOMATIK YARATILGAN — qo'lda tahrirlamang:
-// manba jadvallar docs/emg/{lower,push,pull,home,machines}.json, o'zbekcha izohlar docs/emg/uz*.json, skript scripts/build-activation.mjs.
+// manba jadvallar docs/emg/{lower,push,pull,home,machines,extra}.json, o'zbekcha izohlar docs/emg/uz*.json, skript scripts/build-activation.mjs.
 // est: true — qiymat to'g'ridan-to'g'ri o'lchanmagan (o'xshash mashq, tadqiqotdagi nisbiy farq yoki oraliq asosida baho).
 import type { M3 } from './muscles3d';
 
@@ -6383,6 +6383,814 @@ export const ACTIVATION: Record<string, ExerciseActivation> = {
     },
     "rom": "Eng uzoq nuqtada press tananing orqaga egilishiga qarshi eng ko‘p ishlaydi; bel mushaklari deyarli ishlamaydi (10% dan kam).",
     "notes": "Fitbolda yoyilishda qorin to‘g‘ri mushagi ~63%, tashqi qiyshiq mushak ~46% MVIC. Press roligida richag uzunroq — qiymatlar biroz yuqoriroq baholangan."
+  },
+  "straight-arm-pulldown": {
+    "basis": "similar:lat-pulldown",
+    "load": "blokda o‘rtacha vazn, 10–15 takror",
+    "metric": "mean",
+    "muscles": {
+      "lats": {
+        "mvic": 60,
+        "range": [
+          40,
+          80
+        ],
+        "est": true
+      },
+      "teresMajor": {
+        "mvic": 45,
+        "range": [
+          30,
+          65
+        ],
+        "est": true
+      },
+      "tricepsLong": {
+        "mvic": 40,
+        "range": [
+          25,
+          60
+        ],
+        "est": true
+      },
+      "deltPost": {
+        "mvic": 30,
+        "range": [
+          15,
+          45
+        ],
+        "est": true
+      },
+      "rectusAbdominis": {
+        "mvic": 15,
+        "range": [
+          5,
+          25
+        ],
+        "est": true
+      }
+    },
+    "rom": "Keng orqa qo‘llar ko‘z sathidan sonlarga tushayotganda, ayniqsa pastki yarmida eng faol.",
+    "notes": "Bu mashq bo‘yicha EMG tadqiqot topilmadi: qiymatlar yuqori blokni tortishdan olingan baho, bitseps deyarli ishlamaydi."
+  },
+  "reverse-pec-deck": {
+    "basis": "similar:reverse-fly",
+    "load": "yengil-o‘rta vazn, 12–20 takror",
+    "metric": "mean",
+    "muscles": {
+      "deltPost": {
+        "mvic": 80,
+        "range": [
+          55,
+          100
+        ],
+        "est": true
+      },
+      "trapMid": {
+        "mvic": 50,
+        "range": [
+          30,
+          70
+        ],
+        "est": true
+      },
+      "rhomboids": {
+        "mvic": 45,
+        "range": [
+          25,
+          65
+        ],
+        "est": true
+      },
+      "infraspinatus": {
+        "mvic": 40,
+        "range": [
+          25,
+          60
+        ],
+        "est": true
+      },
+      "deltLat": {
+        "mvic": 30,
+        "range": [
+          15,
+          45
+        ],
+        "est": true
+      }
+    },
+    "rom": "Orqa delta qo‘llar gavda chizig‘iga yaqinlashganda eng faol.",
+    "notes": "Qiymatlar lentani yoyishdan olingan baho: trenajyor yuklamani barqaror ushlaydi."
+  },
+  "db-reverse-fly": {
+    "basis": "similar:reverse-fly",
+    "load": "yengil gantellar, 12–20 takror",
+    "metric": "mean",
+    "muscles": {
+      "deltPost": {
+        "mvic": 75,
+        "range": [
+          50,
+          95
+        ],
+        "est": true
+      },
+      "trapMid": {
+        "mvic": 50,
+        "range": [
+          30,
+          70
+        ],
+        "est": true
+      },
+      "rhomboids": {
+        "mvic": 45,
+        "range": [
+          25,
+          65
+        ],
+        "est": true
+      },
+      "infraspinatus": {
+        "mvic": 40,
+        "range": [
+          25,
+          60
+        ],
+        "est": true
+      },
+      "erectors": {
+        "mvic": 25,
+        "range": [
+          10,
+          40
+        ],
+        "est": true
+      }
+    },
+    "rom": "Orqa delta tepada (qo‘llar yelka sathida) eng faol.",
+    "notes": "Qiymatlar lentani yoyishdan olingan baho; engashgan holat bel mushaklarini ham ishlatadi."
+  },
+  "lying-leg-curl": {
+    "basis": "similar:leg-curl",
+    "load": "trenajyor, 10–15 takror",
+    "metric": "mean",
+    "muscles": {
+      "medialHamstrings": {
+        "mvic": 75,
+        "range": [
+          55,
+          95
+        ],
+        "est": true
+      },
+      "bicepsFemoris": {
+        "mvic": 70,
+        "range": [
+          50,
+          90
+        ],
+        "est": true
+      },
+      "gastrocnemius": {
+        "mvic": 35,
+        "range": [
+          20,
+          50
+        ],
+        "est": true
+      }
+    },
+    "rom": "Son orqasi tizza bukilgan sari faolroq.",
+    "notes": "O‘tirib bukishdan olingan baho. Tadqiqotlarda o‘tirib bukish son orqasini ko‘proq o‘stirgan (son cho‘zilgan holatda) — ikkalasini almashtirib turish mumkin."
+  },
+  "db-lunge": {
+    "basis": "similar:split-squat",
+    "load": "gantellar, har oyoqqa 8–12 takror",
+    "metric": "mean",
+    "muscles": {
+      "vastusLateralis": {
+        "mvic": 70,
+        "range": [
+          45,
+          95
+        ],
+        "est": true
+      },
+      "vastusMedialis": {
+        "mvic": 70,
+        "range": [
+          45,
+          95
+        ],
+        "est": true
+      },
+      "gluteMax": {
+        "mvic": 45,
+        "range": [
+          25,
+          65
+        ],
+        "est": true
+      },
+      "rectusFemoris": {
+        "mvic": 35,
+        "range": [
+          20,
+          50
+        ],
+        "est": true
+      },
+      "adductors": {
+        "mvic": 30,
+        "range": [
+          15,
+          45
+        ],
+        "est": true
+      },
+      "gastrocnemius": {
+        "mvic": 20,
+        "range": [
+          10,
+          35
+        ],
+        "est": true
+      },
+      "bicepsFemoris": {
+        "mvic": 20,
+        "range": [
+          10,
+          35
+        ],
+        "est": true
+      }
+    },
+    "rom": "Son oldi va dumba pastki nuqtadan ko‘tarilishda eng faol; oldinga qadam to‘xtatish fazasini qo‘shadi.",
+    "notes": "Split-o‘tirishdan olingan baho."
+  },
+  "single-leg-rdl": {
+    "basis": "direct",
+    "load": "tadqiqotda — o‘z vazni; ilovada — yengil gantel",
+    "metric": "mean",
+    "muscles": {
+      "gluteMax": {
+        "mvic": 59,
+        "range": [
+          31,
+          87
+        ],
+        "src": [
+          "X.distefano2009"
+        ]
+      },
+      "gluteMed": {
+        "mvic": 58,
+        "range": [
+          33,
+          83
+        ],
+        "src": [
+          "X.distefano2009"
+        ]
+      },
+      "bicepsFemoris": {
+        "mvic": 55,
+        "range": [
+          35,
+          75
+        ],
+        "est": true
+      },
+      "medialHamstrings": {
+        "mvic": 55,
+        "range": [
+          35,
+          75
+        ],
+        "est": true
+      },
+      "erectors": {
+        "mvic": 40,
+        "range": [
+          25,
+          60
+        ],
+        "est": true
+      },
+      "adductors": {
+        "mvic": 25,
+        "range": [
+          10,
+          40
+        ],
+        "est": true
+      }
+    },
+    "rom": "Dumba va son orqasi pastki nuqtadan ko‘tarilishda eng faol; dumbaning o‘rta mushagi muvozanatni ushlaydi.",
+    "notes": "Katta va o‘rta dumba qiymatlari DiStefano 2009 da bir oyoqda o‘lik tortish uchun o‘lchangan (yuklamasiz); son orqasi va bel — baho."
+  },
+  "cable-overhead-extension": {
+    "basis": "similar:overhead-extension",
+    "load": "blokda, 10–15 takror",
+    "metric": "mean",
+    "muscles": {
+      "tricepsLong": {
+        "mvic": 80,
+        "range": [
+          60,
+          100
+        ],
+        "est": true
+      },
+      "tricepsLateral": {
+        "mvic": 65,
+        "range": [
+          45,
+          85
+        ],
+        "est": true
+      },
+      "tricepsMedial": {
+        "mvic": 65,
+        "range": [
+          45,
+          85
+        ],
+        "est": true
+      },
+      "rectusAbdominis": {
+        "mvic": 15,
+        "range": [
+          5,
+          25
+        ],
+        "est": true
+      }
+    },
+    "rom": "Trisepsning uzun boshi qo‘llar bosh ustida — cho‘zilgan holatda kuchli yuklanadi.",
+    "notes": "Bosh ortidan gantel bilan trisepsdan olingan baho. Maeo 2023: bosh ustidagi holatda triseps pastga itarishdagidan ko‘proq o‘sgan."
+  },
+  "farmers-carry": {
+    "basis": "similar:db-shrug",
+    "load": "og‘ir gantel yoki girya, 30–45 soniya",
+    "metric": "mean",
+    "muscles": {
+      "forearmFlexors": {
+        "mvic": 80,
+        "range": [
+          60,
+          100
+        ],
+        "est": true
+      },
+      "trapUpper": {
+        "mvic": 60,
+        "range": [
+          40,
+          80
+        ],
+        "est": true
+      },
+      "externalOblique": {
+        "mvic": 35,
+        "range": [
+          20,
+          55
+        ],
+        "est": true,
+        "src": [
+          "X.mcgill2009"
+        ]
+      },
+      "erectors": {
+        "mvic": 35,
+        "range": [
+          20,
+          55
+        ],
+        "est": true,
+        "src": [
+          "X.mcgill2009"
+        ]
+      },
+      "gluteMed": {
+        "mvic": 30,
+        "range": [
+          15,
+          50
+        ],
+        "est": true,
+        "src": [
+          "X.mcgill2009"
+        ]
+      },
+      "rectusAbdominis": {
+        "mvic": 20,
+        "range": [
+          10,
+          35
+        ],
+        "est": true
+      }
+    },
+    "rom": "Yurish davomida doimiy (izometrik) faollik.",
+    "notes": "McGill 2009: fermer yurishida qorin, bel va dumbaning o‘rta mushaklari yuqori faol. Aniq foizlar — baho."
+  },
+  "pallof-press": {
+    "basis": "similar:plank",
+    "load": "yengil blok yoki lenta",
+    "metric": "mean",
+    "muscles": {
+      "externalOblique": {
+        "mvic": 40,
+        "range": [
+          25,
+          60
+        ],
+        "est": true
+      },
+      "rectusAbdominis": {
+        "mvic": 25,
+        "range": [
+          15,
+          40
+        ],
+        "est": true
+      },
+      "gluteMed": {
+        "mvic": 20,
+        "range": [
+          10,
+          35
+        ],
+        "est": true
+      },
+      "serratus": {
+        "mvic": 20,
+        "range": [
+          10,
+          35
+        ],
+        "est": true
+      },
+      "deltAnt": {
+        "mvic": 20,
+        "range": [
+          10,
+          35
+        ],
+        "est": true
+      }
+    },
+    "rom": "Qo‘llar to‘liq oldinga cho‘zilganda burilishga qarshi yuklama eng katta.",
+    "notes": "Pallof press bo‘yicha %MVIC tadqiqot topilmadi — baho."
+  },
+  "hanging-knee-raise": {
+    "basis": "similar:hanging-leg-raise",
+    "load": "o‘z vazni",
+    "metric": "mean",
+    "muscles": {
+      "rectusAbdominis": {
+        "mvic": 60,
+        "range": [
+          40,
+          80
+        ],
+        "est": true
+      },
+      "iliopsoas": {
+        "mvic": 55,
+        "range": [
+          35,
+          75
+        ],
+        "est": true
+      },
+      "externalOblique": {
+        "mvic": 40,
+        "range": [
+          25,
+          60
+        ],
+        "est": true
+      },
+      "forearmFlexors": {
+        "mvic": 35,
+        "range": [
+          20,
+          50
+        ],
+        "est": true
+      },
+      "rectusFemoris": {
+        "mvic": 30,
+        "range": [
+          15,
+          45
+        ],
+        "est": true
+      }
+    },
+    "rom": "Press tepada, tos ko‘krak tomon buralganda eng faol.",
+    "notes": "Turnikda oyoq ko‘tarishdan olingan baho: tizza bukilgani uchun richag qisqa, faollik pastroq."
+  },
+  "sumo-deadlift": {
+    "basis": "similar:deadlift",
+    "load": "og‘ir, 3–6 takror",
+    "metric": "mean",
+    "muscles": {
+      "gluteMax": {
+        "mvic": 70,
+        "range": [
+          45,
+          95
+        ],
+        "est": true
+      },
+      "vastusLateralis": {
+        "mvic": 65,
+        "range": [
+          45,
+          90
+        ],
+        "est": true,
+        "src": [
+          "X.escamilla2002"
+        ]
+      },
+      "vastusMedialis": {
+        "mvic": 65,
+        "range": [
+          45,
+          90
+        ],
+        "est": true,
+        "src": [
+          "X.escamilla2002"
+        ]
+      },
+      "erectors": {
+        "mvic": 60,
+        "range": [
+          40,
+          85
+        ],
+        "est": true
+      },
+      "adductors": {
+        "mvic": 55,
+        "range": [
+          35,
+          75
+        ],
+        "est": true
+      },
+      "bicepsFemoris": {
+        "mvic": 45,
+        "range": [
+          25,
+          65
+        ],
+        "est": true
+      },
+      "medialHamstrings": {
+        "mvic": 40,
+        "range": [
+          25,
+          60
+        ],
+        "est": true
+      },
+      "forearmFlexors": {
+        "mvic": 40,
+        "range": [
+          25,
+          60
+        ],
+        "est": true
+      },
+      "trapUpper": {
+        "mvic": 30,
+        "range": [
+          15,
+          45
+        ],
+        "est": true
+      }
+    },
+    "rom": "Son oldi va dumba pastdan ko‘tarilishda, bel rostlovchilar tizza sathida eng faol.",
+    "notes": "Escamilla 2002: sumo uslubida tashqi va ichki son oldi mushaklari oddiy o‘lik tortishdagidan faolroq. Foizlar o‘lik tortish profilidan olingan baho."
+  },
+  "incline-push-up": {
+    "basis": "similar:push-up",
+    "load": "o‘z vazni, qo‘llar ~45 sm balandlikda",
+    "metric": "mean",
+    "muscles": {
+      "pecMid": {
+        "mvic": 40,
+        "range": [
+          25,
+          55
+        ],
+        "est": true
+      },
+      "deltAnt": {
+        "mvic": 35,
+        "range": [
+          20,
+          50
+        ],
+        "est": true
+      },
+      "tricepsLateral": {
+        "mvic": 30,
+        "range": [
+          15,
+          45
+        ],
+        "est": true
+      },
+      "serratus": {
+        "mvic": 25,
+        "range": [
+          15,
+          40
+        ],
+        "est": true
+      },
+      "rectusAbdominis": {
+        "mvic": 15,
+        "range": [
+          5,
+          25
+        ],
+        "est": true
+      }
+    },
+    "rom": "Ko‘krak pastki nuqtadan itarishda eng faol.",
+    "notes": "Oddiy otjimaniyadan olingan baho: qo‘llar baland bo‘lgani uchun yuklama va faollik pastroq."
+  },
+  "nordic-curl": {
+    "basis": "similar:leg-curl",
+    "load": "o‘z vazni, ekssentrik (sekin tushish)",
+    "metric": "mean",
+    "muscles": {
+      "medialHamstrings": {
+        "mvic": 90,
+        "range": [
+          65,
+          110
+        ],
+        "est": true,
+        "src": [
+          "X.bourne2017"
+        ]
+      },
+      "bicepsFemoris": {
+        "mvic": 70,
+        "range": [
+          50,
+          95
+        ],
+        "est": true,
+        "src": [
+          "X.bourne2017"
+        ]
+      },
+      "gastrocnemius": {
+        "mvic": 40,
+        "range": [
+          25,
+          60
+        ],
+        "est": true
+      },
+      "gluteMax": {
+        "mvic": 25,
+        "range": [
+          10,
+          40
+        ],
+        "est": true
+      }
+    },
+    "rom": "Son orqasi tana oldinga engashib, tizza yozilgan sari eng kuchli yuklanadi.",
+    "notes": "Bourne 2017: Nordik bukilish son orqasini eng yuqori faollashtirgan mashqlardan, ayniqsa yarimpay mushakni. Foizlar — baho. Van Dyk 2019 meta-tahlili: son orqasi jarohatlarini qariyb ikki barobar kamaytiradi."
+  },
+  "lateral-lunge": {
+    "basis": "similar:reverse-lunge",
+    "load": "o‘z vazni",
+    "metric": "mean",
+    "muscles": {
+      "vastusLateralis": {
+        "mvic": 55,
+        "range": [
+          35,
+          75
+        ],
+        "est": true
+      },
+      "vastusMedialis": {
+        "mvic": 55,
+        "range": [
+          35,
+          75
+        ],
+        "est": true
+      },
+      "gluteMax": {
+        "mvic": 40,
+        "range": [
+          25,
+          60
+        ],
+        "est": true
+      },
+      "adductors": {
+        "mvic": 40,
+        "range": [
+          25,
+          60
+        ],
+        "est": true
+      },
+      "gluteMed": {
+        "mvic": 30,
+        "range": [
+          15,
+          45
+        ],
+        "est": true
+      },
+      "bicepsFemoris": {
+        "mvic": 20,
+        "range": [
+          10,
+          35
+        ],
+        "est": true
+      }
+    },
+    "rom": "Bukilgan oyoq son oldi va dumbasi pastki nuqtada, to‘g‘ri oyoq son ichki mushaklari cho‘zilishda ishlaydi.",
+    "notes": "Orqaga hamladan olingan baho."
+  },
+  "jump-squat": {
+    "basis": "similar:bw-squat",
+    "load": "o‘z vazni",
+    "metric": "peak",
+    "muscles": {
+      "vastusLateralis": {
+        "mvic": 80,
+        "range": [
+          55,
+          110
+        ],
+        "est": true
+      },
+      "vastusMedialis": {
+        "mvic": 80,
+        "range": [
+          55,
+          110
+        ],
+        "est": true
+      },
+      "gastrocnemius": {
+        "mvic": 60,
+        "range": [
+          40,
+          85
+        ],
+        "est": true
+      },
+      "gluteMax": {
+        "mvic": 55,
+        "range": [
+          35,
+          80
+        ],
+        "est": true
+      },
+      "rectusFemoris": {
+        "mvic": 40,
+        "range": [
+          25,
+          60
+        ],
+        "est": true
+      },
+      "bicepsFemoris": {
+        "mvic": 25,
+        "range": [
+          10,
+          40
+        ],
+        "est": true
+      }
+    },
+    "rom": "Sakrashdan oldingi itarish va qo‘nishda eng yuqori (cho‘qqi) faollik.",
+    "notes": "O‘z vazni bilan o‘tirishdan olingan cho‘qqi qiymat bahosi."
   }
 };
 
@@ -6881,5 +7689,18 @@ export const EMG_SOURCES: Record<string, { cite: string; doi?: string }> = {
   },
   "M.youdas2008": {
     "cite": "Youdas, Guck, et al. An electromyographic analysis of the Ab-Slide exercise, abdominal crunch, supine double leg thrust, and side bridge in healthy young adults: implications for rehabilitation professionals. J Strength Cond Res 22(6):1939-1946, 2008."
+  },
+  "X.distefano2009": {
+    "cite": "DiStefano LJ, Blackburn JT, Marshall SW, Padua DA. Gluteal muscle activation during common therapeutic exercises. J Orthop Sports Phys Ther 39(7):532-540, 2009.",
+    "doi": "10.2519/jospt.2009.2796"
+  },
+  "X.mcgill2009": {
+    "cite": "McGill SM, McDermott A, Fenwick CMJ. Comparison of different strongman events: trunk muscle activation and lumbar spine motion, load, and stiffness. J Strength Cond Res 23(4):1148-1161, 2009."
+  },
+  "X.escamilla2002": {
+    "cite": "Escamilla RF, Francisco AC, Kayes AV, Speer KP, Moorman CT 3rd. An electromyographic analysis of sumo and conventional style deadlifts. Med Sci Sports Exerc 34(4):682-688, 2002."
+  },
+  "X.bourne2017": {
+    "cite": "Bourne MN, Williams MD, Opar DA, Al Najjar A, Kerr GK, Shield AJ. Impact of exercise selection on hamstring muscle activation. Br J Sports Med 51(13):1021-1028, 2017."
   }
 };
