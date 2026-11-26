@@ -85,7 +85,11 @@ const ALL_EXTRA: Exercise[] = [
     loadType: 'machine',
     increment: 2.5,
     setup: ['Trenajyorga yuzingiz bilan qarab o‘tiring, ko‘krak suyanchiqqa tegsin.', 'O‘rindiqni dastalar yelka sathida bo‘ladigan qilib sozlang; dastalarni neytral ushlang.'],
-    steps: ['Qo‘llarni deyarli to‘g‘ri tutib, yonlarga keng yoy bo‘ylab gavda chizig‘igacha oching.', 'Oxirida 1 soniya ushlang.', 'Nazorat bilan oldinga qaytaring — og‘irlik to‘liq tushib qolmasin.'],
+    steps: [
+      'Qo‘llarni deyarli to‘g‘ri tutib, yonlarga keng yoy bo‘ylab gavda chizig‘igacha oching.',
+      'Oxirida 1 soniya ushlang.',
+      'Nazorat bilan oldinga qaytaring — og‘irlik to‘liq tushib qolmasin.',
+    ],
     cues: ['Qo‘llar gavda chizig‘idan orqaga ketmasin', 'Yelkani ko‘tarmang — trapetsiya emas, orqa delta ishlasin', 'Ko‘krak suyanchiqdan uzilmaydi'],
     breathing: BREATH_PULL,
     mistakes: [
@@ -109,7 +113,10 @@ const ALL_EXTRA: Exercise[] = [
     loadType: 'dumbbell',
     increment: 1,
     caution: ['lowerBack'],
-    setup: ['Yengil gantellarni oling, oyoqlar tos kengligida, tizzalar biroz bukik.', 'Tosni orqaga surib gavdani polga deyarli parallel engashtiring — bel tekis, bosh umurtqa bilan bir chiziqda.'],
+    setup: [
+      'Yengil gantellarni oling, oyoqlar tos kengligida, tizzalar biroz bukik.',
+      'Tosni orqaga surib gavdani 45° dan polga deyarli parallelgacha engashtiring (qancha past — orqa delta shuncha ko‘p ishlaydi); bel tekis, bosh umurtqa bilan bir chiziqda.',
+    ],
     steps: ['Gantellarni yonlarga keng yoy bo‘ylab yelka sathigacha ko‘taring («T» shakli).', '1 soniya ushlang.', 'Sekin pastga tushiring.'],
     cues: ['Tirsak biroz bukik va qotgan', 'Gavda ko‘tarilmaydi — faqat qo‘llar harakatlanadi', 'Kaftlar bir-biriga qaragan'],
     breathing: BREATH_PULL,
@@ -281,8 +288,15 @@ const ALL_EXTRA: Exercise[] = [
     loadType: 'cable',
     increment: 2.5,
     unilateral: true,
-    setup: ['Blokni (yoki lentani) ko‘krak balandligiga qo‘ying va unga yon tomoningiz bilan turing.', 'Dastani ikki qo‘l bilan ko‘krak o‘rtasida ushlang; oyoqlar yelka kengligida, tizzalar yumshoq.'],
-    steps: ['Qo‘llarni ko‘krakdan oldinga to‘liq to‘g‘rilang — gavda blok tomon burilmasin.', '2–3 soniya ushlang.', 'Sekin ko‘krakka qaytaring. Barcha takrorlardan so‘ng ikkinchi tomonga o‘giriling.'],
+    setup: [
+      'Blokni (yoki lentani) ko‘krak balandligiga qo‘ying va unga yon tomoningiz bilan turing.',
+      'Dastani ikki qo‘l bilan ko‘krak o‘rtasida ushlang; oyoqlar yelka kengligida, tizzalar yumshoq.',
+    ],
+    steps: [
+      'Qo‘llarni ko‘krakdan oldinga to‘liq to‘g‘rilang — gavda blok tomon burilmasin.',
+      '2–3 soniya ushlang.',
+      'Sekin ko‘krakka qaytaring. Barcha takrorlardan so‘ng ikkinchi tomonga o‘giriling.',
+    ],
     cues: ['Yelka va tos oldinga qaragan — burilishga qarshi turing', 'Dumba va qorin qotgan', 'Qancha uzoq itarsangiz — shuncha qiyin'],
     breathing: 'Itarayotganda nafas chiqaring, ushlab turganda bir maromda nafas oling.',
     mistakes: [
@@ -340,7 +354,11 @@ const ALL_EXTRA: Exercise[] = [
       'Shtangani tizzalar ichidan yelka kengligida ushlang, qo‘llar tik.',
       'Tosni tushirib, ko‘krakni ko‘taring: bel tekis, tizzalar oyoq uchlari yo‘nalishida tashqariga.',
     ],
-    steps: ['Chuqur nafas olib qorinni qotiring va polni oyoqlar bilan «yoyib» itaring.', 'Shtanga sonlar bo‘ylab yuqoriga sirpanadi; tos va tizza birga to‘g‘rilanadi.', 'Tepada dumbani qisib tik turing, so‘ng nazorat bilan tushiring.'],
+    steps: [
+      'Chuqur nafas olib qorinni qotiring va polni oyoqlar bilan «yoyib» itaring.',
+      'Shtanga sonlar bo‘ylab yuqoriga sirpanadi; tos va tizza birga to‘g‘rilanadi.',
+      'Tepada dumbani qisib tik turing, so‘ng nazorat bilan tushiring.',
+    ],
     cues: ['Tizzalarni tashqariga suring', 'Shtanga tanaga yaqin', 'Belni orqaga egmang — tepada tik turish yetarli'],
     breathing: BREATH_BRACE,
     mistakes: [
@@ -395,7 +413,11 @@ const ALL_EXTRA: Exercise[] = [
     increment: 0,
     caution: ['knee'],
     setup: ['Yumshoq gilamda tiz cho‘king, to‘piqlarni og‘ir divan ostiga qistiring (yoki sherik ushlab tursin).', 'Gavda tizzadan boshgacha to‘g‘ri, qo‘llar ko‘krak oldida.'],
-    steps: ['Tanani to‘g‘ri chiziqda ushlab, son orqasi bilan qarshilik qilib, iloji boricha sekin oldinga engashing.', 'Ushlab tura olmay qolganda qo‘llar bilan polga «yiqiling».', 'Qo‘llar bilan itarib, boshlang‘ich holatga qayting.'],
+    steps: [
+      'Tanani to‘g‘ri chiziqda ushlab, son orqasi bilan qarshilik qilib, iloji boricha sekin oldinga engashing.',
+      'Ushlab tura olmay qolganda qo‘llar bilan polga «yiqiling».',
+      'Qo‘llar bilan itarib, boshlang‘ich holatga qayting.',
+    ],
     cues: ['Tos bukilmasin — tizzadan boshgacha bitta chiziq', 'Tushish 3–5 soniya: asosiy foyda shu qismda', 'Haftasiga 1–2 marta, 2–3 set × 3–6 takror yetarli'],
     breathing: 'Tushayotganda bir maromda nafas chiqaring, nafasni ushlamang.',
     mistakes: [
@@ -464,8 +486,21 @@ const ALL_EXTRA: Exercise[] = [
   },
 ];
 
-/** Rasmi tekshirilib, ilovaga joylangan mashqlar. Qolganlari (rasmi Flow-7 da qayta) — rasm kelguncha ko‘rsatilmaydi:
- *  db-reverse-fly, single-leg-rdl, pallof-press, hanging-knee-raise, incline-push-up, nordic-curl, lateral-lunge */
-const READY = new Set(['straight-arm-pulldown', 'reverse-pec-deck', 'lying-leg-curl', 'db-lunge', 'cable-overhead-extension', 'farmers-carry', 'sumo-deadlift', 'jump-squat']);
+/** Rasmi tekshirilib, ilovaga joylangan mashqlar. Qolganlari rasm kelguncha ko‘rsatilmaydi:
+ *  single-leg-rdl, lateral-lunge (yuz terili chizilgan), incline-push-up (pastki nuqta yo‘q, yuz terili) */
+const READY = new Set([
+  'straight-arm-pulldown',
+  'reverse-pec-deck',
+  'db-reverse-fly',
+  'lying-leg-curl',
+  'db-lunge',
+  'cable-overhead-extension',
+  'farmers-carry',
+  'pallof-press',
+  'hanging-knee-raise',
+  'sumo-deadlift',
+  'jump-squat',
+  'nordic-curl',
+]);
 
 export const EXTRA_EXERCISES: Exercise[] = ALL_EXTRA.filter((e) => READY.has(e.id));
