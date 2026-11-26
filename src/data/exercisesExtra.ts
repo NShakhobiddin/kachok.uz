@@ -36,7 +36,7 @@ function hangingKneeRaiseAnim(): AnimSpec {
   return { ...base, frames: con(start, end, { move1: 1100, hold2: 400, move2: 1700 }) };
 }
 
-export const EXTRA_EXERCISES: Exercise[] = [
+const ALL_EXTRA: Exercise[] = [
   /* ---------- zal ---------- */
   {
     id: 'straight-arm-pulldown',
@@ -463,3 +463,9 @@ export const EXTRA_EXERCISES: Exercise[] = [
     anim: A.bodyweightSquat(),
   },
 ];
+
+/** Rasmi tekshirilib, ilovaga joylangan mashqlar. Qolganlari (rasmi Flow-7 da qayta) — rasm kelguncha ko‘rsatilmaydi:
+ *  db-reverse-fly, single-leg-rdl, pallof-press, hanging-knee-raise, incline-push-up, nordic-curl, lateral-lunge */
+const READY = new Set(['straight-arm-pulldown', 'reverse-pec-deck', 'lying-leg-curl', 'db-lunge', 'cable-overhead-extension', 'farmers-carry', 'sumo-deadlift', 'jump-squat']);
+
+export const EXTRA_EXERCISES: Exercise[] = ALL_EXTRA.filter((e) => READY.has(e.id));

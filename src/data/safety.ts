@@ -5,6 +5,7 @@
 import type { Injury } from '../types';
 import { BAR_DOWN, BENCH_BAIL, C, DB_PRESS_BAIL, FALL_BAIL, S } from './safetyText';
 import { SAFETY_HOME } from './safetyHome';
+import { EXTRA_EXERCISES } from './exercisesExtra';
 import { SAFETY_EXTRA } from './safetyExtra';
 import { SAFETY_MACHINES } from './safetyMachines';
 
@@ -1060,7 +1061,14 @@ const BASE: Record<string, ExerciseSafety> = {
   },
 };
 
-const SAFETY: Record<string, ExerciseSafety> = { ...BASE, ...SAFETY_HOME, ...SAFETY_MACHINES, ...SAFETY_EXTRA };
+// yangi mashqlardan faqat ilovaga kiritilganlari (rasmi tayyor)
+const EXTRA_IDS = new Set(EXTRA_EXERCISES.map((e) => e.id));
+const SAFETY: Record<string, ExerciseSafety> = {
+  ...BASE,
+  ...SAFETY_HOME,
+  ...SAFETY_MACHINES,
+  ...Object.fromEntries(Object.entries(SAFETY_EXTRA).filter(([id]) => EXTRA_IDS.has(id))),
+};
 
 export const safetyFor = (id: string): ExerciseSafety | undefined => SAFETY[id];
 export const SAFETY_IDS = Object.keys(SAFETY);

@@ -2,6 +2,7 @@
 // Anatomiya (boshlanishi, birikishi, vazifasi): OpenStax "Anatomy and Physiology 2e" (openstax2022) va standart anatomiya darsliklari.
 // "Eng ko'p ishlatadigan mashqlar" — ilovadagi EMG jadvalidan (src/data/activation.ts) hisoblanadi.
 import { ACTIVATION } from './activation';
+import { EXERCISE_MAP } from './exercises';
 import { M3_KEYS, type M3 } from './muscles3d';
 
 export type Region = 'chest' | 'shoulders' | 'back' | 'arms' | 'core' | 'hips' | 'legs';
@@ -512,6 +513,8 @@ export const MUSCLE_GUIDE: Record<M3, MuscleGuide> = {
 /** EMG jadvali asosida: shu mushakni eng ko'p ishlatadigan mashqlar (o'lchanganlari teng qiymatda oldinda) */
 export function bestExercises(key: M3, limit = 5): { id: string; mvic: number; est: boolean }[] {
   return Object.entries(ACTIVATION)
+    // faqat ilovadagi mashqlar (rasmi hali tayyor bo'lmagan yangi mashqlarning EMG si jadvalda bor)
+    .filter(([id]) => EXERCISE_MAP[id])
     .flatMap(([id, a]) => {
       const v = a.muscles[key];
       return v ? [{ id, mvic: v.mvic, est: !!v.est }] : [];
