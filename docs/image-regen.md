@@ -306,3 +306,23 @@ Qolgan 7 tasi rasm kelguncha ilovada ko‘rsatilmaydi (`exercisesExtra.ts` READY
 **Flow-7 to‘plami:** `npx vite-node scripts/images/flow-pack4.ts -- <chiqish> <flow6-natijalar>`, 28 ta ish.
 
 Natijalar `.jpg` kelsa, `place_flow.py` dan oldin `natija-*.png` ga o‘giriladi.
+
+## Flow-6 yakuniy to‘plam joylandi va Flow-8 (2026-11-26)
+
+118 ta PNG ko‘rib chiqildi:
+- 13 tasi ilovadagi rasm bilan bir xil;
+- 33 ta ish joylandi: 4 ta yangi mashq (engashib gantel yoyish, Pallof press, turnikda tizza ko‘tarish, Nordik bukilish) va 29 ta tuzatish yoki ikkinchi kadr;
+- 25 tasi rad etildi.
+
+Asosiy kadri almashgan 8 ta yozuvda yorliq va texnika belgilarining koordinatalari qayta o‘lchandi.
+
+Flow-8 to‘plami: `npx vite-node scripts/images/flow-pack5.ts -- <chiqish> <flow6-yakuniy-papka>`. Unda 24 ta ish bor (`scripts/images/fixesFlow8.ts`).
+
+Har bir kadr uchun asos tanlanadi:
+- **edit** — tayyor kadrdagi faqat xato joy tuzatiladi;
+- **pair** — tayyor kadrdan harakatning ikkinchi cheti chiziladi;
+- **fresh** — noldan chiziladi, faqat boshqa iloji bo‘lmasa.
+
+Natijalarni joylash: `python3 scripts/images/place_flow.py <papka>`.
+
+Tos-son cho‘zish (hip-flexor-stretch) to‘plamga kiritilmadi: harakat tabiatan juda kichik (3–5 sm), bitta kadr yetarli.
