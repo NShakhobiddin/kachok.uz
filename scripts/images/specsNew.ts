@@ -131,7 +131,7 @@ export const NEW_SPECS: Record<string, NewExerciseSpec> = {
   'cable-overhead-extension': {
     uz: 'Blokda bosh ortidan triseps (arqon)',
     en: 'Cable Overhead Triceps Extension',
-    why: 'Tritsepsning uzun boshi cho‘zilgan holatda ishlaydi — tadqiqotda o‘sish pushdown’dan ko‘proq (Maeo 2023).',
+    why: 'Trisepsning uzun boshi cho‘zilgan holatda ishlaydi — tadqiqotda o‘sish pushdown’dan ko‘proq (Maeo 2023).',
     female: false,
     phase: 'the stretched position behind the head',
     phaseUz: 'Pastki nuqta',

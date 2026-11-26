@@ -168,7 +168,6 @@ export const ILLUSTRATIONS: Partial<Record<string, Illustration>> = {
   'hip-thrust': {
     src: img('hip-thrust.webp'),
     phase: 'Yuqori nuqta',
-    pair: { src: img('alt/hip-thrust.webp'), phase: 'Pastki nuqta' },
     alt: 'Shtanga bilan tos ko‘tarish, yuqori nuqta: to‘g‘ri texnika; ishlayotgan mushaklar lime rangda yonmoqda',
     labels: [
       { key: 'gluteMax', name: 'Katta dumba', x: 60.8, y: 73.7, side: 'r', ly: 40 },
@@ -184,10 +183,9 @@ export const ILLUSTRATIONS: Partial<Record<string, Illustration>> = {
   'push-up': {
     src: img('push-up.webp'),
     phase: 'Yuqori nuqta',
-    pair: { src: img('alt/push-up.webp'), phase: 'Pastki nuqta' },
     alt: 'Otjimaniya, yuqori nuqta: to‘g‘ri texnika; ishlayotgan mushaklar lime rangda yonmoqda',
     labels: [
-      { key: 'pecMid', name: 'Ko‘krak (o‘rta)', x: 74.8, y: 47.8, side: 'l', ly: 26 },
+      { key: 'pecMid', name: 'Ko‘krak (o‘rta)', x: 71, y: 46, side: 'l', ly: 26 },
       { key: 'deltAnt', name: 'Old delta', x: 70, y: 42, side: 'r', ly: 18 },
       { key: 'tricepsLateral', name: 'Triseps', x: 66, y: 55, side: 'r', ly: 46 },
     ],
@@ -209,8 +207,8 @@ export const ILLUSTRATIONS: Partial<Record<string, Illustration>> = {
       { key: 'rectusFemoris', name: 'Son: to‘g‘ri', x: 62, y: 58, side: 'r', ly: 50 },
     ],
     checks: [
-      { text: 'Shtanga old deltada, o‘mrov oldida', x: 36, y: 34, side: 'l', ly: 18 },
-      { text: 'Tana deyarli tik', x: 50, y: 42, side: 'r', ly: 30 },
+      { text: 'Shtanga old deltada, o‘mrov oldida', x: 45, y: 33.5, side: 'l', ly: 18 },
+      { text: 'Tana deyarli tik', x: 55, y: 50, side: 'r', ly: 30 },
       { text: 'Son pol bilan parallel', x: 64, y: 60, side: 'r', ly: 62 },
       { text: 'Tovonlar yerda', x: 39.2, y: 88.7, side: 'l', ly: 88 },
     ],
@@ -279,7 +277,6 @@ export const ILLUSTRATIONS: Partial<Record<string, Illustration>> = {
   'hack-squat': {
     src: img('hack-squat.webp'),
     phase: 'Pastki nuqta',
-    pair: { src: img('alt/hack-squat.webp'), phase: 'Yuqori nuqta' },
     alt: 'Gakk-mashinada o‘tirish, pastki nuqta: to‘g‘ri texnika; ishlayotgan mushaklar lime rangda yonmoqda',
     labels: [
       { key: 'rectusFemoris', name: 'Son: to‘g‘ri', x: 38, y: 46, side: 'l', ly: 34 },
@@ -288,7 +285,7 @@ export const ILLUSTRATIONS: Partial<Record<string, Illustration>> = {
     ],
     checks: [
       { text: 'Yelkalar yostiq ostida', x: 64, y: 27.4, side: 'r', ly: 12 },
-      { text: 'Bel yostiqqa tegib', x: 66, y: 36, side: 'r', ly: 30 },
+      { text: 'Bel yostiqqa tegib', x: 58, y: 44, side: 'r', ly: 30 },
       { text: 'Tovonlar platformada', x: 28.5, y: 72.6, side: 'l', ly: 80 },
     ],
   },
@@ -345,7 +342,6 @@ export const ILLUSTRATIONS: Partial<Record<string, Illustration>> = {
   'back-extension': {
     src: img('back-extension.webp'),
     phase: 'Yuqori nuqta',
-    pair: { src: img('alt/back-extension.webp'), phase: 'Pastki nuqta' },
     alt: 'Giperekstenziya, yuqori nuqta: to‘g‘ri texnika; ishlayotgan mushaklar lime rangda yonmoqda',
     labels: [
       { key: 'gluteMax', name: 'Katta dumba', x: 53, y: 40, side: 'l', ly: 22 },
@@ -447,7 +443,6 @@ export const ILLUSTRATIONS: Partial<Record<string, Illustration>> = {
       { text: 'Son yostiq ostida mahkam', x: 62, y: 45, side: 'r', ly: 14 },
       { text: 'Orqa suyanchiqda', x: 24.2, y: 28.5, side: 'l', ly: 24 },
       { text: 'Tizza ~90° bukilgan', x: 67.2, y: 51.1, side: 'r', ly: 46 },
-      { text: 'Rolik tovon ustida', x: 64, y: 72, side: 'r', ly: 66 },
     ],
   },
   'glute-bridge': {
@@ -468,7 +463,6 @@ export const ILLUSTRATIONS: Partial<Record<string, Illustration>> = {
   'calf-raise': {
     src: img('calf-raise.webp'),
     phase: 'Yuqori nuqta',
-    pair: { src: img('alt/calf-raise.webp'), phase: 'Pastki nuqta' },
     alt: 'Boldir ko‘tarish, yuqori nuqta: to‘g‘ri texnika; ishlayotgan mushaklar lime rangda yonmoqda',
     labels: [
       { key: 'gastrocnemius', name: 'Boldir', x: 45, y: 68, side: 'l', ly: 62 },
@@ -483,7 +477,6 @@ export const ILLUSTRATIONS: Partial<Record<string, Illustration>> = {
   'db-bench': {
     src: img('db-bench.webp'),
     phase: 'Yuqori nuqta',
-    pair: { src: img('alt/db-bench.webp'), phase: 'Pastki nuqta' },
     alt: 'Gantel bilan yotib jim, yuqori nuqta: qo‘llar yozilgan, gantellar ko‘krak ustida; ishlayotgan mushaklar lime rangda yonmoqda',
     labels: [
       { key: 'pecMid', name: 'Ko‘krak (o‘rta)', x: 39, y: 55, side: 'r', ly: 40 },
@@ -498,11 +491,10 @@ export const ILLUSTRATIONS: Partial<Record<string, Illustration>> = {
   'machine-chest-press': {
     src: img('machine-chest-press.webp'),
     phase: 'Boshlang‘ich holat',
-    pair: { src: img('alt/machine-chest-press.webp'), phase: 'Itarilgan holat' },
     alt: 'Ko‘krak press trenajyori, boshlang‘ich holat: to‘g‘ri texnika; ishlayotgan mushaklar lime rangda yonmoqda',
     labels: [
       { key: 'pecMid', name: 'Ko‘krak (o‘rta)', x: 45, y: 32, side: 'l', ly: 14 },
-      { key: 'pecUpper', name: 'Ko‘krak (yuqori)', x: 50, y: 27, side: 'r', ly: 14 },
+      { key: 'pecUpper', name: 'Ko‘krak (yuqori)', x: 55, y: 28.5, side: 'r', ly: 14 },
       { key: 'deltAnt', name: 'Old delta', x: 62, y: 30, side: 'r', ly: 30 },
     ],
     checks: [
@@ -560,7 +552,6 @@ export const ILLUSTRATIONS: Partial<Record<string, Illustration>> = {
   'cable-fly': {
     src: img('cable-fly.webp'),
     phase: 'Boshlang‘ich holat',
-    pair: { src: img('alt/cable-fly.webp'), phase: 'Qisqargan holat' },
     alt: 'Krossoverda qo‘l birlashtirish, boshlang‘ich holat: qo‘llar keng ochilgan, tirsak biroz bukilgan; ishlayotgan mushaklar lime rangda yonmoqda',
     labels: [
       { key: 'pecMid', name: 'Ko‘krak (o‘rta)', x: 45, y: 28, side: 'l', ly: 40 },
@@ -576,7 +567,6 @@ export const ILLUSTRATIONS: Partial<Record<string, Illustration>> = {
   'pec-deck': {
     src: img('pec-deck.webp'),
     phase: 'Boshlang‘ich holat',
-    pair: { src: img('alt/pec-deck.webp'), phase: 'Qisqargan holat' },
     alt: 'Batterflay trenajyori, boshlang‘ich holat: to‘g‘ri texnika; ishlayotgan mushaklar lime rangda yonmoqda',
     labels: [
       { key: 'pecMid', name: 'Ko‘krak (o‘rta)', x: 54, y: 32, side: 'r', ly: 30 },
@@ -591,7 +581,6 @@ export const ILLUSTRATIONS: Partial<Record<string, Illustration>> = {
   'db-fly': {
     src: img('db-fly.webp'),
     phase: 'Pastki nuqta',
-    pair: { src: img('alt/db-fly.webp'), phase: 'Yuqori nuqta' },
     alt: 'Gantel bilan qo‘l yoyish, pastki nuqta: to‘g‘ri texnika; ishlayotgan mushaklar lime rangda yonmoqda',
     labels: [
       { key: 'pecMid', name: 'Ko‘krak (o‘rta)', x: 56, y: 35, side: 'l', ly: 36 },

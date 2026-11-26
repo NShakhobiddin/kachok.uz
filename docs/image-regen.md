@@ -235,3 +235,43 @@ Tavsiflar aniqlashtirildi:
 - seated-calf-raise B — plastinka joyida, tovon chetidan pastda.
 - mountain-climber B, bicycle-crunch B.
 
+
+## 2026-11-26: to‘liq murabbiy auditi (ma’lumotlar + rasmlar)
+
+107 ta mashq va cho‘zilish tekshirildi: har bir rasm, ikkinchi kadr, mushak yorliqlari va texnika belgilari.
+Har biri ilovada qanday ko‘rinishi bilan suratga olindi va 10% to‘r ustida o‘lchandi.
+
+**Ma’lumotlar tuzatildi** (kod): jarohatga moslash, yuklama turi, mushaklar va texnika matnlari. Batafsil — `git log`.
+
+**Ilovadan olib tashlangan ikkinchi kadrlar** (harakat noto‘g‘ri yoki buzuq; Flow-6 da qayta):
+- machine-chest-press — dastaklar havoda;
+- push-up — qo‘llar yarim uzunlikda;
+- hip-thrust — shtanga tosdan tushgan;
+- calf-raise — ikki kadr bir xil;
+- back-extension — bel dumaloq;
+- cable-fly, pec-deck, db-fly — tirsak 90°, jimga aylanadi;
+- db-bench — ushlash o‘zgaradi;
+- hack-squat — harakat yo‘q;
+- reverse-crunch — tizza teskari bukilgan;
+- reverse-lunge, wall-sit — oyoq sirpanadi;
+- single-leg-bridge — kadrlar bir xil;
+- childs-pose — oyoqlar sakraydi;
+- butterfly — umurtqa dumaloq.
+
+**Boshqa o‘zgarishlar:**
+- hip-flexor-stretch — to‘g‘ri yoritilgan B kadr asosiy qilindi.
+- leg-curl — «Rolik tovon ustida» belgisi olib tashlandi (rasmda rolik boldir oldida).
+- Yorliq joylari tuzatildi: barbell-row, db-row, chin-up, front-squat, hack-squat, machine-chest-press, push-up.
+- dead-bug ga yorliq va belgilar qo‘shildi.
+
+**Flow-6 to‘plami:** `npx vite-node scripts/images/flow-pack3.ts -- <chiqish>`.
+- `1_yangi` — 15 ta yangi mashq (`specsNew.ts`). Mashqlar ilovaga rasmlar bilan birga qo‘shiladi.
+- `2_tuzatish` — 56 ta topshiriq (`fixesAudit3.ts`).
+
+Eng muhimlari (ustuvorlik 1):
+- **Noto‘g‘ri ushlash yoki shtanga joyi:** chin-up (ushlash teskari — kaftlar oldinga), barbell-row (shtanga son o‘rtasida), lateral-raise (dasta bilak bo‘ylab), reverse-fly (lenta orqada), incline-bench.
+- **Noto‘g‘ri sozlangan trenajyor yoki holat:** leg-curl (rolik boldir oldida), pike-push-up, knee-push-up.
+- **Mashq yoki pozaning boshqa varianti chizilgan:** curtsy-lunge (oyoqlar kesishmaydi), side-plank (bilak o‘rniga to‘g‘ri qo‘l).
+- **Cho‘zilishlar:** calf-stretch (tovon ko‘tarilgan), cross-body-shoulder (tirsakdan ushlangan), doorway-chest, cobra, pigeon, figure-four.
+
+Joylash: `python3 scripts/images/place_flow.py <natijalar>`.
