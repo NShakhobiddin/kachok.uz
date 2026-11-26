@@ -1,7 +1,4 @@
-# main ga har push'da GitHub Pages'ga joylaydi:
-#   https://<foydalanuvchi>.github.io/<repo>/      — reklama sayti (site/)
-#   https://<foydalanuvchi>.github.io/<repo>/app/  — ilovaning brauzer versiyasi
-# O'z domeni ulansa (Settings → Pages → Custom domain), manzillar o'zi moslashadi: sayt — domen ildizida, ilova — /app/.
+# main ga har push'da ilovani GitHub Pages'ga joylaydi: https://<foydalanuvchi>.github.io/<repo>/
 # Bir martalik sozlash: Settings → Pages → Source: "GitHub Actions"
 name: GitHub Pages
 
@@ -30,32 +27,31 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm test
-      # Pages manzili: base_path — "/kachok.uz" (yoki o'z domenida ""), base_url — to'liq manzil
-      - id: pages
-        uses: actions/configure-pages@v5
-      - name: Ilova (app/)
-        run: npm run build
+      - run: npm run build
         env:
-          VITE_BASE: ${{ steps.pages.outputs.base_path }}/app/
+          VITE_BASE: /${{ github.event.repository.name }}/
           # Settings → Secrets and variables → Actions → Variables: API_URL (masalan https://gymbos-api.onrender.com),
           # TG_BOT (bot nomi, @siz), TG_APP (Mini App qisqa nomi, bo'lsa). Bo'sh bo'lsa — ilova serversiz ishlaydi
           VITE_API_URL: ${{ vars.API_URL }}
           VITE_TG_BOT: ${{ vars.TG_BOT || 'gym_bosbot' }}
           VITE_TG_APP: ${{ vars.TG_APP }}
-      - name: Sayt (ildiz)
-        run: npm run build:site
-        env:
-          SITE_BASE: ${{ steps.pages.outputs.base_path }}/
-          SITE_URL: ${{ steps.pages.outputs.base_url }}
-          VITE_TG_BOT: ${{ vars.TG_BOT || 'gym_bosbot' }}
-      - name: Birlashtirish
-        run: node scripts/compose-pages.mjs _site
-        env:
-          SITE_BASE: ${{ steps.pages.outputs.base_path }}/
-          SITE_URL: ${{ steps.pages.outputs.base_url }}
+      # ichki sahifaga to'g'ridan-to'g'ri kirilganda ham ilova ochilsin
+      - run: cp dist/index.html dist/404.html
+      # 26-noyabrda ilova qisqa vaqt app/ manzilida turdi: o'sha yerda ro'yxatdan o'tgan xizmat ishchisi keshini tozalab, o'zini o'chiradi
+      - run: |
+          mkdir -p dist/app
+          printf '%s\n' \
+            "self.addEventListener('install', function () { self.skipWaiting(); });" \
+            "self.addEventListener('activate', function (e) { e.waitUntil((async function () {" \
+            "  var s = self.registration.scope, keys = await caches.keys();" \
+            "  await Promise.all(keys.filter(function (k) { return k.indexOf(s) >= 0; }).map(function (k) { return caches.delete(k); }));" \
+            "  await self.registration.unregister();" \
+            "  (await self.clients.matchAll({ type: 'window' })).forEach(function (c) { c.navigate(c.url.replace('/app/', '/')); });" \
+            "})()); });" > dist/app/sw.js
+      - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: _site
+          path: dist
 
   deploy:
     needs: build
