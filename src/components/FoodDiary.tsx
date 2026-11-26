@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FOOD_CATS, FOOD_DB, FOOD_MAP, portion, searchFoods, type FoodCat, type FoodItem } from '../data/foods';
 import { RECIPE_FOODS } from '../data/recipes';
+import { giShort } from '../data/glycemic';
 import type { NutritionPlan, TdeeEstimate } from '../engine/nutrition';
 import { fmtDate, isoDate } from '../lib/date';
 import { useDateKey } from '../lib/useToday';
@@ -341,6 +342,7 @@ function PortionStep({
         <h3 className="title">{food.name}</h3>
         <p className="tiny faint num mt-4">
           {food.noGram ? '1 porsiya' : '100 g'}: {food.kcal} kkal · O {food.p} · U {food.c} · Y {food.f}
+          {giShort(food)}
         </p>
       </div>
       {/* birlik bitta bo‘lsa (retsept — faqat porsiya) tanlov ko‘rsatilmaydi */}

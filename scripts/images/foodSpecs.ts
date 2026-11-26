@@ -1,0 +1,105 @@
+// Taom rasmlari uchun tavsiflar (ingliz tilida — generatorlar yaxshiroq tushunadi).
+// Milliy taomlar (dishes.ts) va retseptlar (recipes.ts): idish, porsiya, ko‘rinishi. Uslub — ilova dizayni (qora fon, lime aksent).
+
+export interface FoodShot {
+  /** nima tasvirlanadi */
+  dish: string;
+  /** idish va xizmat ko‘rinishi */
+  serve: string;
+}
+
+const LAGAN = 'a round traditional Uzbek ceramic lagan plate with a cobalt-blue Rishton pattern';
+const KOSA = 'a traditional Uzbek ceramic kosa bowl with a cobalt-blue and white cotton-flower (paxta) pattern';
+const PLATE = 'a simple matte dark stone plate';
+const BOARD = 'a dark wooden serving board';
+
+export const DISH_SHOTS: Record<string, FoodShot> = {
+  osh: { dish: 'Uzbek plov (osh): golden-orange long-grain rice with julienned yellow and orange carrots, chunks of lamb on top, a whole head of garlic and chickpeas', serve: `a generous heap on ${LAGAN}, a small side of achchiq-chuchuk tomato-onion salad` },
+  somsa: { dish: 'two triangular Uzbek tandoor samsa with golden, blistered, sesame-sprinkled crust, one broken open showing minced lamb and onion filling', serve: BOARD },
+  lagmon: { dish: 'Uzbek lagman: thick hand-pulled noodles in rich broth topped with stir-fried beef, bell pepper, tomato, onion and fresh herbs', serve: KOSA },
+  manti: { dish: 'five large steamed Uzbek manti dumplings with thin translucent dough, juicy lamb and onion filling, a small bowl of white yogurt (qatiq) beside', serve: LAGAN },
+  shashlik: { dish: 'three skewers of grilled Uzbek lamb shashlik with charred edges, raw onion rings and fresh dill', serve: `${PLATE}, metal skewers` },
+  shorva: { dish: 'Uzbek shurpa: clear golden broth with a large piece of lamb on the bone, whole potato, carrot chunks, bell pepper and fresh herbs', serve: KOSA },
+  mastava: { dish: 'Uzbek mastava rice soup with small beef pieces, potato, carrot, tomato, topped with a spoon of white yogurt and chopped greens', serve: KOSA },
+  chuchvara: { dish: 'Uzbek chuchvara: small meat dumplings in clear broth with fresh dill and a swirl of yogurt', serve: KOSA },
+  dimlama: { dish: 'Uzbek dimlama: slow-braised layers of beef, potato, cabbage leaves, carrot, bell pepper and tomato, juicy and glossy', serve: LAGAN },
+  moshxorda: { dish: 'Uzbek mashkhurda: thick green mung bean and rice soup with beef pieces, topped with yogurt and herbs', serve: KOSA },
+  'qozon-kabob': { dish: 'Uzbek kazan kabob: fried lamb pieces and golden fried potato wedges with raw onion rings', serve: LAGAN },
+  norin: { dish: 'Uzbek naryn: very thin hand-cut cold noodles mixed with finely sliced boiled horse meat and onion', serve: PLATE },
+  'qovurma-lagmon': { dish: 'Uzbek fried lagman (qovurma lagman): thick noodles stir-fried with beef, bell pepper, tomato and garlic', serve: LAGAN },
+  'osh-tovuq': { dish: 'Uzbek chicken plov: long-grain rice with carrots and chickpeas topped with pieces of chicken', serve: LAGAN },
+  'tandir-gosht': { dish: 'Uzbek tandoor lamb (tandir go‘sht): large juicy roasted lamb pieces with crisp brown skin on a bed of flatbread, red onion and herbs', serve: BOARD },
+  qovurma: { dish: 'Uzbek qovurma: pan-fried beef pieces with onion and spices in a little fat', serve: PLATE },
+  'jigar-kabob': { dish: 'two skewers of grilled lamb liver kebab alternated with small pieces of fat, onion rings', serve: `${PLATE}, metal skewers` },
+  lula: { dish: 'two skewers of grilled minced-lamb lula kebab, onion rings, dill', serve: `${PLATE}, metal skewers` },
+  'shashlik-tovuq': { dish: 'three skewers of grilled chicken shashlik with charred edges, onion rings and herbs', serve: `${PLATE}, metal skewers` },
+  'tovuq-qovurma': { dish: 'Uzbek chicken and potato stew (jarkop style): chicken pieces with potato chunks, onion and herbs', serve: KOSA },
+  'baliq-qovurma': { dish: 'pan-fried whole river fish pieces with golden crust, lemon slice and herbs', serve: PLATE },
+  xonim: { dish: 'Uzbek khanum: steamed rolled dough with meat and potato filling, sliced into thick spiral rounds, with yogurt sauce', serve: LAGAN },
+  beshbarmoq: { dish: 'beshbarmak: wide flat boiled noodles topped with sliced boiled meat and onion in broth', serve: LAGAN },
+  'shivit-oshi': { dish: 'Khorezm shivit oshi: bright green dill noodles topped with a meat and vegetable sauce and yogurt', serve: LAGAN },
+  mampar: { dish: 'mampar: short torn noodle soup with beef, bell pepper, tomato and herbs in red broth', serve: KOSA },
+  'ugra-oshi': { dish: 'Uzbek ugra noodle soup: thin homemade noodles in clear broth with beef, carrot and greens', serve: KOSA },
+  'kuza-shorva': { dish: 'kuza shurpa: clear lamb broth with chickpeas and vegetables served in a small clay pot (kuza)', serve: 'a small brown clay pot with a lid beside it' },
+  halim: { dish: 'Uzbek halim: smooth thick porridge of wheat and meat with melted butter on top and cinnamon', serve: KOSA },
+  'moshkichiri-dish': { dish: 'Uzbek mosh kichiri: mung bean and rice porridge with fried onion and a fried egg on top', serve: LAGAN },
+  shirguruch: { dish: 'Uzbek shirguruch: creamy milk rice porridge with a small piece of butter melting on top', serve: KOSA },
+  'manti-qovoq': { dish: 'five steamed manti dumplings with orange pumpkin filling visible through thin dough, yogurt beside', serve: LAGAN },
+  'chuchvara-qovurma': { dish: 'pan-fried Uzbek chuchvara dumplings with golden crispy bottoms, yogurt and herbs', serve: PLATE },
+  'somsa-kok': { dish: 'two Uzbek samsa with green herb filling, golden crust, one broken open', serve: BOARD },
+  'somsa-qovoq': { dish: 'two Uzbek samsa with orange pumpkin filling, golden crust, one broken open', serve: BOARD },
+  dolma: { dish: 'Uzbek dolma: ten grape-leaf rolls stuffed with minced meat and rice, with a small bowl of yogurt', serve: PLATE },
+  hasip: { dish: 'Uzbek hasip: home-made lamb sausage sliced into rounds showing rice and meat filling', serve: BOARD },
+  gumma: { dish: 'three golden deep-fried Uzbek gumma pies (pirozhki), one broken open showing filling', serve: BOARD },
+  'tuxum-barak': { dish: 'Uzbek tukhum barak: boiled half-moon dumplings with egg filling, glossy with butter', serve: PLATE },
+  qatlama: { dish: 'Uzbek qatlama: flaky layered pan-fried flatbread, golden and crisp, torn to show layers', serve: BOARD },
+  bogirsoq: { dish: 'Uzbek boursak (bo‘g‘irsoq): a pile of small golden deep-fried dough pieces', serve: PLATE },
+  jiz: { dish: 'Uzbek jiz: crispy pan-fried lamb pieces with onion rings and herbs', serve: PLATE },
+  qazi: { dish: 'Uzbek kazy: horse meat sausage sliced into rounds showing meat and white fat marbling', serve: BOARD },
+  'achchiq-chuchuk': { dish: 'Uzbek achichuk salad: thinly sliced ripe tomatoes and sweet onion rings with black pepper and basil', serve: PLATE },
+  chalop: { dish: 'Uzbek chalop: cold yogurt soup with diced cucumber and fresh dill', serve: KOSA },
+  sumalak: { dish: 'Uzbek sumalak: dark brown glossy sprouted-wheat pudding (Navruz dish)', serve: KOSA },
+  nisholda: { dish: 'Uzbek nishalda: fluffy white whipped sweet cream-like dessert', serve: 'a small glass bowl with a teaspoon' },
+  'chak-chak': { dish: 'chak-chak: honey-coated fried dough pieces pressed into a golden mound with chopped nuts', serve: PLATE },
+  parvarda: { dish: 'Uzbek parvarda: small white pillow-shaped pulled-sugar candies dusted with flour', serve: 'a small ceramic dish next to a piala tea cup' },
+  non: { dish: 'Uzbek tandoor non: round flatbread with a stamped center pattern, sesame and nigella seeds, golden crust', serve: BOARD },
+  patir: { dish: 'Uzbek patir non: rich layered round flatbread with glossy golden crust and stamped center', serve: BOARD },
+  'shirmoy-non': { dish: 'Uzbek shirmoy non: soft glossy round milk bread with sesame', serve: BOARD },
+};
+
+export const RECIPE_SHOTS: Record<string, FoodShot> = {
+  'oat-tvorog': { dish: 'oatmeal porridge mixed with cottage cheese, topped with banana slices and cinnamon', serve: KOSA },
+  'omelet-tomato': { dish: 'fluffy omelet with tomato pieces and herbs, a slice of rye bread', serve: PLATE },
+  syrniki: { dish: 'six golden baked cottage-cheese pancakes (syrniki) with a spoon of Greek yogurt and honey', serve: PLATE },
+  'greek-bowl': { dish: 'Greek yogurt bowl topped with diced apple, walnuts and a drizzle of honey', serve: KOSA },
+  'egg-cheese-bread': { dish: 'two halved boiled eggs, cheese slices, tomato and cucumber, a quarter of Uzbek non', serve: PLATE },
+  'lavash-roll': { dish: 'lavash wrap with omelet, cheese and tomato, cut in half showing layers', serve: BOARD },
+  'protein-shake': { dish: 'tall glass of banana protein shake, a banana and oats beside', serve: 'a tall glass on a dark stone surface' },
+  'chicken-buckwheat': { dish: 'grilled chicken breast slices with buckwheat and fresh tomato-cucumber salad', serve: PLATE },
+  'light-plov': { dish: 'light Uzbek chicken plov: rice with lots of carrots, chickpeas and lean chicken breast pieces', serve: LAGAN },
+  'lentil-soup': { dish: 'red lentil soup with beef pieces, potato, carrot and herbs', serve: KOSA },
+  'mastava-light': { dish: 'light mastava rice soup with lean beef, vegetables and a spoon of yogurt', serve: KOSA },
+  dimlama: { dish: 'Uzbek dimlama with lean beef, potato, cabbage, carrot and bell pepper', serve: LAGAN },
+  'chicken-lagman': { dish: 'stir-fried noodles with chicken strips, bell pepper and tomato', serve: LAGAN },
+  'moshxorda-light': { dish: 'mung bean and rice soup with lean beef and yogurt', serve: KOSA },
+  'beans-chicken-salad': { dish: 'red bean salad with shredded chicken, cucumber, tomato and herbs, lemon dressing', serve: KOSA },
+  'baked-fish': { dish: 'baked white fish fillet on roasted potato, zucchini and bell pepper, lemon wedge', serve: PLATE },
+  'oven-kebab': { dish: 'oven-baked chicken thigh skewers with achichuk tomato-onion salad and a quarter of non', serve: PLATE },
+  'stuffed-zucchini': { dish: 'baked zucchini halves stuffed with minced beef and rice, topped with tomato and melted cheese', serve: PLATE },
+  'chicken-stirfry': { dish: 'chicken and vegetable stir-fry (bell pepper, zucchini, carrot) with a side of white rice', serve: PLATE },
+  'herb-tvorog': { dish: 'cottage cheese mixed with dill and garlic, cucumber slices and a slice of rye bread', serve: PLATE },
+  'beef-buckwheat': { dish: 'buckwheat cooked with beef pieces, onion, carrot and tomato', serve: KOSA },
+  'tuna-salad': { dish: 'tuna salad with red beans, cucumber, tomato and a halved boiled egg', serve: KOSA },
+  'lentil-patties': { dish: 'golden lentil patties with garlic Greek yogurt sauce and herbs', serve: PLATE },
+  'veg-frittata': { dish: 'oven-baked vegetable frittata with spinach and red pepper, one slice cut out', serve: 'a dark cast-iron pan' },
+  'mung-salad': { dish: 'mung bean salad with tomato, cucumber, onion, herbs and a halved boiled egg', serve: KOSA },
+  'chickpea-eggplant': { dish: 'chickpea and eggplant ragout in tomato sauce topped with Greek yogurt and herbs', serve: KOSA },
+  'lentil-soup-veg': { dish: 'thick red lentil soup without meat, with potato and carrot, lemon and herbs', serve: KOSA },
+  moshkichiri: { dish: 'mung bean and rice porridge with fried onion and an egg on top', serve: LAGAN },
+  'qatiq-almond': { dish: 'a glass of kefir (qatiq), a handful of almonds and a green apple', serve: 'a glass and a small dish on a dark stone surface' },
+  'tvorog-honey': { dish: 'cottage cheese with honey and chopped walnuts', serve: KOSA },
+  'suzma-toast': { dish: 'two rye bread slices spread with suzma (strained yogurt), topped with cucumber slices and dill', serve: BOARD },
+  'eggs-cucumber': { dish: 'two boiled eggs (one halved) and fresh cucumber slices with a pinch of salt', serve: PLATE },
+  chalop: { dish: 'cold yogurt soup with diced cucumber and dill', serve: KOSA },
+  'egg-white-omelet': { dish: 'light egg-white omelet with spinach and tomato', serve: PLATE },
+};

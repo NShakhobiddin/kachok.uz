@@ -4,17 +4,18 @@ import { LineChart, MacroBar } from '../components/charts';
 import { FoodDiary, TdeeCard } from '../components/FoodDiary';
 import { ProGate } from '../components/ProGate';
 import { MealIdeasCard, RecipeBrowser } from '../components/Recipes';
+import { FoodGuide } from '../components/FoodGuide';
 import { Icon } from '../components/ui/Icon';
 import { Note } from '../components/ui/Fold';
 import { Sheet } from '../components/ui/Sheet';
 import { Stepper } from '../components/ui/controls';
 import { sourceById } from '../data/sources';
-import { ACTIVITY, NATIONAL_DISHES, SUPPLEMENTS, clampKcalAdjust, mealPlan, weeklyCheck, weightTrend } from '../engine/nutrition';
+import { ACTIVITY, SUPPLEMENTS, clampKcalAdjust, mealPlan, weeklyCheck, weightTrend } from '../engine/nutrition';
 import { fmtDate, isoDate } from '../lib/date';
 import { useNutrition } from '../lib/useNutrition';
 import { useStore } from '../store/useStore';
 
-type Tab = 'diary' | 'recipes' | 'plan';
+type Tab = 'diary' | 'recipes' | 'foods' | 'plan';
 
 const GOAL_TEXT: Record<string, string> = {
   fatLoss: 'ozish',
@@ -41,7 +42,7 @@ export default function Nutrition() {
     if (deepRecipe) return 'recipes';
     try {
       const t = localStorage.getItem('kachok-ntab');
-      return t === 'plan' || t === 'recipes' ? t : 'diary';
+      return t === 'plan' || t === 'recipes' || t === 'foods' ? t : 'diary';
     } catch {
       return 'diary';
     }
@@ -134,6 +135,9 @@ export default function Nutrition() {
         <button role="tab" aria-selected={tab === 'recipes'} className={tab === 'recipes' ? 'on' : ''} onClick={() => setTab('recipes')}>
           Retseptlar
         </button>
+        <button role="tab" aria-selected={tab === 'foods'} className={tab === 'foods' ? 'on' : ''} onClick={() => setTab('foods')}>
+          Taomlar
+        </button>
         <button role="tab" aria-selected={tab === 'plan'} className={tab === 'plan' ? 'on' : ''} onClick={() => setTab('plan')}>
           Reja
         </button>
@@ -153,6 +157,8 @@ export default function Nutrition() {
       )}
 
       {tab === 'recipes' && <RecipeBrowser initial={deepRecipe} />}
+
+      {tab === 'foods' && <FoodGuide np={np} />}
 
       {tab === 'plan' && (
         <>
@@ -264,30 +270,16 @@ export default function Nutrition() {
             </Note>
           </section>
 
-          {/* Milliy taomlar */}
-          <section className="section">
-            <div className="section-head">
-              <h2>Milliy taomlar</h2>
-              <span className="small muted">taxminiy</span>
-            </div>
-            <div className="card flush">
-              {NATIONAL_DISHES.map((d, i) => (
-                <div key={d.name} style={{ padding: '12px 14px', borderBottom: i < NATIONAL_DISHES.length - 1 ? '1px solid var(--line)' : 0 }}>
-                  <div className="row between gap-12">
-                    <span className="strong">{d.name}</span>
-                    <span className="strong num" style={{ flex: 'none' }}>
-                      {d.kcal} kkal
-                    </span>
-                  </div>
-                  <div className="tiny faint">
-                    {d.portion} · oqsil ~{d.p} g
-                  </div>
-                  <div className="small muted mt-4">{d.tip}</div>
-                </div>
-              ))}
-            </div>
-            <p className="tiny faint mt-8">Kunlik maqsadingizning {Math.round((800 / np.kcal) * 100)}% i — bitta likopcha osh. Taqiq yo‘q, faqat hisob bor.</p>
-          </section>
+          <button className="card row gap-12 mt-16" style={{ textAlign: 'left', width: '100%' }} onClick={() => setTab('foods')}>
+            <span className="lesson-ico" aria-hidden="true">
+              🍚
+            </span>
+            <span className="grow stack" style={{ gap: 2 }}>
+              <span className="strong">Milliy taomlar va mahsulotlar</span>
+              <span className="tiny muted">50 dan ortiq taom kaloriyasi, mahsulotlar tarkibi va glikemik indeks</span>
+            </span>
+            <Icon name="right" style={{ color: 'var(--text-3)' }} />
+          </button>
 
           {/* Qo‘shimchalar */}
           <section className="section">

@@ -403,6 +403,25 @@ export const SOURCES: Source[] = [
     cite: 'Betts JG, Young KA, Wise JA, Johnson E, Poe B, Kruse DH, Korol O, Johnson JE, Womble M, DeSaix P. Anatomy and Physiology 2e. Houston, TX: OpenStax, Rice University; 2022. https://openstax.org/details/books/anatomy-and-physiology-2e (CC BY 4.0).',
     finding: "Skelet mushaklarining boshlanishi, birikishi va vazifalari — mushaklar atlasidagi anatomik ma’lumotlar asosi.",
   },
+  {
+    id: 'atkinson2008',
+    short: 'Atkinson va boshq., 2008',
+    cite: 'Atkinson FS, Foster-Powell K, Brand-Miller JC. International tables of glycemic index and glycemic load values: 2008. Diabetes Care 31(12):2281-2283, 2008.',
+    doi: '10.2337/dc08-1239',
+    finding: "2480 dan ortiq mahsulotning glikemik indeksi; ilovadagi GI qiymatlari — maqolaning umumiy mahsulotlar jadvalidan (glyukoza = 100).",
+  },
+  {
+    id: 'iso26642',
+    short: 'ISO 26642:2010',
+    cite: 'International Organization for Standardization. ISO 26642:2010 Food products — Determination of the glycaemic index (GI) and recommendation for food classification. Geneva: ISO; 2010.',
+    finding: "GI o‘lchash usuli va toifalar: past ≤ 55, o‘rta 56–69, yuqori ≥ 70.",
+  },
+  {
+    id: 'fdc',
+    short: 'USDA FoodData Central',
+    cite: 'U.S. Department of Agriculture, Agricultural Research Service. FoodData Central. https://fdc.nal.usda.gov',
+    finding: "Mahsulotlarning 100 g dagi kaloriya, oqsil, uglevod va yog‘ miqdori — ovqat kundaligi va ma’lumotnoma asosi.",
+  },
 ];
 
 export const sourceById = (id: string) => SOURCES.find((s) => s.id === id);

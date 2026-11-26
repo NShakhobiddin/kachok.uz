@@ -1,6 +1,7 @@
 // Retseptlar: kunlik tavsiya kartasi (kundalikda), retseptlar ro‘yxati (filtrlar bilan) va retsept oynasi
 // (masalliqlar necha kishiga, tayyorlash bosqichlari, kundalikka bir bosishda qo‘shish).
 import { useMemo, useState } from 'react';
+import { foodImg } from '../data/foodImages';
 import { normalize } from '../data/foods';
 import { RECIPES, RECIPE_PREFIX, fmtQty, ingredientLine, type MealSlot, type RecipeInfo } from '../data/recipes';
 import { mealIdeas } from '../engine/mealIdeas';
@@ -20,12 +21,16 @@ const PEOPLE = [1, 2, 3, 4, 6];
 const uid = () => Math.random().toString(36).slice(2, 10);
 const addDays = (iso: string, n: number) => isoDate(new Date(new Date(iso + 'T12:00:00').getTime() + n * 86400000));
 
+/** Retsept rasmi (Flow’da yaratilgan bo‘lsa) yoki belgisi */
+function RecipeIco({ r, lg }: { r: RecipeInfo; lg?: boolean }) {
+  const src = foodImg(RECIPE_PREFIX + r.id);
+  return src ? <img className={`recipe-ico food-img${lg ? ' lg' : ''}`} src={src} alt="" loading="lazy" /> : <span className={`recipe-ico${lg ? ' lg' : ''}`} aria-hidden="true">{r.icon}</span>;
+}
+
 export function RecipeRow({ r, servings = 1, meta, onClick }: { r: RecipeInfo; servings?: number; meta?: string; onClick: () => void }) {
   return (
     <button className="recipe-row" onClick={onClick}>
-      <span className="recipe-ico" aria-hidden="true">
-        {r.icon}
-      </span>
+      <RecipeIco r={r} />
       <span className="grow stack" style={{ gap: 2, minWidth: 0, textAlign: 'left' }}>
         <span className="small strong ellipsis">{r.name}</span>
         <span className="tiny muted num ellipsis">
@@ -175,9 +180,7 @@ function RecipeBody({ r, servings, meal: meal0 }: { r: RecipeInfo; servings: num
   return (
     <div className="stack gap-16">
       <div className="row gap-12">
-        <span className="recipe-ico lg" aria-hidden="true">
-          {r.icon}
-        </span>
+        <RecipeIco r={r} lg />
         <div className="stack" style={{ gap: 2 }}>
           <h3 className="title">{r.name}</h3>
           <span className="tiny muted">

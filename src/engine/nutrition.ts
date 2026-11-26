@@ -490,20 +490,6 @@ export function mealPlan(plan: NutritionPlan, prefs: Profile['dietPrefs']): Meal
   });
 }
 
-/** Milliy taomlar — taxminiy kaloriya (porsiya tarkibi oshxonaga qarab farq qiladi) */
-export const NATIONAL_DISHES: { name: string; portion: string; kcal: number; p: number; tip: string }[] = [
-  { name: 'Osh (palov)', portion: '1 likopcha, ~350 g', kcal: 800, p: 24, tip: 'Guruchni kamroq, go‘sht va achchiq-chuchukni ko‘proq oling. Haftada 1–2 marta — mutlaqo mumkin.' },
-  { name: 'Somsa', portion: '1 dona, ~120 g', kcal: 350, p: 10, tip: 'Tandir somsa yog‘li. Tovuqli yoki ko‘katli variant yengilroq.' },
-  { name: 'Lag‘mon', portion: '1 kosa, ~450 g', kcal: 600, p: 22, tip: 'Go‘shtli qismini ko‘paytirib, xamirini kamaytiring.' },
-  { name: 'Mastava', portion: '1 kosa, ~400 g', kcal: 300, p: 12, tip: 'Yengil va to‘yimli — kechki ovqatga mos.' },
-  { name: 'Sho‘rva', portion: '1 kosa, ~400 g', kcal: 320, p: 20, tip: 'Go‘shtli sho‘rva oqsilga boy; yog‘ini olib tashlang.' },
-  { name: 'Manti', portion: '5 dona, ~250 g', kcal: 550, p: 25, tip: 'Qatiq bilan yeng — oqsil qo‘shiladi.' },
-  { name: 'Chuchvara', portion: '1 kosa, ~350 g', kcal: 450, p: 20, tip: 'Suyuq (sho‘rvali) variant qovurilganidan ancha yengil.' },
-  { name: 'Non', portion: '1 dona, ~250 g', kcal: 660, p: 22, tip: "Bir mahalda chorak non (~60 g) — 160 kkal. Butun nonni «bilmasdan» yeb qo‘yish oson." },
-  { name: 'Moshxo‘rda', portion: '1 kosa, ~400 g', kcal: 380, p: 16, tip: 'Mosh — o‘simlik oqsili va tolaga boy.' },
-  { name: 'Qozon kabob', portion: '1 porsiya, ~300 g', kcal: 650, p: 30, tip: 'Kartoshkasi yog‘da qovurilgan — salat bilan muvozanatlang.' },
-];
-
 /** Ilmiy asoslangan qo‘shimchalar (dalil darajasi bilan) */
 export const SUPPLEMENTS: { name: string; grade: 'A' | 'B' | 'C' | 'X'; dose: string; text: string; source?: string }[] = [
   {

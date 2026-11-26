@@ -14,3 +14,9 @@ Rasmlar AI bilan yaratiladi, ichida matn bo'lmaydi: mushak foizlari (EMG) va tex
    (jihozlar: `--kind equipment`); qiyin holatlar uchun `IMAGE_MODEL=gemini-3-pro-image`. Natija — `scripts/images/out/` (gitga kirmaydi).
 4. Tekshirish: har bir variant texnika (shtanga joyi, qo'llar, tizza, bel, holat) bo'yicha ko'zdan kechiriladi; xatosi bor bo'lsa — qayta yaratiladi.
 5. Joylash: `python3 scripts/images/place.py picks.json` — webp (1024 px), ro'yxatlar uchun kichik rasm (192 px), jihozlar (512 px) va ma'lumot fayllari.
+
+## Taom rasmlari (Ovqat → Taomlar va Retseptlar)
+
+1. Promptlar: `npx vite-node scripts/images/food-pack.ts -- <papka>` — 51 ta milliy taom va 34 ta retsept (`foodSpecs.ts`), ilova dizayniga mos (qora fon, lime aksent).
+2. Flow’da har papkaga `natija.png` saqlanadi.
+3. Joylash: `python3 -I scripts/images/place_food.py <papka>` — `public/food/<id>.webp` (512 px) va `src/data/foodImages.ts` ro‘yxati. Rasmi yo‘q taomda belgi (emoji) ko‘rinadi.
