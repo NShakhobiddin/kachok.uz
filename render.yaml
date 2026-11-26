@@ -26,7 +26,7 @@ services:
       - key: JWT_SECRET
         generateValue: true
       - key: APP_URL
-        value: https://nshakhobiddin.github.io/kachok.uz/
+        value: https://nshakhobiddin.github.io/kachok.uz/app/
       - key: CORS_ORIGINS
         value: https://nshakhobiddin.github.io
       # Render proksi ortida: mijoz IP'si X-Forwarded-For'dan

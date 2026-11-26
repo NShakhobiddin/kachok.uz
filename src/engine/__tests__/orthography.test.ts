@@ -28,7 +28,8 @@ function texts(file: string): string[] {
 describe('O‘zbek imlosi', () => {
   it('o‘ va g‘ to‘g‘ri belgi bilan, apostrof bilan emas', () => {
     const bad: string[] = [];
-    for (const f of files(ROOT))
+    // ilova va reklama sayti (site/src)
+    for (const f of [...files(ROOT), ...files(resolve(ROOT, '../site/src'))])
       for (const t of texts(f)) if (/(?<!Pr)[oOgG]['`ʼ](?=[a-zA-Z])|\b([YyTtBbSs]og)'/.test(t)) bad.push(`${f.replace(ROOT, 'src')}: ${t.slice(0, 80)}`);
     expect(bad).toEqual([]);
   });

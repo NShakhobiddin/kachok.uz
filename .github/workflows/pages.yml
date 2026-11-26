@@ -1,4 +1,7 @@
-# main ga har push'da ilovani GitHub Pages'ga joylaydi: https://<foydalanuvchi>.github.io/<repo>/
+# main ga har push'da GitHub Pages'ga joylaydi:
+#   https://<foydalanuvchi>.github.io/<repo>/      — reklama sayti (site/)
+#   https://<foydalanuvchi>.github.io/<repo>/app/  — ilovaning brauzer versiyasi
+# O'z domeni ulansa (Settings → Pages → Custom domain), manzillar o'zi moslashadi: sayt — domen ildizida, ilova — /app/.
 # Bir martalik sozlash: Settings → Pages → Source: "GitHub Actions"
 name: GitHub Pages
 
@@ -27,20 +30,32 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm test
-      - run: npm run build
+      # Pages manzili: base_path — "/kachok.uz" (yoki o'z domenida ""), base_url — to'liq manzil
+      - id: pages
+        uses: actions/configure-pages@v5
+      - name: Ilova (app/)
+        run: npm run build
         env:
-          VITE_BASE: /${{ github.event.repository.name }}/
+          VITE_BASE: ${{ steps.pages.outputs.base_path }}/app/
           # Settings → Secrets and variables → Actions → Variables: API_URL (masalan https://gymbos-api.onrender.com),
           # TG_BOT (bot nomi, @siz), TG_APP (Mini App qisqa nomi, bo'lsa). Bo'sh bo'lsa — ilova serversiz ishlaydi
           VITE_API_URL: ${{ vars.API_URL }}
           VITE_TG_BOT: ${{ vars.TG_BOT || 'gym_bosbot' }}
           VITE_TG_APP: ${{ vars.TG_APP }}
-      # ichki sahifaga to'g'ridan-to'g'ri kirilganda ham ilova ochilsin
-      - run: cp dist/index.html dist/404.html
-      - uses: actions/configure-pages@v5
+      - name: Sayt (ildiz)
+        run: npm run build:site
+        env:
+          SITE_BASE: ${{ steps.pages.outputs.base_path }}/
+          SITE_URL: ${{ steps.pages.outputs.base_url }}
+          VITE_TG_BOT: ${{ vars.TG_BOT || 'gym_bosbot' }}
+      - name: Birlashtirish
+        run: node scripts/compose-pages.mjs _site
+        env:
+          SITE_BASE: ${{ steps.pages.outputs.base_path }}/
+          SITE_URL: ${{ steps.pages.outputs.base_url }}
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: dist
+          path: _site
 
   deploy:
     needs: build

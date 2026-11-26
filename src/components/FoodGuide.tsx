@@ -102,7 +102,8 @@ function DishRow({ d, np, onOpen }: { d: DishView; np: NutritionPlan; onOpen: ()
       <span className="grow stack" style={{ gap: 3, minWidth: 0, textAlign: 'left' }}>
         <span className="small strong ellipsis">{d.food.name}</span>
         <span className="tiny muted num ellipsis">
-          1 {d.unit.name} ({d.unit.g} g) · kunlik me’yorning {Math.round(share * 100)}%
+          {/^\d/.test(d.unit.name) ? '' : '1 '}
+          {d.unit.name} ({d.unit.g} g) · kunlik me’yorning {Math.round(share * 100)}%
         </span>
         <span className="share-bar" aria-hidden="true">
           <i style={{ width: `${Math.min(100, share * 100)}%`, background: share > 0.35 ? 'var(--yellow)' : 'var(--accent)' }} />

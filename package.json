@@ -10,7 +10,10 @@
     "preview": "vite preview",
     "typecheck": "tsc -b --noEmit",
     "test": "vitest run",
-    "build:single": "node scripts/build-single.mjs"
+    "build:single": "node scripts/build-single.mjs",
+    "dev:site": "vite --config site/vite.config.ts",
+    "build:site": "vite build --config site/vite.config.ts && vite build --config site/vite.config.ts --ssr src/entry-server.tsx && node scripts/site-prerender.mjs",
+    "pages": "node scripts/compose-pages.mjs"
   },
   "dependencies": {
     "@fontsource-variable/archivo": "^5.3.0",
@@ -25,6 +28,7 @@
     "zustand": "^5.0.8"
   },
   "devDependencies": {
+    "@phosphor-icons/react": "^2.1.10",
     "@tgcloud/cli": "0.2.0",
     "@types/node": "^22.20.5",
     "@types/react": "^19.1.12",

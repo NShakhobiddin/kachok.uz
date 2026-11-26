@@ -44,7 +44,9 @@ npm test           # dvigatellar testlari (2 700+ profil kombinatsiyasi)
 npm run build      # dist/ — istalgan statik hostingga (Vercel, Netlify, Nginx)
 ```
 
-**GitHub Pages:** `main` ga har push'da ilova avtomatik `https://nshakhobiddin.github.io/kachok.uz/` manziliga joylanadi (`.github/workflows/pages.yml`). Bir martalik sozlash: repo **Settings → Pages → Source: GitHub Actions**.
+**GitHub Pages:** `main` ga har push'da avtomatik joylanadi (`.github/workflows/pages.yml`): reklama sayti — `https://nshakhobiddin.github.io/kachok.uz/` (`site/` papkasi, interaktiv kalkulyatorlar bilan), ilovaning brauzer versiyasi — `https://nshakhobiddin.github.io/kachok.uz/app/`. Bir martalik sozlash: repo **Settings → Pages → Source: GitHub Actions**.
+
+**Sayt bilan ishlash:** `npm run dev:site` (localhost:5180), yig'ish — `npm run build:site` (oldindan HTML qilib chiziladi). O'z domenini ulash: domen DNS'ida GitHub Pages manzillari (A: 185.199.108.153, 185.199.109.153, 185.199.110.153, 185.199.111.153; `www` uchun CNAME → `nshakhobiddin.github.io`), keyin **Settings → Pages → Custom domain** — sayt va ilova manzillari keyingi joylashda o'zi moslashadi.
 
 `vercel.json` va `public/_redirects` SPA marshrutlash uchun tayyor. Ma'lumotlar avvalo foydalanuvchi qurilmasida saqlanadi (localStorage); Profil bo'limida JSON zaxira nusxa olish/tiklash bor.
 

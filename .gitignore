@@ -11,3 +11,8 @@ scripts/images/out/
 
 # Telegram Serverless CLI holati (token, snapshot)
 .tgcloud/
+
+# sayt yig‘masi va GitHub Pages to‘plami
+dist-site
+dist-site-ssr
+_site

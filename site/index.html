@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="uz">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#000000" />
+    <meta name="color-scheme" content="dark" />
+    <title>GYMbos — Telegram’dagi shaxsiy murabbiy: mashq dasturi va kaloriya kalkulyatori</title>
+    <meta name="description" content="Bepul mashq dasturi, har bir mashq texnikasi, milliy taomlar kaloriyasi va oqsil me’yori — o‘zbek tilida, Telegram ichida. Kaloriya, kuch darajasi va mushaklar bo‘yicha kalkulyatorlarni hoziroq sinab ko‘ring." />
+    <link rel="canonical" href="%SITE_URL%/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="uz_UZ" />
+    <meta property="og:site_name" content="GYMbos" />
+    <meta property="og:title" content="GYMbos — Telegram’dagi shaxsiy murabbiy" />
+    <meta property="og:description" content="Har mashg‘ulot reja bilan, har hafta kuchliroq. Mashq dasturi, texnika, milliy taomlar kaloriyasi — bepul, o‘zbek tilida." />
+    <meta property="og:url" content="%SITE_URL%/" />
+    <meta property="og:image" content="%SITE_URL%/og.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="preload" href="/shots/home.webp" as="image" type="image/webp" />
+    <script>
+      // o‘rnatilgan eski ilova (PWA) shu manzildan ochilsa — ilovaning yangi joyiga
+      try {
+        if (matchMedia('(display-mode: standalone)').matches || navigator.standalone) location.replace('app/');
+      } catch (e) {}
+      document.documentElement.className += ' js';
+    </script>
+    <!--head-->
+  </head>
+  <body data-page="index">
+    <div id="root"><!--ssr--></div>
+    <!--data-->
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
