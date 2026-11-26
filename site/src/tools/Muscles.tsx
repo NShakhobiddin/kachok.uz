@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { BodyMap } from '../../../src/components/BodyMap';
 import type { MuscleId } from '../../../src/types';
 import { useSiteData } from '../data';
-import { appAsset } from '../links';
+import { asset } from '../links';
 import { BotButton } from '../ui';
 
 export function Muscles() {
@@ -49,7 +49,7 @@ export function Muscles() {
             <ol className="ex-list">
               {m.top.map((e, i) => (
                 <li key={e.id} className="ex">
-                  <img src={appAsset(`illustrations/thumb/${e.id}.webp`)} alt="" width={56} height={56} loading="lazy" decoding="async" />
+                  <img src={asset(`thumbs/${e.id}.webp`)} alt="" width={56} height={56} loading="lazy" decoding="async" />
                   <div className="ex-mid">
                     <div className="row gap-8" style={{ justifyContent: 'space-between' }}>
                       <span className="title-4">
