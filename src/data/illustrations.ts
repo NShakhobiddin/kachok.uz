@@ -155,11 +155,11 @@ export const ILLUSTRATIONS: Partial<Record<string, Illustration>> = {
     labels: [
       { key: 'trapMid', name: 'Trapetsiya o‘rtasi', x: 54, y: 18, side: 'r', ly: 8 },
       { key: 'deltPost', name: 'Orqa delta', x: 56, y: 22, side: 'r', ly: 34 },
-      { key: 'erectors', name: 'Bel rostlovchi', x: 34, y: 28, side: 'l', ly: 18 },
+      { key: 'erectors', name: 'Bel rostlovchi', x: 37, y: 26, side: 'l', ly: 18 },
       { key: 'lats', name: 'Orqaning keng mushagi', x: 50, y: 26, side: 'l', ly: 32 },
     ],
     checks: [
-      { text: 'Bel tekis, tana oldinga egilgan', x: 34, y: 28, side: 'l', ly: 56 },
+      { text: 'Bel tekis, tana oldinga egilgan', x: 37, y: 26.5, side: 'l', ly: 56 },
       { text: 'Shtanga qorin pastiga tortiladi', x: 48, y: 40, side: 'r', ly: 48 },
       { text: 'Tirsak orqaga, ~45°', x: 39, y: 21.5, side: 'r', ly: 62 },
       { text: 'Tizzalar yengil bukilgan', x: 42, y: 60, side: 'l', ly: 72 },
@@ -629,7 +629,7 @@ export const ILLUSTRATIONS: Partial<Record<string, Illustration>> = {
       { key: 'tricepsLateral', name: 'Triseps', x: 68.5, y: 38, side: 'r', ly: 56 },
     ],
     checks: [
-      { text: 'Dastaklar yelka sathida', x: 32, y: 21, side: 'l', ly: 14 },
+      { text: 'Dastaklar iyak sathida', x: 32, y: 21, side: 'l', ly: 14 },
       { text: 'Orqa yostiqqa tegib', x: 67, y: 45, side: 'l', ly: 58 },
       { text: 'Oyoqlar polda', x: 18, y: 86, side: 'l', ly: 80 },
     ],
@@ -717,8 +717,8 @@ export const ILLUSTRATIONS: Partial<Record<string, Illustration>> = {
     alt: 'Bir qo‘llab gantel tortish, yuqori nuqta: to‘g‘ri texnika; ishlayotgan mushaklar lime rangda yonmoqda',
     labels: [
       { key: 'lats', name: 'Orqaning keng mushagi', x: 62, y: 33, side: 'l', ly: 14 },
-      { key: 'trapMid', name: 'Trapetsiya o‘rtasi', x: 72, y: 29, side: 'r', ly: 14 },
-      { key: 'deltPost', name: 'Orqa delta', x: 65, y: 29, side: 'r', ly: 46 },
+      { key: 'trapMid', name: 'Trapetsiya o‘rtasi', x: 76, y: 26.5, side: 'r', ly: 14 },
+      { key: 'deltPost', name: 'Orqa delta', x: 71, y: 28, side: 'r', ly: 46 },
     ],
     checks: [
       { text: 'Tana polga parallel, bel tekis', x: 51, y: 31, side: 'l', ly: 38 },
@@ -778,7 +778,7 @@ export const ILLUSTRATIONS: Partial<Record<string, Illustration>> = {
     phase: 'Yuqori nuqta',
     alt: 'Teskari ushlab tortilish, yuqori nuqta: to‘g‘ri texnika; ishlayotgan mushaklar lime rangda yonmoqda',
     labels: [
-      { key: 'lats', name: 'Orqaning keng mushagi', x: 39, y: 31, side: 'l', ly: 36 },
+      { key: 'lats', name: 'Orqaning keng mushagi', x: 58, y: 32, side: 'r', ly: 44 },
       { key: 'teresMajor', name: 'Katta yumaloq', x: 59, y: 27, side: 'r', ly: 30 },
     ],
     checks: [
@@ -888,7 +888,7 @@ export const ILLUSTRATIONS: Partial<Record<string, Illustration>> = {
     checks: [
       { text: 'Tirsaklar tanaga yopishgan', x: 41, y: 45, side: 'r', ly: 30 },
       { text: 'Qo‘llar to‘liq yozilgan', x: 42, y: 53, side: 'r', ly: 46 },
-      { text: 'Tana tik, qorin tarang', x: 45, y: 46, side: 'l', ly: 66 },
+      { text: 'Tana tik yoki biroz oldinga, qorin tarang', x: 45, y: 46, side: 'l', ly: 66 },
     ],
   },
   'overhead-extension': {
@@ -1240,7 +1240,20 @@ export const ILLUSTRATIONS: Partial<Record<string, Illustration>> = {
     alt: 'Tizzada otjimaniya, pastki nuqta: to‘g‘ri texnika; ishlayotgan mushaklar lime rangda yonmoqda',
     pair: { src: img('alt/knee-push-up.webp'), phase: 'Boshlang‘ich holat' },
   },
-  'dead-bug': { src: img('dead-bug.webp'), phase: 'Boshlang‘ich holat', alt: '«O‘lik qo‘ng‘iz», boshlang‘ich holat: to‘g‘ri texnika; ishlayotgan mushaklar lime rangda yonmoqda' },
+  'dead-bug': {
+    src: img('dead-bug.webp'),
+    phase: 'Boshlang‘ich holat',
+    alt: '«O‘lik qo‘ng‘iz», boshlang‘ich holat: to‘g‘ri texnika; ishlayotgan mushaklar lime rangda yonmoqda',
+    labels: [
+      { key: 'rectusAbdominis', name: 'Qorin to‘g‘ri mushagi', x: 42, y: 66, side: 'r', ly: 74 },
+      { key: 'iliopsoas', name: 'Son bukuvchi', x: 52, y: 55, side: 'r', ly: 58 },
+    ],
+    checks: [
+      { text: 'Qo‘llar tik yuqoriga', x: 30, y: 38, side: 'l', ly: 22 },
+      { text: 'Son tik, tizza 90°', x: 57, y: 44, side: 'r', ly: 28 },
+      { text: 'Bel polga bosilgan', x: 45, y: 73, side: 'l', ly: 86 },
+    ],
+  },
   'bird-dog': {
     src: img('bird-dog.webp'),
     phase: 'Cho‘zilgan holat',
