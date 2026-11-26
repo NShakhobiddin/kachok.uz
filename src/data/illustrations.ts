@@ -1052,7 +1052,6 @@ export const ILLUSTRATIONS: Partial<Record<string, Illustration>> = {
     src: img('butterfly.webp'),
     phase: 'Cho‘zilgan holat',
     alt: 'Kapalak, cho‘zilgan holat: to‘g‘ri texnika; cho‘ziladigan mushaklar lime rangda',
-    pair: { src: img('alt/butterfly.webp'), phase: 'Chuqurroq holat' },
   },
   'cable-kickback': {
     src: img('cable-kickback.webp'),
@@ -1082,7 +1081,6 @@ export const ILLUSTRATIONS: Partial<Record<string, Illustration>> = {
     src: img('childs-pose.webp'),
     phase: 'Cho‘zilgan holat',
     alt: 'Bola pozasi, cho‘zilgan holat: to‘g‘ri texnika; cho‘ziladigan mushaklar lime rangda',
-    pair: { src: img('alt/childs-pose.webp'), phase: 'Boshlang‘ich holat' },
   },
   clamshell: {
     src: img('clamshell.webp'),
@@ -1145,10 +1143,10 @@ export const ILLUSTRATIONS: Partial<Record<string, Illustration>> = {
     pair: { src: img('alt/hamstring-stretch.webp'), phase: 'Boshlang‘ich holat' },
   },
   'hip-flexor-stretch': {
-    src: img('hip-flexor-stretch.webp'),
-    phase: 'Cho‘zilgan holat',
-    alt: 'Tiz cho‘kib son bukuvchisini cho‘zish, cho‘zilgan holat: to‘g‘ri texnika; cho‘ziladigan mushaklar lime rangda',
-    pair: { src: img('alt/hip-flexor-stretch.webp'), phase: 'Boshlang‘ich holat' },
+    // asosiy kadrda yorug'lik old (bo'shashgan) oyoqda edi — to'g'ri yoritilgan kadr qoldi (2026-11 auditi, Flow-6 da qayta)
+    src: img('alt/hip-flexor-stretch.webp'),
+    phase: 'Tiz cho‘kib turish',
+    alt: 'Tiz cho‘kib son bukuvchisini cho‘zish: orqa oyoq tizzasi yerda, tos tik; cho‘ziladigan mushaklar (orqa oyoq son oldi va tos oldi) lime rangda',
   },
   'mountain-climber': {
     src: img('mountain-climber.webp'),
@@ -1183,13 +1181,11 @@ export const ILLUSTRATIONS: Partial<Record<string, Illustration>> = {
     src: img('reverse-crunch.webp'),
     phase: 'Qisqargan holat',
     alt: 'Teskari qisqarish, qisqargan holat: to‘g‘ri texnika; ishlayotgan mushaklar lime rangda yonmoqda',
-    pair: { src: img('alt/reverse-crunch.webp'), phase: 'Boshlang‘ich holat' },
   },
   'reverse-lunge': {
     src: img('reverse-lunge.webp'),
     phase: 'Pastki nuqta',
     alt: 'Orqaga hamla, pastki nuqta: to‘g‘ri texnika; ishlayotgan mushaklar lime rangda yonmoqda',
-    pair: { src: img('alt/reverse-lunge.webp'), phase: 'Boshlang‘ich holat' },
   },
   'side-leg-raise': {
     src: img('side-leg-raise.webp'),
@@ -1207,7 +1203,6 @@ export const ILLUSTRATIONS: Partial<Record<string, Illustration>> = {
     src: img('single-leg-bridge.webp'),
     phase: 'Yuqori nuqta',
     alt: 'Bir oyoqda ko‘prikcha, yuqori nuqta: to‘g‘ri texnika; ishlayotgan mushaklar lime rangda yonmoqda',
-    pair: { src: img('alt/single-leg-bridge.webp'), phase: 'Boshlang‘ich holat' },
   },
   'sumo-squat': {
     src: img('sumo-squat.webp'),
@@ -1238,7 +1233,6 @@ export const ILLUSTRATIONS: Partial<Record<string, Illustration>> = {
     src: img('wall-sit.webp'),
     phase: 'Ushlab turish',
     alt: 'Devorga suyanib o‘tirish, ushlab turish: to‘g‘ri texnika; ishlayotgan mushaklar lime rangda yonmoqda',
-    pair: { src: img('alt/wall-sit.webp'), phase: 'Boshlang‘ich holat' },
   },
   'knee-push-up': {
     src: img('knee-push-up.webp'),
