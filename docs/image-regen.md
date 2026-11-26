@@ -275,3 +275,34 @@ Eng muhimlari (ustuvorlik 1):
 - **Cho‘zilishlar:** calf-stretch (tovon ko‘tarilgan), cross-body-shoulder (tirsakdan ushlangan), doorway-chest, cobra, pigeon, figure-four.
 
 Joylash: `python3 scripts/images/place_flow.py <natijalar>`.
+
+## Flow-6 natijalari joylandi (2026-11-26)
+
+Har bir kadr murabbiy ko‘zi bilan tekshirildi (texnika, anatomiya, jihoz, A–B mosligi). Qabul qilinganlari joylandi.
+
+**Yangi mashqlar (8 ta):**
+- **Ikki kadrli harakat bilan:** straight-arm-pulldown, lying-leg-curl, db-lunge, jump-squat.
+- **Bitta kadr:** reverse-pec-deck, cable-overhead-extension, farmers-carry, sumo-deadlift (tepadagi holat).
+
+Qolgan 7 tasi rasm kelguncha ilovada ko‘rsatilmaydi (`exercisesExtra.ts` READY): db-reverse-fly, single-leg-rdl, pallof-press, hanging-knee-raise, incline-push-up, nordic-curl, lateral-lunge.
+
+**Tuzatilgan rasmlar:**
+- **Asosiy kadri almashdi, yorliqlar qayta joylandi:** barbell-row, lateral-raise, reverse-fly, pike-push-up, incline-bench.
+- **Boshqalar:** cable-pull-through, preacher-curl, t-bar-row, side-plank, bicycle-crunch, calf-stretch, doorway-chest, cobra, pigeon.
+
+**Rad etildi** (Flow-7 da qayta, `fixesFlow7.ts`):
+- chin-up — ushlash yana to‘g‘ri;
+- leg-curl — rolik boldir oldida;
+- calf-raise — oyoq havoda;
+- figure-four — uchta oyoq kafti;
+- curtsy-lunge — kesishmaydi;
+- band-row va hip-adduction — sozlash noto‘g‘ri;
+- cross-body-shoulder — tirsakdan ushlangan;
+- knee-push-up va ab-wheel — pastki yoki cho‘zilgan holat chiqmadi;
+- hip-flexor-stretch — shortik yo‘q;
+- reverse-crunch va butterfly — B harakatsiz;
+- yangi mashqlar — tabiiy teri yuz, suzib yurgan jihoz, noto‘g‘ri kamera.
+
+**Flow-7 to‘plami:** `npx vite-node scripts/images/flow-pack4.ts -- <chiqish> <flow6-natijalar>`, 28 ta ish.
+
+Natijalar `.jpg` kelsa, `place_flow.py` dan oldin `natija-*.png` ga o‘giriladi.
