@@ -47,7 +47,7 @@ export default function Library() {
       <Segmented
         label="Bo‘lim"
         value={tab}
-        onChange={(v) => setParams(v === 'exercises' ? {} : { tab: v }, { replace: true })}
+        onChange={(v) => setParams(v === 'exercises' ? {} : { tab: v })}
         options={[
           { value: 'exercises', label: 'Mashqlar' },
           { value: 'muscles', label: 'Mushaklar' },

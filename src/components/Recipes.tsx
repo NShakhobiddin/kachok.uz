@@ -34,7 +34,7 @@ export function RecipeRow({ r, servings = 1, meta, onClick }: { r: RecipeInfo; s
       <span className="grow stack" style={{ gap: 2, minWidth: 0, textAlign: 'left' }}>
         <span className="small strong ellipsis">{r.name}</span>
         <span className="tiny muted num ellipsis">
-          {Math.round(r.kcal * servings)} kkal · O {Math.round(r.p * servings)} g · {servings !== 1 ? `${fmtQty(servings)} porsiya` : `${r.min} daq`}
+          {Math.round(r.kcal * servings)} kkal · oqsil {Math.round(r.p * servings)} g · {servings !== 1 ? `${fmtQty(servings)} porsiya` : `${r.min} daq`}
         </span>
         {meta && (
           <span className="tiny ellipsis" style={{ color: 'var(--accent)' }}>
@@ -197,9 +197,9 @@ function RecipeBody({ r, servings, meal: meal0 }: { r: RecipeInfo; servings: num
           </span>
         </span>
         <span className="small num" style={{ textAlign: 'right' }}>
-          <span style={{ color: MACRO_COLORS.p }}>O {v.p} g</span>
+          <span style={{ color: MACRO_COLORS.p }}>Oqsil {v.p} g</span>
           <br />
-          <span style={{ color: MACRO_COLORS.c }}>U {v.c} g</span> · <span style={{ color: MACRO_COLORS.f }}>Y {v.f} g</span>
+          <span style={{ color: MACRO_COLORS.c }}>Uglevod {v.c} g</span> · <span style={{ color: MACRO_COLORS.f }}>Yog‘ {v.f} g</span>
         </span>
       </div>
       {r.tip && <p className="small muted">{r.tip}</p>}

@@ -66,6 +66,27 @@ export const DISHES: DishInfo[] = [
   D('shirmoy-non', '🍞', 'Sut va shakar qo‘shilgan non — oddiy nondan biroz og‘ir.'),
 ];
 
+/** Turkumlar (ro‘yxatda shu tartibda) */
+export const DISH_GROUPS: { id: string; name: string; short: string; ids: string[] }[] = [
+  { id: 'rice', name: 'Osh va guruchli taomlar', short: 'Osh', ids: ['osh', 'osh-tovuq', 'moshkichiri-dish', 'shirguruch', 'dolma'] },
+  { id: 'soup', name: 'Sho‘rvalar', short: 'Sho‘rvalar', ids: ['shorva', 'mastava', 'moshxorda', 'chuchvara', 'ugra-oshi', 'kuza-shorva', 'mampar', 'halim'] },
+  {
+    id: 'dough',
+    name: 'Xamirli taomlar',
+    short: 'Xamirli',
+    ids: ['lagmon', 'qovurma-lagmon', 'manti', 'manti-qovoq', 'chuchvara-qovurma', 'somsa', 'somsa-kok', 'somsa-qovoq', 'norin', 'beshbarmoq', 'shivit-oshi', 'xonim', 'tuxum-barak', 'gumma', 'qatlama', 'bogirsoq'],
+  },
+  {
+    id: 'meat',
+    name: 'Go‘sht taomlari va kabob',
+    short: 'Go‘sht',
+    ids: ['shashlik', 'shashlik-tovuq', 'lula', 'jigar-kabob', 'tandir-gosht', 'qozon-kabob', 'dimlama', 'qovurma', 'jiz', 'tovuq-qovurma', 'baliq-qovurma', 'qazi', 'hasip'],
+  },
+  { id: 'light', name: 'Salat va yengil', short: 'Yengil', ids: ['achchiq-chuchuk', 'chalop'] },
+  { id: 'bread', name: 'Non', short: 'Non', ids: ['non', 'patir', 'shirmoy-non'] },
+  { id: 'sweet', name: 'Shirinliklar', short: 'Shirin', ids: ['sumalak', 'nisholda', 'chak-chak', 'parvarda'] },
+];
+
 export interface DishView extends DishInfo {
   food: FoodItem;
   unit: { name: string; g: number };

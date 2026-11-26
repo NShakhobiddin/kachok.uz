@@ -1,6 +1,6 @@
 // Ovqat ma’lumotnomasi: mahsulotlar va milliy taomlar tarkibi, glikemik indeks.
 import { describe, expect, it } from 'vitest';
-import { DISHES, DISH_VIEWS } from '../../data/dishes';
+import { DISHES, DISH_GROUPS, DISH_VIEWS } from '../../data/dishes';
 import { FOOD_DB, FOOD_MAP } from '../../data/foods';
 import { GI, LOW_CARB, energySplit, giFor, giLevel, glycemicLoad } from '../../data/glycemic';
 import { RECIPE_MAP } from '../../data/recipes';
@@ -37,6 +37,12 @@ describe('Milliy taomlar', () => {
     }
     // bazadagi har bir milliy taom ma’lumotnomada bor
     for (const f of FOOD_DB.filter((x) => x.cat === 'dish')) expect(DISHES.some((d) => d.id === f.id), f.id).toBe(true);
+  });
+
+  it('har bir taom aynan bitta turkumda', () => {
+    const all = DISH_GROUPS.flatMap((g) => g.ids);
+    expect(new Set(all).size).toBe(all.length);
+    expect([...all].sort()).toEqual(DISHES.map((d) => d.id).sort());
   });
 
   it('porsiya kaloriyasi birinchi o‘lchovdan: osh likopchasi ~800 kkal', () => {

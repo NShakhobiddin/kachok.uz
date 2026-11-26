@@ -3185,3 +3185,24 @@ ol.steps li::before {
   object-fit: cover;
   padding: 0;
 }
+
+/* oynani yopish (ortga) — har doim ko‘rinadi, oyna aylantirilganda ham tepada, kontentni siqmaydi */
+.sheet-close-wrap {
+  position: sticky;
+  top: 0;
+  height: 0;
+  z-index: 3;
+}
+.sheet-close {
+  position: absolute;
+  top: -10px;
+  right: -6px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  color: var(--text-2);
+}

@@ -9,6 +9,7 @@ import { TrainingHeatmap } from '../components/TrainingHeatmap';
 import { Icon } from '../components/ui/Icon';
 import { Note } from '../components/ui/Fold';
 import { GoalsSection } from '../components/Goals';
+import { PageBack } from '../components/PageBack';
 import { LogEditor } from '../components/LogEditor';
 import { Sheet } from '../components/ui/Sheet';
 import { GROUPS, GROUP_ORDER, VOLUME_LANDMARKS, mrvAt } from '../data/catalog';
@@ -69,6 +70,7 @@ export default function Progress() {
   if (t.workouts === 0)
     return (
       <div className="page">
+        <PageBack />
         <div className="page-head">
           <h1 className="display">Natija</h1>
         </div>
@@ -94,6 +96,7 @@ export default function Progress() {
 
   return (
     <div className="page">
+      <PageBack />
       <div className="page-head">
         <h1 className="display">Natija</h1>
       </div>

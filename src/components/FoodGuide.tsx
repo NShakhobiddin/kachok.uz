@@ -2,7 +2,7 @@
 // (oqsil/uglevod/yog‘ — grammda va kaloriya ulushida) hamda glikemik indeks — manbalari bilan.
 import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { DISH_VIEWS, type DishView } from '../data/dishes';
+import { DISH_GROUPS, DISH_VIEWS, type DishView } from '../data/dishes';
 import { foodImg } from '../data/foodImages';
 import { FOOD_CATS, FOOD_DB, normalize, portion, type FoodCat, type FoodItem } from '../data/foods';
 import { GI_COLOR, GI_LABEL, energySplit, giFor, giLevel, glycemicLoad } from '../data/glycemic';
@@ -47,7 +47,7 @@ function SplitText({ f }: { f: Pick<FoodItem, 'p' | 'c' | 'f'> }) {
   const s = energySplit(f);
   return (
     <span className="tiny num">
-      <span style={{ color: MACRO_COLORS.p }}>O {s.p}%</span> · <span style={{ color: MACRO_COLORS.c }}>U {s.c}%</span> · <span style={{ color: MACRO_COLORS.f }}>Y {s.f}%</span>
+      <span style={{ color: MACRO_COLORS.p }}>oqsil {s.p}%</span> · <span style={{ color: MACRO_COLORS.c }}>uglevod {s.c}%</span> · <span style={{ color: MACRO_COLORS.f }}>yog‘ {s.f}%</span>
     </span>
   );
 }
@@ -90,27 +90,68 @@ export function FoodGuide({ np }: { np: NutritionPlan }) {
 
 type DishSort = 'popular' | 'light' | 'protein';
 
+const sorter = (sort: DishSort) => (a: DishView, b: DishView) =>
+  // yengillik — energiya zichligi (100 g dagi kaloriya), porsiya kattaligiga bog‘liq emas
+  sort === 'light' ? a.food.kcal - b.food.kcal : sort === 'protein' ? b.p / Math.max(1, b.kcal) - a.p / Math.max(1, a.kcal) : 0;
+
+function DishRow({ d, np, onOpen }: { d: DishView; np: NutritionPlan; onOpen: () => void }) {
+  const share = d.kcal / np.kcal;
+  return (
+    <button className="recipe-row" onClick={onOpen}>
+      <Thumb id={d.id} icon={d.icon} />
+      <span className="grow stack" style={{ gap: 3, minWidth: 0, textAlign: 'left' }}>
+        <span className="small strong ellipsis">{d.food.name}</span>
+        <span className="tiny muted num ellipsis">
+          1 {d.unit.name} ({d.unit.g} g) · kunlik me’yorning {Math.round(share * 100)}%
+        </span>
+        <span className="share-bar" aria-hidden="true">
+          <i style={{ width: `${Math.min(100, share * 100)}%`, background: share > 0.35 ? 'var(--yellow)' : 'var(--accent)' }} />
+        </span>
+      </span>
+      <span className="stack" style={{ gap: 0, alignItems: 'flex-end', flex: 'none' }}>
+        <b className="num">
+          {d.kcal} <span className="tiny muted">kkal</span>
+        </b>
+        <span className="tiny num" style={{ color: MACRO_COLORS.p }}>
+          oqsil {d.p} g
+        </span>
+      </span>
+    </button>
+  );
+}
+
 function DishList({ np }: { np: NutritionPlan }) {
   const [q, setQ] = useState('');
+  const [group, setGroup] = useState<string>('all');
   const [sort, setSort] = useState<DishSort>('popular');
-  const [shown, setShown] = useState(PAGE);
   const [open, setOpen] = useState<DishView | null>(null);
-  const list = useMemo(() => {
-    const n = normalize(q);
-    const xs = DISH_VIEWS.filter((d) => !n || normalize(`${d.food.name} ${d.food.alt ?? ''}`).includes(n));
-    // yengillik — energiya zichligi (100 g dagi kaloriya), porsiya kattaligiga bog‘liq emas
-    if (sort === 'light') return [...xs].sort((a, b) => a.food.kcal - b.food.kcal);
-    if (sort === 'protein') return [...xs].sort((a, b) => b.p / Math.max(1, b.kcal) - a.p / Math.max(1, a.kcal));
-    return xs;
-  }, [q, sort]);
+  const byId = useMemo(() => new Map(DISH_VIEWS.map((d) => [d.id, d])), []);
+  // qidiruv yoki turkum tanlansa — bitta ro‘yxat; aks holda turkumlar bo‘yicha bo‘limlar
+  const n = normalize(q);
+  const match = (d: DishView) => !n || normalize(`${d.food.name} ${d.food.alt ?? ''}`).includes(n);
+  const sections = DISH_GROUPS.filter((g) => group === 'all' || g.id === group)
+    .map((g) => ({ g, items: g.ids.map((id) => byId.get(id)!).filter(match).sort(sorter(sort)) }))
+    .filter((x) => x.items.length);
   return (
     <div className="stack gap-12">
-      <p className="small muted">Bir porsiya kaloriyasi va u kunlik me’yoringiz ({np.kcal} kkal) ning qancha qismi. Bosing — tarkibi, yengil varianti va kundalikka qo‘shish.</p>
+      <p className="small muted">
+        Bir porsiyaning <b>kaloriyasi (kkal)</b> va <b style={{ color: MACRO_COLORS.p }}>oqsili</b>, chiziq — kunlik me’yoringizning ({np.kcal} kkal) qancha qismi. Taomni bosing — to‘liq tarkibi va kundalikka qo‘shish.
+      </p>
       <div style={{ position: 'relative' }}>
         <Icon name="search" size={18} style={{ position: 'absolute', left: 14, top: 16, color: 'var(--text-3)' }} />
         <input className="input" style={{ paddingLeft: 40 }} placeholder="Osh, somsa, manti…" value={q} onChange={(e) => setQ(e.target.value)} aria-label="Taom qidirish" />
       </div>
-      <div className="row wrap gap-6" role="radiogroup" aria-label="Tartib">
+      <div className="hscroll" role="radiogroup" aria-label="Turkum">
+        {[{ id: 'all', short: 'Hammasi' }, ...DISH_GROUPS].map((g) => (
+          <button key={g.id} role="radio" aria-checked={group === g.id} className={`chip ${group === g.id ? 'on' : ''}`} onClick={() => setGroup(g.id)}>
+            {g.short}
+          </button>
+        ))}
+      </div>
+      <div className="row wrap gap-6 small" role="radiogroup" aria-label="Tartib">
+        <span className="tiny muted" style={{ alignSelf: 'center' }}>
+          Tartib:
+        </span>
         {(
           [
             ['popular', 'Ommabop'],
@@ -123,35 +164,20 @@ function DishList({ np }: { np: NutritionPlan }) {
           </button>
         ))}
       </div>
-      <div className="card flush" style={{ padding: '0 14px' }}>
-        {list.slice(0, shown).map((d) => {
-          const share = d.kcal / np.kcal;
-          return (
-            <button key={d.id} className="recipe-row" onClick={() => setOpen(d)}>
-              <Thumb id={d.id} icon={d.icon} />
-              <span className="grow stack" style={{ gap: 3, minWidth: 0, textAlign: 'left' }}>
-                <span className="small strong ellipsis">{d.food.name}</span>
-                <span className="tiny muted num ellipsis">
-                  1 {d.unit.name} · {d.unit.g} g · O {d.p} g
-                </span>
-                <span className="share-bar" aria-hidden="true">
-                  <i style={{ width: `${Math.min(100, share * 100)}%`, background: share > 0.35 ? 'var(--yellow)' : 'var(--accent)' }} />
-                </span>
-              </span>
-              <span className="stack" style={{ gap: 0, alignItems: 'flex-end', flex: 'none' }}>
-                <b className="num">{d.kcal}</b>
-                <span className="tiny faint num">kunning {Math.round(share * 100)}%</span>
-              </span>
-            </button>
-          );
-        })}
-        {!list.length && <p className="small muted" style={{ padding: '14px 0' }}>Topilmadi</p>}
-      </div>
-      {list.length > shown && (
-        <button className="btn btn-secondary btn-sm" style={{ alignSelf: 'center' }} onClick={() => setShown(shown + PAGE)}>
-          Yana {Math.min(PAGE, list.length - shown)} ta
-        </button>
-      )}
+      {sections.map(({ g, items }) => (
+        <section key={g.id} className="stack gap-6">
+          <div className="row between">
+            <span className="eyebrow">{g.name}</span>
+            <span className="tiny faint">{items.length} ta</span>
+          </div>
+          <div className="card flush" style={{ padding: '0 14px' }}>
+            {items.map((d) => (
+              <DishRow key={d.id} d={d} np={np} onOpen={() => setOpen(d)} />
+            ))}
+          </div>
+        </section>
+      ))}
+      {!sections.length && <p className="small muted">Topilmadi</p>}
       <Note>Qiymatlar an’anaviy retseptlar bo‘yicha o‘rtacha (oshxonaga qarab ±20%): mahsulotlar tarkibi — USDA FoodData Central. Taqiq yo‘q — faqat hisob bor.</Note>
       <DishSheet dish={open} np={np} onClose={() => setOpen(null)} />
     </div>
@@ -197,9 +223,9 @@ function DishBody({ d, np }: { d: DishView; np: NutritionPlan }) {
             {v.kcal} <span className="small muted">kkal</span>
           </span>
           <span className="small num" style={{ textAlign: 'right' }}>
-            <span style={{ color: MACRO_COLORS.p }}>O {Math.round(v.p)} g</span>
+            <span style={{ color: MACRO_COLORS.p }}>Oqsil {Math.round(v.p)} g</span>
             <br />
-            <span style={{ color: MACRO_COLORS.c }}>U {Math.round(v.c)} g</span> · <span style={{ color: MACRO_COLORS.f }}>Y {Math.round(v.f)} g</span>
+            <span style={{ color: MACRO_COLORS.c }}>Uglevod {Math.round(v.c)} g</span> · <span style={{ color: MACRO_COLORS.f }}>Yog‘ {Math.round(v.f)} g</span>
           </span>
         </div>
         <SplitBar f={d.food} height={8} />
@@ -237,7 +263,7 @@ function DishBody({ d, np }: { d: DishView; np: NutritionPlan }) {
             </span>
             <span className="small strong ellipsis">{light.name}</span>
             <span className="tiny muted num">
-              {light.kcal} kkal · O {Math.round(light.p)} g
+              {light.kcal} kkal · oqsil {Math.round(light.p)} g
             </span>
           </span>
           <Icon name="right" size={16} style={{ color: 'var(--text-3)', flex: 'none' }} />
@@ -345,16 +371,27 @@ function ProductList() {
           </button>
         ))}
       </div>
+      <span className="tiny muted row wrap gap-8">
+        Chiziq — kaloriya qayerdan:
+        <span className="row gap-4">
+          <i className="dot" style={{ background: MACRO_COLORS.p }} /> oqsil
+        </span>
+        <span className="row gap-4">
+          <i className="dot" style={{ background: MACRO_COLORS.c }} /> uglevod
+        </span>
+        <span className="row gap-4">
+          <i className="dot" style={{ background: MACRO_COLORS.f }} /> yog‘
+        </span>
+      </span>
       <div className="card flush" style={{ padding: '0 14px' }}>
         {list.slice(0, shown).map((f) => (
           <button key={f.id} className="recipe-row" onClick={() => setOpen(f)}>
             <span className="grow stack" style={{ gap: 4, minWidth: 0, textAlign: 'left' }}>
               <span className="small strong ellipsis">{f.name}</span>
-              <SplitBar f={f} />
-              <span className="row between gap-8">
-                <SplitText f={f} />
-                <span className="tiny faint num">{f.kcal} kkal / 100 g</span>
+              <span className="tiny muted num">
+                100 g: <b style={{ color: 'var(--text)' }}>{f.kcal} kkal</b> · <span style={{ color: MACRO_COLORS.p }}>oqsil {Math.round(f.p * 10) / 10} g</span> · uglevod {Math.round(f.c * 10) / 10} g · yog‘ {Math.round(f.f * 10) / 10} g
               </span>
+              <SplitBar f={f} />
             </span>
             <GiBadge food={f} />
           </button>
@@ -425,7 +462,7 @@ function ProductBody({ f }: { f: FoodItem }) {
         </span>
         {pv && unit && (
           <span className="tiny muted num">
-            1 {unit.name} ({unit.g} g): {pv.kcal} kkal · O {pv.p} · U {pv.c} · Y {pv.f} g
+            1 {unit.name} ({unit.g} g): {pv.kcal} kkal · oqsil {pv.p} g · uglevod {pv.c} g · yog‘ {pv.f} g
           </span>
         )}
       </div>

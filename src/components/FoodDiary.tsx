@@ -25,10 +25,10 @@ const uid = () => Math.random().toString(36).slice(2, 10);
 const addDays = (iso: string, n: number) => isoDate(new Date(new Date(iso + 'T12:00:00').getTime() + n * 86400000));
 const r1 = (n: number) => Math.round(n * 10) / 10;
 
-/** "1 kosa · O 12 · U 40 · Y 9" — bo'sh qismlarsiz (qo'lda kiritilganda faqat kaloriya bo'lishi mumkin) */
+/** "1 kosa · oqsil 12 g · uglevod 40 g · yog‘ 9 g" — bo'sh qismlarsiz (qo'lda kiritilganda faqat kaloriya bo'lishi mumkin) */
 function entryMeta(e: FoodEntry): string {
   const parts = [e.label ?? (e.g ? `${e.g} g` : '')];
-  if (e.p || e.c || e.f) parts.push(`O ${r1(e.p)}`, `U ${r1(e.c)}`, `Y ${r1(e.f)}`);
+  if (e.p || e.c || e.f) parts.push(`oqsil ${r1(e.p)} g`, `uglevod ${r1(e.c)} g`, `yog‘ ${r1(e.f)} g`);
   return parts.filter(Boolean).join(' · ');
 }
 
@@ -287,7 +287,7 @@ function FoodList({ items, onPick }: { items: FoodItem[]; onPick: (f: FoodItem) 
             <span className="stack" style={{ gap: 2, minWidth: 0, textAlign: 'left' }}>
               <span className="small strong">{f.name}</span>
               <span className="tiny faint num">
-                {u ? (f.noGram ? `1 ${u.name}` : `1 ${u.name} (${u.g} g)`) : '100 g'} · O {v.p} g
+                {u ? (f.noGram ? `1 ${u.name}` : `1 ${u.name} (${u.g} g)`) : '100 g'} · oqsil {v.p} g
               </span>
             </span>
             <span className="small num" style={{ flex: 'none' }}>
@@ -341,7 +341,7 @@ function PortionStep({
       <div>
         <h3 className="title">{food.name}</h3>
         <p className="tiny faint num mt-4">
-          {food.noGram ? '1 porsiya' : '100 g'}: {food.kcal} kkal · O {food.p} · U {food.c} · Y {food.f}
+          {food.noGram ? '1 porsiya' : '100 g'}: {food.kcal} kkal · oqsil {food.p} g · uglevod {food.c} g · yog‘ {food.f} g
           {giShort(food)}
         </p>
       </div>
@@ -373,9 +373,9 @@ function PortionStep({
           </span>
         </span>
         <span className="small num" style={{ textAlign: 'right' }}>
-          <span style={{ color: MACRO_COLORS.p }}>O {v.p} g</span>
+          <span style={{ color: MACRO_COLORS.p }}>Oqsil {v.p} g</span>
           <br />
-          <span style={{ color: MACRO_COLORS.c }}>U {v.c} g</span> · <span style={{ color: MACRO_COLORS.f }}>Y {v.f} g</span>
+          <span style={{ color: MACRO_COLORS.c }}>Uglevod {v.c} g</span> · <span style={{ color: MACRO_COLORS.f }}>Yog‘ {v.f} g</span>
         </span>
       </div>
       <MealChips meal={meal} setMeal={setMeal} />
@@ -402,8 +402,8 @@ function QuickStep({ meal, setMeal, onBack, onAdd }: { meal: Meal; setMeal: (m: 
       <Stepper value={kcal} onChange={setKcal} step={10} min={0} max={5000} unit="kkal" label="Kaloriya" />
       <Stepper value={p} onChange={setP} step={1} min={0} max={300} unit="g oqsil" label="Oqsil" />
       <div className="grid-2">
-        <Stepper value={c} onChange={setC} step={5} min={0} max={600} unit="g U" label="Uglevod" />
-        <Stepper value={f} onChange={setF} step={1} min={0} max={300} unit="g Y" label="Yog‘" />
+        <Stepper value={c} onChange={setC} step={5} min={0} max={600} unit="g uglevod" label="Uglevod" />
+        <Stepper value={f} onChange={setF} step={1} min={0} max={300} unit="g yog‘" label="Yog‘" />
       </div>
       <MealChips meal={meal} setMeal={setMeal} />
       <button className="btn btn-primary btn-block" disabled={kcal <= 0} onClick={() => onAdd({ name: name.trim() || 'Qo‘lda kiritilgan', kcal, p, f, c })}>

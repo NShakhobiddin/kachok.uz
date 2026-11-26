@@ -5,6 +5,7 @@ import { FoodDiary, TdeeCard } from '../components/FoodDiary';
 import { ProGate } from '../components/ProGate';
 import { MealIdeasCard, RecipeBrowser } from '../components/Recipes';
 import { FoodGuide } from '../components/FoodGuide';
+import { PageBack } from '../components/PageBack';
 import { Icon } from '../components/ui/Icon';
 import { Note } from '../components/ui/Fold';
 import { Sheet } from '../components/ui/Sheet';
@@ -36,19 +37,31 @@ export default function Nutrition() {
   const setSettings = useStore((s) => s.setSettings);
   const { np, est, adaptiveOn, useAdaptive } = useNutrition();
   // ?r=<retsept> — to‘g‘ridan-to‘g‘ri retseptni ochish (bot xabari, ulashilgan havola)
-  const [params] = useSearchParams();
+  const [params, setParams] = useSearchParams();
   const deepRecipe = params.get('r');
-  const [tab, setTabRaw] = useState<Tab>(() => {
-    if (deepRecipe) return 'recipes';
-    try {
-      const t = localStorage.getItem('kachok-ntab');
-      return t === 'plan' || t === 'recipes' || t === 'foods' ? t : 'diary';
-    } catch {
-      return 'diary';
-    }
-  });
+  // yorliq manzilda (?tab=) — telefon/brauzer "orqaga"si oldingi yorliqqa qaytaradi
+  const isTab = (t: string | null): t is Tab => t === 'diary' || t === 'plan' || t === 'recipes' || t === 'foods';
+  const fromUrl = params.get('tab');
+  const tab: Tab = isTab(fromUrl)
+    ? fromUrl
+    : deepRecipe
+      ? 'recipes'
+      : (() => {
+          try {
+            const t = localStorage.getItem('kachok-ntab');
+            return isTab(t) ? t : 'diary';
+          } catch {
+            return 'diary';
+          }
+        })();
   const setTab = (t: Tab) => {
-    setTabRaw(t);
+    if (t === tab) return;
+    setParams((p) => {
+      const n = new URLSearchParams(p);
+      n.set('tab', t);
+      n.delete('r');
+      return n;
+    });
     try {
       localStorage.setItem('kachok-ntab', t);
     } catch {
@@ -121,6 +134,7 @@ export default function Nutrition() {
 
   return (
     <div className="page">
+      <PageBack />
       <div className="page-head">
         <div className="stack gap-4">
           <span className="eyebrow">Maqsad: {GOAL_TEXT[profile.goal]}</span>
@@ -238,7 +252,7 @@ export default function Nutrition() {
                         <span className="strong">{m.name}</span>
                       </div>
                       <span className="row gap-8 small muted num">
-                        {m.kcal} kkal · O {m.p} g
+                        {m.kcal} kkal · oqsil {m.p} g
                         <Icon name={openMeal === i ? 'up' : 'down'} size={16} />
                       </span>
                     </button>
