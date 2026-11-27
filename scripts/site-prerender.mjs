@@ -5,7 +5,7 @@ import { copyFileSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSyn
 import { dirname } from 'node:path';
 import { pathToFileURL } from 'node:url';
 
-const { render } = await import(pathToFileURL('dist-site-ssr/entry-server.js').href);
+const { render, buildPlans } = await import(pathToFileURL('dist-site-ssr/entry-server.js').href);
 const PLACEHOLDER = 'https://SIZNING-DOMENINGIZ.uz';
 const url = (process.env.SITE_URL || PLACEHOLDER).replace(/\/$/, '');
 if (url === PLACEHOLDER) console.warn(`SITE_URL berilmagan: kanonik manzil, og:image va sitemap’da "${PLACEHOLDER}" turibdi — domeningizga almashtiring`);
@@ -32,11 +32,16 @@ for (const page of ['index', 'maxfiylik']) {
   writeFileSync(file, out);
   console.log(`${file}: ${Math.round(out.length / 1024)} KB`);
 }
+// «Sizga mos dastur»: barcha tanlovlar uchun rejalar (sahifada faqat standarti bor)
+const plans = buildPlans();
+writeFileSync('dist-site/plans.json', JSON.stringify(plans));
+const planThumbs = new Set(Object.values(plans).flatMap((pl) => pl.days.flatMap((d) => d.ex.filter((e) => e.thumb).map((e) => e.id))));
+console.log(`dist-site/plans.json: ${Object.keys(plans).length} ta reja, ${Math.round(JSON.stringify(plans).length / 1024)} KB`);
 rmSync('dist-site-ssr', { recursive: true, force: true });
 
 // mushaklar bo‘limidagi mashq rasmlari (ilovadagi kichik nusxalar)
 mkdirSync('dist-site/thumbs', { recursive: true });
-for (const id of thumbs) {
+for (const id of new Set([...thumbs, ...planThumbs])) {
   const src = `public/illustrations/thumb/${id}.webp`;
   if (!existsSync(src)) throw new Error(`rasm yo‘q: ${src}`);
   copyFileSync(src, `dist-site/thumbs/${id}.webp`);

@@ -1,7 +1,9 @@
 // Yig‘ishda: sahifalarni HTML qilib chizadi (qidiruv tizimlari va tez ochilish uchun) — scripts/site-prerender.mjs chaqiradi.
 import { renderToString } from 'react-dom/server';
 import { App, type Page } from './App';
-import { buildSiteData } from './buildData';
+import { buildPlans, buildSiteData } from './buildData';
+
+export { buildPlans };
 import { faqs } from './faq';
 import { BOT_NAME } from './links';
 

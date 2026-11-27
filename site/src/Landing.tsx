@@ -1,4 +1,4 @@
-// Bosh sahifa: taklif → shior → faktlar → muammolar → imkoniyatlar → rasm lentasi → 3D anatomiya → qanday boshlash → kalkulyatorlar → «Mif yoki haqiqat?» → manbalar → savollar → chaqiriq.
+// Bosh sahifa: taklif → sizga mos dastur → shior → faktlar → muammolar → imkoniyatlar → rasm lentasi → 3D anatomiya → qanday boshlash → kalkulyatorlar → «Mif yoki haqiqat?» → manbalar → savollar → chaqiriq.
 import {
   ArrowUpRight,
   BookOpen,
@@ -25,6 +25,7 @@ import { Anatomy } from "./sections/Anatomy";
 import { Facts } from "./sections/Facts";
 import { Gallery } from "./sections/Gallery";
 import { Myths } from "./sections/Myths";
+import { Plan } from "./sections/Plan";
 import { Calories } from "./tools/Calories";
 import { Dishes } from "./tools/Dishes";
 import { Goal } from "./tools/Goal";
@@ -39,6 +40,7 @@ export function Landing() {
       <Nav />
       <main id="main">
         <Hero />
+        <Plan />
         <Tagline />
         <Facts />
         <Pains />
@@ -79,7 +81,12 @@ function Hero() {
             hisoblaydi.
           </p>
           <div className="hero-cta">
-            <BotButton from="site_hero" />
+            <div className="row wrap gap-12">
+              <BotButton from="site_hero" />
+              <a className="btn btn-ghost btn-lg button-lg" href="#dastur">
+                Menga mos dastur
+              </a>
+            </div>
             <span className="caption-2 faint">
               Bepul · karta va parol kerak emas · 4 ta savoldan keyin dastur
               tayyor

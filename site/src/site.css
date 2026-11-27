@@ -2202,3 +2202,118 @@ summary {
     transform: rotate(360deg);
   }
 }
+
+/* ===== Sizga mos dastur ===== */
+.plan {
+  display: grid;
+  gap: 16px;
+}
+@media (min-width: 960px) {
+  .plan {
+    grid-template-columns: 0.85fr 1.15fr;
+    gap: 32px;
+    align-items: start;
+  }
+  .plan-q {
+    position: sticky;
+    top: 96px;
+  }
+}
+.plan-q {
+  gap: 24px;
+}
+.plan-r {
+  gap: 24px;
+}
+.week {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 4px;
+}
+.week-day {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 0;
+  border: 0;
+  border-radius: 12px;
+  background: transparent;
+  color: var(--text-3);
+  cursor: default;
+}
+.week-day.on {
+  color: var(--text);
+  cursor: pointer;
+}
+.week-day.sel {
+  background: var(--s2);
+}
+.week-dot {
+  width: 28px;
+  height: 28px;
+  border-radius: 9999px;
+  display: grid;
+  place-items: center;
+  font-size: 12px;
+  font-weight: 700;
+  background: var(--s3);
+  color: var(--text-3);
+}
+.week-day.on .week-dot {
+  background: var(--lime-soft);
+  color: var(--lime);
+}
+.week-day.sel .week-dot {
+  background: var(--lime);
+  color: #000;
+}
+.plan-day {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.plan-ex {
+  display: flex;
+  flex-direction: column;
+}
+.plan-ex li {
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: center;
+  padding: 8px 0;
+  border-top: 1px solid var(--line);
+}
+.plan-ex li:first-child {
+  border-top: 0;
+}
+.plan-ex img,
+.plan-ico {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: #0b0b0c;
+  object-fit: cover;
+}
+.plan-ico {
+  display: grid;
+  place-items: center;
+  color: var(--text-3);
+}
+.plan-mid {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+.plan-sets {
+  white-space: nowrap;
+}
+.plan-next {
+  align-self: flex-start;
+  border: 0;
+  background: none;
+  padding: 8px 0;
+  cursor: pointer;
+}

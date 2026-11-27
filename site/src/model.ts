@@ -83,6 +83,32 @@ export interface ShowcaseRow {
   view: 'front' | 'back';
 }
 
+/** «Sizga mos dastur»: ilova dvigateli tuzgan haftalik reja (ixcham) */
+export interface PlanEx {
+  id: string;
+  name: string;
+  sets: number;
+  /** "8–12" yoki "5" */
+  reps: string;
+  rest: number;
+  /** kichik rasm bor (thumbs/<id>.webp) */
+  thumb: boolean;
+}
+export interface PlanDay {
+  title: string;
+  focus: string;
+  /** 0 = dushanba */
+  weekday: number;
+  min: number;
+  ex: PlanEx[];
+}
+export interface PlanRow {
+  key: string;
+  name: string;
+  method: string;
+  days: PlanDay[];
+}
+
 export interface GalleryRow {
   id: string;
   name: string;
@@ -104,4 +130,6 @@ export interface SiteData {
   gallery: GalleryRow[];
   /** 3D modeldagi barcha mushaklar nomi (bosilganda ko‘rsatish uchun) */
   m3names: Record<string, string>;
+  /** standart tanlov uchun reja (qolganlari plans.json da) */
+  plan: PlanRow;
 }

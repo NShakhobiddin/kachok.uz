@@ -11,15 +11,19 @@ import { LESSONS } from '../../src/data/lessons';
 import { MUSCLE_GUIDE } from '../../src/data/muscleGuide';
 import { M3_INFO, M3_KEYS } from '../../src/data/muscles3d';
 import { activationFor } from '../../src/engine/activation';
+import { METHOD_INFO } from '../../src/engine/methods';
+import { generateProgram } from '../../src/engine/program';
+import { EQUIPMENT_PRESETS } from '../../src/data/catalog';
 import { RECIPE_MAP, RECIPES } from '../../src/data/recipes';
 import { PROGRAM_TEMPLATES } from '../../src/data/programTemplates';
 import { ROUTINES } from '../../src/data/routines';
 import { SOURCES } from '../../src/data/sources';
 import { STRETCHES } from '../../src/data/stretches';
-import type { Exercise, MuscleId } from '../../src/types';
+import type { Exercise, Goal, MuscleId, Profile } from '../../src/types';
+import { PLAN_DAYS, PLAN_DEFAULT, PLAN_GOALS, PLAN_PLACES, planKey, type Place } from './plans';
 import { GALLERY_IDS, SHOWCASE } from './media';
 import { FACT_DEFS, MYTH_DEFS } from './content';
-import type { GalleryRow, MuscleRow, ShowcaseRow, SiteData, SourceRow } from './model';
+import type { GalleryRow, MuscleRow, PlanRow, ShowcaseRow, SiteData, SourceRow } from './model';
 
 /** saytda ko‘rsatiladigan manbalar (asosiy hisob-kitoblar shularga tayanadi) */
 const KEY_SOURCES = ['mifflin1990', 'morton2018', 'helms2014', 'schoenfeld2017vol', 'atkinson2008', 'iso26642'];
@@ -96,6 +100,57 @@ function gallery(): GalleryRow[] {
   });
 }
 
+/** ilova dvigateli bilan reja: boshlovchi, 60 daqiqa, jarohatsiz (ilovada 4 savoldan keyin shaxsiylashadi) */
+function plan(goal: Goal, place: Place, days: number): PlanRow {
+  const preset = EQUIPMENT_PRESETS.find((x) => x.id === PLAN_PLACES.find((pl) => pl.v === place)!.preset)!;
+  const p: Profile = {
+    name: '',
+    sex: 'male',
+    age: 25,
+    heightCm: 175,
+    weightKg: 75,
+    goal,
+    level: 'beginner',
+    daysPerWeek: days,
+    sessionMin: 60,
+    trainingDays: [],
+    equipment: preset.items,
+    injuries: [],
+    focus: [],
+    activity: 'light',
+    healthFlags: [],
+    dietPrefs: { noPork: false, lactoseFree: false, vegetarian: false },
+    createdAt: '',
+  };
+  const prog = generateProgram(p);
+  return {
+    key: planKey(goal, place, days),
+    name: prog.split,
+    method: prog.method ? METHOD_INFO[prog.method].name : '',
+    days: prog.days.map((d) => ({
+      title: d.title,
+      focus: d.focus,
+      weekday: d.weekday,
+      min: d.estMin,
+      ex: d.exercises.map((e) => ({
+        id: e.exerciseId,
+        name: EXERCISE_MAP[e.exerciseId]?.name ?? e.exerciseId,
+        sets: e.sets,
+        reps: e.repMin === e.repMax ? String(e.repMin) : `${e.repMin}–${e.repMax}`,
+        rest: e.restSec,
+        thumb: !!ILLUSTRATIONS[e.exerciseId],
+      })),
+    })),
+  };
+}
+
+/** barcha tanlovlar (plans.json uchun) */
+export function buildPlans(): Record<string, PlanRow> {
+  const out: Record<string, PlanRow> = {};
+  for (const g of PLAN_GOALS) for (const pl of PLAN_PLACES) for (const d of PLAN_DAYS) out[planKey(g.v, pl.v, d)] = plan(g.v, pl.v, d);
+  return out;
+}
+
 /** manba nomi va DOI ilovaning ro‘yxatidan: id xato bo‘lsa yig‘ish to‘xtaydi */
 function src(id: string): SourceRow {
   const s = SOURCES.find((x) => x.id === id);
@@ -154,5 +209,6 @@ export function buildSiteData(): SiteData {
     showcase: showcase(),
     gallery: gallery(),
     m3names: Object.fromEntries(M3_KEYS.map((k) => [k, M3_INFO[k].name])),
+    plan: plan(PLAN_DEFAULT.goal, PLAN_DEFAULT.place, PLAN_DEFAULT.days),
   };
 }
