@@ -1,5 +1,5 @@
 // Mashq sahifasidagi "Mushaklar 3D" bo'limi: anatomik model, EMG foizlari, rol, manbalar.
-import { lazy, Suspense, useMemo, useState } from 'react';
+import { lazy, Suspense, useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { EMG_SOURCES } from '../data/activation';
 import { M3_INFO, type M3 } from '../data/muscles3d';
@@ -9,6 +9,7 @@ import { exById } from '../data/exercises';
 import type { View3D } from './Muscle3D';
 import { Icon } from './ui/Icon';
 import { Note } from './ui/Fold';
+import { useNear } from '../lib/hooks';
 
 const Muscle3D = lazy(() => import('./Muscle3D'));
 
@@ -18,6 +19,16 @@ const PHASE_TEXT: Record<Phase, string> = {
   hold: 'Ushlab turish',
   squeeze: 'Qisish — eng yuqori nuqta',
 };
+
+function M3DWait() {
+  return (
+    <div className="m3d-host">
+      <div className="m3d-overlay">
+        <span className="spinner" aria-hidden="true" />
+      </div>
+    </div>
+  );
+}
 
 export function MuscleActivation({ ex }: { ex: Exercise }) {
   const act = useMemo(() => activationFor(ex), [ex]);
@@ -35,6 +46,16 @@ export function MuscleActivation({ ex }: { ex: Exercise }) {
   const scaleMax = Math.max(100, ...act.list.map((a) => Math.max(a.mvic, a.range?.[1] ?? 0)));
   const measured = act.list.filter((a) => !a.est).length;
 
+  // 3D model (~3.6 MB, WebGL) sahifa ochilishi bilan emas, bo‘limga yaqinlashganda yuklanadi — sahifa va video qotmasin
+  // bo‘lim birinchi ekranda bo‘lsa ham — mashq rasmi/videosi avval chiqib olsin, model biroz keyin
+  const [hostRef, near] = useNear<HTMLDivElement>('250px');
+  const [ready, setReady] = useState(false);
+  useEffect(() => {
+    if (!near) return;
+    const id = window.setTimeout(() => setReady(true), 1200);
+    return () => window.clearTimeout(id);
+  }, [near]);
+
   const pick = (k: M3 | null) => {
     setSelected(k);
     if (k) setView(M3_INFO[k].view);
@@ -42,18 +63,14 @@ export function MuscleActivation({ ex }: { ex: Exercise }) {
 
   return (
     <div className="stack gap-12">
-      <div className="m3d-wrap">
-        <Suspense
-          fallback={
-            <div className="m3d-host">
-              <div className="m3d-overlay">
-                <span className="spinner" aria-hidden="true" />
-              </div>
-            </div>
-          }
-        >
-          <Muscle3D acts={act.list} anim={ex.anim} selected={selected} onSelect={pick} view={view} playing={playing} onPhase={setPhase} />
-        </Suspense>
+      <div className="m3d-wrap" ref={hostRef}>
+        {ready ? (
+          <Suspense fallback={<M3DWait />}>
+            <Muscle3D acts={act.list} anim={ex.anim} selected={selected} onSelect={pick} view={view} playing={playing} onPhase={setPhase} />
+          </Suspense>
+        ) : (
+          <M3DWait />
+        )}
         <div className="m3d-top">
           <span className="tag stage-tag">
             <i className="dot" style={{ background: phase === 'up' || phase === 'squeeze' ? 'var(--red)' : 'var(--blue-2)' }} />

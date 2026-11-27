@@ -2698,9 +2698,11 @@ ol.steps li::before {
   object-fit: cover;
   background: #0e0e10;
 }
-.motion-note {
-  flex: 1;
-  min-width: 0;
+.motion-video.light video {
+  background: #eeeeec;
+}
+.motion-video.light .illu-phase {
+  color: #3a3a3c;
 }
 .motion-cue {
   position: absolute;

@@ -2,7 +2,7 @@
 // Kadrlar — bitta kamera va bitta odam bilan yaratilgan rasmlar; vaqt — mashq tempidan (tushirish sekinroq, ko'tarish tezroq).
 // 3D videosi bor mashqda — video aylanadi (ochilmasa, masalan internetsiz — o‘sha ikki kadr).
 import { useEffect, useMemo, useRef, useState } from 'react';
-import type { Illustration } from '../data/illustrations';
+import { VIDEO_STYLES, videoSrc, type Illustration, type VideoStyle } from '../data/illustrations';
 import { usePrefersReducedMotion } from '../lib/hooks';
 import type { Exercise, Phase } from '../types';
 import { Icon } from './ui/Icon';
@@ -49,31 +49,80 @@ const CUE: Record<'up' | 'down', string> = {
   down: 'Nazorat bilan · nafas oling',
 };
 
-function VideoMotion({ ex, ill, video, compact, onFail }: { ex: Exercise; ill: Illustration; video: NonNullable<Illustration['video']>; compact: boolean; onFail: () => void }) {
+const STYLE_KEY = 'gymbos.videoStyle';
+function savedStyle(): VideoStyle {
+  try {
+    const v = localStorage.getItem(STYLE_KEY);
+    if (VIDEO_STYLES.some(([k]) => k === v)) return v as VideoStyle;
+  } catch {
+    /* saqlash yopiq — standart uslub */
+  }
+  return 'kulrang';
+}
+
+/** video to‘liq faylini keshga qo‘yish (bir marta, o‘ynay boshlagandan keyin): keyingi ochilishda darhol va internetsiz */
+function warmCache(url: string) {
+  if (!url || !('caches' in window)) return;
+  window.setTimeout(() => {
+    caches
+      .open('kachok-videos')
+      .then((c) => c.match(url).then((hit) => (hit ? undefined : c.add(url))))
+      .catch(() => undefined);
+  }, 1500);
+}
+
+function VideoMotion({ ex, ill, name, compact, onFail }: { ex: Exercise; ill: Illustration; name: string; compact: boolean; onFail: () => void }) {
   const ref = useRef<HTMLVideoElement>(null);
   const reduced = usePrefersReducedMotion();
+  const [style, setStyle] = useState<VideoStyle>(savedStyle);
   const [playing, setPlaying] = useState(!reduced);
   const [slow, setSlow] = useState(false);
+  const src = videoSrc(name, style);
   useEffect(() => {
     if (ref.current) ref.current.playbackRate = slow ? 0.5 : 1;
-  }, [slow]);
+  }, [slow, style]);
   useEffect(() => {
     const v = ref.current;
     if (!v) return;
     if (playing) v.play().catch(() => setPlaying(false));
     else v.pause();
-  }, [playing]);
+  }, [playing, style]);
+  const choose = (k: VideoStyle) => {
+    setStyle(k);
+    try {
+      localStorage.setItem(STYLE_KEY, k);
+    } catch {
+      /* saqlanmasa ham ishlayveradi */
+    }
+  };
   return (
     <div className={`motion ${compact ? 'compact' : ''}`}>
-      <figure className="illu motion-stage motion-video" aria-label={`${ex.name}: 3D harakat`}>
-        <video ref={ref} poster={video.poster} muted loop playsInline autoPlay={!reduced} preload="auto" aria-label={ill.alt}>
-          <source src={video.mp4} type="video/mp4" />
-          <source src={video.webm} type="video/webm" onError={onFail} />
+      <figure className={`illu motion-stage motion-video${style === 'oq' ? ' light' : ''}`} aria-label={`${ex.name}: 3D harakat`}>
+        <video
+          key={style}
+          ref={ref}
+          poster={src.poster}
+          muted
+          loop
+          playsInline
+          autoPlay={!reduced}
+          preload="auto"
+          aria-label={ill.alt}
+          onPlaying={(e) => warmCache(e.currentTarget.currentSrc)}
+        >
+          <source src={src.mp4} type="video/mp4" />
+          <source src={src.webm} type="video/webm" onError={onFail} />
         </video>
         <figcaption className="illu-phase">3D harakat</figcaption>
       </figure>
       <div className="motion-bar">
-        <span className="small muted motion-note">Ishlayotgan mushaklar — lime rangda</span>
+        <div className="segmented motion-seg" role="radiogroup" aria-label="Video rangi">
+          {VIDEO_STYLES.map(([k, t]) => (
+            <button key={k} role="radio" aria-checked={style === k} className={style === k ? 'on' : ''} onClick={() => choose(k)}>
+              {t}
+            </button>
+          ))}
+        </div>
         {!compact && (
           <button className="chip sm" onClick={() => setSlow((s) => !s)} aria-label="Tezlik" aria-pressed={slow}>
             {slow ? '0.5×' : '1×'}
@@ -89,7 +138,7 @@ function VideoMotion({ ex, ill, video, compact, onFail }: { ex: Exercise; ill: I
 
 export function ExerciseMotion({ ex, ill, compact = false }: { ex: Exercise; ill: Illustration; compact?: boolean }) {
   const [videoFailed, setVideoFailed] = useState(false);
-  if (ill.video && !videoFailed) return <VideoMotion ex={ex} ill={ill} video={ill.video} compact={compact} onFail={() => setVideoFailed(true)} />;
+  if (ill.video && !videoFailed) return <VideoMotion ex={ex} ill={ill} name={ill.video} compact={compact} onFail={() => setVideoFailed(true)} />;
   return <FrameMotion ex={ex} ill={ill} compact={compact} />;
 }
 

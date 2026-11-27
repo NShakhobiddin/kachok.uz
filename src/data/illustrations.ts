@@ -36,12 +36,23 @@ export interface Illustration {
   /** harakatning ikkinchi cheti (o'sha kamera va odam) — ikki kadrli harakat uchun.
    *  mainSrc — asosiy kadrning ikkinchi kadr masshtabiga moslangan nusxasi (faqat harakatda; yorliqlar asl rasmda) */
   pair?: { src: string; phase: string; mainSrc?: string };
-  /** 3D harakat videosi (MoveKit, ilova uslubiga o‘tkazilgan): «Harakat» bo‘limida ikki kadr o‘rniga; ochilmasa — kadrlar */
-  video?: { mp4: string; webm: string; poster: string };
+  /** 3D harakat videosi nomi (MoveKit, ilova uslubiga o‘tkazilgan; public/videos/<uslub>/<nom>.*): «Harakat» bo‘limida ikki kadr o‘rniga; ochilmasa — kadrlar */
+  video?: string;
 }
 
+/** video uslublari (sinov): oq — MoveKit asli, kulrang va to‘q — qora fon, lime mushak */
+export const VIDEO_STYLES = [
+  ['kulrang', 'Kulrang'],
+  ['toq', 'To‘q'],
+  ['oq', 'Oq'],
+] as const;
+export type VideoStyle = (typeof VIDEO_STYLES)[number][0];
+export const videoSrc = (name: string, style: VideoStyle) => {
+  const b = `${import.meta.env.BASE_URL}videos/${style}/${name}`;
+  return { mp4: `${b}.mp4`, webm: `${b}.webm`, poster: `${b}.webp` };
+};
+
 const img = (f: string) => `${import.meta.env.BASE_URL}illustrations/${f}`;
-const vid = (id: string) => ({ mp4: `${import.meta.env.BASE_URL}videos/${id}.mp4`, webm: `${import.meta.env.BASE_URL}videos/${id}.webm`, poster: `${import.meta.env.BASE_URL}videos/${id}.webp` });
 
 export const ILLUSTRATIONS: Partial<Record<string, Illustration>> = {
   'back-squat': {
@@ -137,7 +148,7 @@ export const ILLUSTRATIONS: Partial<Record<string, Illustration>> = {
     src: img('pull-up.webp'),
     phase: 'Yuqori nuqta',
     pair: { src: img('alt/pull-up.webp'), phase: 'Pastki nuqta' },
-    video: vid('pull-up'),
+    video: 'pull-up',
     alt: 'Turnikda tortilish, yuqori nuqta: to‘g‘ri texnika; ishlayotgan mushaklar lime rangda yonmoqda',
     labels: [
       { key: 'teresMajor', name: 'Katta yumaloq', x: 41, y: 20, side: 'l', ly: 18 },
@@ -593,7 +604,7 @@ export const ILLUSTRATIONS: Partial<Record<string, Illustration>> = {
     src: img('db-fly.webp'),
     phase: 'Pastki nuqta',
     pair: { src: img('alt/db-fly.webp'), phase: 'Yuqori nuqta' },
-    video: vid('db-fly'),
+    video: 'db-fly',
     alt: 'Gantel bilan qo‘l yoyish, pastki nuqta: to‘g‘ri texnika; ishlayotgan mushaklar lime rangda yonmoqda',
     labels: [
       { key: 'pecMid', name: 'Ko‘krak (o‘rta)', x: 56, y: 35, side: 'l', ly: 36 },

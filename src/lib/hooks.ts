@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 export function usePrefersReducedMotion() {
   const [reduced, setReduced] = useState(
@@ -37,4 +37,30 @@ export function useArmed(delayMs = 400) {
     /** tasdiq tugmasi bosildi: bajarish mumkinmi */
     ready: () => armedAt !== null && Date.now() - armedAt >= delayMs,
   };
+}
+
+/** element ekranga yaqinlashganda (margin ichida) bir marta true bo‘ladi — og‘ir qismlarni kechiktirib yuklash uchun */
+export function useNear<T extends Element>(margin = '300px'): [React.RefObject<T | null>, boolean] {
+  const ref = useRef<T>(null);
+  const [near, setNear] = useState(false);
+  useEffect(() => {
+    if (near) return;
+    const el = ref.current;
+    if (!el || typeof IntersectionObserver === 'undefined') {
+      setNear(true);
+      return;
+    }
+    const io = new IntersectionObserver(
+      ([e]) => {
+        if (e.isIntersecting) {
+          setNear(true);
+          io.disconnect();
+        }
+      },
+      { rootMargin: margin },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, [near, margin]);
+  return [ref, near];
 }

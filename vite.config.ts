@@ -64,6 +64,17 @@ export default defineConfig({
             handler: 'CacheFirst',
             options: { cacheName: 'kachok-illustrations', expiration: { maxEntries: 200 } },
           },
+          // 3D harakat videolari: to‘liq fayl keshda bo‘lsa — darhol (bo‘lak so‘rovlari ham keshdan), internetsiz ham
+          {
+            urlPattern: /\/videos\/.*\.(mp4|webm)$/,
+            handler: 'CacheFirst',
+            options: { cacheName: 'kachok-videos', rangeRequests: true, cacheableResponse: { statuses: [200] }, expiration: { maxEntries: 150 } },
+          },
+          {
+            urlPattern: /\/videos\/.*\.webp$/,
+            handler: 'CacheFirst',
+            options: { cacheName: 'kachok-illustrations', expiration: { maxEntries: 200 } },
+          },
         ],
       },
     }),
