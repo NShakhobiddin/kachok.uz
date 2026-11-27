@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { Logo } from '../../src/components/Logo';
 import { useSiteData } from './data';
 import { APP_URL, BOT_CHAT, HOME_URL, PRIVACY_URL, botUrl } from './links';
+import { BotButton } from './ui';
 
 // sahifadagi tartibda
 const LINKS = [
@@ -121,5 +122,57 @@ export function Footer() {
         </nav>
       </div>
     </footer>
+  );
+}
+
+/**
+ * Telefonda pastki yopishqoq tugma: bosh ekran o‘tgach chiqadi; yakuniy chaqiriq yoki pastki qism ko‘ringanda
+ * va raqam kiritilayotganda (klaviatura ochiq) yashirinadi — kalkulyator maydonlarini yopmaydi.
+ */
+export function MobileCta() {
+  const [show, setShow] = useState(false);
+  useEffect(() => {
+    if (typeof IntersectionObserver === 'undefined') return;
+    const hero = document.getElementById('top');
+    const blockers = [document.querySelector('.final'), document.querySelector('.footer')].filter((e): e is Element => !!e);
+    let heroIn = true;
+    const seen = new Set<Element>();
+    let typing = false;
+    const update = () => setShow(!heroIn && seen.size === 0 && !typing);
+    const io = new IntersectionObserver((entries) => {
+      for (const e of entries) {
+        if (e.target === hero) heroIn = e.isIntersecting;
+        else if (e.isIntersecting) seen.add(e.target);
+        else seen.delete(e.target);
+      }
+      update();
+    });
+    if (hero) io.observe(hero);
+    blockers.forEach((b) => io.observe(b));
+    const isField = (t: EventTarget | null) => t instanceof Element && t.matches('input, select, textarea');
+    const onIn = (e: FocusEvent) => {
+      typing = isField(e.target);
+      update();
+    };
+    // bir maydondan ikkinchisiga o‘tganda tugma "miltillamasin": fokus qayerga tushganini bir lahzadan keyin tekshiramiz
+    const onOut = () =>
+      window.setTimeout(() => {
+        typing = isField(document.activeElement);
+        update();
+      }, 50);
+    document.addEventListener('focusin', onIn);
+    document.addEventListener('focusout', onOut);
+    return () => {
+      io.disconnect();
+      document.removeEventListener('focusin', onIn);
+      document.removeEventListener('focusout', onOut);
+    };
+  }, []);
+  return (
+    <div className={`mcta${show ? ' on' : ''}`} aria-hidden={!show} inert={!show}>
+      <BotButton from="site_sticky" size="md">
+        Telegram’da bepul boshlash
+      </BotButton>
+    </div>
   );
 }

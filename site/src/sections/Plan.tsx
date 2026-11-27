@@ -57,7 +57,7 @@ export function Plan() {
     <section id="dastur" className="section" aria-labelledby="plan-t" onPointerEnter={() => void loadPlans().catch(() => {})} onFocus={() => void loadPlans().catch(() => {})}>
       <div className="container">
         <div className="section-head reveal">
-          <span className="eyebrow">30 soniyada</span>
+          <span className="eyebrow">3 savol · 30 soniya</span>
           <h2 id="plan-t" className="section-title">
             Sizga mos dastur — uchta savol bilan
           </h2>

@@ -10,16 +10,18 @@ import {
   House,
   Lightning,
   PersonSimpleRun,
+  Cube,
+  ListChecks,
   Question,
   Ruler,
   Target,
   Timer,
 } from "@phosphor-icons/react/ssr";
 import { useCallback, useEffect, useRef, useState, type KeyboardEvent } from "react";
-import { Footer, Nav } from "./Chrome";
+import { Footer, MobileCta, Nav } from "./Chrome";
 import { useSiteData } from "./data";
 import { faqs } from "./faq";
-import { APP_URL, BOT_NAME, PRIVACY_URL } from "./links";
+import { APP_URL, asset, BOT_NAME, PRIVACY_URL } from "./links";
 import { AllSources } from "./sections/AllSources";
 import { Anatomy } from "./sections/Anatomy";
 import { Facts } from "./sections/Facts";
@@ -58,6 +60,7 @@ export function Landing() {
         <FinalCta />
       </main>
       <Footer />
+      <MobileCta />
     </>
   );
 }
@@ -84,17 +87,30 @@ function Hero() {
             hisoblaydi.
           </p>
           <div className="hero-cta">
-            <div className="row wrap gap-12">
-              <BotButton from="site_hero" />
-              <a className="btn btn-ghost btn-lg button-lg" href="#dastur">
+            <BotButton from="site_hero" />
+            <Assure />
+          </div>
+          <nav className="quick" aria-label="Hoziroq sinab ko‘ring">
+            <span className="caption-3 muted">Hoziroq sinab ko‘ring:</span>
+            <div className="quick-row">
+              <a className="chip button-sm" href="#dastur">
+                <ListChecks size={16} aria-hidden="true" />
                 Menga mos dastur
               </a>
+              <a className="chip button-sm" href="#anatomiya">
+                <Cube size={16} aria-hidden="true" />
+                3D anatomiya
+              </a>
+              <a className="chip button-sm" href="#vositalar">
+                <Calculator size={16} aria-hidden="true" />
+                Kalkulyatorlar
+              </a>
+              <a className="chip button-sm" href="#mif">
+                <Question size={16} aria-hidden="true" />
+                Mif yoki haqiqat
+              </a>
             </div>
-            <span className="caption-2 faint">
-              Bepul · karta va parol kerak emas · 4 ta savoldan keyin dastur
-              tayyor
-            </span>
-          </div>
+          </nav>
           <ul className="proof body-6" aria-label="Ilovada">
             <li>
               <b className="body-4">{stats.illustrated}</b> ta mashq rasmi
@@ -646,6 +662,20 @@ function FaqSection() {
   );
 }
 
+/** asosiy tugma ostidagi kafolatlar: faqat rost bo‘lgan gaplar */
+function Assure() {
+  return (
+    <ul className="assure caption-1" aria-label="Shartlar">
+      {["Bepul", "Yuklab olish shart emas", "Karta va parol kerak emas"].map((t) => (
+        <li key={t}>
+          <Check size={14} weight="bold" aria-hidden="true" />
+          {t}
+        </li>
+      ))}
+    </ul>
+  );
+}
+
 function FinalCta() {
   const { stats } = useSiteData();
   return (
@@ -659,9 +689,18 @@ function FinalCta() {
             {stats.illustrated} ta mashq rasmi, {stats.dishes} ta milliy taom va
             sizga moslangan dastur. Bepul, o‘zbek tilida, Telegram ichida.
           </p>
-          <div className="hero-cta" style={{ alignItems: "center" }}>
-            <BotButton from="site_final" />
-            <span className="caption-2 faint">Karta va parol kerak emas</span>
+          <div className="final-cta">
+            <div className="hero-cta" style={{ alignItems: "center" }}>
+              <BotButton from="site_final" />
+              <Assure />
+            </div>
+            {/* kompyuterda: telefon kamerasi bilan skanerlab, botni telefonda ochish */}
+            <div className="final-qr">
+              <img src={asset("qr-bot.svg")} width={132} height={132} alt="GYMbos botini ochadigan QR kod" loading="lazy" />
+              <span className="caption-2 muted">
+                Kompyuterdasizmi? Telefon kamerasi bilan skanerlang
+              </span>
+            </div>
           </div>
         </div>
       </div>

@@ -493,6 +493,8 @@ dd {
   }
 }
 .hero-copy {
+  /* ichidagi yonga suriladigan qator (tezkor havolalar) ustunni kengaytirib yubormasin */
+  min-width: 0;
   display: flex;
   flex-direction: column;
   gap: 24px;
@@ -2318,4 +2320,142 @@ summary {
   background: none;
   padding: 8px 0;
   cursor: pointer;
+}
+
+/* ===== Bosh ekran: kafolatlar va tezkor havolalar ===== */
+.assure {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  color: var(--text-2);
+}
+.assure li {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.assure svg {
+  color: var(--lime);
+}
+.quick {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  /* bosh ekran ustunida elementlar matn kengligicha cho‘ziladi — bu qator esa ustundan oshmasin */
+  align-self: stretch;
+  min-width: 0;
+}
+.quick-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+@media (max-width: 639px) {
+  .quick-row {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+    margin: 0 -16px;
+    padding: 0 16px;
+  }
+  .quick-row::-webkit-scrollbar {
+    display: none;
+  }
+  .quick-row .chip {
+    flex: none;
+  }
+}
+
+/* ===== Yakuniy chaqiriq: kompyuterda QR kod ===== */
+.final-cta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+}
+.final-qr {
+  display: none;
+}
+@media (min-width: 1024px) {
+  .final-cta {
+    flex-direction: row;
+    gap: 48px;
+  }
+  .final-qr {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    max-width: 260px;
+    padding-left: 48px;
+    border-left: 1px solid var(--lime-line);
+    text-align: left;
+  }
+  .final-qr img {
+    flex: none;
+    width: 132px;
+    height: 132px;
+    border-radius: 12px;
+    background: #fff;
+  }
+}
+
+/* ===== Telefon: pastki yopishqoq tugma ===== */
+.mcta {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 30;
+  padding: 24px 16px calc(12px + env(safe-area-inset-bottom));
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.94) 55%, rgba(0, 0, 0, 0));
+  opacity: 0;
+  transform: translateY(100%);
+  pointer-events: none;
+  transition:
+    opacity 400ms var(--ease),
+    transform 400ms var(--ease);
+}
+.mcta.on {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+.mcta .btn {
+  width: 100%;
+  min-height: 48px;
+}
+@media (max-width: 767px) {
+  /* maydon yoki havolaga o‘tganda kontent tugma ostida qolmasin */
+  html {
+    scroll-padding-bottom: 96px;
+  }
+}
+@media (min-width: 768px) {
+  .mcta {
+    display: none;
+  }
+}
+
+/* ===== Kichik telefonlar (320–374 px): suzuvchi yorliqlar va katta tugma ekrandan chiqmasin ===== */
+@media (max-width: 374px) {
+  .chip-a {
+    left: -16px;
+  }
+  .chip-b {
+    right: -16px;
+  }
+  .chip-float {
+    max-width: 200px;
+    padding: 8px 12px 8px 8px;
+  }
+  .btn-lg {
+    padding: 12px 16px;
+    font-size: 16px;
+  }
+  /* uzun tugma matni (masalan, kalkulyator ostida) ikki qatorga o‘tsin, ekrandan chiqmasin */
+  .btn {
+    max-width: 100%;
+    white-space: normal;
+    text-align: center;
+  }
 }

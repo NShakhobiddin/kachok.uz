@@ -41,7 +41,7 @@ export function Myths() {
     // javob va «Keyingisi» tugmasi ekrandan pastda qolmasin
     requestAnimationFrame(() => {
       const next = cardRef.current?.querySelector('.myth-next');
-      if (next && next.getBoundingClientRect().bottom > window.innerHeight - 16) next.scrollIntoView({ block: 'nearest' });
+      if (next && next.getBoundingClientRect().bottom > window.innerHeight - 96) next.scrollIntoView({ block: 'center' });
     });
   };
   const next = () => {
