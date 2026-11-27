@@ -1,6 +1,7 @@
 // Mashq harakati: ikki kadr (boshlanish va harakatning ikkinchi cheti) navbatma-navbat, silliq almashadi.
 // Kadrlar — bitta kamera va bitta odam bilan yaratilgan rasmlar; vaqt — mashq tempidan (tushirish sekinroq, ko'tarish tezroq).
-import { useEffect, useMemo, useState } from 'react';
+// 3D videosi bor mashqda — video aylanadi (ochilmasa, masalan internetsiz — o‘sha ikki kadr).
+import { useEffect, useMemo, useRef, useState } from 'react';
 import type { Illustration } from '../data/illustrations';
 import { usePrefersReducedMotion } from '../lib/hooks';
 import type { Exercise, Phase } from '../types';
@@ -48,7 +49,51 @@ const CUE: Record<'up' | 'down', string> = {
   down: 'Nazorat bilan · nafas oling',
 };
 
+function VideoMotion({ ex, ill, video, compact, onFail }: { ex: Exercise; ill: Illustration; video: NonNullable<Illustration['video']>; compact: boolean; onFail: () => void }) {
+  const ref = useRef<HTMLVideoElement>(null);
+  const reduced = usePrefersReducedMotion();
+  const [playing, setPlaying] = useState(!reduced);
+  const [slow, setSlow] = useState(false);
+  useEffect(() => {
+    if (ref.current) ref.current.playbackRate = slow ? 0.5 : 1;
+  }, [slow]);
+  useEffect(() => {
+    const v = ref.current;
+    if (!v) return;
+    if (playing) v.play().catch(() => setPlaying(false));
+    else v.pause();
+  }, [playing]);
+  return (
+    <div className={`motion ${compact ? 'compact' : ''}`}>
+      <figure className="illu motion-stage motion-video" aria-label={`${ex.name}: 3D harakat`}>
+        <video ref={ref} poster={video.poster} muted loop playsInline autoPlay={!reduced} preload="auto" aria-label={ill.alt}>
+          <source src={video.mp4} type="video/mp4" />
+          <source src={video.webm} type="video/webm" onError={onFail} />
+        </video>
+        <figcaption className="illu-phase">3D harakat</figcaption>
+      </figure>
+      <div className="motion-bar">
+        <span className="small muted motion-note">Ishlayotgan mushaklar — lime rangda</span>
+        {!compact && (
+          <button className="chip sm" onClick={() => setSlow((s) => !s)} aria-label="Tezlik" aria-pressed={slow}>
+            {slow ? '0.5×' : '1×'}
+          </button>
+        )}
+        <button className="icon-btn filled" style={{ width: 40, height: 40 }} onClick={() => setPlaying((p) => !p)} aria-label={playing ? 'To‘xtatish' : 'Harakatni ko‘rsatish'}>
+          <Icon name={playing ? 'pause' : 'play'} size={16} />
+        </button>
+      </div>
+    </div>
+  );
+}
+
 export function ExerciseMotion({ ex, ill, compact = false }: { ex: Exercise; ill: Illustration; compact?: boolean }) {
+  const [videoFailed, setVideoFailed] = useState(false);
+  if (ill.video && !videoFailed) return <VideoMotion ex={ex} ill={ill} video={ill.video} compact={compact} onFail={() => setVideoFailed(true)} />;
+  return <FrameMotion ex={ex} ill={ill} compact={compact} />;
+}
+
+function FrameMotion({ ex, ill, compact }: { ex: Exercise; ill: Illustration; compact: boolean }) {
   const frames = useMemo(() => motionFrames(ex, ill), [ex, ill]);
   const t = useMemo(() => tempo(ex), [ex]);
   const reduced = usePrefersReducedMotion();
