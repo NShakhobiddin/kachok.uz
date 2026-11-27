@@ -23,6 +23,7 @@ const Profile = lazy(() => import('./pages/Profile'));
 const LessonView = lazy(() => import('./pages/LessonView'));
 const Sources = lazy(() => import('./pages/Sources'));
 const Lab = lazy(() => import('./pages/Lab'));
+const Demo3D = lazy(() => import('./pages/Demo3D'));
 const Account = lazy(() => import('./pages/Account'));
 const Register = lazy(() => import('./pages/CloudAccount').then((m) => ({ default: m.Register })));
 const Coach = lazy(() => import('./pages/Coach'));
@@ -66,9 +67,9 @@ function TabBar() {
   );
 }
 
-const NO_TAB = ['/onboarding', '/workout', '/summary', '/lesson', '/lab', '/account', '/premium', '/stretch', '/report'];
+const NO_TAB = ['/demo3d', '/onboarding', '/workout', '/summary', '/lesson', '/lab', '/account', '/premium', '/stretch', '/report'];
 // profil to'ldirilmasdan ham ochiladigan sahifalar
-const NO_PROFILE_OK = ['/onboarding', '/lab', '/exercise', '/library', '/lesson', '/sources', '/account', '/premium', '/coach', '/muscle', '/routine', '/stretch'];
+const NO_PROFILE_OK = ['/demo3d', '/onboarding', '/lab', '/exercise', '/library', '/lesson', '/sources', '/account', '/premium', '/coach', '/muscle', '/routine', '/stretch'];
 
 type Gate = 'ok' | 'checking' | 'restoring' | 'register';
 /**
@@ -187,6 +188,7 @@ function Shell() {
           <Route path="/premium" element={<Premium />} />
           <Route path="/coach" element={<Coach />} />
           <Route path="/coach/:id" element={<CoachClient />} />
+          <Route path="/demo3d" element={<Demo3D />} />
           {import.meta.env.DEV && <Route path="/lab" element={<Lab />} />}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
