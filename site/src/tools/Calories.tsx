@@ -92,12 +92,14 @@ export function Calories() {
               <select id={actId} className="input" value={activity} onChange={(e) => setActivity(e.target.value as ActivityLevel)}>
                 {(Object.keys(ACTIVITY) as ActivityLevel[]).map((k) => (
                   <option key={k} value={k}>
-                    {ACTIVITY[k].name}: {ACTIVITY[k].desc}
+                    {ACTIVITY[k].name}
                   </option>
                 ))}
               </select>
               <CaretDown size={16} className="select-caret" aria-hidden="true" />
             </div>
+            {/* tavsif alohida: telefonda tanlov maydoniga uzun matn sig‘maydi */}
+            <span className="caption-5 faint">{ACTIVITY[activity].desc}</span>
           </div>
           <Chips label="Haftada necha kun kuch mashqi" value={days} options={DAYS} onChange={setDays} />
           <Chips label="Maqsad" value={goal} options={GOALS} onChange={setGoal} />

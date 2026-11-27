@@ -26,11 +26,23 @@ export function Myths() {
   const answered = pick !== null;
   const right = answered && pick === m.truth;
 
-  const focusCard = () => requestAnimationFrame(() => cardRef.current?.focus({ preventScroll: true }));
+  // telefonda: yangi savol yoki natija kartochka boshidan ko‘rinsin
+  const focusCard = () =>
+    requestAnimationFrame(() => {
+      const el = cardRef.current;
+      if (!el) return;
+      el.focus({ preventScroll: true });
+      if (el.getBoundingClientRect().top < 80) el.scrollIntoView({ block: 'start' });
+    });
   const answer = (v: boolean) => {
     if (answered) return;
     setPick(v);
     if (v === m.truth) setScore((s) => s + 1);
+    // javob va «Keyingisi» tugmasi ekrandan pastda qolmasin
+    requestAnimationFrame(() => {
+      const next = cardRef.current?.querySelector('.myth-next');
+      if (next && next.getBoundingClientRect().bottom > window.innerHeight - 16) next.scrollIntoView({ block: 'nearest' });
+    });
   };
   const next = () => {
     if (i + 1 >= total) setDone(true);

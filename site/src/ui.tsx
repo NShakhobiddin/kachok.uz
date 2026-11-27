@@ -1,6 +1,6 @@
 // Umumiy bo‘laklar: telefon ramkasi, asosiy tugma, raqamli maydon, tanlov tugmalari.
 import { Check, TelegramLogo } from '@phosphor-icons/react/ssr';
-import { useId, type ReactNode } from 'react';
+import { useEffect, useId, useState, type ReactNode, type RefObject } from 'react';
 import { asset, botUrl } from './links';
 
 /** Ilovaning haqiqiy ekrani (scripts/site-shots bilan olingan) */
@@ -135,6 +135,40 @@ export function Chips<T extends string | number>({ label, value, options, onChan
           </button>
         ))}
       </div>
+    </div>
+  );
+}
+
+/** Telefonda yonga suriladigan kartochkalar qatori (.swipe) uchun nuqtalar: qaysi kartochka ko‘rinib turibdi */
+export function SwipeDots({ target, count }: { target: RefObject<HTMLElement | null>; count: number }) {
+  const [i, setI] = useState(0);
+  useEffect(() => {
+    const el = target.current;
+    if (!el) return;
+    let raf = 0;
+    const onScroll = () => {
+      if (raf) return;
+      raf = requestAnimationFrame(() => {
+        raf = 0;
+        const first = el.firstElementChild as HTMLElement | null;
+        if (!first) return;
+        const step = first.offsetWidth + parseFloat(getComputedStyle(el).columnGap || '0');
+        // oxiriga yetganda — oxirgi nuqta (oxirgi kartochka chapga to‘liq kelmaydi)
+        const end = el.scrollLeft + el.clientWidth >= el.scrollWidth - 4;
+        setI(end ? count - 1 : Math.round(el.scrollLeft / Math.max(1, step)));
+      });
+    };
+    el.addEventListener('scroll', onScroll, { passive: true });
+    return () => {
+      el.removeEventListener('scroll', onScroll);
+      cancelAnimationFrame(raf);
+    };
+  }, [target, count]);
+  return (
+    <div className="swipe-dots" aria-hidden="true">
+      {Array.from({ length: count }, (_, k) => (
+        <i key={k} className={k === i ? 'on' : ''} />
+      ))}
     </div>
   );
 }

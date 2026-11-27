@@ -15,7 +15,7 @@ import {
   Target,
   Timer,
 } from "@phosphor-icons/react/ssr";
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState, type KeyboardEvent } from "react";
 import { Footer, Nav } from "./Chrome";
 import { useSiteData } from "./data";
 import { faqs } from "./faq";
@@ -29,7 +29,7 @@ import { Goal } from "./tools/Goal";
 import { Muscles } from "./tools/Muscles";
 import { Strength } from "./tools/Strength";
 import { Waist } from "./tools/Waist";
-import { BotButton, CheckItem, Phone } from "./ui";
+import { BotButton, CheckItem, Phone, SwipeDots } from "./ui";
 
 export function Landing() {
   return (
@@ -427,15 +427,71 @@ function Steps() {
   );
 }
 
+/** kalkulyatorlar: bir vaqtda bittasi ko‘rinadi (telefonda sahifa 6 ta vosita bilan juda uzun bo‘lib ketardi) */
+const TOOLS = [
+  { id: "kaloriya", t: "Kaloriya", icon: <Calculator size={16} />, el: <Calories /> },
+  { id: "taomlar", t: "Milliy taomlar", icon: <ForkKnife size={16} />, el: <Dishes /> },
+  { id: "mushaklar", t: "Mushaklar", icon: <Lightning size={16} />, el: <Muscles /> },
+  { id: "kuch", t: "Kuch darajasi", icon: <ChartLineUp size={16} />, el: <Strength /> },
+  { id: "bel", t: "Bel/bo‘y", icon: <Ruler size={16} />, el: <Waist /> },
+  { id: "maqsad", t: "Maqsad muddati", icon: <Target size={16} />, el: <Goal /> },
+];
+const TOOL_IDS = TOOLS.map((x) => x.id);
+
 function Tools() {
-  const links = [
-    { id: "kaloriya", t: "Kaloriya va oqsil", icon: <Calculator size={16} /> },
-    { id: "taomlar", t: "Milliy taomlar", icon: <ForkKnife size={16} /> },
-    { id: "mushaklar", t: "Mushaklar xaritasi", icon: <Lightning size={16} /> },
-    { id: "kuch", t: "Kuch darajasi", icon: <ChartLineUp size={16} /> },
-    { id: "bel", t: "Bel/bo‘y nisbati", icon: <Ruler size={16} /> },
-    { id: "maqsad", t: "Maqsad muddati", icon: <Target size={16} /> },
-  ];
+  const [active, setActive] = useState(TOOL_IDS[0]);
+  const boxRef = useRef<HTMLDivElement>(null);
+  const barRef = useRef<HTMLDivElement>(null);
+
+  const open = useCallback((id: string, scroll: boolean) => {
+    setActive(id);
+    // tab qatori o‘ziga yopishgan bo‘lsa (vosita o‘rtasida turibmiz) — yangi vositaning boshiga qaytamiz
+    if (scroll && boxRef.current && boxRef.current.getBoundingClientRect().top < 0)
+      boxRef.current.scrollIntoView({ block: "start" });
+  }, []);
+
+  // #taomlar kabi havolalar (sahifa ichida yoki boshqa sahifadan) — kerakli vositani ochadi
+  useEffect(() => {
+    const fromHash = () => {
+      const id = location.hash.slice(1);
+      if (!TOOL_IDS.includes(id)) return;
+      setActive(id);
+      requestAnimationFrame(() => boxRef.current?.scrollIntoView({ block: "start" }));
+    };
+    const onClick = (e: MouseEvent) => {
+      const a = (e.target as Element | null)?.closest?.('a[href^="#"]');
+      const id = a?.getAttribute("href")?.slice(1);
+      if (!id || !TOOL_IDS.includes(id)) return;
+      e.preventDefault();
+      history.replaceState(null, "", `#${id}`);
+      setActive(id);
+      requestAnimationFrame(() => boxRef.current?.scrollIntoView({ block: "start" }));
+    };
+    fromHash();
+    document.addEventListener("click", onClick);
+    window.addEventListener("hashchange", fromHash);
+    return () => {
+      document.removeEventListener("click", onClick);
+      window.removeEventListener("hashchange", fromHash);
+    };
+  }, []);
+
+  // tanlangan tab qatorda ko‘rinib tursin (telefonda qator yonga suriladi)
+  useEffect(() => {
+    const bar = barRef.current;
+    const tab = bar?.querySelector<HTMLElement>('[aria-selected="true"]');
+    if (bar && tab) bar.scrollTo({ left: tab.offsetLeft - (bar.clientWidth - tab.offsetWidth) / 2, behavior: "smooth" });
+  }, [active]);
+
+  const onKey = (e: KeyboardEvent) => {
+    const d = e.key === "ArrowRight" ? 1 : e.key === "ArrowLeft" ? -1 : 0;
+    if (!d) return;
+    e.preventDefault();
+    const next = TOOL_IDS[(TOOL_IDS.indexOf(active) + d + TOOL_IDS.length) % TOOL_IDS.length];
+    open(next, false);
+    requestAnimationFrame(() => document.getElementById(`tab-${next}`)?.focus());
+  };
+
   return (
     <section id="vositalar" className="section" aria-labelledby="tools-t">
       <div className="container">
@@ -448,22 +504,36 @@ function Tools() {
             Ro‘yxatdan o‘tmasdan. Natijalar ilovadagi formulalar bilan
             hisoblanadi, kiritgan raqamlaringiz hech qayerga yuborilmaydi.
           </p>
-          <nav className="tool-nav" aria-label="Kalkulyatorlar">
-            {links.map((l) => (
-              <a key={l.id} className="chip button-sm" href={`#${l.id}`}>
-                {l.icon}
-                {l.t}
-              </a>
-            ))}
-          </nav>
         </div>
-        <div className="tools">
-          <Calories />
-          <Dishes />
-          <Muscles />
-          <Strength />
-          <Waist />
-          <Goal />
+        <div ref={boxRef} className="tools-box">
+          <div ref={barRef} className="tool-tabs" role="tablist" aria-label="Kalkulyatorlar" onKeyDown={onKey}>
+            {TOOLS.map((x) => (
+              <button
+                key={x.id}
+                id={`tab-${x.id}`}
+                type="button"
+                role="tab"
+                aria-selected={x.id === active}
+                aria-controls={`panel-${x.id}`}
+                tabIndex={x.id === active ? 0 : -1}
+                className="chip button-sm"
+                onClick={() => {
+                  history.replaceState(null, "", `#${x.id}`);
+                  open(x.id, true);
+                }}
+              >
+                {x.icon}
+                {x.t}
+              </button>
+            ))}
+          </div>
+          <div className="tools">
+            {TOOLS.map((x) => (
+              <div key={x.id} id={`panel-${x.id}`} role="tabpanel" aria-labelledby={`tab-${x.id}`} hidden={x.id !== active}>
+                {x.el}
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </section>
@@ -472,6 +542,7 @@ function Tools() {
 
 function Science() {
   const { stats, sources } = useSiteData();
+  const listRef = useRef<HTMLUListElement>(null);
   return (
     <section id="manbalar" className="section" aria-labelledby="sci-t">
       <div className="container">
@@ -485,7 +556,7 @@ function Science() {
             {stats.sources} ta manba ko‘rsatilgan. Asosiylari:
           </p>
         </div>
-        <ul className="sources">
+        <ul ref={listRef} className="sources swipe">
           {sources.map((s, i) => (
             <li
               key={s.short}
@@ -508,6 +579,7 @@ function Science() {
             </li>
           ))}
         </ul>
+        <SwipeDots target={listRef} count={sources.length} />
         <AllSources />
       </div>
     </section>

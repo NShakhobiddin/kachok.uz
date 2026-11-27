@@ -285,9 +285,11 @@ dd {
     border-color 300ms var(--ease),
     opacity 300ms var(--ease);
 }
-.btn:hover {
-  transform: translateY(-1px);
-  background: var(--s3);
+@media (hover: hover) {
+  .btn:hover {
+    transform: translateY(-1px);
+    background: var(--s3);
+  }
 }
 .btn:active {
   transform: scale(0.98);
@@ -296,8 +298,10 @@ dd {
   background: var(--lime);
   color: #000;
 }
-.btn-primary:hover {
-  background: var(--lime-hover);
+@media (hover: hover) {
+  .btn-primary:hover {
+    background: var(--lime-hover);
+  }
 }
 .btn-ghost {
   background: transparent;
@@ -319,10 +323,12 @@ dd {
   gap: 4px;
   transition: opacity 300ms var(--ease);
 }
-.link:hover {
-  opacity: 0.8;
-  text-decoration: underline;
-  text-underline-offset: 4px;
+@media (hover: hover) {
+  .link:hover {
+    opacity: 0.8;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
 }
 
 /* ===== Navigatsiya ===== */
@@ -367,8 +373,10 @@ dd {
     color 300ms var(--ease),
     background-color 300ms var(--ease);
 }
-.nav-links a:hover {
-  color: var(--text);
+@media (hover: hover) {
+  .nav-links a:hover {
+    color: var(--text);
+  }
 }
 .nav-links a[aria-current='true'] {
   color: var(--text);
@@ -905,8 +913,10 @@ dd {
   -webkit-appearance: none;
   margin: 0;
 }
-.input:hover {
-  border-color: #3d3d3d;
+@media (hover: hover) {
+  .input:hover {
+    border-color: #3d3d3d;
+  }
 }
 .input:focus {
   outline: none;
@@ -970,15 +980,18 @@ select.input {
     color 300ms var(--ease),
     border-color 300ms var(--ease);
 }
-.chip:hover {
-  color: var(--text);
-  border-color: #3d3d3d;
+@media (hover: hover) {
+  .chip:hover {
+    color: var(--text);
+    border-color: #3d3d3d;
+  }
 }
 .chip:active {
   transform: scale(0.98);
 }
 .chip[aria-pressed='true'],
-.chip[aria-checked='true'] {
+.chip[aria-checked='true'],
+.chip[aria-selected='true'] {
   background: var(--lime);
   border-color: var(--lime);
   color: #000;
@@ -1221,8 +1234,10 @@ select.input {
   -webkit-tap-highlight-color: transparent;
   transition: fill 300ms var(--ease);
 }
-.bm-hit:hover {
-  fill: rgba(212, 250, 80, 0.14);
+@media (hover: hover) {
+  .bm-hit:hover {
+    fill: rgba(212, 250, 80, 0.14);
+  }
 }
 .bm-hit:focus-visible {
   stroke: var(--lime);
@@ -1390,8 +1405,10 @@ select.input {
   text-decoration: none;
   transition: color 300ms var(--ease);
 }
-.footer-links a:hover {
-  color: var(--text);
+@media (hover: hover) {
+  .footer-links a:hover {
+    color: var(--text);
+  }
 }
 
 /* ===== Matnli sahifa (maxfiylik) ===== */
@@ -1578,19 +1595,25 @@ select.input {
     background-color 300ms var(--ease),
     border-color 300ms var(--ease);
 }
-.myth-btn:hover {
-  transform: translateY(-2px);
+@media (hover: hover) {
+  .myth-btn:hover {
+    transform: translateY(-2px);
+  }
 }
 .myth-btn:active {
   transform: scale(0.98);
 }
-.myth-btn.is-myth:hover {
-  border-color: var(--red);
-  background: rgba(255, 90, 76, 0.12);
+@media (hover: hover) {
+  .myth-btn.is-myth:hover {
+    border-color: var(--red);
+    background: rgba(255, 90, 76, 0.12);
+  }
 }
-.myth-btn.is-truth:hover {
-  border-color: var(--lime);
-  background: var(--lime-soft);
+@media (hover: hover) {
+  .myth-btn.is-truth:hover {
+    border-color: var(--lime);
+    background: var(--lime-soft);
+  }
 }
 .myth-btn.is-myth svg {
   color: var(--red);
@@ -1749,4 +1772,166 @@ select.input {
 }
 .src-list a {
   word-break: break-all;
+}
+
+/* ===== Kalkulyator tablari: aylantirganda tepada yopishib turadi ===== */
+.tool-tabs {
+  position: sticky;
+  top: 76px;
+  z-index: 20;
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  margin: 0 -16px 24px;
+  padding: 8px 16px;
+  background: var(--bg);
+}
+.tool-tabs::-webkit-scrollbar {
+  display: none;
+}
+.tool-tabs .chip {
+  flex: none;
+}
+@media (min-width: 640px) {
+  .tool-tabs {
+    flex-wrap: wrap;
+    overflow: visible;
+    margin: 0 0 32px;
+    padding: 8px 0;
+  }
+}
+
+/* ===== Telefonda yonga suriladigan kartochkalar ===== */
+.swipe-dots {
+  display: none;
+}
+@media (max-width: 639px) {
+  .swipe {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding: 0 16px;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+    margin: 0 -16px;
+    padding: 0 16px;
+  }
+  .swipe::-webkit-scrollbar {
+    display: none;
+  }
+  .swipe > li {
+    flex: 0 0 84%;
+    scroll-snap-align: start;
+  }
+  /* kartochkalar yonda turibdi — ularni alohida "paydo qilish" o‘rniga butun qator ko‘rinadi */
+  .js .swipe > .reveal {
+    opacity: 1;
+    transform: none;
+  }
+  .swipe-dots {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 16px;
+  }
+  .swipe-dots i {
+    width: 8px;
+    height: 8px;
+    border-radius: 9999px;
+    background: var(--s3);
+    transition:
+      background-color 300ms var(--ease),
+      transform 300ms var(--ease);
+  }
+  .swipe-dots i.on {
+    background: var(--lime);
+    transform: scale(1.25);
+  }
+}
+
+/* ===== Telefon: bosish, xavfsiz hudud (chekka va "chelka"), ixchamroq sahifa ===== */
+a,
+button,
+summary,
+select,
+input {
+  -webkit-tap-highlight-color: transparent;
+}
+a,
+button,
+summary {
+  touch-action: manipulation;
+}
+.nav-wrap {
+  top: calc(12px + env(safe-area-inset-top));
+}
+.menu {
+  padding-top: calc(96px + env(safe-area-inset-top));
+}
+.footer {
+  padding-bottom: calc(64px + env(safe-area-inset-bottom));
+}
+.container {
+  padding-left: max(16px, env(safe-area-inset-left));
+  padding-right: max(16px, env(safe-area-inset-right));
+}
+@media (min-width: 640px) {
+  .container {
+    padding-left: max(24px, env(safe-area-inset-left));
+    padding-right: max(24px, env(safe-area-inset-right));
+  }
+}
+@media (min-width: 1024px) {
+  .container {
+    padding-left: 32px;
+    padding-right: 32px;
+  }
+}
+/* yorliq ikki qatorga o‘tsa ham maydonlar bir chiziqda tursin */
+.fields-2,
+.fields-3 {
+  align-items: end;
+}
+/* barmoq bilan bosiladigan qurilmalarda tugmalar kattaroq */
+@media (pointer: coarse) {
+  .chip {
+    min-height: 40px;
+  }
+  .fact-src,
+  .myth-answer .link {
+    padding: 8px 0;
+  }
+}
+@media (max-width: 639px) {
+  .section {
+    padding: 48px 0;
+  }
+  .tagline {
+    padding: 48px 0;
+  }
+  .section-head {
+    margin-bottom: 32px;
+  }
+  .features {
+    gap: 64px;
+  }
+  .feature {
+    gap: 32px;
+  }
+  .feature-media .phone {
+    width: 224px;
+  }
+  .extras {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    margin-top: 64px;
+  }
+  .extra {
+    padding: 16px;
+  }
+  .myth-card {
+    min-height: 0;
+  }
 }

@@ -2,7 +2,7 @@
 import { ArrowUpRight } from '@phosphor-icons/react/ssr';
 import { useEffect, useRef } from 'react';
 import { useSiteData } from '../data';
-import { BotButton } from '../ui';
+import { BotButton, SwipeDots } from '../ui';
 
 /**
  * Matndagi raqamlar ekranga chiqqanda noldan sanab chiqadi ("10–17%" → 0–0% … 10–17%).
@@ -57,6 +57,7 @@ function CountUp({ value }: { value: string }) {
 
 export function Facts() {
   const { facts } = useSiteData();
+  const listRef = useRef<HTMLUListElement>(null);
   return (
     <section id="faktlar" className="section" aria-labelledby="facts-t">
       <div className="container">
@@ -67,7 +68,7 @@ export function Facts() {
           </h2>
           <p className="body-3 muted">Gap faqat chiroyli tanada emas. Xalqaro tadqiqotlar kuch mashqi umr, yurak, suyak va kayfiyat uchun nima berishini o‘lchagan:</p>
         </div>
-        <ul className="facts">
+        <ul ref={listRef} className="facts swipe">
           {facts.map((f, i) => (
             <li key={f.title} className={`card fact reveal${i === 0 ? ' card-olive' : ''}`} style={{ transitionDelay: `${(i % 3) * 80}ms` }}>
               <CountUp value={f.value} />
@@ -84,6 +85,7 @@ export function Facts() {
             </li>
           ))}
         </ul>
+        <SwipeDots target={listRef} count={facts.length} />
         <div className="facts-cta reveal">
           <p className="body-3 muted">Boshlash uchun murakkab reja shart emas: GYMbos haftasiga 2 kunlik dasturdan boshlab beradi.</p>
           <BotButton from="site_fakt" size="md">
