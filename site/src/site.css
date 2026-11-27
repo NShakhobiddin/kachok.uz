@@ -365,6 +365,7 @@ dd {
 }
 .nav-links a {
   display: block;
+  white-space: nowrap;
   padding: 8px 12px;
   border-radius: 9999px;
   color: var(--text-2);
@@ -382,7 +383,8 @@ dd {
   color: var(--text);
   background: var(--s3);
 }
-@media (min-width: 900px) {
+/* 6 ta band 1024 px dan torroq ekranga bir qatorda sig‘maydi — u yerda menyu tugmasi */
+@media (min-width: 1024px) {
   .nav-links {
     display: flex;
   }

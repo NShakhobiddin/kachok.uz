@@ -1,4 +1,4 @@
-// Bosh sahifa: taklif → sizga mos dastur → shior → faktlar → muammolar → imkoniyatlar → rasm lentasi → 3D anatomiya → qanday boshlash → kalkulyatorlar → «Mif yoki haqiqat?» → manbalar → savollar → chaqiriq.
+// Bosh sahifa: umumiy ma’lumot (taklif → shior → muammolar → imkoniyatlar → qanday boshlash) → sinab ko‘rish (sizga mos dastur → rasm lentasi → 3D anatomiya → kalkulyatorlar) → bilim (faktlar → «Mif yoki haqiqat?» → manbalar) → savollar → chaqiriq.
 import {
   ArrowUpRight,
   BookOpen,
@@ -39,16 +39,19 @@ export function Landing() {
     <>
       <Nav />
       <main id="main">
+        {/* 1. umumiy ma’lumot: nima bu va qanday boshlanadi */}
         <Hero />
-        <Plan />
         <Tagline />
-        <Facts />
         <Pains />
         <Features />
+        <Steps />
+        {/* 2. sinab ko‘rish: dastur, rasmlar, 3D, kalkulyatorlar */}
+        <Plan />
         <Gallery />
         <Anatomy />
-        <Steps />
         <Tools />
+        {/* 3. bilim: faktlar, miflar, manbalar */}
+        <Facts />
         <Myths />
         <Science />
         <FaqSection />

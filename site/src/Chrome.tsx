@@ -4,7 +4,9 @@ import { Logo } from '../../src/components/Logo';
 import { useSiteData } from './data';
 import { APP_URL, BOT_CHAT, HOME_URL, PRIVACY_URL, botUrl } from './links';
 
+// sahifadagi tartibda
 const LINKS = [
+  { id: 'imkoniyatlar', t: 'Imkoniyatlar' },
   { id: 'dastur', t: 'Dastur' },
   { id: 'anatomiya', t: '3D anatomiya' },
   { id: 'vositalar', t: 'Kalkulyatorlar' },
