@@ -355,6 +355,7 @@ export function prescription(goal: Goal, level: Level, role: Role, ex: Exercise)
     repMin = level === 'beginner' ? 20 : 30;
     repMax = level === 'beginner' ? 40 : 60;
   }
+  if (ex.repRange) [repMin, repMax] = ex.repRange;
   let note: string | undefined;
   if (ex.unilateral) note = 'Har tomonga alohida';
   if (ex.timed) note = 'Takror o‘rniga soniya';

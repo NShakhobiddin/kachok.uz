@@ -288,6 +288,8 @@ export interface Exercise {
   tempo?: string;
   /** vaqtga asoslangan (planka) */
   timed?: boolean;
+  /** takror chegarasi (maqsaddan qat’i nazar): masalan Nordik bukilish — 3–6, ko‘p takrorda jarohat xavfi */
+  repRange?: [number, number];
   /** yordamchi trenajyor (gravitron): yozilgan kg — yordam, ko'paysa mashq osonlashadi */
   assisted?: boolean;
   /** cho'zilish: kuch mashqi emas — dastur va hajm hisobiga kirmaydi, primary — cho'ziladigan mushaklar */

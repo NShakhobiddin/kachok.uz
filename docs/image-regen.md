@@ -336,3 +336,17 @@ Asosiy kadri almashgan, yorliqlari qayta o‘lchangan yozuvlar: teskari ushlab t
 Rad etilganlar:
 - **Blokda qo‘l birlashtirish, batterflay:** tirsak yana ~90°.
 - **O‘tirib boldir ko‘tarish:** tovon kam tushgan. Ilovadagi asosiy kadrda yuz terili, shuning uchun A va B ni qayta chizish kerak.
+
+## 2026-11-27: ikkinchi murabbiy auditi
+
+**Rasmlar** (122 ta mashq, asosiy va ikkinchi kadr):
+- 9 ta tasdiqlangan ikkinchi kadr ulanmay qolgan edi, endi ulandi. Sababi `place_flow.py` dagi xato edi: ko‘p qatorli `<auto>` yozuvga ikkinchi kadr qo‘shilmasdi. Test qo‘shildi.
+- Sumo o‘lik tortishning yuqori kadri qaytarildi.
+- T-shtangada dastak grifdan ajralib qolgan edi, ikkinchi kadr olib tashlandi.
+- 9 ta mashqda yorliq nuqtalari qayta o‘lchandi.
+
+**Flow-9** (`fixesFlow9.ts`, `flow-pack5.ts … flow9`): Smith squat (shtanga yo‘q), T-shtanga B, o‘tirib boldir ko‘tarish, blokda qo‘l birlashtirish B, batterflay B, turnikda tizza ko‘tarish B, fermer yurishi A (oyoqlar kesishgan).
+
+**Ma’lumotlar:** mushaklar, nafas, jarohat bayroqlari, takror chegarasi (`repRange`), Pallof press faqat blokda. Batafsil — `git log`.
+
+**Hali qilinmagan:** fermer yurishi, Nordik, yotib oyoq bukish, yonga hamla va orqa delta mashqlarining animatsiyalari boshqa harakatni ko‘rsatadi. Ular uchun yangi animatsiya kerak.

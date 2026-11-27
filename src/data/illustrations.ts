@@ -441,7 +441,7 @@ export const ILLUSTRATIONS: Partial<Record<string, Illustration>> = {
     src: img('leg-curl.webp'),
     phase: 'Qisqargan holat',
     pair: { src: img('alt/leg-curl.webp'), phase: 'Boshlang‘ich holat' },
-    alt: 'Oyoq bukish trenajyori, qisqargan holat: to‘g‘ri texnika; ishlayotgan mushaklar lime rangda yonmoqda',
+    alt: 'O‘tirib oyoq bukish, qisqargan holat: to‘g‘ri texnika; ishlayotgan mushaklar lime rangda yonmoqda',
     labels: [{ key: 'bicepsFemoris', name: 'Son orqasi', x: 52, y: 58, side: 'r', ly: 30 }],
     checks: [
       { text: 'Son yostiq ostida mahkam', x: 52, y: 48, side: 'r', ly: 14 },

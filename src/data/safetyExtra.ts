@@ -9,8 +9,8 @@ export const SAFETY_EXTRA: Record<string, ExerciseSafety> = {
     joints: [
       {
         at: 'shoulder',
-        how: 'Tepada qo‘llar bosh ustiga ko‘tarilganda yelka oldi cho‘ziladi; og‘ir vazn yelkani oldinga tortadi.',
-        mod: 'Amplitudani ko‘z sathidan boshlang (bosh ustidan emas), vaznni kamaytiring; og‘riq bo‘lsa — yuqori blokni ko‘krakka tortish.',
+        how: 'Qo‘llar ko‘z sathidan baland ko‘tarilsa yoki og‘ir vazn yelkani oldinga tortsa, yelka oldi cho‘zilib qisiladi.',
+        mod: 'Harakatni ko‘krak sathidan boshlang, vaznni kamaytiring; og‘riq bo‘lsa — o‘tirib blok tortish (neytral tutqich).',
       },
     ],
     check: [C.stack, 'Dasta karabinga mahkam ilinganini tekshiring.'],
@@ -39,7 +39,13 @@ export const SAFETY_EXTRA: Record<string, ExerciseSafety> = {
   'lying-leg-curl': {
     risk: 1,
     why: 'Trenajyorda, harakat yo‘li qotirilgan. Asosiy xato — tosni ko‘tarib belni egish.',
-    joints: [],
+    joints: [
+      {
+        at: 'lowerBack',
+        how: 'Og‘ir vaznda tos yostiqdan ko‘tarilsa, bel ortiqcha egiladi — bel bo‘g‘imchalari siqiladi.',
+        mod: 'Qorin va tosni yostiqqa bosing, vaznni kamaytiring; og‘riq bo‘lsa — o‘tirib oyoq bukish.',
+      },
+    ],
     check: [C.seat('tizza trenajyor o‘qi bilan bir chiziqda, rolik tovondan biroz yuqorida'), C.stack],
     stop: [S.ham, S.back],
   },
@@ -63,7 +69,7 @@ export const SAFETY_EXTRA: Record<string, ExerciseSafety> = {
     joints: [
       {
         at: 'lowerBack',
-        how: 'Muvozanat uchun bel dumaloqlansa yoki tos burilsa, bel bo‘g‘imchalariga noteks yuklama tushadi.',
+        how: 'Muvozanat uchun bel dumaloqlansa yoki tos burilsa, bel bo‘g‘imchalariga notekis yuklama tushadi.',
         mod: 'Bo‘sh qo‘l bilan devorga tayaning, amplitudani kamaytiring; og‘riq bo‘lsa — ko‘prikcha yoki tos ko‘tarish.',
       },
     ],
@@ -83,7 +89,7 @@ export const SAFETY_EXTRA: Record<string, ExerciseSafety> = {
       {
         at: 'shoulder',
         how: 'Qo‘llar bosh ustida — yelka harakatchanligi yetmasa, yelka oldi qisiladi va bel egiladi.',
-        mod: 'Gavdani ko‘proq oldinga engashtiring, amplitudani kamaytiring; og‘riq bo‘lsa — blokda triseps.',
+        mod: 'Tavsiya etilmaydi: qo‘l bosh ustida bo‘lganda yelka qisiladi — o‘rniga blokda triseps (pastga itarish), qo‘l bosh ustiga ko‘tarilmaydi.',
       },
     ],
     check: [C.stack, 'Arqon karabinga to‘liq ilinganini tekshiring.'],
@@ -106,7 +112,7 @@ export const SAFETY_EXTRA: Record<string, ExerciseSafety> = {
     risk: 1,
     why: 'Yengil yuk, umurtqa harakatsiz — bel uchun eng xavfsiz press mashqlaridan.',
     joints: [],
-    check: [C.stack, 'Lenta ishlatsangiz — mahkam tayanchga iling.'],
+    check: [C.stack],
     stop: [S.back],
   },
   'hanging-knee-raise': {
@@ -170,7 +176,11 @@ export const SAFETY_EXTRA: Record<string, ExerciseSafety> = {
         mod: 'Tizza ostiga qalin yostiq qo‘ying, amplitudani kichraytiring; og‘riq bo‘lsa — fitbolda oyoq bukish.',
       },
     ],
-    check: ['Tizza ostida qalin yumshoq gilam yoki yostiq.', 'To‘piqlar mahkam qistirilgan (og‘ir divan yoki sherik).', 'Birinchi haftalarda 2 set × 3–5 takror — keyingi kunlardagi kuchli og‘riqni kamaytiradi.'],
+    check: [
+      'Tizza ostida qalin yumshoq gilam yoki yostiq.',
+      'To‘piqlar mahkam qistirilgan (og‘ir divan yoki sherik).',
+      'Birinchi haftalarda 2 set × 3–5 takror — keyingi kunlardagi kuchli og‘riqni kamaytiradi.',
+    ],
     stop: [S.ham, S.knee],
   },
   'lateral-lunge': {
@@ -198,7 +208,7 @@ export const SAFETY_EXTRA: Record<string, ExerciseSafety> = {
       {
         at: 'knee',
         how: 'Tik oyoqda qattiq qo‘nish yoki tizzaning ichkariga qulashi tizza paylariga zarb beradi.',
-        mod: 'Pastroq sakrang, yumshoq qo‘ning; og‘riq bo‘lsa — oddiy o‘tirib-turish.',
+        mod: 'Tavsiya etilmaydi: sakrab qo‘nish tizzaga takroriy zarba beradi — o‘rniga o‘z vazni bilan o‘tirish yoki qutiga o‘tirib-turish, og‘riqsiz chuqurlikda.',
       },
     ],
     check: ['Yumshoq gilam yoki rezina pol; poyabzal tovoni yumshoq.', 'Oldin 1–2 daqiqa isinish.'],

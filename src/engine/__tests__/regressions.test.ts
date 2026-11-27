@@ -580,3 +580,28 @@ describe('2026-11 auditi', () => {
       }
   });
 });
+
+describe('2026-11-27 murabbiy auditi', () => {
+  it('Nordik bukilish 3–6 takror (maqsad va «o‘z vazni» qoidasidan qat’i nazar)', () => {
+    for (const goal of ['muscle', 'health', 'fatLoss'] as Goal[])
+      for (const level of ['beginner', 'intermediate'] as Level[]) {
+        const pe = generateProgram({ ...base, goal, level, equipment: [] })
+          .days.flatMap((d) => d.exercises)
+          .find((e) => e.exerciseId === 'nordic-curl');
+        if (pe) expect([pe.repMin, pe.repMax], `${goal}/${level}`).toEqual([3, 6]);
+      }
+  });
+
+  it('tizzasi og‘riganga sakrab o‘tirish berilmaydi', () => {
+    for (const level of ['beginner', 'intermediate'] as Level[]) {
+      const ids = generateProgram({ ...base, level, equipment: [], injuries: ['knee'] }).days.flatMap((d) => d.exercises.map((e) => e.exerciseId));
+      expect(ids, level).not.toContain('jump-squat');
+    }
+  });
+
+  it('fermer yurishi bitseps hajmiga qo‘shilmaydi; yelkasi og‘riganga bosh ortidan triseps (blok) tavsiya etilmaydi', () => {
+    const vol = weeklyVolume({ days: [{ id: 'd', title: '', exercises: [{ exerciseId: 'farmers-carry', sets: 3, repMin: 30, repMax: 60, rir: 2, restSec: 90 }] }] } as Pick<Program, 'days'>);
+    expect(vol.biceps).toBe(0);
+    expect(EXERCISE_MAP['cable-overhead-extension'].avoid).toContain('shoulder');
+  });
+});
