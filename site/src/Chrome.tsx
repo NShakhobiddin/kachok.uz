@@ -5,9 +5,10 @@ import { useSiteData } from './data';
 import { APP_URL, BOT_CHAT, HOME_URL, PRIVACY_URL, botUrl } from './links';
 
 const LINKS = [
+  { id: 'faktlar', t: 'Faktlar' },
   { id: 'imkoniyatlar', t: 'Imkoniyatlar' },
   { id: 'vositalar', t: 'Kalkulyatorlar' },
-  { id: 'taomlar', t: 'Milliy taomlar' },
+  { id: 'mif', t: 'Mif yoki haqiqat' },
   { id: 'savollar', t: 'Savollar' },
 ];
 

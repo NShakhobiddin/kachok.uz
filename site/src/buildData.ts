@@ -15,7 +15,8 @@ import { ROUTINES } from '../../src/data/routines';
 import { SOURCES } from '../../src/data/sources';
 import { STRETCHES } from '../../src/data/stretches';
 import type { MuscleId } from '../../src/types';
-import type { MuscleRow, SiteData } from './model';
+import { FACT_DEFS, MYTH_DEFS } from './content';
+import type { MuscleRow, SiteData, SourceRow } from './model';
 
 /** saytda ko‘rsatiladigan manbalar (asosiy hisob-kitoblar shularga tayanadi) */
 const KEY_SOURCES = ['mifflin1990', 'morton2018', 'helms2014', 'schoenfeld2017vol', 'atkinson2008', 'iso26642'];
@@ -40,6 +41,13 @@ function muscles(): Partial<Record<MuscleId, MuscleRow>> {
     out[m] = { name: MUSCLES[m].name, short: MUSCLE_GUIDE[keys[0]].short, view: MUSCLES[m].view, top: best };
   }
   return out;
+}
+
+/** manba nomi va DOI ilovaning ro‘yxatidan: id xato bo‘lsa yig‘ish to‘xtaydi */
+function src(id: string): SourceRow {
+  const s = SOURCES.find((x) => x.id === id);
+  if (!s) throw new Error(`manba topilmadi: ${id}`);
+  return { short: s.short, finding: s.finding ?? '', doi: s.doi };
 }
 
 export function buildSiteData(): SiteData {
@@ -86,9 +94,9 @@ export function buildSiteData(): SiteData {
       })
       .sort((a, b) => a.gi - b.gi),
     muscles: muscles(),
-    sources: KEY_SOURCES.flatMap((id) => {
-      const s = SOURCES.find((x) => x.id === id);
-      return s ? [{ short: s.short, finding: s.finding ?? '', doi: s.doi }] : [];
-    }),
+    sources: KEY_SOURCES.map(src),
+    facts: FACT_DEFS.map(({ source, ...f }) => ({ ...f, src: src(source) })),
+    myths: MYTH_DEFS.map(({ source, ...m }) => ({ ...m, src: src(source) })),
+    allSources: SOURCES.map((s) => ({ short: s.short, finding: s.finding ?? '', doi: s.doi, cite: s.cite })),
   };
 }

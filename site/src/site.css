@@ -1430,3 +1430,323 @@ select.input {
 .doc p {
   color: var(--text-2);
 }
+
+/* ===== Faktlar: kuch mashqining foydasi raqamlarda ===== */
+.facts {
+  display: grid;
+  gap: 16px;
+}
+@media (min-width: 640px) {
+  .facts {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (min-width: 1024px) {
+  .facts {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+.fact {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.fact-num {
+  font-size: 48px;
+  line-height: 52px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--lime);
+  white-space: nowrap;
+}
+@media (min-width: 768px) {
+  .fact-num {
+    font-size: 56px;
+    line-height: 60px;
+  }
+}
+.fact-src {
+  margin-top: auto;
+  padding-top: 8px;
+}
+.facts-cta {
+  margin-top: 32px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px 24px;
+}
+.facts-cta p {
+  max-width: 480px;
+}
+
+/* ===== «Mif yoki haqiqat?» o‘yini ===== */
+.myths {
+  display: grid;
+  gap: 8px;
+}
+@media (min-width: 960px) {
+  .myths {
+    grid-template-columns: 1fr 1.2fr;
+    gap: 48px;
+    align-items: start;
+  }
+  .myths .section-head {
+    position: sticky;
+    top: 120px;
+  }
+}
+.myth-card {
+  border-radius: 24px;
+  border: 1px solid var(--lime-line);
+  background: var(--olive);
+  padding: 24px;
+  min-height: 360px;
+  outline: none;
+}
+@media (min-width: 640px) {
+  .myth-card {
+    padding: 32px;
+  }
+}
+.myth-step {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  animation: myth-in 500ms var(--ease);
+}
+@keyframes myth-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .myth-step,
+  .myth-answer {
+    animation: none;
+  }
+}
+.myth-top {
+  display: flex;
+  justify-content: space-between;
+}
+.myth-progress {
+  height: 4px;
+  border-radius: 9999px;
+  background: var(--s3);
+  overflow: hidden;
+  margin-top: -8px;
+}
+.myth-progress > i {
+  display: block;
+  height: 100%;
+  background: var(--lime);
+  transform-origin: left center;
+  transition: transform 500ms var(--ease);
+}
+.myth-claim {
+  font-size: 24px;
+  line-height: 32px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  min-height: 96px;
+}
+@media (min-width: 768px) {
+  .myth-claim {
+    font-size: 30px;
+    line-height: 36px;
+  }
+}
+.myth-btns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.myth-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 56px;
+  border-radius: 16px;
+  border: 1px solid var(--line-2);
+  background: var(--s1);
+  cursor: pointer;
+  transition:
+    transform 300ms var(--ease),
+    background-color 300ms var(--ease),
+    border-color 300ms var(--ease);
+}
+.myth-btn:hover {
+  transform: translateY(-2px);
+}
+.myth-btn:active {
+  transform: scale(0.98);
+}
+.myth-btn.is-myth:hover {
+  border-color: var(--red);
+  background: rgba(255, 90, 76, 0.12);
+}
+.myth-btn.is-truth:hover {
+  border-color: var(--lime);
+  background: var(--lime-soft);
+}
+.myth-btn.is-myth svg {
+  color: var(--red);
+}
+.myth-btn.is-truth svg {
+  color: var(--lime);
+}
+.myth-answer {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px;
+  border-radius: 16px;
+  border: 1px solid var(--line-2);
+  background: var(--s1);
+  animation: myth-in 400ms var(--ease);
+}
+.myth-answer.ok {
+  border-color: var(--lime-line);
+}
+.myth-answer.bad {
+  border-color: rgba(255, 90, 76, 0.4);
+}
+.myth-next {
+  margin-top: 8px;
+}
+.ico-round.red {
+  background: var(--red);
+  color: #000;
+}
+.myth-end {
+  align-items: flex-start;
+  gap: 16px;
+}
+.myth-dots {
+  display: flex;
+  gap: 4px;
+  width: 100%;
+  max-width: 320px;
+}
+.myth-dots i {
+  flex: 1 1 0;
+  height: 8px;
+  border-radius: 9999px;
+  background: var(--s3);
+}
+.myth-dots i.on {
+  background: var(--lime);
+}
+.myth-again {
+  border: 0;
+  background: none;
+  padding: 8px 0;
+  cursor: pointer;
+}
+
+/* ===== Bel/bo‘y shkalasi ===== */
+.whtr {
+  position: relative;
+  padding: 8px 0 24px;
+}
+.whtr-bar {
+  display: flex;
+  gap: 2px;
+  height: 8px;
+  border-radius: 9999px;
+  overflow: hidden;
+}
+.whtr-bar > i {
+  display: block;
+  height: 100%;
+  transition: opacity 500ms var(--ease);
+}
+.whtr-mark {
+  position: absolute;
+  top: 0;
+  width: 4px;
+  height: 24px;
+  margin-left: -2px;
+  border-radius: 9999px;
+  background: var(--text);
+  box-shadow: 0 0 0 4px var(--s1);
+}
+.whtr-ticks {
+  position: relative;
+  height: 16px;
+  margin-top: 8px;
+}
+.whtr-ticks span {
+  position: absolute;
+  transform: translateX(-50%);
+}
+
+/* ===== Maqsad grafigi ===== */
+.goal-chart {
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+  background: var(--s2);
+}
+.goal-line {
+  fill: none;
+  stroke: var(--lime);
+  stroke-width: 2.5;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+.goal-area {
+  fill: var(--lime-soft);
+  stroke: none;
+}
+.goal-target {
+  stroke: var(--text-3);
+  stroke-width: 1;
+  stroke-dasharray: 4 4;
+}
+.goal-dot {
+  fill: var(--lime);
+}
+.goal-dot.start {
+  fill: var(--s2);
+  stroke: var(--lime);
+  stroke-width: 2;
+}
+
+/* ===== Barcha manbalar ===== */
+.all-sources {
+  margin-top: 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+}
+.src-panel {
+  width: 100%;
+}
+.src-list {
+  display: flex;
+  flex-direction: column;
+  max-height: 560px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.src-list li {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  padding: 16px 0;
+  border-top: 1px solid var(--line);
+}
+.src-list li:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+.src-list a {
+  word-break: break-all;
+}

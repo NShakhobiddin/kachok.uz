@@ -44,6 +44,24 @@ export interface SourceRow {
   doi?: string;
 }
 
+export interface FactRow {
+  value: string;
+  title: string;
+  text: string;
+  src: SourceRow;
+}
+
+export interface MythRow {
+  claim: string;
+  truth: boolean;
+  explain: string;
+  src: SourceRow;
+}
+
+export interface SourceFull extends SourceRow {
+  cite: string;
+}
+
 export interface SiteData {
   stats: { year: number; templates: number; exercises: number; stretches: number; illustrated: number; dishes: number; recipes: number; foods: number; sources: number; routines: number; lessons: number };
   dishes: DishRow[];
@@ -51,4 +69,8 @@ export interface SiteData {
   gi: GiRow[];
   muscles: Partial<Record<MuscleId, MuscleRow>>;
   sources: SourceRow[];
+  facts: FactRow[];
+  myths: MythRow[];
+  /** ilovadagi barcha manbalar (ro‘yxatni ochganda ko‘rinadi) */
+  allSources: SourceFull[];
 }

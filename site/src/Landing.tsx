@@ -1,4 +1,4 @@
-// Bosh sahifa: taklif → shior → muammolar → imkoniyatlar → qanday boshlash → kalkulyatorlar → manbalar → savollar → chaqiriq.
+// Bosh sahifa: taklif → shior → faktlar → muammolar → imkoniyatlar → qanday boshlash → kalkulyatorlar → «Mif yoki haqiqat?» → manbalar → savollar → chaqiriq.
 import {
   ArrowUpRight,
   BookOpen,
@@ -11,6 +11,8 @@ import {
   Lightning,
   PersonSimpleRun,
   Question,
+  Ruler,
+  Target,
   Timer,
 } from "@phosphor-icons/react/ssr";
 import { useEffect, useRef } from "react";
@@ -18,10 +20,15 @@ import { Footer, Nav } from "./Chrome";
 import { useSiteData } from "./data";
 import { faqs } from "./faq";
 import { APP_URL, BOT_NAME, PRIVACY_URL } from "./links";
+import { AllSources } from "./sections/AllSources";
+import { Facts } from "./sections/Facts";
+import { Myths } from "./sections/Myths";
 import { Calories } from "./tools/Calories";
 import { Dishes } from "./tools/Dishes";
+import { Goal } from "./tools/Goal";
 import { Muscles } from "./tools/Muscles";
 import { Strength } from "./tools/Strength";
+import { Waist } from "./tools/Waist";
 import { BotButton, CheckItem, Phone } from "./ui";
 
 export function Landing() {
@@ -31,10 +38,12 @@ export function Landing() {
       <main id="main">
         <Hero />
         <Tagline />
+        <Facts />
         <Pains />
         <Features />
         <Steps />
         <Tools />
+        <Myths />
         <Science />
         <FaqSection />
         <FinalCta />
@@ -424,6 +433,8 @@ function Tools() {
     { id: "taomlar", t: "Milliy taomlar", icon: <ForkKnife size={16} /> },
     { id: "mushaklar", t: "Mushaklar xaritasi", icon: <Lightning size={16} /> },
     { id: "kuch", t: "Kuch darajasi", icon: <ChartLineUp size={16} /> },
+    { id: "bel", t: "Bel/bo‘y nisbati", icon: <Ruler size={16} /> },
+    { id: "maqsad", t: "Maqsad muddati", icon: <Target size={16} /> },
   ];
   return (
     <section id="vositalar" className="section" aria-labelledby="tools-t">
@@ -451,6 +462,8 @@ function Tools() {
           <Dishes />
           <Muscles />
           <Strength />
+          <Waist />
+          <Goal />
         </div>
       </div>
     </section>
@@ -495,6 +508,7 @@ function Science() {
             </li>
           ))}
         </ul>
+        <AllSources />
       </div>
     </section>
   );
