@@ -8,7 +8,7 @@ import { BOT_NAME } from './links';
 export function render(page: Page) {
   const full = buildSiteData();
   // maxfiylik sahifasiga faqat pastki qism uchun kerakli raqamlar
-  const data = page === 'index' ? full : { ...full, dishes: [], groups: [], gi: [], muscles: {}, sources: [], facts: [], myths: [], allSources: [] };
+  const data = page === 'index' ? full : { ...full, dishes: [], groups: [], gi: [], muscles: {}, sources: [], facts: [], myths: [], allSources: [], showcase: [], gallery: [], m3names: {} };
   const html = renderToString(<App page={page} data={data} />);
   const url = __SITE_URL__;
   const ld: object[] =

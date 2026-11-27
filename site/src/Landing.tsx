@@ -1,4 +1,4 @@
-// Bosh sahifa: taklif → shior → faktlar → muammolar → imkoniyatlar → qanday boshlash → kalkulyatorlar → «Mif yoki haqiqat?» → manbalar → savollar → chaqiriq.
+// Bosh sahifa: taklif → shior → faktlar → muammolar → imkoniyatlar → rasm lentasi → 3D anatomiya → qanday boshlash → kalkulyatorlar → «Mif yoki haqiqat?» → manbalar → savollar → chaqiriq.
 import {
   ArrowUpRight,
   BookOpen,
@@ -21,7 +21,9 @@ import { useSiteData } from "./data";
 import { faqs } from "./faq";
 import { APP_URL, BOT_NAME, PRIVACY_URL } from "./links";
 import { AllSources } from "./sections/AllSources";
+import { Anatomy } from "./sections/Anatomy";
 import { Facts } from "./sections/Facts";
+import { Gallery } from "./sections/Gallery";
 import { Myths } from "./sections/Myths";
 import { Calories } from "./tools/Calories";
 import { Dishes } from "./tools/Dishes";
@@ -41,6 +43,8 @@ export function Landing() {
         <Facts />
         <Pains />
         <Features />
+        <Gallery />
+        <Anatomy />
         <Steps />
         <Tools />
         <Myths />

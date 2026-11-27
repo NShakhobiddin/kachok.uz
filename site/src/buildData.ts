@@ -1,4 +1,5 @@
 // Faqat yig‘ishda (SSR) ishlaydi: ilova bazasidan sayt uchun ixcham ma’lumot.
+import { motionFrames } from '../../src/components/ExerciseMotion';
 import { ACTIVATION } from '../../src/data/activation';
 import { MUSCLES } from '../../src/data/catalog';
 import { DISH_GROUPS, DISH_VIEWS } from '../../src/data/dishes';
@@ -9,14 +10,16 @@ import { ILLUSTRATIONS } from '../../src/data/illustrations';
 import { LESSONS } from '../../src/data/lessons';
 import { MUSCLE_GUIDE } from '../../src/data/muscleGuide';
 import { M3_INFO, M3_KEYS } from '../../src/data/muscles3d';
+import { activationFor } from '../../src/engine/activation';
 import { RECIPE_MAP, RECIPES } from '../../src/data/recipes';
 import { PROGRAM_TEMPLATES } from '../../src/data/programTemplates';
 import { ROUTINES } from '../../src/data/routines';
 import { SOURCES } from '../../src/data/sources';
 import { STRETCHES } from '../../src/data/stretches';
-import type { MuscleId } from '../../src/types';
+import type { Exercise, MuscleId } from '../../src/types';
+import { GALLERY_IDS, SHOWCASE } from './media';
 import { FACT_DEFS, MYTH_DEFS } from './content';
-import type { MuscleRow, SiteData, SourceRow } from './model';
+import type { GalleryRow, MuscleRow, ShowcaseRow, SiteData, SourceRow } from './model';
 
 /** saytda ko‘rsatiladigan manbalar (asosiy hisob-kitoblar shularga tayanadi) */
 const KEY_SOURCES = ['mifflin1990', 'morton2018', 'helms2014', 'schoenfeld2017vol', 'atkinson2008', 'iso26642'];
@@ -41,6 +44,56 @@ function muscles(): Partial<Record<MuscleId, MuscleRow>> {
     out[m] = { name: MUSCLES[m].name, short: MUSCLE_GUIDE[keys[0]].short, view: MUSCLES[m].view, top: best };
   }
   return out;
+}
+
+/** mashq tempidan: kadrlar orasidagi harakat vaqti (ilovadagi ExerciseMotion bilan bir xil qoida) */
+function tempo(ex: Exercise): ShowcaseRow['tempo'] {
+  const segs: { phase: string; dur: number }[] = [];
+  for (const f of ex.anim.frames) {
+    const last = segs[segs.length - 1];
+    if (last && last.phase === f.phase) last.dur += f.dur;
+    else segs.push({ phase: f.phase, dur: f.dur });
+  }
+  const moves = segs.filter((s) => s.phase === 'up' || s.phase === 'down') as { phase: 'up' | 'down'; dur: number }[];
+  const clamp = (v: number) => Math.min(2200, Math.max(700, v));
+  return {
+    go: { phase: moves[0]?.phase ?? 'down', ms: clamp(moves[0]?.dur ?? 1200) },
+    back: { phase: moves[1]?.phase ?? 'up', ms: clamp(moves[1]?.dur ?? 900) },
+  };
+}
+
+function showcase(): ShowcaseRow[] {
+  return SHOWCASE.map(({ id, tag }) => {
+    const ex = EXERCISE_MAP[id];
+    const ill = ILLUSTRATIONS[id];
+    if (!ex || !ill) throw new Error(`3D bo‘limi: mashq yoki rasm topilmadi: ${id}`);
+    const act = activationFor(ex);
+    const groups = (min: number, max: number) => [
+      ...new Set(act.list.filter((a) => a.mvic >= min && a.mvic < max).flatMap((a) => (M3_INFO[a.key].group ? [M3_INFO[a.key].group!] : []))),
+    ];
+    const primary = groups(50, Infinity);
+    return {
+      id,
+      name: ex.name,
+      tag,
+      alt: ill.alt,
+      frames: motionFrames(ex, ill).map((f) => ({ src: f.src, phase: f.phase })),
+      tempo: tempo(ex),
+      anim: ex.anim.frames.map((f) => ({ phase: f.phase, dur: f.dur })),
+      acts: act.list.map((a) => ({ key: a.key, name: M3_INFO[a.key].name, mvic: Math.round(a.mvic), est: a.est })),
+      primary,
+      secondary: groups(20, 50).filter((g) => !primary.includes(g)),
+      view: M3_INFO[act.list[0].key].view === 'back' ? ('back' as const) : ('front' as const),
+    };
+  });
+}
+
+function gallery(): GalleryRow[] {
+  return GALLERY_IDS.map((id) => {
+    const ex = EXERCISE_MAP[id];
+    if (!ex || !ILLUSTRATIONS[id]) throw new Error(`rasm lentasi: mashq yoki rasm topilmadi: ${id}`);
+    return { id, name: ex.name, src: `gallery/${id}.webp` };
+  });
 }
 
 /** manba nomi va DOI ilovaning ro‘yxatidan: id xato bo‘lsa yig‘ish to‘xtaydi */
@@ -98,5 +151,8 @@ export function buildSiteData(): SiteData {
     facts: FACT_DEFS.map(({ source, ...f }) => ({ ...f, src: src(source) })),
     myths: MYTH_DEFS.map(({ source, ...m }) => ({ ...m, src: src(source) })),
     allSources: SOURCES.map((s) => ({ short: s.short, finding: s.finding ?? '', doi: s.doi, cite: s.cite })),
+    showcase: showcase(),
+    gallery: gallery(),
+    m3names: Object.fromEntries(M3_KEYS.map((k) => [k, M3_INFO[k].name])),
   };
 }

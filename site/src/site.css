@@ -991,7 +991,8 @@ select.input {
 }
 .chip[aria-pressed='true'],
 .chip[aria-checked='true'],
-.chip[aria-selected='true'] {
+.chip[aria-selected='true'],
+.chip[aria-pressed='true'] {
   background: var(--lime);
   border-color: var(--lime);
   color: #000;
@@ -1933,5 +1934,271 @@ summary {
   }
   .myth-card {
     min-height: 0;
+  }
+}
+
+/* ===== Mashq rasmlari lentasi ===== */
+.gallery {
+  padding: 32px 0 64px;
+}
+.marquee {
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+}
+.marquee-track {
+  --g: 16px;
+  display: flex;
+  gap: var(--g);
+  width: max-content;
+  animation: marquee 80s linear infinite;
+}
+/* ikki nusxa: bir nusxa + bitta oraliq qadar surilganda boshiga qaytadi — choki ko‘rinmaydi */
+@keyframes marquee {
+  to {
+    transform: translateX(calc(-50% - var(--g) / 2));
+  }
+}
+@media (hover: hover) {
+  .marquee:hover .marquee-track {
+    animation-play-state: paused;
+  }
+}
+.marquee-item {
+  flex: none;
+  width: 200px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.marquee-item img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1;
+  border-radius: 24px;
+  border: 1px solid var(--line);
+  background: #0b0b0c;
+}
+@media (max-width: 639px) {
+  .gallery {
+    padding: 16px 0 48px;
+  }
+  .marquee-track {
+    --g: 12px;
+    animation-duration: 60s;
+  }
+  .marquee-item {
+    width: 152px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .marquee {
+    overflow-x: auto;
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+  .marquee-track {
+    animation: none;
+    padding: 0 16px;
+  }
+}
+
+/* ===== 3D anatomiya ===== */
+.anat {
+  display: grid;
+  gap: 24px;
+}
+.anat-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  min-width: 0;
+}
+.anat-copy .section-head {
+  margin-bottom: 0;
+}
+.anat-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.anat-list .bar-row .body-5 {
+  min-width: 0;
+}
+.anat-stage-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+}
+@media (min-width: 960px) {
+  .anat {
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    align-items: start;
+  }
+  .anat-stage-wrap {
+    position: sticky;
+    top: 96px;
+  }
+}
+/* telefonda mashqlar bitta qatorda yonga suriladi */
+@media (max-width: 639px) {
+  .anat .chips {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+    margin: 0 -16px;
+    padding: 0 16px;
+  }
+  .anat .chips::-webkit-scrollbar {
+    display: none;
+  }
+  .anat .chips .chip {
+    flex: none;
+  }
+  .anat-copy {
+    display: contents;
+  }
+  .anat-copy .section-head {
+    order: 1;
+  }
+  .anat-copy .field {
+    order: 2;
+  }
+  .anat-stage-wrap {
+    order: 3;
+  }
+  .anat-list {
+    order: 4;
+  }
+  .anat-copy .tool-cta {
+    order: 5;
+  }
+}
+.stage {
+  position: relative;
+  aspect-ratio: 1;
+  border-radius: 24px;
+  border: 1px solid var(--line);
+  background:
+    radial-gradient(90% 55% at 50% 100%, rgba(212, 250, 80, 0.08) 0%, transparent 60%),
+    #0b0b0c;
+  overflow: hidden;
+  isolation: isolate;
+}
+.motion-fig {
+  position: absolute;
+  inset: 0;
+}
+.motion-fig img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.motion-top {
+  transition-property: opacity;
+  transition-timing-function: var(--ease);
+}
+.stage-tag,
+.stage-cue,
+.stage-hint {
+  position: absolute;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 12px;
+  border-radius: 9999px;
+  background: rgba(0, 0, 0, 0.64);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  white-space: nowrap;
+}
+.stage-tag {
+  left: 12px;
+  top: 12px;
+}
+.stage-cue {
+  left: 12px;
+  bottom: 12px;
+  color: var(--text-2);
+}
+.stage-cue.up {
+  color: var(--lime);
+}
+.motion-ctl {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+}
+.motion-ctl .chip {
+  background: rgba(0, 0, 0, 0.64);
+}
+.play-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 9999px;
+  border: 0;
+  display: grid;
+  place-items: center;
+  background: var(--lime);
+  color: #000;
+  cursor: pointer;
+}
+.stage-hint {
+  left: 50%;
+  bottom: 12px;
+  transform: translateX(-50%);
+  max-width: calc(100% - 24px);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--text-2);
+  z-index: 2;
+}
+.stage-flat {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 24px 0 48px;
+}
+.stage .m3d-host {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.m3d-host canvas {
+  display: block;
+  cursor: grab;
+}
+.m3d-host canvas:active {
+  cursor: grabbing;
+}
+.m3d-ph {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.m3d-ph .stage-flat {
+  pointer-events: none;
+}
+.spinner {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 2px solid var(--s3);
+  border-top-color: var(--lime);
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
   }
 }
