@@ -326,3 +326,13 @@ Har bir kadr uchun asos tanlanadi:
 Natijalarni joylash: `python3 scripts/images/place_flow.py <papka>`.
 
 Tos-son cho‘zish (hip-flexor-stretch) to‘plamga kiritilmadi: harakat tabiatan juda kichik (3–5 sm), bitta kadr yetarli.
+
+## Flow-8 natijalari joylandi (2026-11-27)
+
+24 ta ishdan 21 tasi qabul qilindi. Ilovaga qo‘shilgan mashqlar: bir oyoqda rumincha tortish, yonga hamla, qiya otjimaniya. Shu bilan rejalashtirilgan 15 ta yangi mashqning hammasi ilovada.
+
+Asosiy kadri almashgan, yorliqlari qayta o‘lchangan yozuvlar: teskari ushlab tortilish, oyoq bukish, krunch, shtanga jimi.
+
+Rad etilganlar:
+- **Blokda qo‘l birlashtirish, batterflay:** tirsak yana ~90°.
+- **O‘tirib boldir ko‘tarish:** tovon kam tushgan. Ilovadagi asosiy kadrda yuz terili, shuning uchun A va B ni qayta chizish kerak.

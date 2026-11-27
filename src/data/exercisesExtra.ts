@@ -486,8 +486,7 @@ const ALL_EXTRA: Exercise[] = [
   },
 ];
 
-/** Rasmi tekshirilib, ilovaga joylangan mashqlar. Qolganlari rasm kelguncha ko‘rsatilmaydi:
- *  single-leg-rdl, lateral-lunge (yuz terili chizilgan), incline-push-up (pastki nuqta yo‘q, yuz terili) */
+/** Rasmi tekshirilib, ilovaga joylangan mashqlar (yangi mashq rasmi tasdiqlanmaguncha shu ro‘yxatga kirmaydi). */
 const READY = new Set([
   'straight-arm-pulldown',
   'reverse-pec-deck',
@@ -501,6 +500,9 @@ const READY = new Set([
   'sumo-deadlift',
   'jump-squat',
   'nordic-curl',
+  'single-leg-rdl',
+  'lateral-lunge',
+  'incline-push-up',
 ]);
 
 export const EXTRA_EXERCISES: Exercise[] = ALL_EXTRA.filter((e) => READY.has(e.id));
