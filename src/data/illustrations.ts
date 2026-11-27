@@ -71,12 +71,12 @@ export const ILLUSTRATIONS: Partial<Record<string, Illustration>> = {
     alt: 'Shtanga bilan yotib jim, pastki nuqta: to‘g‘ri texnika; ishlayotgan mushaklar lime rangda yonmoqda',
     labels: [
       { key: 'pecMid', name: 'Ko‘krak (o‘rta)', x: 46, y: 53, side: 'l', ly: 14 },
-      { key: 'deltAnt', name: 'Old delta', x: 33, y: 63, side: 'l', ly: 30 },
-      { key: 'tricepsLong', name: 'Triseps', x: 31, y: 68, side: 'l', ly: 46 },
+      { key: 'deltAnt', name: 'Old delta', x: 38, y: 57, side: 'l', ly: 30 },
+      { key: 'tricepsLong', name: 'Triseps', x: 34, y: 62, side: 'l', ly: 46 },
     ],
     checks: [
       { text: 'Shtanga ko‘krakka tegadi', x: 44, y: 52, side: 'l', ly: 28 },
-      { text: 'Bilaklar tik, tirsak 45–70°', x: 40, y: 58, side: 'l', ly: 44 },
+      { text: 'Bilaklar tik, tirsak 45–70°', x: 42, y: 55, side: 'l', ly: 44 },
       { text: 'Kuraklar yig‘ilgan, dumba skameykada', x: 72, y: 58, side: 'r', ly: 60 },
       { text: 'Oyoqlar polda', x: 88, y: 77, side: 'r', ly: 84 },
     ],
@@ -87,13 +87,13 @@ export const ILLUSTRATIONS: Partial<Record<string, Illustration>> = {
     pair: { src: img('alt/deadlift.webp'), phase: 'Yuqori nuqta' },
     alt: 'O‘lik tortish, boshlang‘ich holat: to‘g‘ri texnika; ishlayotgan mushaklar lime rangda yonmoqda',
     labels: [
-      { key: 'erectors', name: 'Bel rostlovchi', x: 38, y: 36, side: 'l', ly: 30 },
+      { key: 'erectors', name: 'Bel rostlovchi', x: 41, y: 36, side: 'l', ly: 30 },
       { key: 'gluteMax', name: 'Katta dumba', x: 32, y: 44, side: 'l', ly: 44 },
       { key: 'medialHamstrings', name: 'Son orqasi', x: 40, y: 56, side: 'l', ly: 60 },
       { key: 'forearmFlexors', name: 'Bilak', x: 63, y: 58, side: 'r', ly: 62 },
     ],
     checks: [
-      { text: 'Bel tekis', x: 45, y: 30, side: 'r', ly: 30 },
+      { text: 'Bel tekis', x: 48, y: 32, side: 'r', ly: 30 },
       { text: 'Tos tizzadan baland, yelkadan past', x: 33, y: 42, side: 'l', ly: 20 },
       { text: 'Qo‘llar tik, tirsak to‘g‘ri', x: 52, y: 55, side: 'r', ly: 48 },
       { text: 'Shtanga oyoq kafti o‘rtasi ustida', x: 47, y: 71, side: 'r', ly: 82 },
@@ -193,7 +193,7 @@ export const ILLUSTRATIONS: Partial<Record<string, Illustration>> = {
     ],
     checks: [
       { text: 'Qo‘llar yelka ostida, biroz kengroq', x: 70, y: 72, side: 'r', ly: 66 },
-      { text: 'Tana boshdan tovongacha tekis', x: 42, y: 52, side: 'l', ly: 44 },
+      { text: 'Tana boshdan tovongacha tekis', x: 40, y: 49, side: 'l', ly: 44 },
       { text: 'Oyoq uchlari yerda', x: 12, y: 63, side: 'l', ly: 76 },
       { text: 'Bosh tabiiy, nigoh polga', x: 88.7, y: 39.2, side: 'r', ly: 26 },
     ],
@@ -206,12 +206,12 @@ export const ILLUSTRATIONS: Partial<Record<string, Illustration>> = {
     labels: [
       { key: 'vastusLateralis', name: 'Son: tashqi', x: 37, y: 63, side: 'l', ly: 56 },
       { key: 'vastusMedialis', name: 'Son: ichki bosh', x: 43, y: 67, side: 'l', ly: 70 },
-      { key: 'rectusFemoris', name: 'Son: to‘g‘ri', x: 68, y: 62, side: 'r', ly: 50 },
+      { key: 'rectusFemoris', name: 'Son: to‘g‘ri', x: 64, y: 61, side: 'r', ly: 50 },
     ],
     checks: [
       { text: 'Shtanga old deltada, o‘mrov oldida', x: 53, y: 41, side: 'l', ly: 18 },
       { text: 'Tana deyarli tik', x: 52, y: 52, side: 'r', ly: 30 },
-      { text: 'Son pol bilan parallel', x: 72, y: 63, side: 'r', ly: 62 },
+      { text: 'Son pol bilan parallel', x: 60, y: 65, side: 'r', ly: 62 },
       { text: 'Tovonlar yerda', x: 36, y: 86, side: 'l', ly: 88 },
     ],
   },
@@ -385,7 +385,7 @@ export const ILLUSTRATIONS: Partial<Record<string, Illustration>> = {
     ],
     checks: [
       { text: 'Orqa oyoq skameykada', x: 25.2, y: 66.1, side: 'l', ly: 24 },
-      { text: 'Tana biroz oldinga, bel tekis', x: 56, y: 40, side: 'r', ly: 24 },
+      { text: 'Tana biroz oldinga, bel tekis', x: 58, y: 42, side: 'r', ly: 24 },
       { text: 'Old son parallel', x: 72.6, y: 64, side: 'r', ly: 42 },
       { text: 'Old tovon yerda', x: 75.8, y: 93, side: 'r', ly: 86 },
     ],
@@ -628,7 +628,7 @@ export const ILLUSTRATIONS: Partial<Record<string, Illustration>> = {
     checks: [
       { text: 'Dastaklar iyak sathida', x: 32, y: 21, side: 'l', ly: 14 },
       { text: 'Orqa yostiqqa tegib', x: 67, y: 45, side: 'l', ly: 58 },
-      { text: 'Oyoqlar polda', x: 18, y: 86, side: 'l', ly: 80 },
+      { text: 'Oyoqlar polda', x: 25, y: 79, side: 'l', ly: 80 },
     ],
   },
   'pike-push-up': {
@@ -719,9 +719,9 @@ export const ILLUSTRATIONS: Partial<Record<string, Illustration>> = {
       { key: 'deltPost', name: 'Orqa delta', x: 71, y: 28, side: 'r', ly: 46 },
     ],
     checks: [
-      { text: 'Tana polga parallel, bel tekis', x: 51, y: 31, side: 'l', ly: 38 },
-      { text: 'Gantel songa tortiladi', x: 57, y: 45, side: 'r', ly: 46 },
-      { text: 'Tirsak tanaga yaqin', x: 56.5, y: 24.5, side: 'l', ly: 22 },
+      { text: 'Tana polga parallel, bel tekis', x: 60, y: 30, side: 'l', ly: 38 },
+      { text: 'Gantel songa tortiladi', x: 48, y: 43, side: 'r', ly: 46 },
+      { text: 'Tirsak tanaga yaqin', x: 50, y: 34, side: 'l', ly: 22 },
       { text: 'Tizza va qo‘l skameykada', x: 35, y: 66, side: 'l', ly: 62 },
     ],
   },
@@ -782,7 +782,7 @@ export const ILLUSTRATIONS: Partial<Record<string, Illustration>> = {
     ],
     checks: [
       { text: 'Iyak turnikdan oshadi', x: 50, y: 15, side: 'r', ly: 8 },
-      { text: 'Tana tik, oyoqlar birga', x: 50, y: 62, side: 'r', ly: 60 },
+      { text: 'Tana tik, oyoqlar birga', x: 46, y: 62, side: 'r', ly: 60 },
     ],
   },
   'db-shrug': {
@@ -827,7 +827,7 @@ export const ILLUSTRATIONS: Partial<Record<string, Illustration>> = {
     checks: [
       { text: 'Kaft yelkaga qaragan', x: 55, y: 26, side: 'r', ly: 14 },
       { text: 'Tirsak tana yonida', x: 47, y: 35, side: 'l', ly: 48 },
-      { text: 'Silkinmasdan', x: 40, y: 38, side: 'r', ly: 58 },
+      { text: 'Silkinmasdan', x: 46, y: 41, side: 'r', ly: 58 },
     ],
   },
   'hammer-curl': {
@@ -1033,6 +1033,7 @@ export const ILLUSTRATIONS: Partial<Record<string, Illustration>> = {
   butterfly: {
     src: img('butterfly.webp'),
     phase: 'Cho‘zilgan holat',
+    pair: { src: img('alt/butterfly.webp'), phase: 'Chuqurroq holat' },
     alt: 'Kapalak, cho‘zilgan holat: to‘g‘ri texnika; cho‘ziladigan mushaklar lime rangda',
   },
   'cable-kickback': {
@@ -1050,6 +1051,7 @@ export const ILLUSTRATIONS: Partial<Record<string, Illustration>> = {
   'childs-pose': {
     src: img('childs-pose.webp'),
     phase: 'Cho‘zilgan holat',
+    pair: { src: img('alt/childs-pose.webp'), phase: 'Boshlang‘ich holat' },
     alt: 'Bola pozasi, cho‘zilgan holat: to‘g‘ri texnika; cho‘ziladigan mushaklar lime rangda',
   },
   clamshell: {
@@ -1085,6 +1087,7 @@ export const ILLUSTRATIONS: Partial<Record<string, Illustration>> = {
   'mountain-climber': {
     src: img('mountain-climber.webp'),
     phase: 'Qisqargan holat',
+    pair: { src: img('alt/mountain-climber.webp'), phase: 'Ikkinchi oyoq' },
     alt: '«Alpinist», qisqargan holat: to‘g‘ri texnika; ishlayotgan mushaklar lime rangda yonmoqda',
   },
   'neck-stretch': {
@@ -1102,11 +1105,13 @@ export const ILLUSTRATIONS: Partial<Record<string, Illustration>> = {
   'reverse-crunch': {
     src: img('reverse-crunch.webp'),
     phase: 'Qisqargan holat',
+    pair: { src: img('alt/reverse-crunch.webp'), phase: 'Boshlang‘ich holat' },
     alt: 'Teskari qisqarish, qisqargan holat: to‘g‘ri texnika; ishlayotgan mushaklar lime rangda yonmoqda',
   },
   'reverse-lunge': {
     src: img('reverse-lunge.webp'),
     phase: 'Pastki nuqta',
+    pair: { src: img('alt/reverse-lunge.webp'), phase: 'Boshlang‘ich holat' },
     alt: 'Orqaga hamla, pastki nuqta: to‘g‘ri texnika; ishlayotgan mushaklar lime rangda yonmoqda',
   },
   'side-leg-raise': {
@@ -1118,6 +1123,7 @@ export const ILLUSTRATIONS: Partial<Record<string, Illustration>> = {
   'single-leg-bridge': {
     src: img('single-leg-bridge.webp'),
     phase: 'Yuqori nuqta',
+    pair: { src: img('alt/single-leg-bridge.webp'), phase: 'Boshlang‘ich holat' },
     alt: 'Bir oyoqda ko‘prikcha, yuqori nuqta: to‘g‘ri texnika; ishlayotgan mushaklar lime rangda yonmoqda',
   },
   'sumo-squat': {
@@ -1147,11 +1153,13 @@ export const ILLUSTRATIONS: Partial<Record<string, Illustration>> = {
   'wall-sit': {
     src: img('wall-sit.webp'),
     phase: 'Ushlab turish',
+    pair: { src: img('alt/wall-sit.webp'), phase: 'Boshlang‘ich holat' },
     alt: 'Devorga suyanib o‘tirish, ushlab turish: to‘g‘ri texnika; ishlayotgan mushaklar lime rangda yonmoqda',
   },
   'dead-bug': {
     src: img('dead-bug.webp'),
     phase: 'Boshlang‘ich holat',
+    pair: { src: img('alt/dead-bug.webp'), phase: 'Cho‘zilgan holat' },
     alt: '«O‘lik qo‘ng‘iz», boshlang‘ich holat: to‘g‘ri texnika; ishlayotgan mushaklar lime rangda yonmoqda',
     labels: [
       { key: 'rectusAbdominis', name: 'Qorin to‘g‘ri mushagi', x: 42, y: 66, side: 'r', ly: 74 },
@@ -1197,6 +1205,7 @@ export const ILLUSTRATIONS: Partial<Record<string, Illustration>> = {
   'cable-overhead-extension': {
     src: img('cable-overhead-extension.webp'),
     phase: 'Pastki nuqta',
+    pair: { src: img('alt/cable-overhead-extension.webp'), phase: 'Yuqori nuqta' },
     alt: 'Blokda bosh ortidan triseps, pastki nuqta: to‘g‘ri texnika; ishlayotgan mushaklar lime rangda yonmoqda',
   },
   'farmers-carry': {
@@ -1227,7 +1236,6 @@ export const ILLUSTRATIONS: Partial<Record<string, Illustration>> = {
     src: img('t-bar-row.webp'),
     phase: 'Pastki nuqta',
     alt: 'T-shtanga tortish, pastki nuqta: to‘g‘ri texnika; ishlayotgan mushaklar lime rangda yonmoqda',
-    pair: { src: img('alt/t-bar-row.webp'), phase: 'Yuqori nuqta' },
   },
   'preacher-curl': {
     src: img('preacher-curl.webp'),
@@ -1278,7 +1286,12 @@ export const ILLUSTRATIONS: Partial<Record<string, Illustration>> = {
     pair: { src: img('alt/pallof-press.webp'), phase: 'Boshlang‘ich holat' },
   },
   'hanging-knee-raise': { src: img('hanging-knee-raise.webp'), phase: 'Yuqori nuqta', alt: 'Turnikda tizza ko‘tarish, yuqori nuqta: to‘g‘ri texnika; ishlayotgan mushaklar lime rangda yonmoqda' },
-  'sumo-deadlift': { src: img('sumo-deadlift.webp'), phase: 'Pastki nuqta', alt: 'Sumo o‘lik tortish, pastki nuqta: to‘g‘ri texnika; ishlayotgan mushaklar lime rangda yonmoqda' },
+  'sumo-deadlift': {
+    src: img('sumo-deadlift.webp'),
+    phase: 'Pastki nuqta',
+    alt: 'Sumo o‘lik tortish, pastki nuqta: to‘g‘ri texnika; ishlayotgan mushaklar lime rangda yonmoqda',
+    pair: { src: img('alt/sumo-deadlift.webp'), phase: 'Yuqori nuqta' },
+  },
   'nordic-curl': {
     src: img('nordic-curl.webp'),
     phase: 'Tushish',

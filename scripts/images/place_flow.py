@@ -118,11 +118,18 @@ for d in sorted(os.listdir(res_dir)):
             pair = f", pair: {{ src: img('alt/{eid}.webp'), phase: '{job['pair']['phaseUz']}' }}" if has_b else ''
             auto_body += f"  '{eid}': {{ src: img('{eid}.webp'), phase: '{phase}', alt: '{alt}'{pair} }},\n"
         else:
-            # <auto> blokidagi yozuvga faqat ikkinchi kadr qo'shiladi
+            # <auto> blokidagi yozuvga faqat ikkinchi kadr qo'shiladi: bir qatorli yoki prettier ko'p qatorga bo'lgan yozuv
+            pair_txt = f"pair: {{ src: img('alt/{eid}.webp'), phase: '{job['pair']['phaseUz']}' }}"
             m = re.search(r"^  '?" + re.escape(eid) + r"'?: \{[^\n]*\},\n", auto_body, re.M)
+            mm = re.search(r"^  '?" + re.escape(eid) + r"'?: \{\n.*?\n  \},\n", auto_body, re.M | re.S)
             if m and 'pair:' not in m.group(0):
                 line = m.group(0)
-                auto_body = auto_body.replace(line, line[:-4] + f", pair: {{ src: img('alt/{eid}.webp'), phase: '{job['pair']['phaseUz']}' }} }},\n")
+                auto_body = auto_body.replace(line, line[:-4] + f", {pair_txt} }},\n")
+            elif mm and 'pair:' not in mm.group(0):
+                blk = mm.group(0)
+                auto_body = auto_body.replace(blk, re.sub(r"(\n    phase: '[^']*',\n)", lambda g: g.group(1) + f"    {pair_txt},\n", blk, count=1))
+            elif not (m or mm):
+                raise SystemExit(f'{eid}: illustrations.ts da yozuv topilmadi — ikkinchi kadr ulanmadi')
 
 open(ill_path, 'w', encoding='utf-8').write(head + '// <auto>' + auto_first + '\n' + auto_body + '  // </auto>' + tail)
 order = [m for m in re.findall(r"\{ id: '([a-zA-Z]+)'", open('src/data/catalog.ts', encoding='utf-8').read()) if m in eq_ids]

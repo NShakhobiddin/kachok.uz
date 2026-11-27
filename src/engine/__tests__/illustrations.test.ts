@@ -1,4 +1,4 @@
-import { existsSync } from 'node:fs';
+import { existsSync, readdirSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { BODYMAP } from '../../data/bodymap';
@@ -20,6 +20,12 @@ describe('Mashq illyustratsiyalari', () => {
       expect(existsSync(resolve(__dirname, '../../../public/illustrations', file)), file).toBe(true);
       expect(ill.alt.length, id).toBeGreaterThan(20);
     }
+  });
+
+  it('alt/ dagi har bir kadr ilovada ishlatiladi (joylangan, lekin ulanmay qolgan kadr yo‘q)', () => {
+    const used = new Set(entries.flatMap(([, ill]) => [ill.src, ill.pair?.src, ill.pair?.mainSrc].filter(Boolean).map((s) => s!.split('/illustrations/')[1])));
+    const alt = readdirSync(resolve(__dirname, '../../../public/illustrations/alt')).map((f) => `alt/${f}`);
+    expect(alt.filter((f) => !used.has(f))).toEqual([]);
   });
 
   it('yorliqdagi har bir mushak shu mashqning EMG jadvalida bor', () => {

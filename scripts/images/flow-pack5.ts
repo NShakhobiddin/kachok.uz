@@ -1,15 +1,18 @@
 // Flow-8 to‘plami: Flow-6 yakuniy tekshiruvida rad etilgan kadrlar (fixesFlow8.ts).
-// Ishlatish: npx vite-node scripts/images/flow-pack5.ts -- <chiqish> <flow6-yakuniy-papka>
+// Ishlatish: npx vite-node scripts/images/flow-pack5.ts -- <chiqish> <flow6-yakuniy-papka> [flow9]
 //   <flow6-yakuniy-papka> — 4 qismli yakuniy zip birlashtirilib ochilgan papka (1_yangi/, 2_tuzatish/).
 // Natijalar: python3 scripts/images/place_flow.py <papka>
 import { copyFileSync, existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import { ILLUSTRATIONS } from '../../src/data/illustrations';
 import { AUDIT_FIXES } from './fixesAudit3';
 import { FLOW8, type Flow8Frame, type Flow8Job } from './fixesFlow8';
+import { FLOW9 } from './fixesFlow9';
 import { NEW_SPECS } from './specsNew';
 
-const [out, yak] = process.argv.slice(2).filter((a) => a !== '--');
+const [out, yak, set = 'flow8'] = process.argv.slice(2).filter((a) => a !== '--');
 if (!out || !yak) throw new Error('chiqish va flow6-yakuniy papkasi kerak');
+const JOBS = set === 'flow9' ? FLOW9 : FLOW8;
+const TITLE = set === 'flow9' ? 'Flow-9: murabbiy auditida topilgan rasm xatolari' : 'Flow-8: rad etilgan kadrlar';
 
 const prompts: Record<string, { prompt: string }> = Object.fromEntries(
   JSON.parse(readFileSync('scripts/images/prompts.json', 'utf8'))
@@ -88,9 +91,9 @@ function frameText(job: Flow8Job, f: Flow8Frame, dir: string, step: 'A' | 'B'): 
 }
 
 const md: string[] = [
-  '# GYMbos — Flow-8: rad etilgan kadrlar',
+  `# GYMbos — ${TITLE}`,
   '',
-  'Flow-6 yakuniy to‘plam tekshiruvida rad etilgan kadrlar. Har papkada:',
+  'Har papkada:',
   '- **A-prompt.txt** bo‘lsa — avval A: `A-asos.*` (yoki `A-uslub.webp`) ni 1-rasm qilib yuklang, matnni qo‘ying, eng to‘g‘risini `natija-A.png` deb saqlang.',
   '- **B-prompt.txt** — keyin B: prompt qaysi rasmni 1-rasm deb aytsa, o‘shani yuklang (`natija-A.png` yoki `B-asos.*`), eng to‘g‘risini `natija-B.png` deb saqlang.',
   '- `2-namuna.webp` bo‘lsa — uni 2-rasm qilib qo‘shing (faqat bitta detal uchun namuna).',
@@ -102,7 +105,7 @@ const md: string[] = [
   '',
 ];
 let n = 0;
-for (const job of FLOW8) {
+for (const job of JOBS) {
   const dir = `${out}/${String(++n).padStart(2, '0')}_${job.id}`;
   mkdirSync(dir, { recursive: true });
   if (job.ref) copyFileSync(`public/illustrations/${job.ref.src}`, `${dir}/2-namuna.webp`);
@@ -123,4 +126,4 @@ for (const job of FLOW8) {
   md.push(`### ${n}. \`${job.id}\` — ${what}`, `- Muammo: ${job.problem}`, `- Tekshiring: ${job.check}`, '');
 }
 writeFileSync(`${out}/ROYXAT.md`, md.join('\n'));
-console.log(`tayyor: ${out} (${FLOW8.length} ish)`);
+console.log(`tayyor: ${out} (${JOBS.length} ish)`);
