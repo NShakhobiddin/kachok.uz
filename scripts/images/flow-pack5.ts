@@ -1,5 +1,5 @@
 // Flow-8 to‘plami: Flow-6 yakuniy tekshiruvida rad etilgan kadrlar (fixesFlow8.ts).
-// Ishlatish: npx vite-node scripts/images/flow-pack5.ts -- <chiqish> <flow6-yakuniy-papka> [flow9]
+// Ishlatish: npx vite-node scripts/images/flow-pack5.ts -- <chiqish> <flow6-yakuniy-papka> [flow9|flow10]
 //   <flow6-yakuniy-papka> — 4 qismli yakuniy zip birlashtirilib ochilgan papka (1_yangi/, 2_tuzatish/).
 // Natijalar: python3 scripts/images/place_flow.py <papka>
 import { copyFileSync, existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
@@ -7,12 +7,13 @@ import { ILLUSTRATIONS } from '../../src/data/illustrations';
 import { AUDIT_FIXES } from './fixesAudit3';
 import { FLOW8, type Flow8Frame, type Flow8Job } from './fixesFlow8';
 import { FLOW9 } from './fixesFlow9';
+import { FLOW10 } from './fixesFlow10';
 import { NEW_SPECS } from './specsNew';
 
 const [out, yak, set = 'flow8'] = process.argv.slice(2).filter((a) => a !== '--');
 if (!out || !yak) throw new Error('chiqish va flow6-yakuniy papkasi kerak');
-const JOBS = set === 'flow9' ? FLOW9 : FLOW8;
-const TITLE = set === 'flow9' ? 'Flow-9: murabbiy auditida topilgan rasm xatolari' : 'Flow-8: rad etilgan kadrlar';
+const JOBS = set === 'flow10' ? FLOW10 : set === 'flow9' ? FLOW9 : FLOW8;
+const TITLE = set === 'flow10' ? 'Flow-10: ekran rasmlari tahlili va Flow-9 (bitta to‘plam)' : set === 'flow9' ? 'Flow-9: murabbiy auditida topilgan rasm xatolari' : 'Flow-8: rad etilgan kadrlar';
 
 const prompts: Record<string, { prompt: string }> = Object.fromEntries(
   JSON.parse(readFileSync('scripts/images/prompts.json', 'utf8'))
@@ -84,7 +85,7 @@ function frameText(job: Flow8Job, f: Flow8Frame, dir: string, step: 'A' | 'B'): 
   const b = base(job, f, dir, step);
   const head =
     f.mode === 'edit'
-      ? `Image 1 is ${b}. EDIT this illustration: it shows the same moment of the same exercise — fix ONLY what is listed below. The camera must NOT move.`
+      ? `Image 1 is ${b}. EDIT this illustration: fix ONLY what is listed below — everything not listed stays exactly as it is. The camera must NOT move.`
       : `Image 1 is ${b}. Create the SAME scene at the other end of the movement. The camera must NOT move.`;
   const what = f.mode === 'edit' ? `Change ONLY: ${f.change}.` : `Change ONLY the body pose (and whatever the athlete holds, pushes or rides moves with the body) to: ${f.change}.`;
   return [head, refLine, keep(female), what, HEAD(female), NO_TEXT].filter(Boolean).join('\n\n');
@@ -101,6 +102,7 @@ const md: string[] = [
   '- Saqlashdan oldin **«Tekshiring»** qatoriga qarang. Flow ikki urinishda chiqarmasa — xuddi shu fayllar bilan ChatGPT’da sinab ko‘ring.',
   '- Hammasini zip qilib yuboring.',
   '',
+  ...(set === 'flow10' ? ['**Flow-9 ham shu to‘plamda (16–21-papkalar)** — uni alohida qilish shart emas. Flow-9 dan tayyor natijangiz bo‘lsa, uni ham yuboring.', ''] : []),
   'Umumiy: yuz ham terisiz (mushaklari ko‘rinadi), ayol figurada — sport ko‘ylagi va shortik, soch past tugunda; oyoq-qo‘l soni to‘g‘ri; kamera ikki kadrda bir xil.',
   '',
 ];
