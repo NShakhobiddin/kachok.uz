@@ -1,6 +1,6 @@
 // 2026-11 auditi: bo‘shliqlarni to‘ldiruvchi yangi mashqlar (rasmlari Flow-6 da yaratilgan).
 // Zal — erkak figura, uy — ayol figura (rasmlarda). Mushak faolligi: docs/emg/extra.json (o‘xshash mashqlar asosida baho).
-import type { AnimSpec, Exercise, SidePose } from '../types';
+import type { AnimSpec, Exercise, FrontPose, SidePose } from '../types';
 import * as A from './anims';
 import { con } from './anims';
 import { BREATH_PRESS, BREATH_PULL } from './exerciseText';
@@ -34,6 +34,125 @@ function hangingKneeRaiseAnim(): AnimSpec {
   const start: SidePose = { torso: 0, head: 0, ua: 0, fa: 0, th: 180, sh: 180, ft: 90 };
   const end: SidePose = { torso: -4, head: -2, ua: 0, fa: 0, th: 80, sh: 178, ft: 92 };
   return { ...base, frames: con(start, end, { move1: 1100, hold2: 400, move2: 1700 }) };
+}
+
+/** Fermer yurishi (yon ko‘rinish): joyida qadam — oyoqlar navbatma-navbat, qo‘llar to‘g‘ri, gavda tik */
+export function farmersCarryAnim(): AnimSpec {
+  const arms = { torso: 1, head: 1, ua: 180, fa: 180, ua2: 180, fa2: 180 };
+  const a: SidePose = { ...arms, th: 162, sh: 174, ft: 84, th2: 199, sh2: 214, ft2: 128, at: { x: 116, y: 123 } };
+  const b: SidePose = { ...arms, th: 199, sh: 214, ft: 128, th2: 162, sh2: 174, ft2: 84, at: { x: 116, y: 123 } };
+  const p1: SidePose = { ...arms, th: 182, sh: 180, ft: 90, th2: 168, sh2: 206, ft2: 110, at: { x: 116, y: 119 } };
+  const p2: SidePose = { ...arms, th: 168, sh: 206, ft: 110, th2: 182, sh2: 180, ft2: 90, at: { x: 116, y: 119 } };
+  return {
+    view: 'side',
+    anchor: { joint: 'hip', x: 116, y: 121 },
+    held: { kind: 'dumbbell' },
+    frames: [
+      { pose: a, dur: 420, phase: 'hold' },
+      { pose: p1, dur: 420, phase: 'hold' },
+      { pose: b, dur: 420, phase: 'hold' },
+      { pose: p2, dur: 420, phase: 'hold' },
+    ],
+  };
+}
+
+/** Nordik bukilish: tiz cho‘kib, to‘piqlar divan ostida; tizzadan boshgacha tekis tana nazorat bilan oldinga tushadi */
+export function nordicCurlAnim(): AnimSpec {
+  const top: SidePose = { torso: 0, head: 0, ua: 168, fa: 34, th: 180, sh: 270, ft: 200 };
+  const bottom: SidePose = { torso: 52, head: 50, ua: 118, fa: 96, th: 232, sh: 270, ft: 200 };
+  return {
+    view: 'side',
+    anchor: { joint: 'knee', x: 100, y: 207 },
+    props: [
+      { kind: 'mat', x: 22, y: 0, w: 190 },
+      { kind: 'box', x: 0, y: 176, w: 58, h: 38 },
+    ],
+    frames: A.ecc(top, bottom, { hold1: 400, move1: 2600, hold2: 250, move2: 1400 }),
+    frame: { x: -6, y: 40, w: 230, h: 180 },
+  };
+}
+
+/** Yotib oyoq bukish: qorin bilan qiya yostiqda, tos yostiqda qoladi, tovonlar dumbaga tortiladi */
+export function lyingLegCurlAnim(): AnimSpec {
+  const base = { torso: 96, head: 104, ua: 176, fa: 120, th: 268 };
+  const start: SidePose = { ...base, sh: 262, ft: 175 };
+  const end: SidePose = { ...base, sh: 18, ft: 290 };
+  return {
+    view: 'side',
+    anchor: { joint: 'hip', x: 112, y: 140 },
+    footGear: { kind: 'anklePad' },
+    props: [{ kind: 'bench', x: 46, y: 144, w: 112 }],
+    frames: con(start, end, { move1: 1100, hold2: 450, move2: 1900 }),
+    frame: { x: 10, y: 50, w: 220, h: 170 },
+  };
+}
+
+/** Yonga hamla (old ko‘rinish): keng turishdan tos bir oyoq tomonga surilib o‘tiradi, ikkinchi oyoq to‘g‘ri; oyoq kaftlari joyida */
+export function lateralLungeAnim(): AnimSpec {
+  const hands = { ua: 172, fa: 50, fwd: 80 };
+  const wide: FrontPose = { ...hands, th: 158, sh: 158, hipY: 124.6 };
+  const low: FrontPose = { ...hands, th: 166, sh: 178, legFwd: 52, th2: 142.5, sh2: 142.5, legFwd2: 0, shift: 21, hipY: 136.5, lean: 28 };
+  return { view: 'front', frames: A.ecc(wide, low, { move1: 1700, move2: 1100 }) };
+}
+
+/** Orqa delta (orqadan): gavda engashgan, qo‘llar pastdan yon tomonlarga yelka sathigacha («T») */
+function rearDeltBentAnim(): AnimSpec {
+  const down: FrontPose = { ua: 186, fa: 184, th: 172, sh: 186, legFwd: 30, hipY: 132, lean: 70 };
+  const up: FrontPose = { ...down, ua: 96, fa: 100 };
+  return { view: 'back', held: { kind: 'dumbbell' }, frames: con(down, up, { move1: 1100, hold2: 500, move2: 1800 }) };
+}
+
+/** Batterflayda orqa delta (orqadan): o‘tirib, qo‘llar yelka sathida oldindan yon tomonlarga */
+function reversePecDeckAnim(): AnimSpec {
+  const start: FrontPose = { ua: 90, fa: 92, fwd: 82, hipY: 156, legFwd: 76 };
+  const end: FrontPose = { ...start, fwd: 0 };
+  return {
+    view: 'back',
+    held: { kind: 'handle' },
+    props: [{ kind: 'seatFront', x: 120, y: 164, w: 46 }],
+    frames: con(start, end, { move1: 1100, hold2: 500, move2: 1800 }),
+    frame: { x: 18, y: 10, w: 204, h: 210 },
+  };
+}
+
+/** Bir oyoqda rumincha tortish: tayanch oyoq biroz bukik, ikkinchi oyoq gavda bilan bir chiziqda orqaga, gantel qarama-qarshi qo‘lda */
+export function singleLegRdlAnim(): AnimSpec {
+  const top: SidePose = { torso: 2, ua: 180, fa: 180, ua2: 180, fa2: 180, th: 180, sh: 180, th2: 186, sh2: 206, ft2: 120, hand: { x: 116, y: 123 } };
+  const bottom: SidePose = { torso: 80, head: 66, ua: 180, fa: 180, ua2: 182, fa2: 180, th: 172, sh: 186, th2: 262, sh2: 262, ft2: 176, hand: { x: 128, y: 170 } };
+  return { view: 'side', anchor: ankle, held: { kind: 'dumbbell', single: true }, frames: A.ecc(top, bottom, { move1: 2300, move2: 1300 }) };
+}
+
+/** Qiya otjimaniya: qo‘llar skameyka chetida, tana tovondan boshgacha tekis */
+export function inclinePushUpAnim(): AnimSpec {
+  const top: SidePose = { torso: 50, head: 54, ua: 180, fa: 180, th: 230, sh: 230, ft: 150, hand: { x: 168, y: 165 } };
+  const bottom: SidePose = { ...top, torso: 62, head: 64, th: 242, sh: 242, ft: 162 };
+  return {
+    view: 'side',
+    anchor: { joint: 'toe', x: 40, y: 214 },
+    props: [{ kind: 'bench', x: 150, y: 166, w: 58 }],
+    frames: A.ecc(top, bottom, { move1: 1700, move2: 1000 }),
+    frame: { x: 20, y: 50, w: 210, h: 170 },
+  };
+}
+
+/** Sakrab o‘tirish: yarim o‘tirish -> portlovchi sakrash (oyoqlar poldan uziladi) -> yumshoq qo‘nish */
+export function jumpSquatAnim(): AnimSpec {
+  const stand: SidePose = { torso: 3, ua: 196, fa: 196, th: 180, sh: 180, ft: 90, at: { x: 112, y: 208 } };
+  const dip: SidePose = { torso: 30, head: 18, ua: 214, fa: 214, th: 112, sh: 204, ft: 90, at: { x: 112, y: 208 } };
+  const air: SidePose = { torso: -2, head: -2, ua: 24, fa: 18, th: 182, sh: 184, ft: 136, at: { x: 112, y: 186 } };
+  return {
+    view: 'side',
+    anchor: { joint: 'ankle', x: 112, y: 208 },
+    frames: [
+      { pose: stand, dur: 350, phase: 'hold' },
+      { pose: stand, dur: 650, phase: 'down' },
+      { pose: dip, dur: 160, phase: 'hold' },
+      { pose: dip, dur: 260, phase: 'up' },
+      { pose: air, dur: 260, phase: 'up' },
+      { pose: stand, dur: 380, phase: 'down' },
+    ],
+    frame: { x: 10, y: -44, w: 220, h: 264 },
+  };
 }
 
 const ALL_EXTRA: Exercise[] = [
@@ -97,7 +216,7 @@ const ALL_EXTRA: Exercise[] = [
       { title: 'Yelkalarni qisish', why: 'Trapetsiya yuqorisi ishni oladi.', fix: 'Yelkalarni pastga tushirib bajaring.' },
     ],
     benefits: [{ id: 'joints', text: 'Yelka bo‘g‘imining orqa tomonini mustahkamlaydi — ko‘krak mashqlari bilan muvozanat.' }],
-    anim: A.reverseFly(),
+    anim: reversePecDeckAnim(),
   },
   {
     id: 'db-reverse-fly',
@@ -125,7 +244,7 @@ const ALL_EXTRA: Exercise[] = [
       { title: 'Qo‘llarni juda baland ko‘tarish', why: 'Trapetsiya ishlay boshlaydi.', fix: 'Yelka sathida to‘xtang.' },
     ],
     benefits: [{ id: 'posture', text: 'Kurak va yelka orqasini kuchaytiradi — bukchayishga qarshi.' }],
-    anim: A.reverseFly(),
+    anim: rearDeltBentAnim(),
   },
   {
     id: 'lying-leg-curl',
@@ -149,7 +268,7 @@ const ALL_EXTRA: Exercise[] = [
       { title: 'Og‘irlikni tashlab yuborish', why: 'Eng foydali (cho‘zilish) qismi yo‘qoladi.', fix: 'Pastga sekin tushiring.' },
     ],
     benefits: [{ id: 'joints', text: 'Son orqasini alohida kuchaytiradi — tizza atrofi muvozanatlashadi.' }],
-    anim: A.legCurl(),
+    anim: lyingLegCurlAnim(),
   },
   {
     id: 'db-lunge',
@@ -216,7 +335,7 @@ const ALL_EXTRA: Exercise[] = [
       { id: 'balance', text: 'Bir oyoqda muvozanat — yiqilishning oldini olishga yordam beradi.' },
       { id: 'joints', text: 'Son orqasi va dumbani har oyoqda alohida kuchaytiradi.' },
     ],
-    anim: A.rdl('dumbbell'),
+    anim: singleLegRdlAnim(),
   },
   {
     id: 'cable-overhead-extension',
@@ -275,7 +394,7 @@ const ALL_EXTRA: Exercise[] = [
       { id: 'grip', text: 'Qo‘l siqish kuchi — kundalik hayot va keksalikda muhim.' },
       { id: 'core', text: 'Qorin va bel mushaklari tanani tik ushlashni o‘rganadi.' },
     ],
-    anim: A.shrug(),
+    anim: farmersCarryAnim(),
   },
   {
     id: 'pallof-press',
@@ -399,7 +518,7 @@ const ALL_EXTRA: Exercise[] = [
       { title: 'Tirsaklar yonga keng yoyilgan', why: 'Yelka bo‘g‘imi zo‘riqadi.', fix: 'Tirsaklarni tanaga ~45° burchakda tuting.' },
     ],
     benefits: [{ id: 'bone', text: 'Qo‘l va yelka suyaklariga yuklama — oddiy otjimaniyaga tayyorlov.' }],
-    anim: A.pushUp(),
+    anim: inclinePushUpAnim(),
   },
   {
     id: 'nordic-curl',
@@ -429,7 +548,7 @@ const ALL_EXTRA: Exercise[] = [
       { title: 'Tez «yiqilish»', why: 'Ekssentrik yuklama — mashqning asosiy foydasi — yo‘qoladi.', fix: 'Imkon qadar sekin tushing, amplitudani asta oshiring.' },
     ],
     benefits: [{ id: 'joints', text: 'Son orqasi jarohatlarini qariyb ikki barobar kamaytiradi (van Dyk va boshq., 2019 meta-tahlili).' }],
-    anim: A.legCurl(),
+    anim: nordicCurlAnim(),
   },
   {
     id: 'lateral-lunge',
@@ -458,7 +577,7 @@ const ALL_EXTRA: Exercise[] = [
       { id: 'joints', text: 'Yon tekislikdagi harakat — son ichki mushaklari va tos-son bo‘g‘imi harakatchanligi.' },
       { id: 'balance', text: 'Yonga yurish va burilishlarda barqarorlik.' },
     ],
-    anim: A.bodyweightSquat(),
+    anim: lateralLungeAnim(),
   },
   {
     id: 'jump-squat',
@@ -490,7 +609,7 @@ const ALL_EXTRA: Exercise[] = [
       { id: 'heart', text: 'Yurak urishini tez oshiradi — qisqa intervalli mashg‘ulotlar uchun.' },
       { id: 'bone', text: 'Sakrash suyak zichligini oshiradi.' },
     ],
-    anim: A.bodyweightSquat(),
+    anim: jumpSquatAnim(),
   },
 ];
 

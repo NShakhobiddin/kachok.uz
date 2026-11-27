@@ -232,9 +232,13 @@ export function solveFront(p: FrontPose, cx: number, floorY: number): FrontSkele
   const standingHip = floorY - 6 - FL.sh - FL.th;
   const hipY = p.hipY ?? standingHip;
   const shrug = p.shrug ?? 0;
-  const shoulderY = hipY - FL.torso - shrug * 0.3;
+  // engashganda gavda kameraga qarab qisqaradi; bosh yelkalar ortida pastroq ko‘rinadi
+  const lk = Math.cos(rad(p.lean ?? 0));
+  const torsoLen = FL.torso * lk;
+  cx = cx + (p.shift ?? 0);
+  const shoulderY = hipY - torsoLen - shrug * 0.3;
   const shoulderYArm = shoulderY - shrug;
-  const head: Pt = { x: cx, y: hipY - FL.torso - FL.neck - FL.headR };
+  const head: Pt = { x: cx, y: hipY - torsoLen - (FL.neck + FL.headR) * Math.max(0.45, lk) };
   const fwd = p.fwd ?? 0;
   const proj = (a: number, side: 1 | -1, f: number): Pt => {
     const d = dir(a);
@@ -250,10 +254,10 @@ export function solveFront(p: FrontPose, cx: number, floorY: number): FrontSkele
     const c = add(b, mul(proj(p.fa, side, fwd), FL.fa));
     return { a, b, c };
   };
-  const th = p.th ?? 180;
-  const sh = p.sh ?? 180;
-  const lf = p.legFwd ?? 0;
   const leg = (side: 1 | -1): SideLimb => {
+    const th = (side === -1 ? p.th2 : undefined) ?? p.th ?? 180;
+    const sh = (side === -1 ? p.sh2 : undefined) ?? p.sh ?? 180;
+    const lf = (side === -1 ? p.legFwd2 : undefined) ?? p.legFwd ?? 0;
     const a = { x: cx + side * FL.hipW, y: hipY };
     const b = add(a, mul(projLeg(th, side, lf), FL.th));
     const c = add(b, mul(projLeg(sh, side, 0), FL.sh));
@@ -363,6 +367,11 @@ export function lerpFront(a: FrontPose, b: FrontPose, t: number): FrontPose {
     shrug: lerpOpt(a.shrug, b.shrug, 0, 0, t),
     legFwd: lerpOpt(a.legFwd, b.legFwd, 0, 0, t),
     hand: lerpPtOpt(a.hand, b.hand, t),
+    th2: a.th2 === undefined && b.th2 === undefined ? undefined : lerp(a.th2 ?? a.th ?? 180, b.th2 ?? b.th ?? 180, t),
+    sh2: a.sh2 === undefined && b.sh2 === undefined ? undefined : lerp(a.sh2 ?? a.sh ?? 180, b.sh2 ?? b.sh ?? 180, t),
+    legFwd2: a.legFwd2 === undefined && b.legFwd2 === undefined ? undefined : lerp(a.legFwd2 ?? a.legFwd ?? 0, b.legFwd2 ?? b.legFwd ?? 0, t),
+    shift: lerpOpt(a.shift, b.shift, 0, 0, t),
+    lean: lerpOpt(a.lean, b.lean, 0, 0, t),
   };
 }
 

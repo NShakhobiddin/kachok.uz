@@ -168,6 +168,14 @@ export interface FrontPose {
   legFwd?: number;
   /** IK: o‘ng qo‘l shu nuqtaga yetadi (chap tomoni ko‘zgu) */
   hand?: Pt;
+  /** chap oyoq alohida (asimmetrik harakat: yonga hamla); berilmasa — o‘ng oyoqning ko‘zgusi */
+  th2?: number;
+  sh2?: number;
+  legFwd2?: number;
+  /** tos va gavdani yonga surish (px, + = ekranda o‘ngga) */
+  shift?: number;
+  /** gavdani oldinga engashtirish, ° (orqadan/olddan qaraganda gavda qisqarib ko‘rinadi) */
+  lean?: number;
 }
 
 export type PropKind =

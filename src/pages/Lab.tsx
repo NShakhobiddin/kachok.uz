@@ -1,4 +1,5 @@
 import * as A from '../data/anims';
+import { EXERCISE_MAP } from '../data/exercises';
 import { Figure, poseTimes } from '../components/figure/Figure';
 import { Scene } from '../components/Scenes';
 import type { SceneId } from '../data/lessons';
@@ -62,6 +63,10 @@ const LIST: [string, AnimSpec, MuscleId[]][] = [
   ['cableCrunch', A.cableCrunch(), ['abs']],
   ['crunch', A.crunch(), ['abs']],
   ['deadBug', A.deadBug(), ['abs']],
+  // yangi mashqlar — ma’lumotdagi animatsiya bilan
+  ...['farmers-carry', 'nordic-curl', 'lying-leg-curl', 'lateral-lunge', 'db-reverse-fly', 'reverse-pec-deck', 'single-leg-rdl', 'incline-push-up', 'jump-squat'].map(
+    (id) => [id, EXERCISE_MAP[id].anim, EXERCISE_MAP[id].primary] as [string, AnimSpec, MuscleId[]],
+  ),
 ];
 
 const SCENES: SceneId[] = ['balance-deficit', 'balance-surplus', 'tdee', 'fat-cells', 'spot', 'fiber', 'mps', 'stairs', 'dose', 'rir', 'deload', 'plate', 'protein-day', 'trend', 'sleep', 'brace', 'warmup', 'health', 'bone', 'heart', 'brain', 'grades', 'water', 'pain', 'cardio', 'fig:back-squat', 'fig:deadlift'];
@@ -86,6 +91,21 @@ export default function Lab() {
   return (
     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 8, padding: 8, background: 'var(--bg)' }}>
       {items.map(([name, spec, prim]) => {
+        // ?all=1 — har bir kalit kadr alohida (sakrash kabi ko‘p bosqichli harakatlarni tekshirish uchun)
+        if (q.get('all')) {
+          let acc = 0;
+          const ts = spec.frames.map((f) => ((acc += f.dur), acc - f.dur + 1));
+          return (
+            <div key={name} style={{ background: 'var(--stage)', borderRadius: 10, padding: 4, gridColumn: '1 / -1' }}>
+              <div style={{ color: '#fff', font: '12px monospace' }}>{name}</div>
+              <div style={{ display: 'flex' }}>
+                {ts.map((t, i) => (
+                  <Figure key={i} spec={spec} primary={prim} at={t} className="lab-fig" />
+                ))}
+              </div>
+            </div>
+          );
+        }
         const [t0, t1] = poseTimes(spec);
         return (
           <div key={name} style={{ background: 'var(--stage)', borderRadius: 10, padding: 4 }}>
