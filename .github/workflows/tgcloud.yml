@@ -74,7 +74,8 @@ jobs:
       # sinov foydalanuvchisi tekshiruv yiqilsa ham o'chiriladi
       - name: Sinov ma'lumotini tozalash
         if: always() && steps.token.outputs.ok == 'true'
-        run: npx tgcloud run endpoints/accountDelete '{}' --ctx '{ initData: { user: { id: 1, first_name: "CI" } } }'
+        run: |
+          npx tgcloud run endpoints/accountDelete '{}' --ctx '{ initData: { user: { id: 1, first_name: "CI" } } }'
       # bir martalik endpoint: faqat `run` bilan ishlaydi, deploy qilinmaydi
       - name: Bot sozlamalari (menyu tugmasi, tavsif, /start)
         if: steps.token.outputs.ok == 'true'
