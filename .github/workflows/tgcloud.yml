@@ -53,12 +53,14 @@ jobs:
           VITE_BASE: /
           VITE_TGCLOUD: '1'
           VITE_TG_BOT: ${{ vars.TG_BOT || 'gym_bosbot' }}
-      - name: Joylash va baza migratsiyasi
+      # avval baza sxemasi (--local: joylashtirilgani emas, repodagi schema bilan solishtiriladi), keyin kod:
+      # yangi kod yangi ustunlarni o'qiydi — aksincha bo'lsa migratsiya tugaguncha endpointlar xato beradi
+      - name: Baza migratsiyasi va joylash
         if: steps.token.outputs.ok == 'true'
         run: |
           mkdir -p .tgcloud
+          npx tgcloud migrate --safe --local
           npx tgcloud push --force
-          npx tgcloud migrate --safe
       # haqiqiy platformada: sxema, SQL va Bot API ishlaydimi (sinov foydalanuvchisi oxirida o'chiriladi)
       - name: Tekshiruv (smoke)
         if: steps.token.outputs.ok == 'true'
@@ -69,7 +71,10 @@ jobs:
           npx tgcloud run endpoints/feed '{}' --ctx "$ctx"
           npx tgcloud run endpoints/register '{}' --ctx "$ctx"
           npx tgcloud run endpoints/sync "{ since: 0, changes: [{ kind: 'meta', id: 'state', data: { ci: 1 }, updatedAt: 1 }] }" --ctx "$ctx"
-          npx tgcloud run endpoints/accountDelete '{}' --ctx "$ctx"
+      # sinov foydalanuvchisi tekshiruv yiqilsa ham o'chiriladi
+      - name: Sinov ma'lumotini tozalash
+        if: always() && steps.token.outputs.ok == 'true'
+        run: npx tgcloud run endpoints/accountDelete '{}' --ctx '{ initData: { user: { id: 1, first_name: "CI" } } }'
       # bir martalik endpoint: faqat `run` bilan ishlaydi, deploy qilinmaydi
       - name: Bot sozlamalari (menyu tugmasi, tavsif, /start)
         if: steps.token.outputs.ok == 'true'

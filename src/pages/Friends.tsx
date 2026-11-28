@@ -3,7 +3,6 @@ import { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ApiError, apiEnabled } from '../api/client';
 import {
-  acceptPendingFriend,
   addFriend,
   botLink,
   canTelegramLogin,
@@ -96,7 +95,7 @@ function SignIn() {
       {pending && (
         <div className="notice good small">
           <Icon name="users" size={18} />
-          <span>Sizni do‘stingiz taklif qildi — kirganingizdan keyin avtomatik qo‘shiladi.</span>
+          <span>Sizni do‘stingiz taklif qildi — kirganingizdan keyin tasdiqlab qo‘shasiz.</span>
         </div>
       )}
       <div className="card stack gap-12">
@@ -154,7 +153,7 @@ function Feed() {
   const load = useCallback(async () => {
     setErr(null);
     try {
-      await acceptPendingFriend();
+      // taklif avtomatik qabul qilinmaydi — ilova so'raydi (AppNotices); qo'shilgan bo'lsa ismi shu yerda ko'rsatiladi
       const name = takeAddedFriend();
       if (name) setAdded(name);
       // bittasi ishlamasa ham qolganlari ko'rinsin (masalan, lenta yuklanmasa ham kod va do'stlar)

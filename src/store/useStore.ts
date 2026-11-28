@@ -1,6 +1,6 @@
 // Ilova holati: qurilmada saqlanadi (offline). Har bir set darhol saqlanadi — ma’lumot yo‘qolmaydi.
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { createJSONStorage, persist } from 'zustand/middleware';
 import { exById } from '../data/exercises';
 import { estimateMinutes, generateProgram, manualPlanned, suggestExtra, swapPlanned, weeklyVolume } from '../engine/program';
 import { mesoPerWeek, mesoState, setChange, type MuscleFeedback } from '../engine/meso';
@@ -11,6 +11,7 @@ import type { BodyEntry, ExerciseLog, FoodEntry, MuscleGroup, PlannedExercise, P
 import { MUSCLES, mrvAt } from '../data/catalog';
 import type { PR } from '../engine/stats';
 import { DEFAULT_SETTINGS, sanitizeData } from './sanitize';
+import { memoryOnly, memoryStorage, STATE_KEY } from '../lib/tgStorage';
 
 export interface FinishFeedback {
   muscles: Partial<Record<MuscleGroup, MuscleFeedback>>;
@@ -291,6 +292,41 @@ function mapDay(program: Program | null, dayId: string, fn: (d: WorkoutDay) => W
   };
 }
 
+/** Saqlangan faol mashg'ulot: katalogda yo'q mashqlar (yangilanishda o'chirilgan) olib tashlanadi — mashg'ulot sahifasi yiqilmasin */
+function cleanActive(a: State['active'] | undefined): State['active'] {
+  if (!a || !a.log || !Array.isArray(a.log.exercises) || !Array.isArray(a.plan)) return a ?? null;
+  const keepEx = a.log.exercises.filter((e) => !!exById(e.exerciseId));
+  const keepPlan = a.plan.filter((pe) => !!exById(pe.exerciseId));
+  if (keepEx.length === a.log.exercises.length && keepPlan.length === a.plan.length) return a;
+  if (!keepEx.length) return null;
+  return { ...a, plan: keepPlan, log: { ...a.log, exercises: keepEx }, index: Math.min(a.index, keepEx.length - 1) };
+}
+
+/** localStorage: joy tugasa amal xato bermaydi — ilova ogohlantiradi (App: StorageWarning), qolgan holat ishlayveradi */
+const safeLocal = {
+  getItem: (k: string) => {
+    try {
+      return localStorage.getItem(k);
+    } catch {
+      return null;
+    }
+  },
+  setItem: (k: string, v: string) => {
+    try {
+      localStorage.setItem(k, v);
+    } catch {
+      if (typeof window !== 'undefined') window.dispatchEvent(new Event('kachok:storage-full'));
+    }
+  },
+  removeItem: (k: string) => {
+    try {
+      localStorage.removeItem(k);
+    } catch {
+      /* yo'q */
+    }
+  },
+};
+
 export const useStore = create<State>()(
   persist(
     (set, get) => {
@@ -379,7 +415,10 @@ export const useStore = create<State>()(
         syncSchedule(days, program);
       },
 
-      startWorkout: (day, plan, readiness, initialEx, title) => {
+      startWorkout: (day, plan0, readiness, initialEx0, title) => {
+        // katalogda yo'q mashqlar (yangilanishda olib tashlangan) mashg'ulotga kirmaydi — sahifa yiqilmasin
+        const plan = plan0.filter((pe) => !!exById(pe.exerciseId));
+        const initialEx = initialEx0?.filter((e) => !!exById(e.exerciseId));
         const exercises: ExerciseLog[] = initialEx ?? plan.map((pe) => ({ exerciseId: pe.exerciseId, sets: Array.from({ length: pe.sets }, () => ({ kg: 0, reps: 0, done: false })) }));
         set({
           active: {
@@ -410,8 +449,9 @@ export const useStore = create<State>()(
         if (!a) return;
         const exercises = a.log.exercises.map((e, i) => {
           if (i !== exIdx) return e;
-          const last = e.sets[e.sets.length - 1];
-          return { ...e, sets: [...e.sets, { kg: last?.kg ?? 0, reps: last?.reps ?? 0, done: false, ...(last?.kgSet ? { kgSet: true } : {}), ...s }] };
+          // yangi set bo'sh: oldingi qiymatlar ko'chirilsa, bajarilmagan set ham «to'ldirilgan» deb saqlanardi;
+          // vazn va takror maydonlarda kulrang taklif sifatida ko'rinadi, set belgilanganda o'sha qiymat olinadi
+          return { ...e, sets: [...e.sets, { kg: 0, reps: 0, done: false, ...s }] };
         });
         set({ active: { ...a, log: { ...a.log, exercises } } });
       },
@@ -617,7 +657,10 @@ export const useStore = create<State>()(
         const { sync, account } = get();
         if (!a) return set({ account: null, sync: { ...sync, uid: sync.uid ?? account?.user.id, status: 'idle', error: undefined } });
         const same = !sync.uid || sync.uid === a.user.id;
-        set({ account: a, sync: same ? { ...sync, uid: a.user.id } : { ...INITIAL_SYNC, uid: a.user.id } });
+        if (same) return set({ account: a, sync: { ...sync, uid: a.user.id } });
+        // boshqa akkaunt: oldingi egasining (telefonda qoldirilgan) ma'lumoti yangi akkauntga yuborilmasin — qurilma tozalanadi,
+        // yangi egasining ma'lumoti bulutdan keladi (oldingisiniki uning bulutida saqlangan)
+        set({ ...initial, account: a, sync: { ...INITIAL_SYNC, uid: a.user.id } });
       },
       // Telegram akkaunti: boshqa Telegram foydalanuvchisi — sinxron holati boshidan
       setCloud: (c) => {
@@ -669,12 +712,16 @@ export const useStore = create<State>()(
     };
     },
     {
-      name: 'kachok-v1',
+      name: STATE_KEY,
       version: 1,
+      // umumiy telefonda joy yetmasa (tgStorage) — faqat xotirada; aks holda joy tugashi amallarni buzmaydigan localStorage
+      storage: createJSONStorage(() => (memoryOnly ? memoryStorage : safeLocal)),
+      // kelajakda versiya oshirilsa ma'lumot yo'qolmasin: hozircha o'zgarishsiz o'tkaziladi
+      migrate: (persisted) => persisted as State,
       // eski versiyada saqlangan haddan tashqari tuzatish chegaraga keltiriladi
       merge: (persisted, current) => {
         const p = (persisted ?? {}) as Partial<State>;
-        return { ...current, ...p, kcalAdjust: clampKcalAdjust(typeof p.kcalAdjust === 'number' ? p.kcalAdjust : 0) };
+        return { ...current, ...p, active: cleanActive(p.active), kcalAdjust: clampKcalAdjust(typeof p.kcalAdjust === 'number' ? p.kcalAdjust : 0) };
       },
       partialize: (s) => {
         const { lastPRs: _ignored, ...rest } = s;
@@ -684,6 +731,12 @@ export const useStore = create<State>()(
     },
   ),
 );
+
+// ilova ikki oynada ochilgan bo'lsa: boshqa oynada saqlangan holat shu yerga olinadi (eski holat uni bosib ketmasin)
+if (typeof window !== 'undefined' && !memoryOnly)
+  window.addEventListener('storage', (e) => {
+    if (e.key === STATE_KEY && e.newValue) void useStore.persist.rehydrate();
+  });
 
 export function exportData(): string {
   const s = useStore.getState();

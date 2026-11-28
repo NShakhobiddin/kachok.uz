@@ -329,6 +329,12 @@ function suggestLinear(ex: Exercise, pe: PlannedExercise, hist: History, ctx: Su
       out.kg = roundLoad(ex, top * 0.9, bar);
       out.kind = 'down';
       out.reason = 'Ikki marta ketma-ket yetmadi — vazn 10% ga tushirildi (reset). 2–3 mashg‘ulotda yana o‘tib ketasiz.';
+      // eng yengil yukda (bo'sh grif, eng yengil gantel) kamaytirib bo'lmaydi — «kamaytirildi» deb aldamaymiz
+      if (out.kg >= top) {
+        out.kg = top;
+        out.kind = 'same';
+        out.reason = `Bu eng yengil yuk (${fmtKg(top)} kg) — kamaytirib bo‘lmaydi. Texnikaga e’tibor bering; qiyin bo‘lsa, yengilroq grif yoki gantel bilan bajaring.`;
+      }
     } else {
       out.kg = top;
       out.kind = 'same';
@@ -429,6 +435,11 @@ export function suggest(ex: Exercise, pe: PlannedExercise, logs: WorkoutLog[], c
       out.reps = pe.repMin;
       out.kind = 'down';
       out.reason = 'Ikki marta ketma-ket takrorlar yetmadi — vazn 10% kamaytirildi. Bu orqaga qadam emas, sakrash uchun tayyorgarlik.';
+      if (out.kg >= w) {
+        out.kg = w;
+        out.kind = 'same';
+        out.reason = `Bu eng yengil yuk (${fmtKg(w)} kg) — kamaytirib bo‘lmaydi. ${pe.repMin} ${unit}ga yetishga harakat qiling yoki yengilroq variantni tanlang.`;
+      }
     } else if (anyMiss) {
       out.kg = w;
       out.reps = pe.repMin;
@@ -436,10 +447,12 @@ export function suggest(ex: Exercise, pe: PlannedExercise, logs: WorkoutLog[], c
       out.reason = `Shu vaznda qoling va ${pe.repMin} takrorga yeting.`;
       capLone(ex, last, pe.repMin, rir, out, w, bar);
     } else {
+      // vaqtli mashq (masalan, fermer yurishi): qadam — 5 soniya, takror emas
+      const stepR = ex.timed ? 5 : 1;
       out.kg = w;
-      out.reps = Math.min(pe.repMax, minReps + 1);
+      out.reps = Math.min(pe.repMax, minReps + stepR);
       out.kind = 'reps';
-      out.reason = `Vazn o‘sha — har setda +1 takror (maqsad ${pe.repMax}). Shunda keyingi safar vazn oshadi.`;
+      out.reason = `Vazn o‘sha — har setda +${stepR} ${unit} (maqsad ${pe.repMax}). Shunda keyingi safar vazn oshadi.`;
     }
   }
 
@@ -448,7 +461,8 @@ export function suggest(ex: Exercise, pe: PlannedExercise, logs: WorkoutLog[], c
   // 1RM: o'tgan mashg'ulot asosiy, lekin u "yomon kun" bo'lsa (o'rtachadan past) oxirgi 1–3 mashg'ulot EMA si olinadi
   const lastSession = last ? sessionE1rm(last.sets) : null;
   const lastE1 = lastSession ? Math.max(lastSession, refE1rm(hist.map((h) => h.sets)) ?? 0) : null;
-  if (!linear && last && lastE1 && !bodyweight && ex.loadType !== 'band' && out.kg) {
+  // vaqtli mashqlarda soniya takror emas; o'z vazni + qo'shimcha yukda (tortilish, bruslar) jadval umumiy yuk uchun — bu yerda ishlatilmaydi
+  if (!linear && last && lastE1 && !bodyweight && ex.loadType !== 'band' && ex.loadType !== 'bodyweight' && !ex.timed && out.kg) {
     const best = last.sets.filter((x) => x.rir !== undefined).reduce((a, b) => (e1rmFromSet(b.kg, b.reps, b.rir) > e1rmFromSet(a.kg, a.reps, a.rir) ? b : a));
     // ±5% chegara — bitta og'ir setdan emas, ishchi vazndan
     const prevTop = workingWeight(last.sets, pe.repMin);

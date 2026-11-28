@@ -60,7 +60,7 @@ export async function telegramLogin() {
   }
   await syncNow().catch(() => null);
   await refreshMe().catch(() => null);
-  await acceptPendingFriend();
+  // do'stlik taklifi avtomatik qabul qilinmaydi — ilova so'raydi (AppNotices: FriendInvitePrompt)
   return r;
 }
 
@@ -144,6 +144,14 @@ export function capturePendingFriend() {
     const start = (telegram() as unknown as { initDataUnsafe?: { start_param?: string } } | undefined)?.initDataUnsafe?.start_param;
     const code = fromUrl ?? (start?.startsWith('f_') ? start.slice(2) : null);
     if (code && /^[A-Za-z0-9]{6,12}$/.test(code)) localStorage.setItem(PENDING_KEY, code.toUpperCase());
+  } catch {
+    /* localStorage yo'q */
+  }
+}
+/** Taklifni rad etish — kod unutiladi */
+export function declinePendingFriend() {
+  try {
+    localStorage.removeItem(PENDING_KEY);
   } catch {
     /* localStorage yo'q */
   }

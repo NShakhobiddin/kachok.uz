@@ -19,13 +19,17 @@ export const serverless = () => TGCLOUD && !!sls() && tgInitData().length > 0;
 /** Endpoint chaqiruvi (tgcloud/endpoints/<name>.js); xato — ApiError (EndpointError matni foydalanuvchiga) */
 export function scall<T>(name: string, input: object = {}): Promise<T> {
   return new Promise((resolve, reject) => {
+    // javob kelmasa — 30 soniyada xato (sinxron «syncing» holatida osilib qolmasin)
+    const timer = setTimeout(() => reject(new ApiError(0, 'timeout', 'Server javob bermadi — birozdan keyin qayta urinib ko‘ring')), 30_000);
     try {
       sls()!.call(name, input, (err, result) => {
+        clearTimeout(timer);
         if (!err) return resolve(result as T);
         const mine = err.type === 'ENDPOINT_ERROR';
         reject(new ApiError(err.status ?? 0, err.parameters?.code ?? err.type ?? 'error', mine ? err.message : err.status ? 'Server xatosi — birozdan keyin qayta urinib ko‘ring' : 'Internet bilan bog‘lanib bo‘lmadi'));
       });
     } catch {
+      clearTimeout(timer);
       reject(new ApiError(0, 'no_telegram', 'Ilovani Telegram ichida oching'));
     }
   });

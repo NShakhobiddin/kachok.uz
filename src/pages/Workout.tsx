@@ -125,6 +125,8 @@ export default function Workout() {
     if (!active || !profile) return [];
     return active.plan.map((pe) => {
       const ex = EXERCISE_MAP[pe.exerciseId];
+      // katalogda yo'q mashq (yangilanishda olib tashlangan) — sahifa yiqilmasin
+      if (!ex) return { kg: null, reps: pe.repMin, sets: pe.sets, rir: pe.rir, kind: 'first', reason: '', warmups: [] } as Suggestion;
       // setlar soni mashg'ulot boshlanganda belgilangan (active.plan) — bu yerda faqat vazn va RIR
       const ctx = { bodyKg: profile.weightKg, sex: profile.sex, level: profile.level, ...mesoCtx(meso, program), readiness: active.readiness, barKg: settings.barKg, equipment: profile.equipment };
       return { ...suggest(ex, pe, logs, ctx), sets: pe.sets };
@@ -217,6 +219,8 @@ export default function Workout() {
     setPainOpen(false);
   };
 
+  /** rejadan tashqari (qo'shilgan) set uchun: oldingi bajarilgan ishchi set */
+  const extraBase = (j: number) => (j >= (pe?.sets ?? Infinity) ? [...exLog.sets.slice(0, j)].reverse().find((x) => x.done && !x.warmup) : undefined);
   const completeSet = async (j: number) => {
     const s = exLog.sets[j];
     if (s.done) {
@@ -225,9 +229,11 @@ export default function Workout() {
       setPrSets((p) => p.filter((k) => k !== `${idx}-${j}`));
       return;
     }
-    // qo'lda kiritilgan 0 kg (yuksiz tortilish) — tavsiya bilan almashtirilmaydi
-    const kg = s.kgSet ? s.kg : s.kg || sug?.kg || 0;
-    const reps = s.reps || sug?.reps || pe?.repMin || 0;
+    // qo'lda kiritilgan 0 kg (yuksiz tortilish) — tavsiya bilan almashtirilmaydi;
+    // «Set qo'shish» bilan qo'shilgan set bo'sh: belgilanganda oldingi ishchi set qiymati olinadi
+    const base = extraBase(j);
+    const kg = s.kgSet ? s.kg : s.kg || base?.kg || sug?.kg || 0;
+    const reps = s.reps || base?.reps || sug?.reps || pe?.repMin || 0;
     // xato yozilgan vazn (80 o'rniga 800) — soxta rekord va keyingi tavsiyalarni buzmasin: avval so'raymiz
     if (kg > 0 && !ex.assisted) {
       const hist = exerciseHistory(ex.id, logs);
@@ -395,17 +401,17 @@ export default function Workout() {
                     {s.warmup ? 'I' : s.kind === 'drop' ? 'D' : s.kind === 'failure' ? 'Ch' : j + 1 - exLog.sets.slice(0, j).filter((x) => x.warmup).length}
                   </button>
                   <span className="small faint num stack prev-cell" aria-label={prev ? `O‘tgan safar ${fmtKg(prev.kg ?? 0)}×${prev.reps}` : 'O‘tgan natija yo‘q'}>
-                    <span>{prev ? `${fmtKg(prev.kg ?? 0)}×${prev.reps}${prev.rir !== undefined ? ` @${prev.rir}` : ''}` : '—'}</span>
+                    <span>{prev ? `${fmtKg(prev.kg ?? 0)}×${prev.reps}` : '—'}</span>
                     {prSets.includes(`${idx}-${j}`) && s.done ? (
                       <span className="rir-badge" style={{ color: 'var(--yellow)' }}>
                         <Icon name="trophy" size={11} /> rekord
                       </span>
                     ) : (
-                      s.done && s.rir !== undefined && <span className="rir-badge">RIR {s.rir >= 4 ? '4+' : s.rir}</span>
+                      s.done && s.rir !== undefined && <span className="rir-badge">zaxira {s.rir >= 4 ? '4+' : s.rir}</span>
                     )}
                   </span>
-                  <NumCell decimal max={650} label={`${j + 1}-set vazn`} placeholder={sug?.kg ? fmtKg(sug.kg) : '0'} value={s.kg} zero={s.kgSet} onValue={(kg, typed) => st.updateSet(idx, j, { kg, kgSet: typed })} />
-                  <NumCell max={ex.timed ? 3600 : 100} label={`${j + 1}-set takror`} placeholder={String(sug?.reps ?? pe?.repMin ?? '')} value={s.reps} onValue={(reps) => st.updateSet(idx, j, { reps })} />
+                  <NumCell decimal max={650} label={`${j + 1}-set vazn`} placeholder={extraBase(j)?.kg ? fmtKg(extraBase(j)!.kg) : sug?.kg ? fmtKg(sug.kg) : '0'} value={s.kg} zero={s.kgSet} onValue={(kg, typed) => st.updateSet(idx, j, { kg, kgSet: typed })} />
+                  <NumCell max={ex.timed ? 3600 : 100} label={`${j + 1}-set takror`} placeholder={String(extraBase(j)?.reps || (sug?.reps ?? pe?.repMin ?? ''))} value={s.reps} onValue={(reps) => st.updateSet(idx, j, { reps })} />
                   <button className={`set-check ${s.done ? 'on' : ''}`} onClick={() => completeSet(j)} aria-label={s.done ? 'Bekor qilish' : 'Set bajarildi'} aria-pressed={s.done}>
                     <Icon name="check" size={18} stroke={3} />
                   </button>
@@ -757,8 +763,8 @@ function TargetCard({ ex, sug, repMax, barKg }: { ex: Exercise; sug: Suggestion;
     <div className="card glow stack gap-10 target-card">
       <div className="row between">
         <span className="eyebrow accent">Bugungi maqsad</span>
-        <span className="tag num">
-          RIR {sug.rir} · {sug.sets} set
+        <span className="tag num" title="Zaxira — set oxirida yana nechta takror qila olishingiz kerak (RIR)">
+          {sug.sets} yondashuv · zaxira {sug.rir}
         </span>
       </div>
       <div className="row gap-8" style={{ alignItems: 'baseline' }}>

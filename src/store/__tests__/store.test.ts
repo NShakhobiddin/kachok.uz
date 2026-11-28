@@ -289,3 +289,31 @@ describe('dastur', () => {
     expect(new Set(days.map((d) => d.weekday)).size).toBe(days.length);
   });
 });
+
+describe('2026-11-28 to‘liq audit (store)', () => {
+  it('«Set qo‘shish» bo‘sh set yaratadi — bajarilmagan set to‘ldirilgan deb saqlanmaydi', () => {
+    const day = S().program!.days[0];
+    S().startWorkout(day, day.exercises);
+    S().updateSet(0, 0, { kg: 40, reps: 8, done: true });
+    S().addSet(0);
+    const sets = S().active!.log.exercises[0].sets;
+    expect(sets[sets.length - 1]).toMatchObject({ kg: 0, reps: 0, done: false });
+  });
+
+  it('katalogda yo‘q mashq mashg‘ulotga kirmaydi (sahifa yiqilmasin)', () => {
+    const day = S().program!.days[0];
+    S().startWorkout(day, [...day.exercises, { exerciseId: 'olib-tashlangan-mashq', sets: 3, repMin: 8, repMax: 12, rir: 2, restSec: 90 }]);
+    const ids = S().active!.log.exercises.map((e) => e.exerciseId);
+    expect(ids).not.toContain('olib-tashlangan-mashq');
+    expect(S().active!.plan.length).toBe(ids.length);
+  });
+
+  it('boshqa akkauntga kirilganda oldingi egasining ma’lumoti qurilmada qolmaydi (yangi akkauntga yuborilmaydi)', () => {
+    S().setAccount(acc);
+    S().setAccount(null);
+    S().setAccount({ ...acc, user: { ...acc.user, id: 'boshqa' } });
+    expect(S().profile).toBeNull();
+    expect(S().logs).toEqual([]);
+    expect(S().sync.uid).toBe('boshqa');
+  });
+});

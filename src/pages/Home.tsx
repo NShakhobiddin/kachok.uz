@@ -30,7 +30,7 @@ import { useStore } from '../store/useStore';
 import type { PlannedExercise, WorkoutDay } from '../types';
 
 const READY = [
-  { v: 1.8, label: 'Charchagan', hint: 'set va vazn biroz kamayadi', icon: 'moon' },
+  { v: 1.8, label: 'Charchagan', hint: 'yondashuv va vazn biroz kamayadi', icon: 'moon' },
   { v: 3.2, label: 'Odatdagidek', hint: 'reja bo‘yicha', icon: 'balance' },
   { v: 4.6, label: 'Zo‘r', hint: 'to‘liq kuch bilan', icon: 'bolt' },
 ];
@@ -65,6 +65,7 @@ export default function Home() {
   const t = useToday();
   const { np, eatenToday } = useNutrition();
   const waterMl = useStore((s) => s.water[t.dateKey] ?? 0);
+  const stretchDone = useStore((s) => s.stretchLog[t.dateKey] ?? 0);
 
   // qaysi kun ochiq: havoladan (?day=), bugun mashg'ulot bo'lsa — bugun, bo'lmasa o'tkazib yuborilgani, aks holda bugun
   const [sel, setSel] = useState<number>(() => {
@@ -74,6 +75,12 @@ export default function Home() {
     if (t.missed && !t.trainedToday) return t.missed.weekday;
     return t.today;
   });
+  // ilova ochiq qolib sana almashsa (yarim tun) — tanlangan kun yangi «bugun»ga qaytadi (havolada ?day= bo'lmasa)
+  const [selFor, setSelFor] = useState(t.dateKey);
+  if (selFor !== t.dateKey) {
+    setSelFor(t.dateKey);
+    if (params.get('day') === null) setSel(t.todayDay ? t.today : t.missed && !t.trainedToday ? t.missed.weekday : t.today);
+  }
   const day = t.days.find((d) => d.weekday === sel) ?? null;
   const plan = useDayPlan(day);
   const sugOf = useMemo(() => new Map(plan.map((x) => [x.pe, x.sug])), [plan]);
@@ -201,7 +208,9 @@ export default function Home() {
         ? `Salom${profile.name ? ', ' + profile.name : ''}! ${isToday ? 'Bugun' : DAYS[sel]} ${title.toLowerCase()} mashqi: ${day!.exercises.length} ta mashq, taxminan ${estMin} daqiqa.${first ? ` Birinchisi — ${first.name}.` : ''} Boshlash uchun katta yashil tugmani bosing.`
         : mode === 'done' || mode === 'trained'
           ? 'Barakalla! Bugungi mashq bajarildi. Endi suv iching, oqsilli ovqat yeng va kechqurun cho‘ziling.'
-          : `Bugun dam olish kuni. Mushaklar dam olganda o‘sadi. Xohlasangiz, ${stretchMin} daqiqalik yengil cho‘zilish qiling.${nextText ? ` ${nextText}.` : ''}`;
+          : !isToday
+            ? `${DAYS[sel]} — dam olish kuni. Bugungi kunga qaytish uchun tugmani bosing.`
+            : `Bugun dam olish kuni. Mushaklar dam olganda o‘sadi. Xohlasangiz, ${stretchMin} daqiqalik yengil cho‘zilish qiling.${nextText ? ` ${nextText}.` : ''}`;
 
   // tezkor ishlar
   const waterGoal = Math.round((np.waterL + (t.todayDay ? np.waterTrainingL : 0)) * 1000);
@@ -244,7 +253,7 @@ export default function Home() {
             : mode === 'done'
               ? '✓ Bajarildi'
               : mode === 'rest'
-                ? 'Dam olish kuni'
+                ? isToday ? 'Dam olish kuni' : DAYS[sel]
                 : mode === 'trained'
                   ? '✓ Bugun mashq qildingiz'
                   : isToday
@@ -254,14 +263,20 @@ export default function Home() {
         <div className="h3-in">
           {mode === 'rest' || mode === 'trained' ? (
             <>
-              <h2 className="h3-title">{mode === 'trained' || (isToday && t.trainedToday) ? 'Barakalla! Endi tiklanish' : 'Bugun mushaklar tiklanadi'}</h2>
+              <h2 className="h3-title">{!isToday ? `${DAYS[sel]} — dam olish kuni` : mode === 'trained' || t.trainedToday ? 'Barakalla! Endi tiklanish' : 'Bugun mushaklar tiklanadi'}</h2>
               <p className="h3-meta">
                 <Icon name="spine" size={18} /> Yengil cho‘zilish · {stretchMin} daqiqa
               </p>
               <div ref={heroBtn}>
-                <Link to={`/stretch/${stretchId}`} className="btn btn-xl btn-block h3-go calm">
-                  <Icon name="play" size={20} /> CHO‘ZILISH
-                </Link>
+                {isToday ? (
+                  <Link to={`/stretch/${stretchId}`} className="btn btn-xl btn-block h3-go calm">
+                    <Icon name="play" size={20} /> CHO‘ZILISH
+                  </Link>
+                ) : (
+                  <button className="btn btn-secondary btn-xl btn-block h3-go" onClick={() => pickDay(t.today)}>
+                    Bugungi kunga qaytish
+                  </button>
+                )}
               </div>
               <p className="h3-alt">
                 {nextText && <>{nextText} · </>}
@@ -317,7 +332,7 @@ export default function Home() {
               {mode === 'active' && staleHours >= 6 && (
                 <div className="stack gap-8 mt-12">
                   <span className="small">
-                    <b>{staleHours} soatdan beri ochiq.</b> {activeDone ? 'Yakunlashni unutdingizmi? Bajarilgan setlar saqlanadi.' : 'Hech bir set belgilanmagan — saqlanadigan natija yo‘q.'}
+                    <b>{staleHours} soatdan beri ochiq.</b> {activeDone ? 'Yakunlashni unutdingizmi? Bajarilgan yondashuvlar saqlanadi.' : 'Hech bir yondashuv belgilanmagan — saqlanadigan natija yo‘q.'}
                   </span>
                   <div className="row gap-8">
                     {activeDone > 0 && (
@@ -365,9 +380,9 @@ export default function Home() {
           </span>
         </Link>
         <Link to={`/stretch/${stretchId}`} className="h3-q">
-          <Ring value={0} color="#c9a7ff" icon="spine" />
+          <Ring value={stretchMin ? stretchDone / stretchMin : 0} color="#c9a7ff" icon="spine" />
           <b>Cho‘zilish</b>
-          <span className="num">{stretchMin} daqiqa</span>
+          <span className="num">{stretchDone > 0 ? `${Math.round(stretchDone)} / ${stretchMin} daq` : `${stretchMin} daqiqa`}</span>
         </Link>
       </div>
 
@@ -390,7 +405,7 @@ export default function Home() {
             <div className="stack" style={{ gap: 2 }}>
               <b>{day.exercises.length} ta mashq</b>
               <span className="tiny muted num">
-                ~{estMin} daqiqa · {totalSets} set
+                ~{estMin} daqiqa · {totalSets} yondashuv
               </span>
             </div>
             <div className="count-step" role="group" aria-label="Mashqlar soni">
@@ -521,7 +536,7 @@ export default function Home() {
       {/* tayyorlik — boshlashdan oldin bitta savol */}
       <Sheet open={askReady} onClose={() => setAskReady(false)} label="Tayyorlik">
         <h3 className="title">Bugun o‘zingizni qanday his qilyapsiz?</h3>
-        <p className="small muted mt-4">Javobingizga qarab set va vazn moslanadi.</p>
+        <p className="small muted mt-4">Javobingizga qarab yondashuvlar soni va vazn moslanadi.</p>
         <div className="stack gap-8 mt-16">
           {READY.map((o) => (
             <button

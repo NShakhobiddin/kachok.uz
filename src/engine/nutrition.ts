@@ -155,7 +155,7 @@ export function nutritionPlan(p: Profile, kcalAdjust = 0, tdeeOverride?: number)
 
   if (p.goal === 'muscle') notes.push('Haftasiga vaznning ~0.25–0.5% qo‘shilishi — asosan mushak, kam yog‘.');
   if (p.goal === 'fatLoss') notes.push('Haftasiga vaznning ~0.5–0.7% kamayishi — mushakni saqlagan holda yog‘ yo‘qotish uchun optimal.');
-  if (refW < p.weightKg) notes.push('Oqsil miqdori sog‘lom vazn (BMI 25) bo‘yicha hisoblandi.');
+  if (refW < p.weightKg) notes.push(`Oqsil miqdori umumiy vazn emas, mo‘ljal vazn (~${Math.round(refW)} kg) bo‘yicha hisoblandi.`);
 
   return {
     bmr: Math.round(b),

@@ -605,3 +605,42 @@ describe('2026-11-27 murabbiy auditi', () => {
     expect(EXERCISE_MAP['cable-overhead-extension'].avoid).toContain('shoulder');
   });
 });
+
+describe('2026-11-28 to‘liq audit', () => {
+  it('jihozsiz dasturda bo‘sh kun yo‘q (tortish kuni ham mashqli)', () => {
+    for (const d of [3, 4, 5, 6]) {
+      const pr = generateProgram(prof({ equipment: [], daysPerWeek: d, trainingDays: DEFAULT_DAYS[d] }));
+      for (const day of pr.days) expect(day.exercises.length, `${d} kun · ${day.title}`).toBeGreaterThan(0);
+    }
+  });
+
+  it('sog‘liq so‘rovnomasida belgi bo‘lsa ham A/B navbati almashadi (toq hafta — B kuni birinchi)', () => {
+    const pr = generateProgram(prof({ level: 'beginner', goal: 'strength', daysPerWeek: 3, trainingDays: DEFAULT_DAYS[3], healthFlags: ['bp'] }));
+    expect(pr.method).toBe('linear');
+    const odd = rotateLinear(pr, pr.days[0], 1);
+    expect(odd.exercises.map((e) => e.exerciseId)).toEqual(pr.days[1].exercises.map((e) => e.exerciseId));
+  });
+
+  it('chiziqli dasturda ham ustuvor mushak hisobga olinadi', () => {
+    const p = { level: 'beginner' as Level, goal: 'muscle' as Goal, daysPerWeek: 3, trainingDays: DEFAULT_DAYS[3] };
+    const plain = weeklyVolume(generateProgram(prof(p)));
+    const focused = weeklyVolume(generateProgram(prof({ ...p, focus: ['glutes'] })));
+    expect(focused.glutes).toBeGreaterThan(plain.glutes);
+  });
+
+  it('eng yengil yukda (bo‘sh grif) «10% kamaytirildi» deyilmaydi', () => {
+    const pe: PlannedExercise = { exerciseId: 'ohp', sets: 3, repMin: 8, repMax: 12, rir: 2, restSec: 120 };
+    const miss = [{ kg: 20, reps: 5 }, { kg: 20, reps: 5 }, { kg: 20, reps: 4 }];
+    const s = suggest(EXERCISE_MAP['ohp'], pe, [wlog('b', '2026-11-23', 'ohp', miss), wlog('a', '2026-11-20', 'ohp', miss)], { ...ctx, barKg: 20 });
+    expect(s.kg).toBe(20);
+    expect(s.kind).not.toBe('down');
+  });
+
+  it('vaqtli og‘irlikli mashq (fermer yurishi): qadam 5 soniya, avtoregulyatsiya «takror» deb hisoblamaydi', () => {
+    const pe: PlannedExercise = { exerciseId: 'farmers-carry', sets: 3, repMin: 30, repMax: 60, rir: 2, restSec: 90 };
+    const s = suggest(EXERCISE_MAP['farmers-carry'], pe, [wlog('a', '2026-11-20', 'farmers-carry', [{ kg: 24, reps: 45, rir: 1 }, { kg: 24, reps: 45, rir: 1 }])], ctx);
+    expect(s.kg).toBe(24);
+    expect(s.reps).toBe(50);
+    expect(s.auto).toBeFalsy();
+  });
+});

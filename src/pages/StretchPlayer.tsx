@@ -79,14 +79,29 @@ export default function StretchPlayer() {
   }, [phase, paused, advance]);
 
   // ekran o'chib qolmasin
+  // sahifadan chiqilgach so'rov kech javob bersa ham qulf qo'yib yuboriladi; ilovaga qaytilganda qayta olinadi
   useEffect(() => {
-    let lock: { release: () => Promise<void> } | null = null;
-    const nav = navigator as Navigator & { wakeLock?: { request: (t: 'screen') => Promise<{ release: () => Promise<void> }> } };
-    nav.wakeLock
-      ?.request('screen')
-      .then((l) => (lock = l))
-      .catch(() => {});
-    return () => void lock?.release().catch(() => {});
+    type Lock = { release: () => Promise<void>; released?: boolean };
+    const wl = (navigator as unknown as { wakeLock?: { request: (t: 'screen') => Promise<Lock> } }).wakeLock;
+    if (!wl) return;
+    let lock: Lock | null = null;
+    let alive = true;
+    const acquire = () => {
+      if (document.visibilityState !== 'visible' || lock?.released === false) return;
+      wl.request('screen')
+        .then((l) => {
+          if (alive) lock = l;
+          else l.release().catch(() => {});
+        })
+        .catch(() => {});
+    };
+    acquire();
+    document.addEventListener('visibilitychange', acquire);
+    return () => {
+      alive = false;
+      document.removeEventListener('visibilitychange', acquire);
+      lock?.release().catch(() => {});
+    };
   }, []);
 
   if (!r || r.kind !== 'stretch' || !steps.length) return <NotFound text="Cho‘zilish topilmadi" />;

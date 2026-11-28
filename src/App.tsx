@@ -3,7 +3,8 @@ import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import { BrowserRouter, MemoryRouter, Navigate, NavLink, Route, Routes, useLocation, useNavigationType } from 'react-router-dom';
 import { bootCloud } from './api/cloud';
 import { serverless, tgUserId } from './api/serverless';
-import { acceptPendingFriend, capturePendingFriend } from './api/social';
+import { capturePendingFriend } from './api/social';
+import { FriendInvitePrompt, StorageWarning } from './components/AppNotices';
 import { startAutoSync } from './api/sync';
 import { Icon } from './components/ui/Icon';
 import { useTelegramBridge } from './lib/telegram';
@@ -161,6 +162,8 @@ function Shell() {
   if (!profile && !NO_PROFILE_OK.some((p) => loc.pathname.startsWith(p))) return <Navigate to="/onboarding" replace />;
   return (
     <div className="app">
+      <StorageWarning />
+      <FriendInvitePrompt />
       <Suspense fallback={<div className="page" />}>
         <Routes>
           <Route path="/" element={<Home />} />
@@ -201,10 +204,9 @@ const Router = import.meta.env.VITE_TARGET === 'artifact' ? MemoryRouter : Brows
 
 export default function App() {
   useEffect(() => startAutoSync(), []);
-  // do'st taklif havolasi bilan ochilgan bo'lsa — kod eslab qolinadi, kirgan bo'lsa darhol qo'shiladi
+  // do'st taklif havolasi bilan ochilgan bo'lsa — kod eslab qolinadi; qo'shishdan oldin so'raladi (FriendInvitePrompt)
   useEffect(() => {
     capturePendingFriend();
-    void acceptPendingFriend();
   }, []);
   return (
     <Router basename={import.meta.env.BASE_URL}>

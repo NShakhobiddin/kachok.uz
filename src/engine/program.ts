@@ -288,11 +288,18 @@ export function candidates(pattern: Pattern, p: Profile): Exercise[] {
   );
 }
 
+/** orqa uchun mashq topilmasa (jihozsiz): o'z vazni bilan bel/orqa mashqi (superman) — tortish kuni bo'sh qolmasin */
+const BACK_PATTERNS: Pattern[] = ['hPull', 'vPull', 'rearDelt', 'traps'];
+
 function pick(slot: Slot, p: Profile, used: Map<string, number>, method: ConcreteMethod = 'hypertrophy'): Exercise | undefined {
   const chain = [slot.pattern, ...(FALLBACK[slot.pattern] ?? [])];
   for (const pat of chain) {
     const list = candidates(pat, p);
     if (list.length) return [...list].sort((a, b) => rank(b, slot.role, p, used, method) - rank(a, slot.role, p, used, method))[0];
+  }
+  if (BACK_PATTERNS.includes(slot.pattern)) {
+    const bw = candidates('core', p).filter((e) => e.primary.includes('lowerBack'));
+    if (bw.length) return [...bw].sort((a, b) => rank(b, slot.role, p, used, method) - rank(a, slot.role, p, used, method))[0];
   }
   return undefined;
 }
@@ -428,8 +435,9 @@ export function generateProgram(p: Profile): Program {
     // O'z taqsimotida bu customDays ichida qilingan
     for (const f of custom ? [] : p.focus) {
       if (tpl.style === 'power') continue;
-      const isUpperDay = /Yuqori|Itarish|Tortish|Butun|Yelka/.test(tpl.title);
-      const isLowerDay = /Pastki|Oyoq|Butun/.test(tpl.title);
+      // «Kuch A/B» (chiziqli dastur) — butun tana kunlari
+      const isUpperDay = /Yuqori|Itarish|Tortish|Butun|Yelka|Kuch/.test(tpl.title);
+      const isLowerDay = /Pastki|Oyoq|Butun|Kuch/.test(tpl.title);
       const fits = UPPER_FOCUS.includes(f) ? isUpperDay : isLowerDay;
       if (!fits) continue;
       const at = slots.findIndex((sl) => sl.pattern === FOCUS_SLOT[f] && sl.role === 'accessory');
@@ -656,11 +664,11 @@ export function rotateLinear(program: Pick<Program, 'method' | 'days'>, day: Wor
   if (program.method !== 'linear' || program.days.length !== 3 || absWeek % 2 === 0) return day;
   const [a, b, a2] = program.days;
   // asosiy (chiziqli sxemadagi) mashqlar bo'yicha: yordamchilar xilma-xillik uchun farq qilishi mumkin
-  const key = (d: WorkoutDay) =>
-    d.exercises
-      .filter((e) => e.scheme === 'linear')
-      .map((e) => e.exerciseId)
-      .join(',');
+  // ehtiyotkor rejimda (sog'liq so'rovnomasi) sxema belgisi olib tashlanadi — unda kunning dastlabki 2 ta asosiy mashqi
+  const key = (d: WorkoutDay) => {
+    const lin = d.exercises.filter((e) => e.scheme === 'linear');
+    return (lin.length ? lin : d.exercises.slice(0, 2)).map((e) => e.exerciseId).join(',');
+  };
   if (!key(a) || key(a) !== key(a2) || key(a) === key(b)) return day;
   const at = program.days.findIndex((d) => d.id === day.id);
   if (at < 0) return day;

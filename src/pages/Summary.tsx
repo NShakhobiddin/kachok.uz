@@ -144,7 +144,7 @@ export default function Summary() {
                 <div className="grow">
                   <div className="strong">{EXERCISE_MAP[p.exerciseId]?.name}</div>
                   <div className="small muted num">
-                    {fmtKg(p.kg)} kg × {p.reps} · {p.kind === 'weight' ? 'eng og‘ir vazn' : `taxminiy 1RM ${fmtKg(p.value)} kg`}
+                    {fmtKg(p.kg)} kg × {p.reps} · {p.kind === 'weight' ? 'eng og‘ir vazn' : `1 martalik maksimum ≈ ${fmtKg(p.value)} kg`}
                   </div>
                 </div>
               </motion.div>

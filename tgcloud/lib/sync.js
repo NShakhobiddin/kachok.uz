@@ -76,9 +76,13 @@ export async function sync(user, input) {
     let count = prepared.length;
     for (const d of rows) {
       if (touched.has(`${d.kind}:${d.doc_id}`)) continue;
+      // o'chirilganlik belgilari (tombstone) son chegarasiga kirmaydi — eski yozuvlarni o'chirish joy bo'shatishi kerak
+      if (Number(d.deleted)) continue;
       count++;
       total += Number(d.size) + ROW_BYTES;
     }
+    // yangi paketdagi o'chirishlar ham hujjat hisoblanmaydi
+    count -= prepared.filter((p) => p.deleted).length;
     const quota = `Bulutdagi joy tugadi (${USER_QUOTA_BYTES / 1024 / 1024} MB). Eski mashg‘ulot yoki ovqat yozuvlarini o‘chirib, qayta urinib ko‘ring.`;
     if (count > MAX_DOCS || (incoming > 0 && total > USER_QUOTA_BYTES)) bad(quota, 'QUOTA');
   }

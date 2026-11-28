@@ -171,7 +171,8 @@ export const ROUTINES: Routine[] = [
     rest: 45,
     items: [
       { id: 'bw-squat', sets: 3, reps: [8, 10] },
-      { id: 'step-up', sets: 2, reps: [8, 10] },
+      // jihozsiz to'plam: gantel va zinapoya talab qiladigan step-up o'rniga — devorga suyanib o'tirish (tizzaga yumshoq izometrik)
+      { id: 'wall-sit', sets: 2, reps: [20, 30] },
       { id: 'glute-bridge', sets: 2, reps: [10, 12] },
       { id: 'side-leg-raise', sets: 2, reps: [12, 15] },
       { id: 'calf-raise', sets: 2, reps: [12, 15] },

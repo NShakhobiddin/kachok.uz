@@ -8,6 +8,12 @@ import { Icon } from './Icon';
  * aks holda Mini App yopilib yoki boshqa sahifaga o'tib ketardi (lib/telegram.ts useTelegramBridge).
  */
 const stack: { close: () => void }[] = [];
+/**
+ * Yopilgan oynaning tarixdagi belgisini olib tashlash bir lahzaga kechiktiriladi: shu orada boshqa oyna ochilsa
+ * (masalan, «⋯» menyusidan «Almashtirish»), u yangi belgi qo'shmaydi — o'sha joyni egallaydi. Aks holda kechikkan
+ * history.back() yangi oynani darhol yopib qo'yardi.
+ */
+let pendingBack: { timer: ReturnType<typeof setTimeout>; token: string } | null = null;
 const subs = new Set<() => void>();
 const emit = () => subs.forEach((f) => f());
 export const sheetStack = {
@@ -72,7 +78,12 @@ export function Sheet({ open, onClose, children, label }: { open: boolean; onClo
     const token = Math.random().toString(36).slice(2);
     let popped = false;
     try {
-      window.history.pushState({ ...window.history.state, sheet: token }, '');
+      if (pendingBack && window.history.state?.sheet === pendingBack.token) {
+        // oldingi oyna hozirgina yopildi — uning tarixdagi joyini shu oyna oladi
+        clearTimeout(pendingBack.timer);
+        pendingBack = null;
+        window.history.replaceState({ ...window.history.state, sheet: token }, '');
+      } else window.history.pushState({ ...window.history.state, sheet: token }, '');
     } catch {
       /* tarix mavjud emas */
     }
@@ -85,15 +96,27 @@ export function Sheet({ open, onClose, children, label }: { open: boolean; onClo
     window.addEventListener('popstate', onPop);
     return () => {
       window.removeEventListener('popstate', onPop);
-      // tugma, fon yoki tortish bilan yopilgan — tarixdagi belgini olib tashlaymiz (boshqa sahifaga o'tilgan bo'lsa — tegmaymiz)
-      if (!popped && window.history.state?.sheet === token) window.history.back();
+      // tugma, fon yoki tortish bilan yopilgan — tarixdagi belgini olib tashlaymiz (boshqa sahifaga o'tilgan bo'lsa — tegmaymiz);
+      // bir lahza kutiladi: shu orada boshqa oyna ochilsa, belgini u egallaydi (yuqoriga qarang)
+      if (!popped && window.history.state?.sheet === token) {
+        if (pendingBack) clearTimeout(pendingBack.timer);
+        pendingBack = {
+          token,
+          timer: setTimeout(() => {
+            pendingBack = null;
+            if (window.history.state?.sheet === token) window.history.back();
+          }, 0),
+        };
+      }
       clearTimeout(t);
       const i = stack.indexOf(entry);
       if (i >= 0) stack.splice(i, 1);
       emit();
       window.removeEventListener('keydown', onKey);
       document.body.style.overflow = prev;
-      before?.focus?.({ preventScroll: true });
+      // fokus avvalgi joyiga — faqat u hech qayerda bo'lmasa (yangi ochilgan maydon, masalan eslatma, fokusni yo'qotmasin)
+      const ae = document.activeElement;
+      if (!ae || ae === document.body || panel.current?.contains(ae)) before?.focus?.({ preventScroll: true });
     };
   }, [open]);
   // body ga portal: sahifa animatsiyasi (opacity) yaratadigan qatlam kontekstida pastki menyu ostida qolmasin

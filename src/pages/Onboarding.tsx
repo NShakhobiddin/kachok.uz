@@ -121,7 +121,9 @@ export default function Onboarding() {
   const canNext = true;
 
   const progress = idx <= 0 ? 0 : Math.min(1, idx / (STEPS.length - 2));
-  const np = useMemo(() => (step === 'done' ? nutritionPlan({ ...p, createdAt: '' }) : null), [step, p]);
+  // yakuniy qadam: saqlangan profildan (sahifa qayta yuklansa qoralama tozalangan bo'ladi — standart raqamlar chiqmasin)
+  const saved = useStore((s) => s.profile);
+  const np = useMemo(() => (step === 'done' ? nutritionPlan(saved ?? { ...p, createdAt: '' }) : null), [step, p, saved]);
   const program = useStore((s) => s.program);
   const hasProfile = useStore((s) => !!s.profile);
 
@@ -241,7 +243,7 @@ export default function Onboarding() {
               </div>
               <div className="field">
                 <label htmlFor="nm">Ismingiz (ixtiyoriy)</label>
-                <input id="nm" className="input" placeholder="Masalan, Aziz" value={p.name} onChange={(e) => up({ name: e.target.value })} autoComplete="given-name" />
+                <input id="nm" className="input" placeholder="Masalan, Aziz" maxLength={40} value={p.name} onChange={(e) => up({ name: e.target.value })} autoComplete="given-name" />
               </div>
               {p.age < 18 && (
                 <div className="notice info">
@@ -345,7 +347,7 @@ export default function Onboarding() {
             <div className="stack gap-16" style={{ flex: 1 }}>
               <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ type: 'spring', damping: 18 }} className="stack gap-8" style={{ marginTop: 24 }}>
                 <span className="eyebrow">Dastur tayyor</span>
-                <h1 className="display display-xl">{p.name ? `${p.name}, boshladik` : 'Boshladik'}</h1>
+                <h1 className="display display-xl">{(saved?.name ?? p.name) ? `${saved?.name ?? p.name}, boshladik` : 'Boshladik'}</h1>
               </motion.div>
               <div className="card stack gap-12">
                 <Row k="Tizim" v={program.split} />

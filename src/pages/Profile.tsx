@@ -82,8 +82,10 @@ export default function Profile() {
         >
           {(profile.name || 'K')[0].toUpperCase()}
         </span>
-        <div>
-          <h1 className="display display-m">{profile.name || 'Sportchi'}</h1>
+        <div style={{ minWidth: 0 }}>
+          <h1 className="display display-m" style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+            {profile.name || 'Sportchi'}
+          </h1>
           <p className="small muted">
             {profile.age} yosh · {profile.heightCm} sm · {profile.weightKg} kg
           </p>
@@ -249,7 +251,7 @@ export default function Profile() {
           {panel === 'body' && (
             <>
               <h3 className="title">Tana ko‘rsatkichlari</h3>
-              <input className="input" placeholder="Ism" value={draft.name} onChange={(e) => setDraft({ ...draft, name: e.target.value })} />
+              <input className="input" placeholder="Ism" maxLength={40} value={draft.name} onChange={(e) => setDraft({ ...draft, name: e.target.value })} />
               <div className="grid-2">
                 <Choice on={draft.sex === 'male'} onClick={() => setDraft({ ...draft, sex: 'male' })} title="Erkak" />
                 <Choice on={draft.sex === 'female'} onClick={() => setDraft({ ...draft, sex: 'female' })} title="Ayol" />
@@ -390,7 +392,7 @@ export default function Profile() {
                   Kunlar soni o‘zgargani uchun dastur yangi jadvalga qayta tuziladi{customSplitOf(profile) ? '; o‘zingiz tanlagan mushaklar taqsimoti ham moslanadi («Haftalik reja» → «Kunlar taqsimoti»)' : ''}.
                 </p>
               ) : (
-                <button className="btn btn-ghost btn-block" onClick={() => save(false)}>
+                <button className="btn btn-ghost btn-block" disabled={panel === 'schedule' && draft.trainingDays.length !== draft.daysPerWeek} onClick={() => save(false)}>
                   Faqat saqlash
                 </button>
               )}

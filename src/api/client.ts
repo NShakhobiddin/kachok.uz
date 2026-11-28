@@ -47,11 +47,15 @@ export async function api<T>(path: string, opts: { method?: string; body?: unkno
   const auth = opts.auth ?? true;
   const send = () => {
     const token = useStore.getState().account?.access;
+    // osilib qolgan so'rov sinxronni butunlay to'xtatib qo'ymasin — 30 soniyada uziladi
+    const ctl = typeof AbortController !== 'undefined' ? new AbortController() : null;
+    const timer = ctl ? setTimeout(() => ctl.abort(), 30_000) : null;
     return fetch(`${BASE}${path}`, {
       method: opts.method ?? (opts.body === undefined ? 'GET' : 'POST'),
       headers: { 'content-type': 'application/json', ...(auth && token ? { authorization: `Bearer ${token}` } : {}) },
       body: opts.body === undefined ? undefined : JSON.stringify(opts.body),
-    });
+      signal: ctl?.signal,
+    }).finally(() => timer && clearTimeout(timer));
   };
   let res: Response;
   try {
@@ -73,8 +77,11 @@ export interface MeResponse {
 
 /** Profil, obuna va murabbiy holatini yangilash */
 export async function refreshMe() {
-  if (!useStore.getState().account) return null;
+  const uid = useStore.getState().account?.user.id;
+  if (!uid) return null;
   const me = await api<MeResponse>('/me');
+  // so'rov davomida akkaunt almashgan bo'lsa — eski foydalanuvchi ma'lumoti yangisiga yozilmaydi
+  if (useStore.getState().account?.user.id !== uid) return null;
   useStore.getState().patchAccount({ user: me.user, entitlements: me.entitlements, coach: me.coach });
   return me;
 }

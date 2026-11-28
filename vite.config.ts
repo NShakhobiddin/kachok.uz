@@ -59,10 +59,11 @@ export default defineConfig({
             options: { cacheName: 'kachok-models', expiration: { maxEntries: 4 } },
           },
           // mashq illyustratsiyalari: ochilganda yuklanadi va keyin internetsiz ham ko'rinadi
+          // rasmlar bir xil nom bilan yangilanadi (tuzatilgan rasm) — keshdan darhol ko'rsatiladi va fonda yangilanadi
           {
             urlPattern: /\/illustrations\/.*\.webp$/,
-            handler: 'CacheFirst',
-            options: { cacheName: 'kachok-illustrations', expiration: { maxEntries: 200 } },
+            handler: 'StaleWhileRevalidate',
+            options: { cacheName: 'kachok-illustrations', expiration: { maxEntries: 300 } },
           },
           // 3D harakat videolari: to‘liq fayl keshda bo‘lsa — darhol (bo‘lak so‘rovlari ham keshdan), internetsiz ham
           {
@@ -72,8 +73,8 @@ export default defineConfig({
           },
           {
             urlPattern: /\/videos\/.*\.webp$/,
-            handler: 'CacheFirst',
-            options: { cacheName: 'kachok-illustrations', expiration: { maxEntries: 200 } },
+            handler: 'StaleWhileRevalidate',
+            options: { cacheName: 'kachok-illustrations', expiration: { maxEntries: 300 } },
           },
         ],
       },

@@ -4,6 +4,7 @@
 // ovqat kundaligi va meta hujjatini (bir nechta qurilma bir vaqtda yozadigan) birlashtiramiz, keyin yuboramiz.
 import { clampKcalAdjust } from '../engine/nutrition';
 import { useStore } from '../store/useStore';
+import { sanitizeBody, sanitizeFood, sanitizeLog, sanitizeProfile, sanitizeProgram } from '../store/sanitize';
 import type { BodyEntry, FoodEntry, Profile, Program, WorkoutLog } from '../types';
 import { api, apiEnabled, refreshMe } from './client';
 import { scall, serverless, TGCLOUD, tgUserId } from './serverless';
@@ -139,7 +140,9 @@ function applyRemote(docs: RemoteDoc[], c: Ctx, preferServer: boolean) {
     const k = key(d.kind, d.id);
     const ld = local.get(k);
     // qurilmada sinxronlanmagan tahrir bor va u serverdagidan keyin qilingan
-    const dirty = !!ld && hash(ld.data) !== c.hashes[k];
+    // qurilmada o'chirilgan (ld yo'q, lekin ilgari sinxronlangan) ham tahrir hisoblanadi — o'chirish vaqti solishtiriladi,
+    // aks holda boshqa qurilmadagi eskiroq tahrir o'chirilgan yozuvni qaytarib keltirardi
+    const dirty = ld ? hash(ld.data) !== c.hashes[k] : c.hashes[k] !== undefined;
     const editedLater = dirty && (c.edited[k] ?? 0) > d.updatedAt;
     const prefer = preferServer && SINGLETONS.includes(d.kind);
     const localNewer = !prefer && ((c.stamps[k] ?? 0) > d.updatedAt || editedLater);
@@ -155,7 +158,7 @@ function applyRemote(docs: RemoteDoc[], c: Ctx, preferServer: boolean) {
       // ovqat har doim birlashtiriladi
       if ((c.stamps[k] ?? 0) > d.updatedAt) continue;
       c.stamps[k] = Math.max(c.stamps[k] ?? 0, d.updatedAt);
-      const remote = d.deleted || !Array.isArray(d.data) ? [] : (d.data as FoodEntry[]);
+      const remote = d.deleted || !Array.isArray(d.data) ? [] : (d.data as unknown[]).map(sanitizeFood).filter((e): e is FoodEntry => !!e);
       const mine = food.filter((e) => e.date === d.id);
       const merged = mergeFood(remote, mine, c.base[k] as string[] | undefined);
       if (!same(merged, mine)) food = [...food.filter((e) => e.date !== d.id), ...merged];
@@ -186,11 +189,14 @@ function applyRemote(docs: RemoteDoc[], c: Ctx, preferServer: boolean) {
     }
     const h = hash(d.data);
     if (c.hashes[k] === h) continue; // o'zimiz yuborgan nusxa qaytdi
+    // serverdagi buzuq yoki eski sxemadagi hujjat qurilmani yiqitmasin: tozalanadi, yaroqsizi o'tkazib yuboriladi
+    const clean = d.kind === 'profile' ? sanitizeProfile(d.data) : d.kind === 'program' ? sanitizeProgram(d.data) : d.kind === 'log' ? sanitizeLog(d.data) : d.kind === 'body' ? sanitizeBody(d.data) : null;
+    if (!clean) continue;
     c.hashes[k] = h;
-    if (d.kind === 'profile') profile = d.data as Profile;
-    else if (d.kind === 'program') program = d.data as Program;
-    else if (d.kind === 'log') logs = [...logs.filter((l) => l.id !== d.id), d.data as WorkoutLog];
-    else if (d.kind === 'body') body = [...body.filter((b) => b.date !== d.id), d.data as BodyEntry].sort((a, b) => a.date.localeCompare(b.date));
+    if (d.kind === 'profile') profile = clean as Profile;
+    else if (d.kind === 'program') program = clean as Program;
+    else if (d.kind === 'log') logs = [...logs.filter((l) => l.id !== d.id), clean as WorkoutLog];
+    else if (d.kind === 'body') body = [...body.filter((b) => b.date !== d.id), clean as BodyEntry].sort((a, b) => a.date.localeCompare(b.date));
   }
   // eski mijozdan kelgan haddan tashqari kaloriya tuzatishi chegaraga keltiriladi
   if (meta && typeof meta.kcalAdjust === 'number') meta.kcalAdjust = clampKcalAdjust(meta.kcalAdjust);
@@ -248,6 +254,7 @@ export function syncNow(): Promise<void> {
 
 async function run() {
   const { setSync } = useStore.getState();
+  const startedAt = Date.now();
   setSync({ status: 'syncing', error: undefined });
   try {
     const sync = useStore.getState().sync;
@@ -324,6 +331,8 @@ async function run() {
     const st = useStore.getState();
     setSync({ cursor, hashes: c.hashes, stamps: c.stamps, base: c.base, edited: editedLive, forceLocal: false, uid: st.account?.user.id ?? (st.cloud ? `tg:${st.cloud.tgId}` : sync.uid), lastSyncAt: Date.now(), status: 'idle' });
     refreshMe().catch(() => {});
+    // sinxron davomida yozilgan o'zgarishlar (ular shu safar yuborilmagan bo'lishi mumkin) — darhol yana bir marta
+    if (Object.values(useStore.getState().sync.edited ?? {}).some((t) => t >= startedAt)) setTimeout(() => void syncNow(), 1500);
   } catch (e) {
     // egasi almashgan — eski sinxron natijasi tashlab yuboriladi (yangi egasining holati o'zgarmaydi)
     if (e instanceof OwnerChanged) return;

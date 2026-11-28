@@ -96,7 +96,8 @@ export function goalStatus(g: UserGoal, ctx: GoalCtx): GoalStatus {
     }).length;
     const daysInMonth = new Date(y, m + 1, 0).getDate();
     const day = now.getDate();
-    const expected = (g.target * day) / daysInMonth;
+    // oy boshida (1–2 kun) 0 ta mashg'ulot «ortda» deb ko'rsatilmasin — kutilgan son butun songa yaxlitlanadi
+    const expected = Math.floor((g.target * day) / daysInMonth);
     const left = Math.max(0, g.target - count);
     const daysRemain = daysInMonth - day;
     const state: GoalState = count >= g.target ? 'done' : count >= expected ? (count >= expected + 1 ? 'ahead' : 'on') : 'behind';
@@ -166,7 +167,8 @@ export function goalStatus(g: UserGoal, ctx: GoalCtx): GoalStatus {
   return {
     title,
     current,
-    progress: clamp01((current - g.start) / (g.target - g.start)),
+    // boshlang'ich va maqsad bir xil bo'lsa (vaznni saqlash) — 0 ga bo'lish yo'q
+    progress: g.target === g.start ? (Math.abs(current - g.target) < 0.5 ? 1 : 0) : clamp01((current - g.start) / (g.target - g.start)),
     state: wrongWay ? 'behind' : f.state,
     eta: f.eta,
     text: f.eta && !wrongWay ? `${base} · ~${fmtDay(f.eta)}` : base,

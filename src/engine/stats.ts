@@ -11,7 +11,8 @@ export const finished = (logs: WorkoutLog[]) => logs.filter((l) => l.finishedAt)
 
 export function logVolume(l: WorkoutLog): number {
   // yordamchi trenajyorda kg — yordam, ko'tarilgan yuk emas
-  return l.exercises.reduce((a, e) => (EXERCISE_MAP[e.exerciseId]?.assisted ? a : a + e.sets.filter((s) => s.done && !s.warmup).reduce((b, s) => b + s.kg * s.reps, 0)), 0);
+  // vaqtli mashqda (fermer yurishi) «takror» — soniya: kg × soniya hajmga qo'shilmaydi
+  return l.exercises.reduce((a, e) => (EXERCISE_MAP[e.exerciseId]?.assisted || EXERCISE_MAP[e.exerciseId]?.timed ? a : a + e.sets.filter((s) => s.done && !s.warmup).reduce((b, s) => b + s.kg * s.reps, 0)), 0);
 }
 
 export function logSets(l: WorkoutLog): number {

@@ -19,6 +19,22 @@ function ownerFromState(raw: string | null): string | null {
 type TgWindow = { Telegram?: { WebApp?: { initDataUnsafe?: { user?: { id?: number } } } } };
 const currentTgId = () => (typeof window === 'undefined' ? undefined : (window as TgWindow).Telegram?.WebApp?.initDataUnsafe?.user?.id);
 
+/**
+ * Xotirada ikkinchi nusxaga joy yo'q bo'lsa — oldingi egasining ma'lumoti joyida qoladi, yangi foydalanuvchi esa shu
+ * sessiyada faqat xotirada (diskka yozilmaydi) ishlaydi: birovning mashg'ulotlari unga ko'rinmaydi va uning bulutiga ketmaydi.
+ */
+export let memoryOnly = false;
+let memState: string | null = null;
+export const memoryStorage: Pick<Storage, 'getItem' | 'setItem' | 'removeItem'> = {
+  getItem: (k) => (k === STATE_KEY ? memState : null),
+  setItem: (k, v) => {
+    if (k === STATE_KEY) memState = v;
+  },
+  removeItem: (k) => {
+    if (k === STATE_KEY) memState = null;
+  },
+};
+
 export function swapTelegramUser(tgId: number | undefined = currentTgId(), ls?: Storage) {
   try {
     ls ??= localStorage;
@@ -28,12 +44,28 @@ export function swapTelegramUser(tgId: number | undefined = currentTgId(), ls?: 
     // egasi yozilmagan (eski versiya) — sinxron holatidan; u ham bo'lmasa, mavjud ma'lumot joriy foydalanuvchiniki deb olinadi
     const owner = ls.getItem(OWNER_KEY) ?? ownerFromState(cur);
     if (owner && owner !== id) {
-      if (cur !== null) ls.setItem(stash(owner), cur);
+      // avval yangi egasining nusxasi xotiraga olinadi va o'chiriladi — oldingi egasining nusxasiga joy bo'shaydi
       const mine = ls.getItem(stash(id));
-      if (mine !== null) {
-        ls.setItem(STATE_KEY, mine);
-        ls.removeItem(stash(id));
-      } else ls.removeItem(STATE_KEY);
+      if (mine !== null) ls.removeItem(stash(id));
+      if (cur !== null) {
+        try {
+          ls.setItem(stash(owner), cur);
+        } catch {
+          // joy yo'q: oldingi egasining ma'lumoti joyida qoladi (egasi ham), yangi foydalanuvchi — faqat xotirada
+          if (mine !== null) {
+            try {
+              ls.setItem(stash(id), mine);
+            } catch {
+              /* qaytarib bo'lmadi — nusxa shu sessiyada xotirada */
+            }
+          }
+          memoryOnly = true;
+          memState = mine;
+          return;
+        }
+      }
+      if (mine !== null) ls.setItem(STATE_KEY, mine);
+      else ls.removeItem(STATE_KEY);
     }
     ls.setItem(OWNER_KEY, id);
   } catch {
