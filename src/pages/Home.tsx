@@ -1,37 +1,54 @@
-// Bugun: haftalik reja va tanlangan kun mashqlari bitta oynada. Hafta kuni bosilsa — o'sha kun ochiladi;
-// mashqlar sonini − / + bilan o'zgartirish (+ da dastur kunga mos mashqni o'zi tanlaydi), har mashqda bitta "⋯" menyu.
+// Bugun (11-prototip): birinchi ekranda — salomlashuv, bugungi mashq katta rasmda va bitta katta tugma, suv/ovqat/cho‘zilish halqalari.
+// Qolgan hamma imkoniyat pastda saqlanadi: mashqlar ro‘yxati (− / +, «⋯» menyu), hafta kunlari, maqsad, hisobot, to‘plamlar va dars.
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { CoachBanner } from '../components/CoachBanner';
 import { GoalStrip } from '../components/Goals';
-import { useArmed } from '../lib/hooks';
+import { useArmed, useVisible } from '../lib/hooks';
 import { ExercisePicker } from '../components/DayEditor';
 import { ExerciseThumb } from '../components/ExerciseThumb';
-import { Logo } from '../components/Logo';
+import { SpeakButton } from '../components/SpeakButton';
 import { Fold } from '../components/ui/Fold';
 import { Icon } from '../components/ui/Icon';
 import { Sheet } from '../components/ui/Sheet';
 import { Stepper } from '../components/ui/controls';
 import { MUSCLES } from '../data/catalog';
 import { EXERCISE_MAP, EXERCISES } from '../data/exercises';
+import { ILLUSTRATIONS } from '../data/illustrations';
 import { LESSONS } from '../data/lessons';
 import { ROUTINE_MAP, routineMinutes } from '../data/routines';
 import { dailyPick } from '../data/motivation';
 import { alternatives, estimateMinutes, hasEquipment, manualPlanned, removableIndex, rotationSource } from '../engine/program';
 import { fmtKg, type Suggestion } from '../engine/progression';
 import { weekStreak } from '../engine/stats';
-import { DAYS, DAYS_SHORT, MONTHS, addDays, daysBetween, isoDate, startOfWeek } from '../lib/date';
+import { DAYS, DAYS_SHORT, addDays, daysBetween, isoDate, startOfWeek } from '../lib/date';
 import { weekSummary } from '../engine/stats';
+import { plainTitle } from '../lib/plainTitle';
 import { useNutrition } from '../lib/useNutrition';
 import { useDayPlan, useToday } from '../lib/useToday';
 import { useStore } from '../store/useStore';
-import type { PlannedExercise, Program, WorkoutDay } from '../types';
+import type { PlannedExercise, WorkoutDay } from '../types';
 
 const READY = [
   { v: 1.8, label: 'Charchagan', hint: 'set va vazn biroz kamayadi', icon: 'moon' },
   { v: 3.2, label: 'Odatdagidek', hint: 'reja bo‘yicha', icon: 'balance' },
   { v: 4.6, label: 'Zo‘r', hint: 'to‘liq kuch bilan', icon: 'bolt' },
 ];
+const REST_IMG = `${import.meta.env.BASE_URL}illustrations/hamstring-stretch.webp`;
+
+/** kichik halqa: 0..1 */
+function Ring({ value, color, icon }: { value: number; color: string; icon: string }) {
+  const c = 2 * Math.PI * 25;
+  return (
+    <span className="h3-ring" aria-hidden="true">
+      <svg className="h3-ring-svg" viewBox="0 0 58 58">
+        <circle cx="29" cy="29" r="25" fill="none" stroke={color} strokeOpacity={0.18} strokeWidth="6" />
+        {value > 0 && <circle cx="29" cy="29" r="25" fill="none" stroke={color} strokeWidth="6" strokeLinecap="round" strokeDasharray={`${Math.min(1, value) * c} ${c}`} />}
+      </svg>
+      <Icon name={icon} size={24} style={{ color }} />
+    </span>
+  );
+}
 
 export default function Home() {
   const nav = useNavigate();
@@ -44,7 +61,10 @@ export default function Home() {
   const finishWorkout = useStore((s) => s.finishWorkout);
   const discardWorkout = useStore((s) => s.discardWorkout);
   const setReadiness = useStore((s) => s.setReadiness);
+  const addWater = useStore((s) => s.addWater);
   const t = useToday();
+  const { np, eatenToday } = useNutrition();
+  const waterMl = useStore((s) => s.water[t.dateKey] ?? 0);
 
   // qaysi kun ochiq: havoladan (?day=), bugun mashg'ulot bo'lsa — bugun, bo'lmasa o'tkazib yuborilgani, aks holda bugun
   const [sel, setSel] = useState<number>(() => {
@@ -101,30 +121,33 @@ export default function Home() {
     nav('/workout');
   };
 
-  // mashqlar soni: − / + va bekor qilish
+  // mashqlar soni: − / + va bekor qilish (suv qo‘shish ham shu yerdan bekor qilinadi)
   const addAutoPlanned = useStore((s) => s.addAutoPlanned);
   const removePlanned = useStore((s) => s.removePlanned);
   const setProgram = useStore((s) => s.setProgram);
-  const [undo, setUndo] = useState<{ text: string; prev: Program } | null>(null);
+  const [undo, setUndo] = useState<{ text: string; revert: () => void } | null>(null);
   useEffect(() => {
     if (!undo) return;
     const id = setTimeout(() => setUndo(null), 5000);
     return () => clearTimeout(id);
   }, [undo]);
-  const snapshot = () => useStore.getState().program!;
+  const snapshot = () => {
+    const prev = useStore.getState().program!;
+    return () => setProgram(prev);
+  };
   const plus = () => {
     if (!srcId) return;
-    const prev = snapshot();
+    const revert = snapshot();
     const id = addAutoPlanned(srcId);
-    setUndo(id ? { text: `«${EXERCISE_MAP[id].name}» qo‘shildi`, prev } : { text: 'Mos mashq topilmadi — ro‘yxatdan tanlang', prev });
+    setUndo(id ? { text: `«${EXERCISE_MAP[id].name}» qo‘shildi`, revert } : { text: 'Mos mashq topilmadi — ro‘yxatdan tanlang', revert });
   };
   const minus = () => {
     if (!srcId || !day || day.exercises.length <= 1) return;
-    const prev = snapshot();
+    const revert = snapshot();
     const i = removableIndex(day);
     const name = EXERCISE_MAP[day.exercises[i].exerciseId]?.name ?? 'Mashq';
     removePlanned(srcId, i);
-    setUndo({ text: `«${name}» olib tashlandi`, prev });
+    setUndo({ text: `«${name}» olib tashlandi`, revert });
   };
   const [editIdx, setEditIdx] = useState<number | null>(null);
   const [adding, setAdding] = useState(false);
@@ -144,38 +167,281 @@ export default function Home() {
   const prevSum = useMemo(() => weekSummary(logs, prevWeek), [logs, prevWeek.getTime()]);
   const showReport = t.today <= 2 && prevSum.workouts > 0 && reportSeen !== isoDate(prevWeek);
 
-  // pastki tugma: faol mashg'ulot → davom; kunda mashq bor va bajarilmagan → boshlash
+  // asosiy tugma: faol mashg'ulot → davom; kunda mashq bor va bajarilmagan → boshlash
   const canStart = !active && !!day && day.exercises.length > 0 && !doneThisWeek && !(isToday && t.doneToday);
   const ctaLabel = isToday ? 'Boshlash' : past ? 'Bugun bajarish' : 'Bugun shuni bajarish';
+  // katta kartadagi tugma ko‘rinmay qolsa (pastga aylantirilganda) — pastki tugma chiqadi
+  const [heroBtn, heroBtnVisible] = useVisible<HTMLDivElement>();
+
+  // katta karta: rasm, nom, holat
+  const exIds = active ? active.log.exercises.map((e) => e.exerciseId) : (day?.exercises.map((pe) => pe.exerciseId) ?? []);
+  const heroImg = exIds.map((id) => ILLUSTRATIONS[id]?.src).find(Boolean) ?? null;
+  const title = plainTitle(exIds);
+  const stretchId = t.trainedToday ? 'stretch-evening' : 'stretch-morning';
+  const stretchMin = routineMinutes(ROUTINE_MAP[stretchId]);
+  const mode: 'active' | 'start' | 'done' | 'empty' | 'trained' | 'rest' = active
+    ? 'active'
+    : day && day.exercises.length === 0
+      ? 'empty'
+      : canStart
+        ? 'start'
+        : day && doneThisWeek
+          ? 'done'
+          : day && isToday && t.doneToday
+            ? 'trained'
+            : 'rest';
+  const nextText = t.nextDay && untilNext ? `Keyingi mashq — ${DAYS[t.nextDay.weekday].toLowerCase()}` : '';
+
+  // «Eshiting» matni — ekrandagi asosiy narsa oddiy gap bilan
+  const first = day?.exercises.map((pe) => EXERCISE_MAP[pe.exerciseId]).find(Boolean);
+  const speech =
+    mode === 'active'
+      ? `Mashg‘ulot davom etyapti. ${activeDone} ta yondashuv bajarildi, ${Math.max(0, activeTotal - activeDone)} ta qoldi. Davom ettirish uchun yashil tugmani bosing.`
+      : mode === 'start'
+        ? `Salom${profile.name ? ', ' + profile.name : ''}! ${isToday ? 'Bugun' : DAYS[sel]} ${title.toLowerCase()} mashqi: ${day!.exercises.length} ta mashq, taxminan ${estMin} daqiqa.${first ? ` Birinchisi — ${first.name}.` : ''} Boshlash uchun katta yashil tugmani bosing.`
+        : mode === 'done' || mode === 'trained'
+          ? 'Barakalla! Bugungi mashq bajarildi. Endi suv iching, oqsilli ovqat yeng va kechqurun cho‘ziling.'
+          : `Bugun dam olish kuni. Mushaklar dam olganda o‘sadi. Xohlasangiz, ${stretchMin} daqiqalik yengil cho‘zilish qiling.${nextText ? ` ${nextText}.` : ''}`;
+
+  // tezkor ishlar
+  const waterGoal = Math.round((np.waterL + (t.todayDay ? np.waterTrainingL : 0)) * 1000);
+  const glasses = Math.round(waterMl / 250);
+  const glassesGoal = Math.max(1, Math.round(waterGoal / 250));
+  const drink = () => {
+    addWater(250);
+    setUndo({ text: `Suv: ${glasses + 1} / ${glassesGoal} stakan`, revert: () => addWater(-250) });
+  };
+  const pickDay = (i: number) => {
+    setSel(i);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   return (
-    <div className="page home2">
-      <header className="row between gap-12" style={{ marginBottom: 14 }}>
-        <div className="stack" style={{ gap: 4 }}>
-          <Logo size={16} flat />
-          <span className="eyebrow">
-            {DAYS[t.today]} · {now.getDate()} {MONTHS[now.getMonth()]}
-          </span>
+    <div className="page home3">
+      <header className="h3-head">
+        <div style={{ minWidth: 0 }}>
+          <h1 className="h3-hello">Salom{profile.name ? `, ${profile.name}` : ''}!</h1>
+          <p className="h3-sub num">
+            {DAYS[t.today]} · bu hafta {t.weekLogs.length} / {profile.daysPerWeek} mashq
+          </p>
         </div>
-        <span className="row gap-8">
-          <Link to="/library" className="icon-btn" aria-label="Mashqlar va darslar (qidirish)">
-            <Icon name="search" size={20} />
-          </Link>
-          <Link to="/profile" className="avatar" aria-label="Profil va sozlamalar">
-          {profile.name ? profile.name[0].toUpperCase() : <Icon name="user" />}
+        <span className="row gap-8" style={{ flex: 'none' }}>
+          <SpeakButton text={speech} />
+          <Link to="/profile" className="avatar sm" aria-label="Profil va sozlamalar">
+            {profile.name ? profile.name[0].toUpperCase() : <Icon name="user" size={18} />}
           </Link>
         </span>
       </header>
 
       <CoachBanner />
 
-      {/* Hafta: har kun bosiladi */}
-      <section aria-label="Hafta">
-        <div className="row between gap-8" style={{ marginBottom: 8 }}>
-          <h2 className="h-sm">
+      {/* Katta karta: bugungi mashq (yoki faol / bajarilgan / dam olish holati) */}
+      <section className={`h3-hero ${mode === 'rest' || mode === 'trained' ? 'rest' : ''} ${mode === 'done' ? 'done' : ''}`} aria-live="polite">
+        {mode === 'rest' || mode === 'trained' ? <img src={REST_IMG} alt="" decoding="async" /> : heroImg ? <img src={heroImg} alt="" decoding="async" /> : <div className="h3-hero-blank" />}
+        <span className={`h3-chip ${mode === 'done' ? 'ok' : ''} ${mode === 'rest' || mode === 'trained' ? 'calm' : ''}`}>
+          {mode === 'active'
+            ? 'Faol mashg‘ulot'
+            : mode === 'done'
+              ? '✓ Bajarildi'
+              : mode === 'rest'
+                ? 'Dam olish kuni'
+                : mode === 'trained'
+                  ? '✓ Bugun mashq qildingiz'
+                  : isToday
+                    ? `Bugungi mashq${t.deload ? ' · yengil hafta' : ''}`
+                    : `${DAYS[sel]}${past && !doneThisWeek ? ' · o‘tkazib yuborilgan' : ''}`}
+        </span>
+        <div className="h3-in">
+          {mode === 'rest' || mode === 'trained' ? (
+            <>
+              <h2 className="h3-title">{mode === 'trained' || (isToday && t.trainedToday) ? 'Barakalla! Endi tiklanish' : 'Bugun mushaklar tiklanadi'}</h2>
+              <p className="h3-meta">
+                <Icon name="spine" size={18} /> Yengil cho‘zilish · {stretchMin} daqiqa
+              </p>
+              <div ref={heroBtn}>
+                <Link to={`/stretch/${stretchId}`} className="btn btn-xl btn-block h3-go calm">
+                  <Icon name="play" size={20} /> CHO‘ZILISH
+                </Link>
+              </div>
+              <p className="h3-alt">
+                {nextText && <>{nextText} · </>}
+                <button className="link-btn" onClick={() => setFreeOpen(true)}>
+                  Erkin mashg‘ulot
+                </button>
+              </p>
+            </>
+          ) : (
+            <>
+              <h2 className="h3-title">{mode === 'empty' ? 'Bu kun hali bo‘sh' : title}</h2>
+              <p className="h3-meta num">
+                {mode === 'active' ? (
+                  <>
+                    <Icon name="check" size={18} /> {activeDone} / {activeTotal} yondashuv bajarildi
+                  </>
+                ) : mode === 'empty' ? (
+                  'Bitta bosishda dastur mos mashqni o‘zi tanlaydi'
+                ) : (
+                  <>
+                    <Icon name="dumbbell" size={18} /> {day!.exercises.length} ta mashq <Icon name="clock" size={18} /> {estMin} daqiqa
+                  </>
+                )}
+              </p>
+              {mode === 'active' && (
+                <div className="seg-progress mt-8" aria-hidden="true">
+                  {active!.log.exercises.map((e, i) => (
+                    <i key={i}>
+                      <b style={{ width: `${e.sets.length ? (e.sets.filter((s) => s.done).length / e.sets.length) * 100 : 0}%` }} />
+                    </i>
+                  ))}
+                </div>
+              )}
+              <div ref={heroBtn}>
+                {mode === 'active' ? (
+                  <button className="btn btn-primary btn-xl btn-block h3-go" onClick={() => nav('/workout')}>
+                    <Icon name="play" size={20} /> DAVOM ETTIRISH
+                  </button>
+                ) : mode === 'start' ? (
+                  <button className="btn btn-primary btn-xl btn-block h3-go" onClick={onStart}>
+                    <Icon name="play" size={20} /> {ctaLabel.toUpperCase()}
+                  </button>
+                ) : mode === 'empty' ? (
+                  <button className="btn btn-primary btn-xl btn-block h3-go" onClick={plus}>
+                    <Icon name="plus" size={20} /> MASHQ QO‘SHISH
+                  </button>
+                ) : (
+                  <Link to={dayLog ? `/summary/${dayLog.id}` : '/progress'} className="btn btn-secondary btn-xl btn-block h3-go">
+                    Natijani ko‘rish
+                  </Link>
+                )}
+              </div>
+              {mode === 'active' && staleHours >= 6 && (
+                <div className="stack gap-8 mt-12">
+                  <span className="small">
+                    <b>{staleHours} soatdan beri ochiq.</b> {activeDone ? 'Yakunlashni unutdingizmi? Bajarilgan setlar saqlanadi.' : 'Hech bir set belgilanmagan — saqlanadigan natija yo‘q.'}
+                  </span>
+                  <div className="row gap-8">
+                    {activeDone > 0 && (
+                      <button
+                        className="btn btn-success btn-sm grow"
+                        onClick={() => {
+                          const log = finishWorkout();
+                          if (log) nav(`/summary/${log.id}`, { state: { fresh: true } });
+                        }}
+                      >
+                        Yakunlash
+                      </button>
+                    )}
+                    {discard.armed ? (
+                      <button className="btn btn-danger btn-sm grow" onClick={() => discard.ready() && discardWorkout()}>
+                        Ha, o‘chirilsin
+                      </button>
+                    ) : (
+                      <button className="btn btn-ghost btn-sm grow" onClick={discard.arm}>
+                        Saqlamasdan o‘chirish
+                      </button>
+                    )}
+                  </div>
+                </div>
+              )}
+            </>
+          )}
+        </div>
+      </section>
+
+      {/* Tezkor ishlar: suv, ovqat, cho‘zilish */}
+      <div className="h3-quick">
+        <button className="h3-q" onClick={drink} aria-label={`Bir stakan suv qo‘shish. Hozir ${glasses} / ${glassesGoal}`}>
+          <Ring value={glasses / glassesGoal} color="#5ab4ff" icon="drop" />
+          <b>Suv +1</b>
+          <span className="num">
+            {glasses} / {glassesGoal}
+          </span>
+        </button>
+        <Link to="/nutrition" className="h3-q">
+          <Ring value={np.kcal ? eatenToday / np.kcal : 0} color="#ffb547" icon="food" />
+          <b>Ovqat</b>
+          <span className="num">
+            {Math.round(eatenToday)} / {np.kcal}
+          </span>
+        </Link>
+        <Link to={`/stretch/${stretchId}`} className="h3-q">
+          <Ring value={0} color="#c9a7ff" icon="spine" />
+          <b>Cho‘zilish</b>
+          <span className="num">{stretchMin} daqiqa</span>
+        </Link>
+      </div>
+
+      {daysSince !== null && daysSince >= 5 && !active && (
+        <div className="notice gold mt-16">
+          <Icon name="bolt" />
+          <span>{daysSince} kundan beri zalda emassiz. Qaytish uchun mukammal kun shart emas — 30 daqiqalik qisqa mashq ham hisobga kiradi.</span>
+        </div>
+      )}
+
+      {/* Mashqlar ro‘yxati: soni, har mashqning menyusi, qo‘shish */}
+      {day && !active && (
+        <section className="section" aria-label="Mashqlar ro‘yxati">
+          <div className="section-head">
+            <h2>{isToday ? 'Bugungi mashqlar' : `${DAYS[sel]} mashqlari`}</h2>
+            <span className="small muted">{day.title}</span>
+          </div>
+          {groups.length > 0 && <p className="small muted" style={{ marginTop: -4, marginBottom: 10 }}>{groups.join(' · ')}</p>}
+          <div className="count-row">
+            <div className="stack" style={{ gap: 2 }}>
+              <b>{day.exercises.length} ta mashq</b>
+              <span className="tiny muted num">
+                ~{estMin} daqiqa · {totalSets} set
+              </span>
+            </div>
+            <div className="count-step" role="group" aria-label="Mashqlar soni">
+              <button onClick={minus} disabled={day.exercises.length <= 1} aria-label="Bitta mashqni olib tashlash">
+                <Icon name="minus" size={20} />
+              </button>
+              <span className="num" aria-live="polite">
+                {day.exercises.length}
+              </span>
+              <button onClick={plus} disabled={day.exercises.length >= 12} aria-label="Yana bitta mashq qo‘shish">
+                <Icon name="plus" size={20} />
+              </button>
+            </div>
+          </div>
+
+          <ol className="ex-list mt-12">
+            {day.exercises.map((pe, i) => {
+              const ex = EXERCISE_MAP[pe.exerciseId];
+              if (!ex) return null;
+              const sug = sugOf.get(pe);
+              return (
+                <li key={pe.exerciseId + i} className="ex-row2">
+                  <Link to={`/exercise/${ex.id}`} className="ex-row2-main">
+                    <ExerciseThumb ex={ex} size={52} />
+                    <span className="grow" style={{ minWidth: 0 }}>
+                      <span className="ex-name">{ex.name}</span>
+                      <span className="tiny muted num">{rx(pe, sug, ex.timed)}</span>
+                      {!hasEquipment(ex, profile.equipment) && <span className="tiny" style={{ display: 'block', color: 'var(--yellow)' }}>Jihozingizda yo‘q — almashtiring</span>}
+                    </span>
+                  </Link>
+                  <button className="icon-btn" onClick={() => setEditIdx(i)} aria-label={`${ex.name}: o‘zgartirish`}>
+                    <Icon name="more" size={22} stroke={3} />
+                  </button>
+                </li>
+              );
+            })}
+          </ol>
+          <button className="btn btn-ghost btn-block mt-8" onClick={() => setAdding(true)}>
+            <Icon name="list" size={18} /> Ro‘yxatdan tanlab qo‘shish
+          </button>
+        </section>
+      )}
+
+      {/* Hafta: har kun bosiladi — tanlangan kun yuqoridagi kartada ochiladi */}
+      <section className="section" aria-label="Hafta">
+        <div className="section-head">
+          <h2>
             Bu hafta{' '}
-            <span className="muted num" style={{ fontWeight: 600 }}>
-              · {t.weekLogs.length}/{profile.daysPerWeek} mashg‘ulot{streak > 1 ? ` · ${streak} hafta ketma-ket` : ''}
+            <span className="muted num" style={{ fontWeight: 600, fontSize: '0.8em' }}>
+              · {t.weekLogs.length}/{profile.daysPerWeek}
+              {streak > 1 ? ` · ${streak} hafta ketma-ket` : ''}
             </span>
           </h2>
           <Link to="/program" className="icon-btn" style={{ width: 36, height: 36 }} aria-label="Haftalik reja sozlamalari">
@@ -194,7 +460,7 @@ export default function Home() {
                 aria-selected={sel === i}
                 aria-label={`${DAYS[i]}: ${planned ? planned.title : 'dam olish'}${done ? ', bajarildi' : ''}`}
                 className={`wk2 ${state} ${i === t.today ? 'today' : ''} ${sel === i ? 'sel' : ''}`}
-                onClick={() => setSel(i)}
+                onClick={() => pickDay(i)}
               >
                 <span className="wk2-d">{d}</span>
                 <span className="wk2-n num">{addDays(ws, i).getDate()}</span>
@@ -203,174 +469,26 @@ export default function Home() {
             );
           })}
         </div>
-      </section>
-
-      <GoalStrip />
-
-      {showReport && (
-        <Link to={`/report?w=${isoDate(prevWeek)}`} className="report-nudge mt-12">
-          <Icon name="chart" size={18} style={{ color: 'var(--accent)', flex: 'none' }} />
-          <span className="small grow">
-            <b>O‘tgan hafta hisoboti</b>
-            <span className="muted num">
-              {' '}
-              · {prevSum.workouts}/{profile.daysPerWeek} mashg‘ulot
-            </span>
-          </span>
-          <Icon name="right" size={16} style={{ color: 'var(--text-3)', flex: 'none' }} />
-        </Link>
-      )}
-
-      {/* Faol mashg'ulot */}
-      {active && (
-        <div className="card active-card mt-12">
-          <span className="eyebrow accent">Faol mashg‘ulot</span>
-          <div className="row between gap-12 mt-4">
-            <b className="title">{active.log.title}</b>
-            <span className="num small strong">
-              {activeDone}/{activeTotal} set
-            </span>
-          </div>
-          <div className="seg-progress mt-8" aria-hidden="true">
-            {active.log.exercises.map((e, i) => (
-              <i key={i}>
-                <b style={{ width: `${e.sets.length ? (e.sets.filter((s) => s.done).length / e.sets.length) * 100 : 0}%` }} />
-              </i>
-            ))}
-          </div>
-          {staleHours >= 6 && (
-            <div className="stack gap-8 mt-12">
-              <span className="small">
-                <b>{staleHours} soatdan beri ochiq.</b>{' '}
-                {activeDone ? 'Yakunlashni unutdingizmi? Bajarilgan setlar saqlanadi.' : 'Hech bir set belgilanmagan — saqlanadigan natija yo‘q.'}
+        <GoalStrip />
+        {showReport && (
+          <Link to={`/report?w=${isoDate(prevWeek)}`} className="report-nudge mt-12">
+            <Icon name="chart" size={18} style={{ color: 'var(--accent)', flex: 'none' }} />
+            <span className="small grow">
+              <b>O‘tgan hafta hisoboti</b>
+              <span className="muted num">
+                {' '}
+                · {prevSum.workouts}/{profile.daysPerWeek} mashg‘ulot
               </span>
-              <div className="row gap-8">
-                {activeDone > 0 && (
-                  <button
-                    className="btn btn-success btn-sm grow"
-                    onClick={() => {
-                      const log = finishWorkout();
-                      if (log) nav(`/summary/${log.id}`, { state: { fresh: true } });
-                    }}
-                  >
-                    Yakunlash
-                  </button>
-                )}
-                {discard.armed ? (
-                  <button className="btn btn-danger btn-sm grow" onClick={() => discard.ready() && discardWorkout()}>
-                    Ha, o‘chirilsin
-                  </button>
-                ) : (
-                  <button className="btn btn-ghost btn-sm grow" onClick={discard.arm}>
-                    Saqlamasdan o‘chirish
-                  </button>
-                )}
-              </div>
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* Tanlangan kun */}
-      <section className="mt-16" aria-live="polite">
-        {day ? (
-          <>
-            <div className="row between gap-12" style={{ alignItems: 'flex-start' }}>
-              <div style={{ minWidth: 0 }}>
-                <span className={`eyebrow ${isToday ? 'accent' : ''}`}>
-                  {isToday ? 'Bugun' : DAYS[sel]}
-                  {!doneThisWeek && past ? ' · o‘tkazib yuborilgan' : ''}
-                  {t.deload ? ' · yengil hafta' : ''}
-                </span>
-                <h1 className="display display-m mt-4">{day.title}</h1>
-                {groups.length > 0 && <p className="small muted mt-4">{groups.join(' · ')}</p>}
-              </div>
-              {doneThisWeek && (
-                <Link to={dayLog ? `/summary/${dayLog.id}` : '/progress'} className="tag done-tag">
-                  <Icon name="check" size={14} stroke={3} /> Bajarildi
-                </Link>
-              )}
-            </div>
-
-            {/* mashqlar soni */}
-            <div className="count-row mt-12">
-              <div className="stack" style={{ gap: 2 }}>
-                <b>{day.exercises.length} ta mashq</b>
-                <span className="tiny muted num">
-                  ~{estMin} daqiqa · {totalSets} set
-                </span>
-              </div>
-              <div className="count-step" role="group" aria-label="Mashqlar soni">
-                <button onClick={minus} disabled={day.exercises.length <= 1} aria-label="Bitta mashqni olib tashlash">
-                  <Icon name="minus" size={20} />
-                </button>
-                <span className="num" aria-live="polite">
-                  {day.exercises.length}
-                </span>
-                <button onClick={plus} disabled={day.exercises.length >= 12} aria-label="Yana bitta mashq qo‘shish">
-                  <Icon name="plus" size={20} />
-                </button>
-              </div>
-            </div>
-
-            <ol className="ex-list mt-12">
-              {day.exercises.map((pe, i) => {
-                const ex = EXERCISE_MAP[pe.exerciseId];
-                if (!ex) return null;
-                const sug = sugOf.get(pe);
-                return (
-                  <li key={pe.exerciseId + i} className="ex-row2">
-                    <Link to={`/exercise/${ex.id}`} className="ex-row2-main">
-                      <ExerciseThumb ex={ex} size={52} />
-                      <span className="grow" style={{ minWidth: 0 }}>
-                        <span className="ex-name">{ex.name}</span>
-                        <span className="tiny muted num">{rx(pe, sug, ex.timed)}</span>
-                        {!hasEquipment(ex, profile.equipment) && <span className="tiny" style={{ display: 'block', color: 'var(--yellow)' }}>Jihozingizda yo‘q — almashtiring</span>}
-                      </span>
-                    </Link>
-                    <button className="icon-btn" onClick={() => setEditIdx(i)} aria-label={`${ex.name}: o‘zgartirish`}>
-                      <Icon name="more" size={22} stroke={3} />
-                    </button>
-                  </li>
-                );
-              })}
-            </ol>
-            {day.exercises.length === 0 && <p className="card small muted" style={{ textAlign: 'center' }}>Bu kun hali bo‘sh — «+» bosing, dastur mos mashqni o‘zi tanlaydi.</p>}
-            <button className="btn btn-ghost btn-block mt-8" onClick={() => setAdding(true)}>
-              <Icon name="list" size={18} /> Ro‘yxatdan tanlab qo‘shish
-            </button>
-          </>
-        ) : (
-          <div className="card stack gap-8">
-            <span className={`eyebrow ${isToday ? 'accent' : ''}`}>{isToday ? 'Bugun' : DAYS[sel]}</span>
-            <h1 className="display display-m">{isToday && t.trainedToday ? 'Barakalla!' : 'Dam olish kuni'}</h1>
-            <p className="small muted">
-              {isToday && t.trainedToday ? 'Mushak dam olayotganda o‘sadi: oqsil, suv va 7–9 soat uyqu.' : 'Mushaklar dam olishda o‘sadi. 7–10 ming qadam va 5 daqiqa cho‘zilish yetarli.'}
-              {t.nextDay && untilNext && isToday ? ` Keyingi mashg‘ulot — ${DAYS[t.nextDay.weekday].toLowerCase()}, «${t.nextDay.title}».` : ''}
-            </p>
-            {isToday && (
-              <div className="row gap-8 mt-4">
-                <Link to={`/stretch/${t.trainedToday ? 'stretch-evening' : 'stretch-morning'}`} className="btn btn-secondary grow">
-                  <Icon name="spine" size={18} /> Cho‘zilish · {routineMinutes(ROUTINE_MAP[t.trainedToday ? 'stretch-evening' : 'stretch-morning'])} daq
-                </Link>
-                <button className="btn btn-ghost grow" onClick={() => setFreeOpen(true)}>
-                  Erkin mashg‘ulot
-                </button>
-              </div>
-            )}
-          </div>
+            </span>
+            <Icon name="right" size={16} style={{ color: 'var(--text-3)', flex: 'none' }} />
+          </Link>
         )}
       </section>
 
-      {daysSince !== null && daysSince >= 5 && !active && (
-        <div className="notice gold mt-12">
-          <Icon name="bolt" />
-          <span>{daysSince} kundan beri zalda emassiz. Qaytish uchun mukammal kun shart emas — 30 daqiqalik qisqa mashq ham hisobga kiradi.</span>
-        </div>
-      )}
+      <More />
 
-      {/* Pastki asosiy tugma */}
-      {(active || canStart) && (
+      {/* Pastki tugma — faqat katta kartadagi tugma ko‘rinmay qolganda */}
+      {(active || canStart) && !heroBtnVisible && (
         <div className="sticky-cta">
           {active ? (
             <button className="btn btn-primary btn-xl btn-block" onClick={() => nav('/workout')}>
@@ -385,15 +503,13 @@ export default function Home() {
         </div>
       )}
 
-      <Extras trainingDay={!!t.todayDay} trainedToday={t.trainedToday} />
-
       {undo && (
         <div className="undo-bar" role="status">
           <span className="small grow">{undo.text}</span>
           <button
             className="small strong accent-text"
             onClick={() => {
-              setProgram(undo.prev);
+              undo.revert();
               setUndo(null);
             }}
           >
@@ -442,11 +558,11 @@ export default function Home() {
             list={[...EXERCISES].sort((a, b) => Number(hasEquipment(b, profile.equipment)) - Number(hasEquipment(a, profile.equipment)) || b.score - a.score)}
             search
             onPickMany={(ids) => {
-              const prev = snapshot();
+              const revert = snapshot();
               const add = useStore.getState().addPlanned;
               ids.forEach((id) => add(srcId, id));
               setAdding(false);
-              setUndo({ text: `${ids.length} ta mashq qo‘shildi`, prev });
+              setUndo({ text: `${ids.length} ta mashq qo‘shildi`, revert });
             }}
           />
         )}
@@ -555,63 +671,25 @@ function ExerciseMenu({ day, srcId, index, onClose }: { day: WorkoutDay; srcId: 
   );
 }
 
-/** Kunlik qo'shimchalar: suv, ovqat, uyda mashq va cho'zilish, bugungi dars — ixcham */
-function Extras({ trainingDay, trainedToday }: { trainingDay: boolean; trainedToday: boolean }) {
-  const { np, eatenToday } = useNutrition();
+/** Pastki qism: tayyor to‘plamlar, mashqlar kutubxonasi va bugungi dars */
+function More() {
   const lessonsDone = useStore((s) => s.lessonsDone);
-  const addWater = useStore((s) => s.addWater);
   const lesson = LESSONS.find((l) => !lessonsDone.includes(l.id)) ?? dailyPick(LESSONS);
-  const t = useToday();
-  const ml = useStore((s) => s.water[t.dateKey] ?? 0);
-  const goal = Math.round((np.waterL + (trainingDay ? np.waterTrainingL : 0)) * 1000);
-  const left = Math.max(0, np.kcal - Math.round(eatenToday));
-  const stretchId = trainedToday ? 'stretch-evening' : 'stretch-morning';
   return (
     <section className="section">
       <div className="section-head">
-        <h2>Kun davomida</h2>
+        <h2>Yana</h2>
       </div>
       <div className="grid-2">
-        <div className="card tight stack gap-4">
-          <span className="eyebrow">Suv</span>
-          <span className="row gap-6" style={{ alignItems: 'baseline' }}>
-            <b className="poster" style={{ fontSize: 28 }}>
-              {(ml / 1000).toFixed(1)}
-            </b>
-            <span className="small muted">/ {(goal / 1000).toFixed(1)} L</span>
-          </span>
-          <div className="progress" style={{ height: 5 }}>
-            <i style={{ width: `${Math.min(100, (ml / goal) * 100)}%` }} />
-          </div>
-          <div className="row gap-6 mt-4">
-            <button className="btn btn-secondary btn-xs grow" onClick={() => addWater(250)}>
-              +250 ml
-            </button>
-            <button className="btn btn-ghost btn-xs" onClick={() => addWater(-250)} aria-label="250 ml ayirish" disabled={ml <= 0}>
-              <Icon name="minus" size={16} />
-            </button>
-          </div>
-        </div>
-        <Link to="/nutrition" className="card tight stack gap-4" style={{ color: 'inherit' }}>
-          <span className="eyebrow">{eatenToday > 0 ? 'Ovqat · qoldi' : 'Ovqat · kunlik'}</span>
-          <span className="row gap-6" style={{ alignItems: 'baseline' }}>
-            <b className="poster" style={{ fontSize: 28 }}>
-              {eatenToday > 0 ? left : np.kcal}
-            </b>
-            <span className="small muted">kkal</span>
-          </span>
-          <span className="tiny muted">Oqsil {np.protein} g</span>
-          <span className="small strong accent-text mt-4">Yozish ›</span>
-        </Link>
-        <Link to={`/stretch/${stretchId}`} className="card tight stack gap-4" style={{ color: 'inherit' }}>
-          <Icon name="spine" size={20} style={{ color: 'var(--accent)' }} />
-          <b className="mt-4">Cho‘zilish</b>
-          <span className="tiny muted">Taymer bilan · {routineMinutes(ROUTINE_MAP[stretchId])} daq</span>
-        </Link>
         <Link to="/routines?tab=health" className="card tight stack gap-4" style={{ color: 'inherit' }}>
           <Icon name="heart" size={20} style={{ color: 'var(--accent)' }} />
           <b className="mt-4">Tayyor to‘plamlar</b>
           <span className="tiny muted">Uyda, sog‘liq uchun, dasturlar</span>
+        </Link>
+        <Link to="/library" className="card tight stack gap-4" style={{ color: 'inherit' }}>
+          <Icon name="search" size={20} style={{ color: 'var(--accent)' }} />
+          <b className="mt-4">Mashqlar va darslar</b>
+          <span className="tiny muted">Qidirish, texnika, mushaklar</span>
         </Link>
       </div>
       <Link to={`/lesson/${lesson.id}`} className="card row gap-12 mt-12" style={{ color: 'inherit' }}>
@@ -619,9 +697,7 @@ function Extras({ trainingDay, trainedToday }: { trainingDay: boolean; trainedTo
           <Icon name={lesson.icon} />
         </span>
         <div className="grow">
-          <div className="eyebrow">
-            Bugungi dars · {lesson.minutes} daq
-          </div>
+          <div className="eyebrow">Bugungi dars · {lesson.minutes} daq</div>
           <div className="subtitle mt-4">{lesson.title}</div>
         </div>
         <Icon name="right" style={{ color: 'var(--text-3)' }} />
@@ -629,4 +705,3 @@ function Extras({ trainingDay, trainedToday }: { trainingDay: boolean; trainedTo
     </section>
   );
 }
-

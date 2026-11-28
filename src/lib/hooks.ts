@@ -64,3 +64,17 @@ export function useNear<T extends Element>(margin = '300px'): [React.RefObject<T
   }, [near, margin]);
   return [ref, near];
 }
+
+/** element hozir ekranda ko‘rinadimi (doimiy kuzatish) — masalan, asosiy tugma ko‘rinmay qolganda pastki tugmani chiqarish uchun */
+export function useVisible<T extends Element>(): [React.RefObject<T | null>, boolean] {
+  const ref = useRef<T>(null);
+  const [visible, setVisible] = useState(true);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || typeof IntersectionObserver === 'undefined') return;
+    const io = new IntersectionObserver(([e]) => setVisible(e.isIntersecting), { threshold: 0.1 });
+    io.observe(el);
+    return () => io.disconnect();
+  });
+  return [ref, visible];
+}
