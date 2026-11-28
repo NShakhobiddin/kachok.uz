@@ -19,6 +19,27 @@ export const sheetStack = {
   },
 };
 
+/**
+ * Oyna yopilgach boshqa sahifaga o‘tish kerak bo‘lsa — shu orqali: yopilgan oyna tarixdagi belgisini history.back() bilan
+ * olib tashlaydi (asinxron). Undan oldin nav() qilinsa, kechikkan «orqaga» yangi sahifadan qaytarib yuboradi.
+ * Belgi hali turgan bo‘lsa — popstate kutiladi (ko‘pi bilan 600 ms), bo‘lmasa darhol.
+ */
+export function afterSheetClosed(fn: () => void) {
+  if (typeof window === 'undefined' || !window.history.state?.sheet) {
+    fn();
+    return;
+  }
+  let done = false;
+  const run = () => {
+    if (done) return;
+    done = true;
+    window.removeEventListener('popstate', run);
+    fn();
+  };
+  window.addEventListener('popstate', run);
+  setTimeout(run, 600);
+}
+
 /** Yopilish animatsiyasi davomida oyna bosilmaydi — ikki marta bosilganda ovqat/mashq ikki marta qo'shilmasin */
 function PresenceGuard({ children }: { children: React.ReactNode }) {
   const present = useIsPresent();

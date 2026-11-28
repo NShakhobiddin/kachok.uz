@@ -768,7 +768,10 @@ function TargetCard({ ex, sug, repMax, barKg }: { ex: Exercise; sug: Suggestion;
             <small>kg</small>
           </span>
         ) : (
-          <span className="score">{ex.loadType === 'bodyweight' ? 'O‘z vazni' : '—'}</span>
+          // vazn hali noma’lum (birinchi marta): katta «—» oq chiziqqa o‘xshab qolardi — aniq ko‘rsatma
+          <span className="score" style={{ fontSize: '1.6em' }}>
+            {ex.loadType === 'bodyweight' ? 'O‘z vazni' : 'Yengil vazn'}
+          </span>
         )}
         <span className="title muted num">
           × {sug.reps}

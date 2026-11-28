@@ -10,7 +10,7 @@ import { ExerciseThumb } from '../components/ExerciseThumb';
 import { SpeakButton } from '../components/SpeakButton';
 import { Fold } from '../components/ui/Fold';
 import { Icon } from '../components/ui/Icon';
-import { Sheet } from '../components/ui/Sheet';
+import { afterSheetClosed, Sheet } from '../components/ui/Sheet';
 import { Stepper } from '../components/ui/controls';
 import { MUSCLES } from '../data/catalog';
 import { EXERCISE_MAP, EXERCISES } from '../data/exercises';
@@ -530,7 +530,8 @@ export default function Home() {
               onClick={() => {
                 setReadiness(o.v);
                 setAskReady(false);
-                setPending(true);
+                // oyna tarixdan chiqib bo‘lgach boshlanadi — aks holda mashg‘ulot sahifasidan bosh sahifaga qaytib qolardi
+                afterSheetClosed(() => setPending(true));
               }}
             >
               <span className="pill-num">
